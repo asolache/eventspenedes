@@ -69,19 +69,33 @@ recolectores de direcciones que no ejecutan JavaScript no la leen.
 
 En Netlify: `Domain management → Add a domain → eventspenedes.com`.
 
-**Opción A — nameservers de Netlify (recomendada).** En el registrador, sustituir los
-servidores de nombres por los cuatro `dnsX.p0X.nsone.net` que indique Netlify. El
-certificado HTTPS y el `www` se configuran solos.
+**Opción A — DNS en el registrador (la que usamos).** No hace falta Netlify DNS.
+Crear estos dos registros en el panel del registrador, después de borrar cualquier
+registro previo de `@` y `www` (páginas de parking incluidas):
 
-**Opción B — mantener el DNS del registrador.** Crear estos registros:
-
-| Tipo  | Nombre | Valor                          |
-|-------|--------|--------------------------------|
-| A     | `@`    | `75.2.60.5`                    |
+| Tipo  | Nombre | Valor                             |
+|-------|--------|-----------------------------------|
+| A     | `@`    | `75.2.60.5`                       |
 | CNAME | `www`  | `<nombre-del-sitio>.netlify.app.` |
 
+Si el registrador soporta `ALIAS` o `ANAME`, es preferible `ALIAS @ →
+apex-loadbalancer.netlify.com` en lugar del registro A: sigue a Netlify si cambia
+de IP. Nunca un CNAME normal en `@`.
+
+**Opción B — nameservers de Netlify.** Sustituir en el registrador los servidores de
+nombres por los cuatro `dnsX.p0X.nsone.net` que indique Netlify. Netlify pasa a
+gestionar todo el DNS del dominio, MX de correo incluidos. Si al activarlo aparece
+*«A DNS zone for this domain already exists on NS1»*, hay una zona huérfana en NS1
+y hay que localizarla (pestaña `Domains` de cada equipo de Netlify) o pedir a
+soporte que la libere; la opción A no se ve afectada por ese error.
+
 La propagación tarda de minutos a 24 h. Cuando termine, activar **HTTPS →
-Verify DNS configuration** para emitir el certificado de Let's Encrypt.
+Verify DNS configuration** para emitir el certificado de Let's Encrypt y después
+**Force HTTPS**.
+
+**Dominio principal:** marcar `eventspenedes.com` como *Primary domain* en Netlify.
+El `netlify.toml` ya redirige `www` al dominio raíz; si se marcara `www` como
+principal, las dos redirecciones se anularían en bucle.
 
 ## Pendiente antes de dar la web por definitiva
 
