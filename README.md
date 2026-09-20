@@ -89,6 +89,22 @@ gestionar todo el DNS del dominio, MX de correo incluidos. Si al activarlo apare
 y hay que localizarla (pestaña `Domains` de cada equipo de Netlify) o pedir a
 soporte que la libere; la opción A no se ve afectada por ese error.
 
+### Pasos concretos en Porkbun
+
+1. `porkbun.com` → **Domain Management** → `eventspenedes.com` → **DNS**
+   (*Edit DNS Records*).
+2. **Borrar** los registros que Porkbun crea por defecto y que apuntan a su página
+   de parking: `ALIAS` en el host raíz y `CNAME` en el host `*`, ambos hacia
+   `pixie.porkbun.com`. Comprobar también que no haya nada en *URL Forwarding*.
+3. Crear los dos registros (TTL mínimo de Porkbun: 600):
+
+   | Type  | Host (Subdomain) | Answer                            |
+   |-------|------------------|-----------------------------------|
+   | ALIAS | *(vacío)*        | `apex-loadbalancer.netlify.com`   |
+   | CNAME | `www`            | `<nombre-del-sitio>.netlify.app`  |
+
+   En Porkbun el host vacío significa el dominio raíz; no se escribe `@`.
+
 La propagación tarda de minutos a 24 h. Cuando termine, activar **HTTPS →
 Verify DNS configuration** para emitir el certificado de Let's Encrypt y después
 **Force HTTPS**.
