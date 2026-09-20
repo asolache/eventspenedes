@@ -1,0 +1,40 @@
+# Configuración de despliegue de eventspenedes.com
+# Sitio estático: no hay build, se publica la raíz del repositorio tal cual.
+
+[build]
+  publish = "."
+  command = ""
+
+[build.processing]
+  skip_processing = false
+
+# Cabeceras de seguridad y caché
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+# Dominio canónico: todo el tráfico de www va al dominio raíz
+[[redirects]]
+  from = "https://www.eventspenedes.com/*"
+  to = "https://eventspenedes.com/:splat"
+  status = 301
+  force = true
