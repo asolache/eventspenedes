@@ -543,3 +543,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* Página de confirmación de envío */
 .thanks { min-height: 72vh; display: grid; align-content: center; }
 .thanks h1 { max-width: 16ch; }
+
+/* Foto real dentro de la caja de un espacio */
+.venue__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
