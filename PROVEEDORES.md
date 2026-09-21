@@ -13,17 +13,22 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 
 | Espacio              | Qué es                                   | Estado     |
 |----------------------|------------------------------------------|------------|
-| **Cal Seguer**       | Masía del Alt Penedès, jornadas de empresa | Confirmado — faltan fotos, aforo y dirección |
+| **Cal Seguer**       | Masía en Torrelles de Foix, jornadas de empresa | Confirmado — faltan fotos, aforo y dirección exacta |
 | **Taller de Castells** | Espacio cubierto de entreno casteller (TeamTowers) | Confirmado |
 
-## 2 · Bodegas y catas
+## 2 · Espacios aliados
+
+| Espacio                | Dónde      | Qué aporta                              | Estado |
+|------------------------|------------|-----------------------------------------|--------|
+| **Masia Torreblanca**  | Olèrdola   | Masía entre viñedos, interior y exterior | Publicado en la web — falta confirmar aforo, contacto y permiso de uso del nombre |
+
+## 3 · Bodegas y catas
 
 | Proveedor              | Qué aporta                 | Contacto | Estado |
 |------------------------|----------------------------|----------|--------|
-| **Bodega de Sara** *(nombre por confirmar)* | Catas guiadas, visita a bodega | — | Pendiente |
-|                        |                            |          |        |
+| **Bodega de Sara** *(nombre por confirmar)* | Catas guiadas, visita a bodega | Instagram *(handle por confirmar)* | Pendiente |
 
-## 3 · Alojamiento y espacios de gama alta
+## 4 · Alojamiento y espacios de gama alta
 
 | Proveedor              | Qué aporta                 | Contacto | Estado |
 |------------------------|----------------------------|----------|--------|
@@ -31,7 +36,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 |                        | Hoteles boutique de la comarca |      | Pendiente |
 |                        | Casas rurales               |          | Pendiente |
 
-## 4 · Restauración
+## 5 · Restauración
 
 | Proveedor | Qué aporta                          | Contacto | Estado |
 |-----------|-------------------------------------|----------|--------|
@@ -39,7 +44,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 |           | Catering para masía                 |          | Pendiente |
 |           | Chef para reto gastronómico         |          | Pendiente |
 
-## 5 · Movilidad y material
+## 6 · Movilidad y material
 
 | Proveedor | Qué aporta                              | Contacto | Estado |
 |-----------|-----------------------------------------|----------|--------|
@@ -48,7 +53,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 |           | Alquiler de bicicletas y e-bikes        |          | Pendiente |
 |           | Mobiliario, carpas y material técnico   |          | Pendiente |
 
-## 6 · Actividades
+## 7 · Actividades
 
 | Proveedor      | Qué aporta                                  | Estado     |
 |----------------|---------------------------------------------|------------|
