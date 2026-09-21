@@ -13,7 +13,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 
 | Espacio              | Qué es                                   | Estado     |
 |----------------------|------------------------------------------|------------|
-| **Cal Seguer**       | Masía en Torrelles de Foix, jornadas de empresa | Confirmado — faltan fotos, aforo y dirección exacta |
+| **Cal Segue**       | Masía en Torrelles de Foix, jornadas de empresa | Confirmado — faltan fotos, aforo y dirección exacta |
 | **Taller de Castells** | Espacio cubierto de entreno casteller (TeamTowers) | Confirmado |
 
 ## 2 · Espacios aliados

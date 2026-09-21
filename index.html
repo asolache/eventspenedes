@@ -3,46 +3,199 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Events Penedès · Producción de eventos, localizaciones y actividades en el Alt Penedès</title>
-<meta name="description" content="Producción integral de eventos corporativos en el Alt Penedès: localizaciones con carácter, actividades de equipo y gestión completa para agencias, espacios y empresas.">
-<meta name="author" content="Events Penedès">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://eventspenedes.com/">
 
+<!-- Identidad de la página -->
+<title>Events Penedès · Producción de eventos en el Alt Penedès</title>
+<meta name="description" content="Producción de eventos de empresa en el Alt Penedès: localizaciones, actividades de equipo y producción integral para agencias, espacios y empresas.">
+<link rel="canonical" href="https://eventspenedes.com/">
+<meta name="author" content="Events Penedès">
+<meta name="publisher" content="TeamTowers Humà">
+
+<!-- Indexación: permitimos fragmentos largos y vista previa grande, que es lo
+     que usan tanto los buscadores como los asistentes de IA al citar la página -->
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://eventspenedes.com/">
 <meta property="og:site_name" content="Events Penedès">
 <meta property="og:title" content="Events Penedès · Producción de eventos en el Alt Penedès">
 <meta property="og:description" content="Localizaciones, actividades y producción integral de eventos en el Alt Penedès. Para agencias, espacios y empresas.">
 <meta property="og:image" content="https://eventspenedes.com/assets/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Events Penedès · Producción de eventos en el Alt Penedès">
 <meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="ca_ES">
+<meta property="og:locale:alternate" content="en_GB">
+
+<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Events Penedès · Producción de eventos en el Alt Penedès">
+<meta name="twitter:description" content="Localizaciones, actividades y producción integral de eventos en el Alt Penedès. Para agencias, espacios y empresas.">
+<meta name="twitter:image" content="https://eventspenedes.com/assets/og-image.png">
+<meta name="twitter:image:alt" content="Events Penedès · Producción de eventos en el Alt Penedès">
 
+<!-- Iconos y color de interfaz -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/favicon.svg">
+<link rel="icon" href="assets/icon-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="assets/icon-256.png" sizes="256x256">
+<link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#050507">
+<meta name="apple-mobile-web-app-title" content="Events Penedès">
+<meta name="application-name" content="Events Penedès">
 
+<!-- Rastreo -->
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+<!-- Tipografía y estilos -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 
+<!-- Datos estructurados. Un solo grafo con la organización, el sitio, el
+     negocio, su catálogo de servicios y los espacios, para que buscadores y
+     asistentes puedan responder sin tener que interpretar el maquetado. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Events Penedès",
-  "url": "https://eventspenedes.com/",
-  "description": "Producción de eventos corporativos, localizaciones y actividades en el Alt Penedès.",
-  "areaServed": { "@type": "Place", "name": "Alt Penedès, Barcelona, Catalunya" },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Vilafranca del Penedès",
-    "addressRegion": "Barcelona",
-    "addressCountry": "ES"
-  },
-  "telephone": "+34629867715",
-  "knowsLanguage": ["ca", "es", "en"]
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://eventspenedes.com/#organization",
+      "name": "Events Penedès",
+      "url": "https://eventspenedes.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://eventspenedes.com/assets/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://eventspenedes.com/assets/og-image.png",
+      "description": "Productora de eventos de empresa en el Alt Penedès: localizaciones, actividades de equipo y producción integral.",
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "TeamTowers Humà",
+        "url": "https://teamtowershuma.com"
+      },
+      "sameAs": [
+        "https://www.teamtowers.eu",
+        "https://teamtowershuma.com"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "telephone": "+34629867715",
+        "areaServed": "ES",
+        "availableLanguage": ["ca", "es", "en"]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://eventspenedes.com/#website",
+      "url": "https://eventspenedes.com/",
+      "name": "Events Penedès",
+      "publisher": { "@id": "https://eventspenedes.com/#organization" },
+      "inLanguage": ["es", "ca", "en"]
+    },
+    {
+      "@type": ["ProfessionalService", "LocalBusiness"],
+      "@id": "https://eventspenedes.com/#business",
+      "name": "Events Penedès",
+      "url": "https://eventspenedes.com/",
+      "parentOrganization": { "@id": "https://eventspenedes.com/#organization" },
+      "description": "Producción de eventos corporativos, localizaciones y actividades de equipo en el Alt Penedès, para agencias, espacios y empresas finales.",
+      "telephone": "+34629867715",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Vilafranca del Penedès",
+        "addressRegion": "Barcelona",
+        "addressCountry": "ES"
+      },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Alt Penedès" },
+        { "@type": "AdministrativeArea", "name": "Barcelona" },
+        { "@type": "AdministrativeArea", "name": "Catalunya" }
+      ],
+      "knowsLanguage": ["ca", "es", "en"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Servicios de Events Penedès",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Producción integral de eventos",
+              "description": "Planificación, proveedores, timings, técnica, montaje, permisos y dirección del evento sobre el terreno."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Búsqueda y gestión de localizaciones",
+              "description": "Scouting de masías, bodegas, hoteles y entornos naturales del Alt Penedès, visitas técnicas, reserva y contrato."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Actividades de equipo y team building",
+              "description": "Taller de castells «Fent Pinya», gincanas en viñedos, retos gastronómicos, catas y actividades outdoor."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Producción para agencias",
+              "description": "Producción ejecutiva en destino y actividades en marca blanca para agencias de eventos."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "EventVenue",
+      "@id": "https://eventspenedes.com/#cal-segue",
+      "name": "Cal Segue",
+      "description": "Masía en Torrelles de Foix pensada para jornadas de empresa, con espacios interiores y exteriores.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Torrelles de Foix",
+        "addressRegion": "Barcelona",
+        "addressCountry": "ES"
+      },
+      "isAccessibleForFree": false
+    },
+    {
+      "@type": "EventVenue",
+      "@id": "https://eventspenedes.com/#taller-castells",
+      "name": "El Taller de Castells",
+      "description": "Espacio cubierto de entrenamiento castellero adaptado a grupos de empresa, sede del taller «Fent Pinya» de TeamTowers.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Barcelona",
+        "addressCountry": "ES"
+      }
+    },
+    {
+      "@type": "EventVenue",
+      "@id": "https://eventspenedes.com/#masia-torreblanca",
+      "name": "Masia Torreblanca",
+      "description": "Masía en Olèrdola, entre viñedos, con espacios interiores y exteriores para eventos de empresa. Espacio aliado.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Olèrdola",
+        "addressRegion": "Barcelona",
+        "addressCountry": "ES"
+      }
+    }
+  ]
 }
 </script>
 </head>
@@ -241,7 +394,7 @@
         </div>
         <div class="venue__body">
           <p class="venue__tag" data-i18n="ven.v1.tag">Espacio propio · TeamTowers</p>
-          <h3 data-i18n="ven.v1.title">Cal Seguer</h3>
+          <h3 data-i18n="ven.v1.title">Cal Segue</h3>
           <p data-i18n="ven.v1.text">Masía en Torrelles de Foix, en pleno Alt Penedès, pensada para jornadas de empresa: espacios interiores para trabajar y exterior para actividades, comida y sobremesa. Combinable con el taller de castells en la misma jornada.</p>
           <ul class="venue__specs">
             <li data-i18n="ven.v1.s1">Jornadas de empresa</li>

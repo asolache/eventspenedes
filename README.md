@@ -16,13 +16,18 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── gracias.html        Confirmación tras enviar el formulario
 ├── 404.html            Página de error
 ├── netlify.toml        Publicación, cabeceras y redirección de www
-├── robots.txt
+├── robots.txt          Acceso de rastreadores, incluidos los de IA
+├── llms.txt            Resumen del negocio en texto plano para asistentes de IA
+├── site.webmanifest    Nombre, colores e iconos de la aplicación web
 ├── sitemap.xml
 ├── css/styles.css      Hoja de estilos única (tokens Antigravity)
 ├── js/i18n.js          Traducciones CA / ES / EN + navegación móvil
 └── assets/
     ├── favicon.svg
-    └── og-image.png    Imagen para redes sociales (1200×630)
+    ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
+    ├── icon-512.png    Icono grande, también usado como logo en los datos estructurados
+    ├── og-image.png    Imagen para redes sociales (1200×630)
+    └── fotos/          Fotografías de los espacios (ver su propio README)
 ```
 
 ## Idiomas
@@ -113,11 +118,41 @@ Verify DNS configuration** para emitir el certificado de Let's Encrypt y despué
 El `netlify.toml` ya redirige `www` al dominio raíz; si se marcara `www` como
 principal, las dos redirecciones se anularían en bucle.
 
+## SEO y datos estructurados
+
+Todo vive en el `<head>` de `index.html`:
+
+- Título y descripción por idioma, `canonical`, `author` y `robots` con
+  `max-snippet:-1` y `max-image-preview:large`, que es lo que permite a
+  buscadores y asistentes citar la página con un fragmento largo.
+- Open Graph y Twitter Cards completos, con dimensiones y texto alternativo de
+  la imagen, y `og:locale:alternate` para catalán e inglés.
+- Un único grafo JSON-LD con `Organization`, `WebSite`, el negocio como
+  `ProfessionalService` + `LocalBusiness` con su catálogo de servicios, y una
+  ficha `EventVenue` por espacio.
+- `js/i18n.js` reescribe título, descripción, Open Graph y Twitter al cambiar de
+  idioma, para que lo que se comparte coincida con lo que se está viendo.
+
+Fuera del `<head>`:
+
+- `robots.txt` declara explícitamente el acceso de los rastreadores de IA
+  (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot…).
+- `llms.txt` resume el negocio en texto plano, que es lo que consumen los
+  asistentes cuando no quieren interpretar el maquetado.
+
+Al validar: [Rich Results Test](https://search.google.com/test/rich-results) y
+[validator.schema.org](https://validator.schema.org/) para el JSON-LD;
+[opengraph.xyz](https://www.opengraph.xyz/) para la tarjeta social.
+
 ## Pendiente antes de dar la web por definitiva
 
 - Fotografías reales de La Masia y del Taller de Castells.
 - Datos concretos de los espacios: dirección, aforo, accesos, aparcamiento.
 - Notificación por correo de Netlify Forms configurada hacia el buzón definitivo.
+- Coordenadas y dirección exacta de Cal Segue, para añadir `geo` y `PostalAddress`
+  completo a los datos estructurados.
+- Dar de alta el dominio en Google Search Console y Bing Webmaster Tools, y
+  enviar `sitemap.xml`.
 - Aviso legal, política de privacidad y cookies si se añade analítica.
 
 ---

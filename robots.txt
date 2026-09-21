@@ -1,4 +1,41 @@
+# eventspenedes.com
+
+# Buscadores y asistentes de IA: acceso completo. Queremos que la página se
+# pueda indexar y citar. Las páginas que no deben aparecer en resultados
+# (gracias.html, 404.html) llevan su propia etiqueta noindex; no se bloquean
+# aquí a propósito, porque un rastreador bloqueado no puede leer esa etiqueta.
 User-agent: *
+Allow: /
+
+# Rastreadores de IA, declarados explícitamente para que no quede ambiguo
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://eventspenedes.com/sitemap.xml

@@ -73,7 +73,7 @@
       'ven.title': 'Els nostres espais al Penedès',
       'ven.lead': 'Comencem pels dos espais que gestionem directament, amb TeamTowers, i els completem amb la xarxa d’espais aliats de la comarca.',
       'ven.v1.tag': 'Espai propi · TeamTowers',
-      'ven.v1.title': 'Cal Seguer',
+      'ven.v1.title': 'Cal Segue',
       'ven.v1.text': 'Masia a Torrelles de Foix, al cor de l’Alt Penedès, pensada per a jornades d’empresa: espais interiors per treballar i exterior per a activitats, dinar i sobretaula. Combinable amb el taller de castells la mateixa jornada.',
       'ven.v1.s1': 'Jornades d’empresa',
       'ven.v1.s2': 'Interior + exterior',
@@ -235,7 +235,7 @@
       'ven.title': 'Our spaces in the Penedès',
       'ven.lead': 'We start with the two spaces we run directly, together with TeamTowers, and complete them with the partner network across the county.',
       'ven.v1.tag': 'Own space · TeamTowers',
-      'ven.v1.title': 'Cal Seguer',
+      'ven.v1.title': 'Cal Segue',
       'ven.v1.text': 'A farmhouse in Torrelles de Foix, in the heart of the Alt Penedès, built for company days: indoor rooms to work in and outdoor space for activities, lunch and the hours after it. Can be combined with the human-tower workshop on the same day.',
       'ven.v1.s1': 'Company days',
       'ven.v1.s2': 'Indoor + outdoor',
@@ -336,18 +336,27 @@
     }
   };
 
+  /* Metadatos por idioma. Se aplican al <title>, a la descripción y a las
+     etiquetas de Open Graph y Twitter, para que lo que comparte alguien
+     coincida con el idioma que está viendo. */
   var META = {
     es: {
-      title: 'Events Penedès · Producción de eventos, localizaciones y actividades en el Alt Penedès',
-      desc: 'Producción integral de eventos corporativos en el Alt Penedès: localizaciones con carácter, actividades de equipo y gestión completa para agencias, espacios y empresas.'
+      title: 'Events Penedès · Producción de eventos en el Alt Penedès',
+      desc: 'Producción de eventos de empresa en el Alt Penedès: localizaciones, actividades de equipo y producción integral para agencias, espacios y empresas.',
+      social: 'Localizaciones, actividades y producción integral de eventos en el Alt Penedès. Para agencias, espacios y empresas.',
+      locale: 'es_ES'
     },
     ca: {
-      title: 'Events Penedès · Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès',
-      desc: 'Producció integral d’esdeveniments corporatius a l’Alt Penedès: localitzacions amb caràcter, activitats d’equip i gestió completa per a agències, espais i empreses.'
+      title: 'Events Penedès · Producció d\u2019esdeveniments a l\u2019Alt Penedès',
+      desc: 'Producció d\u2019esdeveniments d\u2019empresa a l\u2019Alt Penedès: localitzacions, activitats d\u2019equip i producció integral per a agències, espais i empreses.',
+      social: 'Localitzacions, activitats i producció integral d\u2019esdeveniments a l\u2019Alt Penedès. Per a agències, espais i empreses.',
+      locale: 'ca_ES'
     },
     en: {
-      title: 'Events Penedès · Event production, venues and activities in the Alt Penedès',
-      desc: 'Full corporate event production in the Alt Penedès: characterful venues, team activities and end-to-end management for agencies, venues and companies.'
+      title: 'Events Penedès · Event production in the Alt Penedès',
+      desc: 'Corporate event production in the Alt Penedès: venues, team activities and full production for agencies, venues and companies.',
+      social: 'Venues, activities and full event production in the Alt Penedès. For agencies, venues and companies.',
+      locale: 'en_GB'
     }
   };
 
@@ -381,8 +390,12 @@
     document.title = meta.title;
     setMeta('name', 'description', meta.desc);
     setMeta('property', 'og:title', meta.title);
-    setMeta('property', 'og:description', meta.desc);
-    setMeta('property', 'og:locale', lang === 'ca' ? 'ca_ES' : (lang === 'en' ? 'en_GB' : 'es_ES'));
+    setMeta('property', 'og:description', meta.social);
+    setMeta('property', 'og:image:alt', meta.title);
+    setMeta('property', 'og:locale', meta.locale);
+    setMeta('name', 'twitter:title', meta.title);
+    setMeta('name', 'twitter:description', meta.social);
+    setMeta('name', 'twitter:image:alt', meta.title);
 
     var btns = document.querySelectorAll('.lang__btn');
     for (var j = 0; j < btns.length; j++) {

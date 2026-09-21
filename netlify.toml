@@ -32,6 +32,29 @@
   [headers.values]
     Cache-Control = "public, max-age=2592000"
 
+# Tipos de contenido explícitos para los ficheros que leen rastreadores
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+
 # Dominio canónico: todo el tráfico de www va al dominio raíz
 [[redirects]]
   from = "https://www.eventspenedes.com/*"

@@ -4,8 +4,8 @@ Aquí van las imágenes reales de los espacios. Nombres esperados por la web:
 
 | Fichero                      | Qué es                                  | Tamaño recomendado |
 |------------------------------|-----------------------------------------|--------------------|
-| `cal-seguer-exterior.jpg`    | Exterior de Cal Seguer (foto principal) | 1600 × 1000 px     |
-| `cal-seguer-interior.jpg`    | Interior / espacio de trabajo           | 1600 × 1000 px     |
+| `cal-segue-exterior.jpg`    | Exterior de Cal Segue (foto principal) | 1600 × 1000 px     |
+| `cal-segue-interior.jpg`    | Interior / espacio de trabajo           | 1600 × 1000 px     |
 | `taller-castells.jpg`        | El Taller de Castells en uso            | 1600 × 1000 px     |
 
 Criterios:
@@ -22,6 +22,6 @@ Para sustituir el dibujo por la foto, en `index.html` se cambia el bloque
 
 ```html
 <div class="venue__media">
-  <img src="assets/fotos/cal-seguer-exterior.jpg" alt="Exterior de Cal Seguer" loading="lazy" width="1600" height="1000">
+  <img src="assets/fotos/cal-segue-exterior.jpg" alt="Exterior de Cal Segue" loading="lazy" width="1600" height="1000">
 </div>
 ```
