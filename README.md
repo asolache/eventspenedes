@@ -14,7 +14,6 @@ Netlify sobre el dominio `eventspenedes.com`.
 /
 ├── index.html          Landing (one-page, ES por defecto)
 ├── dj.html             Perfil de Álvaro Solache como DJ
-├── gracias.html        Confirmación tras enviar el formulario
 ├── 404.html            Página de error
 ├── netlify.toml        Publicación, cabeceras y redirección de www
 ├── robots.txt          Acceso de rastreadores, incluidos los de IA
@@ -25,6 +24,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── js/i18n.js          Motor de idiomas, correo protegido y navegación móvil
 ├── js/lang-home.js     Textos CA / EN de la portada
 ├── js/lang-dj.js       Textos CA / EN de la página de DJ
+├── js/form.js          Envío del formulario por correo
 └── assets/
     ├── favicon.svg
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
@@ -66,34 +66,30 @@ python3 -m http.server 8000
 
 ## Formulario de contacto
 
-Usa **Netlify Forms**. El formulario de `index.html` lleva `data-netlify="true"`,
-un campo oculto `form-name` con el valor `contacto`, un honeypot `bot-field` y
-un campo oculto `idioma` que el motor de idiomas mantiene al día. Netlify
-detecta el formulario **al desplegar**, leyendo el HTML publicado; en local no
-funciona.
+No hay servidor ni servicio de formularios: al enviar, `js/form.js` compone un
+`mailto:` con los datos y abre el programa de correo de quien escribe, que solo
+tiene que pulsar enviar. Cero configuración y cero dependencias.
 
-Puesta en marcha, una sola vez:
+La dirección de destino **no está en el HTML en claro**: viaja codificada en el
+atributo `data-m` del formulario, igual que los enlaces de correo, y se compone
+en el navegador.
 
-1. Desplegar el sitio (cualquier push a `main` sirve).
-2. Netlify → `Site configuration → Forms`. Debe aparecer el formulario
-   `contacto`. Si no aparece, comprobar que *Form detection* está activo y
-   volver a desplegar con `Clear cache and deploy site`.
-3. `Forms → Form notifications → Add notification → Email notification`, con la
-   dirección de destino. Esa dirección vive solo en Netlify: no está en el
-   repositorio ni en el HTML.
-4. Enviar una prueba **desde la web publicada**, no desde local, y comprobar
-   que llega el correo y que el envío aparece en el panel.
+El correo llega con los campos etiquetados y en el idioma que la persona estaba
+viendo. El `<textarea>` tiene `maxlength="1200"` a propósito: algunos clientes
+de correo truncan un `mailto:` muy largo, así que es mejor limitarlo de forma
+visible que perder texto en silencio.
 
-Los envíos quedan guardados en Netlify aunque falle el correo. El plan gratuito
-incluye 100 envíos al mes; a partir de ahí hay que subir de plan o mover el
-formulario a otro servicio.
+Si el navegador no tiene cliente de correo asociado no pasa nada visible, así
+que tras enviar aparece bajo el formulario una nota con la dirección y el
+teléfono.
 
-Campos que se envían: `nombre`, `empresa`, `correo`, `telefono`, `personas`,
-`fecha`, `tipo`, `mensaje` e `idioma`. Los valores de `tipo` son estables
-(`team-building`, `convencion`, `incentivo`, `celebracion`, `agencia`, `dj`,
-`otro`), no el texto traducido.
-
-Al enviar, el navegador va a `gracias.html`.
+**Qué tiene de malo esta vía**, para cuando toque decidir: quien use webmail en
+el móvil puede acabar en una app que no usa, no queda registro de los envíos en
+ninguna parte, y no hay protección antispam. Si el formulario empieza a ser una
+vía real de entrada, conviene pasar a **Netlify Forms** (`data-netlify="true"`,
+campo oculto `form-name`, honeypot y una notificación por correo en
+`Site configuration → Forms`), que además guarda los envíos y avisa igual por
+correo. Está en el historial del repositorio, en el commit anterior a este.
 
 ## Dominio
 

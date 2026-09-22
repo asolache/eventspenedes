@@ -620,3 +620,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .timeline__item h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
 .timeline__item p:last-child { margin-bottom: 0; max-width: 62ch; }
+
+/* Alternativa al mailto, visible solo después de enviar */
+.form__fallback {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    font-size: 0.9rem;
+    color: var(--text-mid);
+}

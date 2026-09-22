@@ -2,7 +2,7 @@
 
 # Buscadores y asistentes de IA: acceso completo. Queremos que la página se
 # pueda indexar y citar. Las páginas que no deben aparecer en resultados
-# (gracias.html, 404.html) llevan su propia etiqueta noindex; no se bloquean
+# (404.html) llevan su propia etiqueta noindex; no se bloquean
 # aquí a propósito, porque un rastreador bloqueado no puede leer esa etiqueta.
 User-agent: *
 Allow: /

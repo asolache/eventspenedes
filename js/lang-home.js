@@ -166,7 +166,8 @@ window.EP_I18N = {
       'cta.f.t6': 'Altres',
       'cta.f.msg': 'Explica’ns',
       'cta.f.send': 'Enviar sol·licitud',
-      'cta.f.note': 'Ens arriba directament a la nostra bústia. No publiquem l’adreça de correu per evitar el correu brossa automàtic: si prefereixes escriure’ns tu, fes servir l’enllaç de correu de l’esquerra o truca’ns.',
+      'cta.f.note': 'En enviar s’obre el teu programa de correu amb les dades ja escrites; només has de fer-hi clic a enviar. No publiquem l’adreça per evitar el correu brossa automàtic, però la veuràs allà.',
+      'cta.f.fallback': 'No se t’ha obert el correu? Escriu-nos a <a class="js-mail" href="#contacte" data-m="==QbvNmLjFWbAVGajFGbvNXY">la nostra adreça</a> o truca’ns al <a href="tel:+34629867715">+34 629 86 77 15</a>.',
 
       'foot.tagline': 'Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès.',
       'foot.h1': 'Seccions',
@@ -339,7 +340,8 @@ window.EP_I18N = {
       'cta.f.t6': 'Other',
       'cta.f.msg': 'Tell us more',
       'cta.f.send': 'Send request',
-      'cta.f.note': 'It reaches our inbox directly. We do not publish the email address, to keep automated spam away: if you would rather write yourself, use the email link on the left or call us.',
+      'cta.f.note': 'Submitting opens your email client with everything already written; you just press send. We do not publish the address, to keep automated spam away, but you will see it there.',
+      'cta.f.fallback': 'Did your email client not open? Write to <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.',
 
       'foot.tagline': 'Event production, venues and activities in the Alt Penedès.',
       'foot.h1': 'Sections',

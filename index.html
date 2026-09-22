@@ -633,10 +633,8 @@
           </dl>
         </div>
 
-        <form class="form" name="contacto" method="POST" action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="contacto">
+        <form class="form" id="form-contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">
           <input type="hidden" name="idioma" value="es">
-          <p class="hp"><label>No rellenar este campo <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <div class="form__row">
             <p class="field">
               <label for="f-name" data-i18n="cta.f.name">Nombre</label>
@@ -681,10 +679,11 @@
           </p>
           <p class="field">
             <label for="f-msg" data-i18n="cta.f.msg">Cuéntanos</label>
-            <textarea id="f-msg" name="mensaje" rows="5"></textarea>
+            <textarea id="f-msg" name="mensaje" rows="5" maxlength="1200"></textarea>
           </p>
           <p><button class="btn btn--primary" type="submit" data-i18n="cta.f.send">Enviar solicitud</button></p>
-          <p class="form__note" data-i18n="cta.f.note">Nos llega directamente a nuestro buzón. No publicamos la dirección de correo para evitar el spam automático: si prefieres escribirnos tú, usa el enlace de correo de la izquierda o llámanos.</p>
+          <p class="form__note" data-i18n="cta.f.note">Al enviar se abre tu programa de correo con los datos ya escritos; solo tienes que darle a enviar. No publicamos la dirección para evitar el spam automático, pero la verás ahí.</p>
+          <p class="form__fallback" id="form-fallback" hidden data-i18n="cta.f.fallback">¿No se ha abierto tu correo? Escríbenos a <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">nuestra dirección</a> o llámanos al <a href="tel:+34629867715">+34 629 86 77 15</a>.</p>
         </form>
       </div>
     </div>
@@ -740,6 +739,7 @@
 </footer>
 
 <script src="js/lang-home.js" defer></script>
+<script src="js/form.js" defer></script>
 <script src="js/i18n.js" defer></script>
 </body>
 </html>
