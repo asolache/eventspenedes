@@ -1,0 +1,187 @@
+/* =============================================================================
+   Events Penedès — textos de la página de DJ en catalán e inglés
+   El castellano vive en el HTML; el motor (js/i18n.js) lo lee al arrancar.
+   ========================================================================== */
+window.EP_I18N = {
+
+  ca: {
+    'skip': 'Vés al contingut principal',
+    'nav.services': 'Serveis',
+    'nav.venues': 'Localitzacions',
+    'nav.activities': 'Activitats',
+    'nav.dj': 'DJ',
+    'nav.contact': 'Contacte',
+
+    'dj.crumb': 'Events Penedès',
+    'dj.crumb2': 'DJ',
+
+    'dj.eyebrow': 'DJ des del 2004 · Penedès i Barcelona',
+    'dj.title': 'Álvaro Solache',
+    'dj.lead': 'Vint anys darrere dels plats i la producció de l’Aura Open Air Festival a l’esquena. En un esdeveniment això es tradueix en una cosa concreta: la música va on ha d’anar a cada moment, sense que ningú ho hagi de demanar dues vegades.',
+    'dj.cta1': 'Consultar disponibilitat',
+    'dj.cta2': 'Veure trajectòria',
+    'dj.meta1': 'DJ des del 2004',
+    'dj.meta2': 'Producció de festivals',
+    'dj.meta3': 'Repertori obert',
+    'dj.meta4': 'CA · ES · EN',
+
+    'dj.p.eyebrow': 'La proposta',
+    'dj.p.title': 'Un DJ que també produeix esdeveniments',
+    'dj.p.lead': 'No és el mateix punxar en una sala que punxar dins d’un esdeveniment amb guió. Aquí van juntes les dues coses.',
+    'dj.p1.title': 'Repertori sense límits',
+    'dj.p1.text': 'Treballo amb plataformes de streaming professionals per a DJ, de manera que la música no està limitada al que porto al disc dur. Si a mig sopar algú demana alguna cosa, sona dos minuts després. I si el grup és internacional, la sessió es mou amb ell.',
+    'dj.p2.title': 'Preparat amb tu, no improvisat',
+    'dj.p2.text': 'Abans de l’esdeveniment acordem la línia musical: el que sí, el que no i el que no pot faltar. Amb el timing de l’esdeveniment al davant, perquè la música de la recepció, la del sopar i la de les dues de la matinada no són la mateixa conversa.',
+    'dj.p3.title': 'Encaixa amb la producció',
+    'dj.p3.text': 'Vinc de produir esdeveniments i festivals, així que parlo l’idioma de la resta de l’equip: tècnica, càtering, protocol. Sé quan cal abaixar per a un parlament i quan cal empènyer perquè la pista s’està refredant.',
+
+    'dj.f.eyebrow': 'Formats',
+    'dj.f.title': 'Quin tipus de sessió necessites',
+    'dj.f1.title': 'Recepció i còctel',
+    'dj.f1.text': 'Música de fons que deixa parlar. Volum de conversa, selecció acurada, res que obligui a aixecar la veu.',
+    'dj.f2.title': 'Sopar d’empresa',
+    'dj.f2.text': 'Acompanya sense envair i va pujant amb els plats, de manera que en arribar a les postres la sala ja és on la volem.',
+    'dj.f3.title': 'Festa i after',
+    'dj.f3.text': 'La part que la gent recorda l’endemà. Lectura de pista en directe i repertori obert per sostenir-la les hores que calgui.',
+    'dj.f4.title': 'Sessió temàtica',
+    'dj.f4.text': 'Una dècada concreta, un país, la banda sonora de la marca. Es prepara a mida a partir del briefing.',
+    'dj.f5.title': 'Escenari i festival',
+    'dj.f5.text': 'Format festival, amb el que implica de producció: horaris, canvis d’artista, tècnica i seguretat.',
+    'dj.f6.title': 'Amb tot l’esdeveniment',
+    'dj.f6.text': 'Si Events Penedès porta la producció, la sessió va dins del mateix pressupost i del mateix interlocutor. Sense haver de coordinar dos proveïdors.',
+
+    'dj.a.eyebrow': 'Producció',
+    'dj.a.title': 'Aura Open Air Festival',
+    'dj.a.text': 'Soc el responsable de producció de l’Aura Open Air Festival. És l’escola més exigent que conec: horaris que no es poden moure, artistes que arriben tard, meteorologia, aforament, seguretat i un públic que no perdona un silenci.',
+    'dj.a.text2': 'Aquesta experiència és la que després es nota en un esdeveniment d’empresa de seixanta persones, on el marge d’error és el mateix però ningú no el veu.',
+
+    'dj.t.eyebrow': 'Trajectòria',
+    'dj.t.title': 'Del 2004 fins avui',
+    'dj.t1.title': 'Primeres sessions',
+    'dj.t1.text': 'Comença l’ofici. D’aquí arrenca tota la resta.',
+    'dj.t2.year': '2004 — avui',
+    'dj.t2.title': 'Vint anys punxant',
+    'dj.t2.text': 'Sales, festes privades, esdeveniments d’empresa i festivals. Públics de trenta persones i de diversos milers, que no es tracten igual.',
+    'dj.t3.year': 'Actualitat',
+    'dj.t3.title': 'Aura Open Air Festival',
+    'dj.t3.text': 'Responsable de producció del festival: programació, artistes, logística, tècnica i seguretat.',
+    'dj.t4.year': 'Actualitat',
+    'dj.t4.title': 'Events Penedès',
+    'dj.t4.text': 'La sessió de DJ com una peça més de la producció d’esdeveniments a l’Alt Penedès, al costat de les localitzacions i les activitats d’equip.',
+    'dj.t.note': 'Vols escoltar abans de decidir? Demana’m una sessió de referència i te la passo.',
+
+    'dj.c.eyebrow': 'Contractació',
+    'dj.c.title': 'Explica’m quin esdeveniment és',
+    'dj.c.lead': 'Data, lloc, quanta gent i què vols que passi. Amb això et dic disponibilitat i preu, i si cal et proposo també l’espai i la resta de la producció.',
+    'dj.c.cta': 'Anar al formulari',
+
+    'foot.tagline': 'Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès.',
+    'foot.h1': 'Seccions',
+    'foot.h2': 'Contacte',
+    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.h3': 'Ecosistema',
+    'foot.rights': '© 2026 Events Penedès · Un projecte de TeamTowers Humà',
+    'foot.prov': 'Web provisional — estem preparant la versió completa.'
+  },
+
+  en: {
+    'skip': 'Skip to main content',
+    'nav.services': 'Services',
+    'nav.venues': 'Venues',
+    'nav.activities': 'Activities',
+    'nav.dj': 'DJ',
+    'nav.contact': 'Contact',
+
+    'dj.crumb': 'Events Penedès',
+    'dj.crumb2': 'DJ',
+
+    'dj.eyebrow': 'DJ since 2004 · Penedès and Barcelona',
+    'dj.title': 'Álvaro Solache',
+    'dj.lead': 'Twenty years behind the decks, plus running production for the Aura Open Air Festival. At an event that means one concrete thing: the music goes where it needs to go at every moment, without anyone having to ask twice.',
+    'dj.cta1': 'Check availability',
+    'dj.cta2': 'See the track record',
+    'dj.meta1': 'DJ since 2004',
+    'dj.meta2': 'Festival production',
+    'dj.meta3': 'Open repertoire',
+    'dj.meta4': 'CA · ES · EN',
+
+    'dj.p.eyebrow': 'The offer',
+    'dj.p.title': 'A DJ who also produces events',
+    'dj.p.lead': 'Playing a club is not the same as playing inside an event that runs to a script. Here both come together.',
+    'dj.p1.title': 'No repertoire limits',
+    'dj.p1.text': 'I work with professional DJ streaming platforms, so the music is not limited to what sits on my hard drive. If someone asks for a track halfway through dinner, it plays two minutes later. And if the group is international, the set travels with it.',
+    'dj.p2.title': 'Prepared with you, not improvised',
+    'dj.p2.text': 'Before the event we agree the musical direction: what works, what does not, and what cannot be missing — with the event timing in front of us, because the reception, the dinner and two in the morning are not the same conversation.',
+    'dj.p3.title': 'Fits the production',
+    'dj.p3.text': 'I come from producing events and festivals, so I speak the rest of the crew’s language: AV, catering, protocol. I know when to pull back for a speech and when to push because the floor is cooling down.',
+
+    'dj.f.eyebrow': 'Formats',
+    'dj.f.title': 'What kind of set you need',
+    'dj.f1.title': 'Reception and cocktails',
+    'dj.f1.text': 'Background music that lets people talk. Conversation volume, careful selection, nothing that makes anyone raise their voice.',
+    'dj.f2.title': 'Company dinner',
+    'dj.f2.text': 'It accompanies without taking over, and rises with the courses, so that by dessert the room is already where we want it.',
+    'dj.f3.title': 'Party and after',
+    'dj.f3.text': 'The part people remember the next day. Live floor reading and an open repertoire to hold it for as many hours as it takes.',
+    'dj.f4.title': 'Themed set',
+    'dj.f4.text': 'A given decade, a country, the brand’s soundtrack. Built to measure from the brief.',
+    'dj.f5.title': 'Stage and festival',
+    'dj.f5.text': 'Festival format, with everything production means: schedules, artist changeovers, technical setup and safety.',
+    'dj.f6.title': 'With the whole event',
+    'dj.f6.text': 'If Events Penedès runs the production, the set sits inside the same budget and the same point of contact. No juggling two suppliers.',
+
+    'dj.a.eyebrow': 'Production',
+    'dj.a.title': 'Aura Open Air Festival',
+    'dj.a.text': 'I am the production lead of the Aura Open Air Festival. It is the most demanding school I know: schedules that cannot move, artists arriving late, weather, capacity, safety, and an audience that does not forgive a silence.',
+    'dj.a.text2': 'That experience is what later shows at a sixty-person company event, where the margin for error is the same but nobody sees it.',
+
+    'dj.t.eyebrow': 'Track record',
+    'dj.t.title': 'From 2004 to today',
+    'dj.t1.title': 'First sets',
+    'dj.t1.text': 'Where the craft starts. Everything else grows from there.',
+    'dj.t2.year': '2004 — today',
+    'dj.t2.title': 'Twenty years playing',
+    'dj.t2.text': 'Clubs, private parties, company events and festivals. Crowds of thirty and crowds of several thousand, which are not handled the same way.',
+    'dj.t3.year': 'Current',
+    'dj.t3.title': 'Aura Open Air Festival',
+    'dj.t3.text': 'Production lead for the festival: programme, artists, logistics, technical setup and safety.',
+    'dj.t4.year': 'Current',
+    'dj.t4.title': 'Events Penedès',
+    'dj.t4.text': 'The DJ set as one more piece of event production in the Alt Penedès, alongside the venues and the team activities.',
+    'dj.t.note': 'Want to listen before deciding? Ask me for a reference set and I will send it over.',
+
+    'dj.c.eyebrow': 'Booking',
+    'dj.c.title': 'Tell me what the event is',
+    'dj.c.lead': 'Date, place, how many people and what you want to happen. With that I can give you availability and a price — and, if it helps, propose the venue and the rest of the production too.',
+    'dj.c.cta': 'Go to the form',
+
+    'foot.tagline': 'Event production, venues and activities in the Alt Penedès.',
+    'foot.h1': 'Sections',
+    'foot.h2': 'Contact',
+    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.h3': 'Ecosystem',
+    'foot.rights': '© 2026 Events Penedès · A TeamTowers Humà project',
+    'foot.prov': 'Provisional site — the full version is on its way.'
+  }
+};
+
+window.EP_META = {
+  es: {
+    title: 'Álvaro Solache · DJ para eventos en el Penedès',
+    desc: 'DJ desde 2004 y responsable de producción del Aura Open Air Festival. Sesiones para eventos de empresa, bodas y fiestas en el Penedès y Barcelona.',
+    social: 'Veinte años pinchando y la producción del Aura Open Air Festival. Sesiones que se adaptan a cada evento y a cada público.',
+    locale: 'es_ES'
+  },
+  ca: {
+    title: 'Álvaro Solache · DJ per a esdeveniments al Penedès',
+    desc: 'DJ des del 2004 i responsable de producció de l’Aura Open Air Festival. Sessions per a esdeveniments d’empresa, casaments i festes al Penedès i Barcelona.',
+    social: 'Vint anys punxant i la producció de l’Aura Open Air Festival. Sessions que s’adapten a cada esdeveniment i a cada públic.',
+    locale: 'ca_ES'
+  },
+  en: {
+    title: 'Álvaro Solache · DJ for events in the Penedès',
+    desc: 'DJ since 2004 and production lead of the Aura Open Air Festival. Sets for company events, weddings and parties in the Penedès and Barcelona.',
+    social: 'Twenty years behind the decks and the production of the Aura Open Air Festival. Sets that adapt to each event and each crowd.',
+    locale: 'en_GB'
+  }
+};

@@ -13,6 +13,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ```
 /
 ├── index.html          Landing (one-page, ES por defecto)
+├── dj.html             Perfil de Álvaro Solache como DJ
 ├── gracias.html        Confirmación tras enviar el formulario
 ├── 404.html            Página de error
 ├── netlify.toml        Publicación, cabeceras y redirección de www
@@ -21,7 +22,9 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── site.webmanifest    Nombre, colores e iconos de la aplicación web
 ├── sitemap.xml
 ├── css/styles.css      Hoja de estilos única (tokens Antigravity)
-├── js/i18n.js          Traducciones CA / ES / EN + navegación móvil
+├── js/i18n.js          Motor de idiomas, correo protegido y navegación móvil
+├── js/lang-home.js     Textos CA / EN de la portada
+├── js/lang-dj.js       Textos CA / EN de la página de DJ
 └── assets/
     ├── favicon.svg
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
@@ -32,11 +35,16 @@ Netlify sobre el dominio `eventspenedes.com`.
 
 ## Idiomas
 
-El HTML está escrito en castellano. `js/i18n.js` guarda un diccionario de catalán
-e inglés y sustituye los nodos con `data-i18n`. Para tocar un texto:
+El HTML de cada página está escrito en castellano. Cada página carga su fichero
+`js/lang-<página>.js`, que define `window.EP_I18N` (catalán e inglés) y
+`window.EP_META` (título y descripción por idioma); después, `js/i18n.js`
+sustituye los nodos con `data-i18n`. Para tocar un texto:
 
-1. En castellano → edita directamente el `index.html`.
-2. En catalán o inglés → edita la clave correspondiente en `js/i18n.js`.
+1. En castellano → edita directamente el HTML de la página.
+2. En catalán o inglés → edita la clave en el `lang-*.js` de esa página.
+
+Una página nueva necesita su propio `lang-*.js` y cargarlo **antes** de
+`js/i18n.js`.
 
 El idioma inicial se detecta del navegador y se recuerda en `localStorage`.
 

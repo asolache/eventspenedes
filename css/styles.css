@@ -270,6 +270,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
 .grid--3 { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); }
 
 .card {
     background: var(--bg-elevated);
@@ -551,3 +552,71 @@ ul { margin: 0; padding: 0; list-style: none; }
     object-fit: cover;
     display: block;
 }
+
+/* Enlace de ampliación dentro de una tarjeta */
+.card__more { margin: 1.1rem 0 0; font-size: 0.93rem; }
+.card__more a { font-weight: 500; }
+.card__more a::after { content: " →"; }
+
+/* --- Página de perfil ---------------------------------------------------- */
+
+.crumbs {
+    padding-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-low);
+}
+.crumbs a { color: var(--text-mid); }
+.crumbs span { margin-inline: 0.4rem; }
+
+.hero--dj { padding-block: clamp(3rem, 7vw, 5rem) clamp(3rem, 7vw, 5rem); }
+.hero--dj h1 { max-width: 14ch; }
+
+/* Bloque destacado con dibujo al lado */
+.feature { display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: center; }
+@media (min-width: 880px) { .feature { grid-template-columns: 1.2fr 0.8fr; } }
+.feature__body p:last-child { margin-bottom: 0; }
+.feature__media {
+    display: grid;
+    place-items: center;
+    color: var(--accent-gold);
+    opacity: 0.85;
+}
+.feature__media svg { width: min(100%, 320px); }
+
+/* Cronología */
+.timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+}
+.timeline__item {
+    position: relative;
+    padding: 0 0 2rem 2rem;
+    border-left: 1px solid var(--glass-border);
+}
+.timeline__item:last-child { padding-bottom: 0; border-left-color: transparent; }
+.timeline__item::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+}
+.timeline__year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin: 0 0 0.35rem;
+}
+.timeline__item h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+.timeline__item p:last-child { margin-bottom: 0; max-width: 62ch; }
