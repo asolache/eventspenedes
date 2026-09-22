@@ -66,17 +66,34 @@ python3 -m http.server 8000
 
 ## Formulario de contacto
 
-Usa **Netlify Forms**: el formulario lleva `data-netlify="true"`, un campo oculto
-`form-name` y un honeypot `bot-field`. Netlify lo detecta en el despliegue y guarda
-los envíos en `Site configuration → Forms`.
+Usa **Netlify Forms**. El formulario de `index.html` lleva `data-netlify="true"`,
+un campo oculto `form-name` con el valor `contacto`, un honeypot `bot-field` y
+un campo oculto `idioma` que el motor de idiomas mantiene al día. Netlify
+detecta el formulario **al desplegar**, leyendo el HTML publicado; en local no
+funciona.
 
-Para recibir aviso por correo: `Forms → Form notifications → Add notification →
-Email notification`, con la dirección de destino. La dirección **no aparece en el
-repositorio ni en el HTML**: queda solo en la configuración de Netlify.
+Puesta en marcha, una sola vez:
 
-El enlace de correo visible en la web se compone en el navegador (`js/i18n.js`,
-función `revealMail`) a partir de una cadena codificada, de modo que los
-recolectores de direcciones que no ejecutan JavaScript no la leen.
+1. Desplegar el sitio (cualquier push a `main` sirve).
+2. Netlify → `Site configuration → Forms`. Debe aparecer el formulario
+   `contacto`. Si no aparece, comprobar que *Form detection* está activo y
+   volver a desplegar con `Clear cache and deploy site`.
+3. `Forms → Form notifications → Add notification → Email notification`, con la
+   dirección de destino. Esa dirección vive solo en Netlify: no está en el
+   repositorio ni en el HTML.
+4. Enviar una prueba **desde la web publicada**, no desde local, y comprobar
+   que llega el correo y que el envío aparece en el panel.
+
+Los envíos quedan guardados en Netlify aunque falle el correo. El plan gratuito
+incluye 100 envíos al mes; a partir de ahí hay que subir de plan o mover el
+formulario a otro servicio.
+
+Campos que se envían: `nombre`, `empresa`, `correo`, `telefono`, `personas`,
+`fecha`, `tipo`, `mensaje` e `idioma`. Los valores de `tipo` son estables
+(`team-building`, `convencion`, `incentivo`, `celebracion`, `agencia`, `dj`,
+`otro`), no el texto traducido.
+
+Al enviar, el navegador va a `gracias.html`.
 
 ## Dominio
 

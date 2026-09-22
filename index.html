@@ -635,6 +635,7 @@
 
         <form class="form" name="contacto" method="POST" action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contacto">
+          <input type="hidden" name="idioma" value="es">
           <p class="hp"><label>No rellenar este campo <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <div class="form__row">
             <p class="field">
@@ -669,12 +670,13 @@
           <p class="field">
             <label for="f-type" data-i18n="cta.f.type">Tipo de evento</label>
             <select id="f-type" name="tipo">
-              <option data-i18n="cta.f.t1">Jornada de equipo / team building</option>
-              <option data-i18n="cta.f.t2">Convención o kick-off</option>
-              <option data-i18n="cta.f.t3">Incentivo</option>
-              <option data-i18n="cta.f.t4">Celebración de empresa</option>
-              <option data-i18n="cta.f.t5">Soy agencia y busco partner local</option>
-              <option data-i18n="cta.f.t6">Otro</option>
+              <option value="team-building" data-i18n="cta.f.t1">Jornada de equipo / team building</option>
+              <option value="convencion" data-i18n="cta.f.t2">Convención o kick-off</option>
+              <option value="incentivo" data-i18n="cta.f.t3">Incentivo</option>
+              <option value="celebracion" data-i18n="cta.f.t4">Celebración de empresa</option>
+              <option value="agencia" data-i18n="cta.f.t5">Soy agencia y busco partner local</option>
+              <option value="dj" data-i18n="cta.f.t7">Sesión de DJ</option>
+              <option value="otro" data-i18n="cta.f.t6">Otro</option>
             </select>
           </p>
           <p class="field">

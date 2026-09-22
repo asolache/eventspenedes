@@ -59,6 +59,9 @@
       btns[j].setAttribute('aria-pressed', String(btns[j].getAttribute('data-lang') === lang));
     }
 
+    var idioma = document.querySelector('input[name="idioma"]');
+    if (idioma) { idioma.value = lang; }
+
     revealMail();
 
     try { localStorage.setItem(STORE_KEY, lang); } catch (e) { /* modo privado */ }
