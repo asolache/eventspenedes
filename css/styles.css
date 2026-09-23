@@ -660,6 +660,180 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* --- Partners ----------------------------------------------------------- */
 
+.partner-feature {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    align-items: start;
+}
+@media (min-width: 900px) {
+    .partner-feature { grid-template-columns: 0.85fr 1.15fr; }
+}
+
+.partner-feature__body { max-width: 46ch; }
+
+/* El logotipo es negro y rojo sobre transparente, así que necesita fondo claro */
+.partner__logo {
+    display: inline-grid;
+    place-items: center;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    padding: 1.15rem 1.5rem;
+    margin-bottom: 1.4rem;
+    transition: transform 0.25s ease;
+}
+.partner__logo:hover { text-decoration: none; transform: translateY(-2px); }
+.partner__logo img { width: 200px; height: auto; }
+
+.partner__role { margin: 0; color: var(--text-mid); }
+
+.partner__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+}
+.partner__tags li {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-mid);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    padding: 0.32rem 0.75rem;
+}
+
+/* Mosaico de fotos del partner */
+.mosaic {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+}
+.mosaic li {
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-dark);
+}
+.mosaic img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.45s ease;
+}
+.mosaic li:hover img { transform: scale(1.05); }
+
+/* En pantallas anchas la primera foto manda: ocupa toda la fila */
+@media (min-width: 900px) {
+    .mosaic li:first-child { grid-column: 1 / -1; }
+    .mosaic li:first-child img { aspect-ratio: 2 / 1; }
+    .mosaic li:last-child { grid-column: 1 / -1; }
+    .mosaic li:last-child img { aspect-ratio: 2.4 / 1; }
+}
+
+/* --- Página de perfil ---------------------------------------------------- */
+
+.crumbs {
+    padding-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-low);
+}
+.crumbs a { color: var(--text-mid); }
+.crumbs span { margin-inline: 0.4rem; }
+
+.hero--dj { padding-block: clamp(3rem, 7vw, 5rem) clamp(3rem, 7vw, 5rem); }
+.hero--dj h1 { max-width: 14ch; }
+
+/* Bloque destacado con dibujo al lado */
+.feature { display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: center; }
+@media (min-width: 880px) { .feature { grid-template-columns: 1.2fr 0.8fr; } }
+.feature__body p:last-child { margin-bottom: 0; }
+.feature__media {
+    display: grid;
+    place-items: center;
+    color: var(--accent-gold);
+    opacity: 0.85;
+}
+.feature__media svg { width: min(100%, 320px); }
+
+/* Cronología */
+.timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+}
+.timeline__item {
+    position: relative;
+    padding: 0 0 2rem 2rem;
+    border-left: 1px solid var(--glass-border);
+}
+.timeline__item:last-child { padding-bottom: 0; border-left-color: transparent; }
+.timeline__item::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+}
+.timeline__year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin: 0 0 0.35rem;
+}
+.timeline__item h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+.timeline__item p:last-child { margin-bottom: 0; max-width: 62ch; }
+
+/* Alternativa al mailto, visible solo después de enviar */
+.form__fallback {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    font-size: 0.9rem;
+    color: var(--text-mid);
+}
+
+/* --- Galerías de fotos -------------------------------------------------- */
+
+.venue__gallery,
+.gallery {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin-top: 1.25rem;
+}
+.venue__gallery li,
+.gallery li {
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-elevated);
+}
+.venue__gallery img,
+.gallery img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.venue__gallery li:hover img,
+.gallery li:hover img { transform: scale(1.04); }
+
+/* --- Partners ----------------------------------------------------------- */
+
 .partners {
     display: grid;
     gap: 1.25rem;
