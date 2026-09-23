@@ -8,7 +8,11 @@ Aquí van las imágenes reales de los espacios. Nombres esperados por la web:
 | `cal-segue-jardi.jpg`       | Jardín y era con las viñas al fondo          | Sí     |
 | `cal-segue-barbacoa.jpg`    | Barbacoa bajo el porche                      | Sí     |
 | `cal-segue-vistes.jpg`      | Ventana del porche sobre los campos          | Sí     |
-| `taller-castells.jpg`       | El Taller de Castells en uso                 | Falta  |
+| `taller-castells-grup.jpg`  | Grupo levantando un castell                  | Sí     |
+| `taller-castells-sala.jpg`  | Castell dentro de una sala                   | Sí     |
+| `taller-castells-celebracio.jpg` | Celebración del grupo                   | Sí     |
+| `taller-castells-dalt.jpg`  | Participante en lo alto                      | Sí     |
+| `taller-castells-espai.jpg` | El espacio del Taller de Castells, vacío     | Falta  |
 
 De Cal Segue solo se muestra el espacio exterior, que es lo que se alquila.
 
