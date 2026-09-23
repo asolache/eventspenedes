@@ -13,7 +13,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 
 | Espacio              | Qué es                                   | Estado     |
 |----------------------|------------------------------------------|------------|
-| **Cal Segue**       | Barri Cusconar, Torrelles de Foix. Solo espacio exterior: era, porche con barbacoa y jardín | Confirmado y con fotos — falta el aforo |
+| **Cal Segue**       | Barri Cusconar, Torrelles de Foix. Solo espacio exterior: era, porche con barbacoa y jardín | Confirmado, con fotos y aforo de unas 30 personas |
 | **Taller de Castells** | Espacio cubierto de entreno casteller (TeamTowers) | Confirmado |
 
 ## 2 · Espacios aliados
