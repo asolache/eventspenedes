@@ -12,6 +12,16 @@ window.EP_I18N = {
     'nav.dj': 'DJ',
     'nav.contact': 'Contacte',
 
+    'dj.alias': 'PSYKATXU a l’escena psytrance',
+    'dj.alt1': 'Álvaro Solache punxant en un escenari a l’aire lliure, amb samarreta de PSYKATXU',
+    'dj.alt2': 'Sessió amb dos plats de vinil en una sala amb quadres a la paret',
+    'dj.alt3': 'Sessió de nit, en blanc i negre, amb la mà sobre la taula de mescles',
+    'dj.alt4': 'Cartell de PSYKATXU a l’Aura Open Air Festival 2026, a Pontons',
+    'dj.alt5': 'Cartell de PSYKATXU a la Misa Psicodélika del M7 Club de Barcelona',
+    'dj.a.dates': '29, 30 i 31 de maig del 2026 · Pontons (Barcelona)',
+    'dj.m.eyebrow': 'A la cabina',
+    'dj.m.title': 'On sona',
+    'dj.m.lead': 'De la sessió de vinil en una sala petita a l’escenari d’un festival. El format canvia; el criteri, no.',
     'dj.crumb': 'Events Penedès',
     'dj.crumb2': 'DJ',
 
@@ -92,6 +102,16 @@ window.EP_I18N = {
     'nav.dj': 'DJ',
     'nav.contact': 'Contact',
 
+    'dj.alias': 'PSYKATXU on the psytrance circuit',
+    'dj.alt1': 'Álvaro Solache playing on an open-air stage, wearing a PSYKATXU t-shirt',
+    'dj.alt2': 'A set on two vinyl decks in a room with paintings on the wall',
+    'dj.alt3': 'A night set, in black and white, with a hand on the mixer',
+    'dj.alt4': 'PSYKATXU poster for the Aura Open Air Festival 2026, in Pontons',
+    'dj.alt5': 'PSYKATXU poster for the Misa Psicodélika at the M7 Club in Barcelona',
+    'dj.a.dates': '29, 30 and 31 May 2026 · Pontons (Barcelona)',
+    'dj.m.eyebrow': 'Behind the decks',
+    'dj.m.title': 'Where it plays',
+    'dj.m.lead': 'From a vinyl set in a small room to a festival stage. The format changes; the judgement does not.',
     'dj.crumb': 'Events Penedès',
     'dj.crumb2': 'DJ',
 

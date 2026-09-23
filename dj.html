@@ -63,6 +63,7 @@
       "name": "Álvaro Solache",
       "givenName": "Álvaro",
       "familyName": "Solache",
+      "alternateName": "PSYKATXU",
       "jobTitle": ["DJ", "Responsable de producción"],
       "description": "DJ desde 2004 y responsable de producción del Aura Open Air Festival. Sesiones para eventos de empresa, celebraciones y festivales en el Penedès y Barcelona.",
       "url": "https://eventspenedes.com/dj.html",
@@ -71,6 +72,7 @@
         "DJ para eventos de empresa",
         "Producción de festivales",
         "Programación musical",
+        "Psytrance",
         "Producción de eventos"
       ],
       "worksFor": { "@id": "https://eventspenedes.com/#organization" },
@@ -151,20 +153,27 @@
 
   <!-- HERO -->
   <section class="hero hero--dj" id="top">
-    <div class="wrap">
-      <p class="eyebrow" data-i18n="dj.eyebrow">DJ desde 2004 · Penedès y Barcelona</p>
-      <h1 data-i18n="dj.title">Álvaro Solache</h1>
-      <p class="lead" data-i18n="dj.lead">Veinte años detrás de los platos y la producción del Aura Open Air Festival a las espaldas. En un evento eso se traduce en una cosa concreta: la música va donde tiene que ir en cada momento, sin que nadie tenga que pedirlo dos veces.</p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="index.html#contacto" data-i18n="dj.cta1">Consultar disponibilidad</a>
-        <a class="btn btn--ghost" href="#trayectoria" data-i18n="dj.cta2">Ver trayectoria</a>
+    <div class="wrap dj-hero">
+      <div class="dj-hero__body">
+        <p class="eyebrow" data-i18n="dj.eyebrow">DJ desde 2004 · Penedès y Barcelona</p>
+        <h1 data-i18n="dj.title">Álvaro Solache</h1>
+        <p class="dj-hero__alias" data-i18n="dj.alias">PSYKATXU en la escena psytrance</p>
+        <p class="lead" data-i18n="dj.lead">Veinte años detrás de los platos y la producción del Aura Open Air Festival a las espaldas. En un evento eso se traduce en una cosa concreta: la música va donde tiene que ir en cada momento, sin que nadie tenga que pedirlo dos veces.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="index.html#contacto" data-i18n="dj.cta1">Consultar disponibilidad</a>
+          <a class="btn btn--ghost" href="#trayectoria" data-i18n="dj.cta2">Ver trayectoria</a>
+        </div>
+        <ul class="hero__meta">
+          <li data-i18n="dj.meta1">DJ desde 2004</li>
+          <li data-i18n="dj.meta2">Producción de festivales</li>
+          <li data-i18n="dj.meta3">Repertorio abierto</li>
+          <li data-i18n="dj.meta4">CA · ES · EN</li>
+        </ul>
       </div>
-      <ul class="hero__meta">
-        <li data-i18n="dj.meta1">DJ desde 2004</li>
-        <li data-i18n="dj.meta2">Producción de festivales</li>
-        <li data-i18n="dj.meta3">Repertorio abierto</li>
-        <li data-i18n="dj.meta4">CA · ES · EN</li>
-      </ul>
+      <figure class="dj-hero__media">
+        <img src="assets/dj/dj-cabina-festival.jpg" width="814" height="936" loading="eager"
+             data-i18n-alt="dj.alt1" alt="Álvaro Solache pinchando en un escenario al aire libre, con camiseta de PSYKATXU">
+      </figure>
     </div>
   </section>
 
@@ -247,19 +256,34 @@
         <div class="feature__body">
           <p class="eyebrow" data-i18n="dj.a.eyebrow">Producción</p>
           <h2 data-i18n="dj.a.title">Aura Open Air Festival</h2>
+          <p class="dj-dates" data-i18n="dj.a.dates">29, 30 y 31 de mayo de 2026 · Pontons (Barcelona)</p>
           <p data-i18n="dj.a.text">Soy el responsable de producción del Aura Open Air Festival. Es la escuela más exigente que conozco: horarios que no se pueden mover, artistas que llegan tarde, meteorología, aforo, seguridad y un público que no perdona un silencio.</p>
           <p data-i18n="dj.a.text2">Esa experiencia es la que después se nota en un evento de empresa de sesenta personas, donde el margen de error es el mismo pero nadie lo ve.</p>
         </div>
-        <div class="feature__media">
-          <svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M10 120h180" stroke-linecap="round"/>
-            <path d="M30 120V70l70-40 70 40v50" stroke-linejoin="round"/>
-            <path d="M60 120V95h30v25M115 120v-30h35v30" stroke-linejoin="round"/>
-            <circle cx="100" cy="58" r="10"/>
-            <path d="M100 30v-14M70 44 58 34M130 44l12-10" stroke-linecap="round"/>
-          </svg>
-        </div>
+        <figure class="feature__media feature__media--poster">
+          <img src="assets/dj/dj-cartell-aura.jpg" width="900" height="1273" loading="lazy"
+               data-i18n-alt="dj.alt4" alt="Cartel de PSYKATXU en el Aura Open Air Festival 2026, en Pontons">
+        </figure>
       </div>
+    </div>
+  </section>
+
+  <!-- EN CABINA -->
+  <section class="section" id="cabina">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="dj.m.eyebrow">En cabina</p>
+        <h2 data-i18n="dj.m.title">Dónde suena</h2>
+        <p data-i18n="dj.m.lead">De la sesión de vinilo en una sala pequeña al escenario de un festival. El formato cambia; el criterio, no.</p>
+      </div>
+      <ul class="mosaic mosaic--even">
+        <li><img src="assets/dj/dj-vinils.jpg" width="1000" height="1000" loading="lazy"
+                 data-i18n-alt="dj.alt2" alt="Sesión con dos platos de vinilo en una sala con cuadros en la pared"></li>
+        <li><img src="assets/dj/dj-nit.jpg" width="958" height="960" loading="lazy"
+                 data-i18n-alt="dj.alt3" alt="Sesión de noche, en blanco y negro, con la mano sobre la mezcladora"></li>
+        <li class="is-poster"><img src="assets/dj/dj-cartell-misa.jpg" width="900" height="1125" loading="lazy"
+                 data-i18n-alt="dj.alt5" alt="Cartel de PSYKATXU en la Misa Psicodélika del M7 Club de Barcelona"></li>
+      </ul>
     </div>
   </section>
 

@@ -865,3 +865,65 @@ ul { margin: 0; padding: 0; list-style: none; }
     font-size: 0.92rem;
     color: var(--text-mid);
 }
+
+/* --- Página de DJ: cabecera con foto ------------------------------------ */
+
+.dj-hero { display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: center; }
+@media (min-width: 900px) { .dj-hero { grid-template-columns: 1.05fr 0.95fr; } }
+
+.dj-hero__body { min-width: 0; }
+.dj-hero h1 { margin-bottom: 0.25em; }
+
+.dj-hero__alias {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 1.4rem;
+}
+
+.dj-hero__media {
+    margin: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-elevated);
+}
+.dj-hero__media img { width: 100%; height: auto; display: block; }
+
+/* Fechas destacadas */
+.dj-dates {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--accent-green);
+    margin-bottom: 1.2rem;
+}
+
+/* Un cartel se enseña entero, no recortado */
+.feature__media--poster {
+    margin: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-elevated);
+}
+.feature__media--poster img { width: 100%; height: auto; display: block; }
+
+/* Mosaico de piezas iguales, sin destacar ninguna */
+.mosaic--even img { aspect-ratio: 3 / 4; }
+
+/* Un cartel se enseña entero: recortarlo se come la fecha y el sitio */
+.mosaic .is-poster img {
+    object-fit: contain;
+    background: var(--bg-dark);
+}
+
+@media (min-width: 900px) {
+    .mosaic--even { grid-template-columns: repeat(3, 1fr); }
+    .mosaic--even li:first-child,
+    .mosaic--even li:last-child { grid-column: auto; }
+    .mosaic--even li:first-child img,
+    .mosaic--even li:last-child img { aspect-ratio: 3 / 4; }
+}

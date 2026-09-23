@@ -30,7 +30,10 @@ Netlify sobre el dominio `eventspenedes.com`.
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
     ├── icon-512.png    Icono grande, también usado como logo en los datos estructurados
     ├── og-image.png    Imagen para redes sociales (1200×630)
-    └── fotos/          Fotografías de los espacios (ver su propio README)
+    ├── og-dj.png       Imagen para redes sociales de la página de DJ
+    ├── fotos/          Fotografías de los espacios (ver su propio README)
+    ├── dj/             Fotografías y carteles de Álvaro Solache como DJ
+    └── partners/       Logotipos de los partners
 ```
 
 ## Idiomas
