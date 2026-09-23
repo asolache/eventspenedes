@@ -2,11 +2,15 @@
 
 Aquí van las imágenes reales de los espacios. Nombres esperados por la web:
 
-| Fichero                      | Qué es                                  | Tamaño recomendado |
-|------------------------------|-----------------------------------------|--------------------|
-| `cal-segue-exterior.jpg`    | Exterior de Cal Segue (foto principal) | 1600 × 1000 px     |
-| `cal-segue-interior.jpg`    | Interior / espacio de trabajo           | 1600 × 1000 px     |
-| `taller-castells.jpg`        | El Taller de Castells en uso            | 1600 × 1000 px     |
+| Fichero                     | Qué es                                       | En uso |
+|-----------------------------|----------------------------------------------|--------|
+| `cal-segue-porxo.jpg`       | Porche cubierto y era (foto principal)       | Sí     |
+| `cal-segue-jardi.jpg`       | Jardín y era con las viñas al fondo          | Sí     |
+| `cal-segue-barbacoa.jpg`    | Barbacoa bajo el porche                      | Sí     |
+| `cal-segue-vistes.jpg`      | Ventana del porche sobre los campos          | Sí     |
+| `taller-castells.jpg`       | El Taller de Castells en uso                 | Falta  |
+
+De Cal Segue solo se muestra el espacio exterior, que es lo que se alquila.
 
 Criterios:
 

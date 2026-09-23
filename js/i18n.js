@@ -16,6 +16,7 @@
   var META = window.EP_META || {};
 
   var nodes = [];
+  var altNodes = [];
 
   function collect() {
     var list = document.querySelectorAll('[data-i18n]');
@@ -28,6 +29,17 @@
         I18N.es[key] = el.innerHTML.trim();
       }
     }
+
+    /* Los textos alternativos de las imágenes también se traducen */
+    var imgs = document.querySelectorAll('[data-i18n-alt]');
+    for (var k = 0; k < imgs.length; k++) {
+      var img = imgs[k];
+      var altKey = img.getAttribute('data-i18n-alt');
+      altNodes.push({ el: img, key: altKey });
+      if (!(altKey in I18N.es)) {
+        I18N.es[altKey] = img.getAttribute('alt') || '';
+      }
+    }
   }
 
   function apply(lang) {
@@ -36,6 +48,13 @@
       var txt = dict[nodes[i].key];
       if (typeof txt === 'string') {
         nodes[i].el.innerHTML = txt;
+      }
+    }
+
+    for (var a = 0; a < altNodes.length; a++) {
+      var alt = dict[altNodes[a].key];
+      if (typeof alt === 'string') {
+        altNodes[a].el.setAttribute('alt', alt);
       }
     }
 
