@@ -13,7 +13,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 
 | Espacio              | Qué es                                   | Estado     |
 |----------------------|------------------------------------------|------------|
-| **Cal Segue**       | Barri Cusconar, Torrelles de Foix. Solo espacio exterior: era, porche con barbacoa y jardín | Confirmado, con fotos y aforo de unas 30 personas |
+| **Cal Segue**       | Barri Cusconar, 08737 Torrelles de Foix. Solo espacio exterior: era, porche con barbacoa y jardín | Confirmado, con fotos y aforo de unas 30 personas |
 | **Taller de Castells** | Espacio cubierto de entreno casteller (TeamTowers) | Confirmado |
 
 ## 2 · Espacios aliados
@@ -26,7 +26,7 @@ precio orientativo · estado (`Pendiente` / `Hablado` / `Confirmado`).
 
 | Proveedor              | Qué aporta                 | Contacto | Estado |
 |------------------------|----------------------------|----------|--------|
-| **Bodega de Sara** *(nombre por confirmar)* | Catas guiadas, visita a bodega | Instagram *(handle por confirmar)* | Pendiente |
+| **La Bodega de Sara** | Catas guiadas de vino y cava, en bodega o desplazadas | labodegadesara.com | Publicada en la web, con foto |
 
 ## 4 · Alojamiento y espacios de gama alta
 
