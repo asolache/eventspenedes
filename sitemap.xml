@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://eventspenedes.com/</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://eventspenedes.com/assets/fotos/cal-segue-porxo.jpg</image:loc>
+      <image:title>Cal Segue, masía para eventos en Torrelles de Foix</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://eventspenedes.com/assets/fotos/cal-segue-jardi.jpg</image:loc>
+      <image:title>Jardín y era de Cal Segue, entre viñas del Alt Penedès</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://eventspenedes.com/assets/fotos/taller-castells-grup.jpg</image:loc>
+      <image:title>Taller de castells «Fent Pinya» para empresas</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://eventspenedes.com/dj.html</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://eventspenedes.com/assets/dj/dj-cabina-festival.jpg</image:loc>
+      <image:title>Álvaro Solache, DJ para eventos en el Penedès</image:title>
+    </image:image>
   </url>
 </urlset>

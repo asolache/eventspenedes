@@ -144,29 +144,47 @@ principal, las dos redirecciones se anularían en bucle.
 
 ## SEO y datos estructurados
 
-Todo vive en el `<head>` de `index.html`:
+La consulta objetivo es **eventos de empresa en el Penedès**, y de ahí cuelgan
+los servicios: team building, taller de castells, catas, gincanas, DJ y
+localizaciones.
 
-- Título y descripción por idioma, `canonical`, `author` y `robots` con
-  `max-snippet:-1` y `max-image-preview:large`, que es lo que permite a
-  buscadores y asistentes citar la página con un fragmento largo.
-- Open Graph y Twitter Cards completos, con dimensiones y texto alternativo de
-  la imagen, y `og:locale:alternate` para catalán e inglés.
-- Un único grafo JSON-LD con `Organization`, `WebSite`, el negocio como
-  `ProfessionalService` + `LocalBusiness` con su catálogo de servicios, y una
-  ficha `EventVenue` por espacio.
-- `js/i18n.js` reescribe título, descripción, Open Graph y Twitter al cambiar de
-  idioma, para que lo que se comparte coincida con lo que se está viendo.
+En el `<head>` de `index.html`:
+
+- Título y descripción con la consulta delante y los servicios dentro, por
+  idioma; `canonical`, `author`, `publisher`.
+- `robots` con `max-snippet:-1` y `max-image-preview:large`, que es lo que
+  permite a buscadores y asistentes citar la página con un fragmento largo.
+- `geo.region` y `geo.placename`, y un `keywords` con los términos reales de
+  búsqueda. Google ignora `keywords`; lo leen algún vertical y varios
+  asistentes de IA.
+- Open Graph y Twitter Cards completos, con dimensiones y texto alternativo.
+- Un grafo JSON-LD de trece nodos: `Organization`, `WebSite`, el negocio como
+  `ProfessionalService` + `LocalBusiness` (con `keywords`, `containsPlace` y
+  catálogo de ofertas), un `Service` por servicio con su `serviceType` y su
+  `areaServed`, un `EventVenue` por espacio con fotos y aforo, la `Person` de
+  Álvaro Solache con sus nombres artísticos, y un `WebPage` + `FAQPage` con
+  las ocho preguntas frecuentes.
+- `js/i18n.js` reescribe título, descripción, Open Graph y Twitter al cambiar
+  de idioma.
 
 Fuera del `<head>`:
 
-- `robots.txt` declara explícitamente el acceso de los rastreadores de IA
-  (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot…).
-- `llms.txt` resume el negocio en texto plano, que es lo que consumen los
-  asistentes cuando no quieren interpretar el maquetado.
+- Una sección de **preguntas frecuentes** visible, que es de donde sale el
+  `FAQPage`: el esquema solo vale si la respuesta está en la página.
+- `robots.txt` declara el acceso de los rastreadores de IA (GPTBot, ClaudeBot,
+  PerplexityBot, Google-Extended, Applebot…).
+- `llms.txt` resume el negocio, los términos de búsqueda y las preguntas
+  frecuentes en texto plano.
+- `sitemap.xml` incluye las imágenes principales con título.
 
 Al validar: [Rich Results Test](https://search.google.com/test/rich-results) y
 [validator.schema.org](https://validator.schema.org/) para el JSON-LD;
 [opengraph.xyz](https://www.opengraph.xyz/) para la tarjeta social.
+
+**Lo que falta para competir de verdad** por esa consulta: URLs separadas por
+idioma con `hreflang` (ahora los tres idiomas comparten una sola URL y Google
+indexa la castellana), coordenadas y dirección postal completa para activar la
+ficha de Google Maps, una ficha de Google Business Profile, y reseñas reales.
 
 ## Pendiente antes de dar la web por definitiva
 
