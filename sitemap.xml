@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
   <url>
     <loc>https://eventspenedes.com/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/"/>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
@@ -19,14 +25,57 @@
       <image:title>Taller de castells «Fent Pinya» para empresas</image:title>
     </image:image>
   </url>
+
+  <url>
+    <loc>https://eventspenedes.com/ca/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/"/>
+    <lastmod>2026-09-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/"/>
+    <lastmod>2026-09-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+
   <url>
     <loc>https://eventspenedes.com/dj.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/dj.html"/>
     <lastmod>2026-09-24</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://eventspenedes.com/assets/dj/dj-cabina-festival.jpg</image:loc>
       <image:title>Álvaro Solache, DJ para eventos en el Penedès</image:title>
     </image:image>
   </url>
+
+  <url>
+    <loc>https://eventspenedes.com/ca/dj.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/dj.html"/>
+    <lastmod>2026-09-24</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/en/dj.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/dj.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/dj.html"/>
+    <lastmod>2026-09-24</lastmod>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>

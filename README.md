@@ -12,8 +12,10 @@ Netlify sobre el dominio `eventspenedes.com`.
 
 ```
 /
-├── index.html          Landing (one-page, ES por defecto)
-├── dj.html             Perfil de Álvaro Solache como DJ
+├── index.html          Landing en castellano (fuente de verdad)
+├── dj.html             Perfil de DJ en castellano (fuente de verdad)
+├── ca/, en/            Versiones generadas — no se editan a mano
+├── tools/build-i18n.mjs  Generador de las versiones por idioma
 ├── 404.html            Página de error
 ├── netlify.toml        Publicación, cabeceras y redirección de www
 ├── robots.txt          Acceso de rastreadores, incluidos los de IA
@@ -21,9 +23,9 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── site.webmanifest    Nombre, colores e iconos de la aplicación web
 ├── sitemap.xml
 ├── css/styles.css      Hoja de estilos única (tokens Antigravity)
-├── js/i18n.js          Motor de idiomas, correo protegido y navegación móvil
-├── js/lang-home.js     Textos CA / EN de la portada
-├── js/lang-dj.js       Textos CA / EN de la página de DJ
+├── js/site.js          Correo protegido, navegación móvil e idioma del formulario
+├── js/lang-home.js     Textos CA / EN de la portada (fuente del generador)
+├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
 ├── js/form.js          Envío del formulario por correo
 └── assets/
     ├── favicon.svg
@@ -38,18 +40,38 @@ Netlify sobre el dominio `eventspenedes.com`.
 
 ## Idiomas
 
-El HTML de cada página está escrito en castellano. Cada página carga su fichero
-`js/lang-<página>.js`, que define `window.EP_I18N` (catalán e inglés) y
-`window.EP_META` (título y descripción por idioma); después, `js/i18n.js`
-sustituye los nodos con `data-i18n`. Para tocar un texto:
+Cada idioma tiene **su propia URL**, que es lo que los buscadores necesitan para
+indexar los tres:
 
-1. En castellano → edita directamente el HTML de la página.
-2. En catalán o inglés → edita la clave en el `lang-*.js` de esa página.
+| Idioma     | Portada  | DJ             |
+|------------|----------|----------------|
+| Castellano | `/`      | `/dj.html`     |
+| Catalán    | `/ca/`   | `/ca/dj.html`  |
+| Inglés     | `/en/`   | `/en/dj.html`  |
 
-Una página nueva necesita su propio `lang-*.js` y cargarlo **antes** de
-`js/i18n.js`.
+El castellano es la **fuente de verdad**: vive en `index.html` y `dj.html`. Las
+traducciones viven en `js/lang-home.js` y `js/lang-dj.js`, como diccionarios de
+clave → texto. Las carpetas `ca/` y `en/` se **generan**, no se editan a mano.
 
-El idioma inicial se detecta del navegador y se recuerda en `localStorage`.
+Para tocar un texto:
+
+1. En castellano → edita el HTML y vuelve a generar.
+2. En catalán o inglés → edita la clave en el `lang-*.js` y vuelve a generar.
+
+```bash
+node tools/build-i18n.mjs
+```
+
+El generador traduce los nodos con `data-i18n` y los textos alternativos con
+`data-i18n-alt`, cambia el `lang` del documento, pone el título, la descripción
+y las etiquetas sociales del idioma, ajusta el `canonical`, convierte las rutas
+en absolutas y marca el idioma activo en el conmutador. Si falta alguna clave la
+nombra y devuelve código de salida 1, así que se puede encadenar en CI.
+
+Las páginas generadas se **commitean**: no hay paso de build en Netlify.
+
+Cada página declara sus `hreflang` (`es`, `ca`, `en` y `x-default`), y el
+conmutador de idioma son enlaces reales, no botones de JavaScript.
 
 ## Desarrollo local
 

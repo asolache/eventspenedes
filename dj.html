@@ -7,6 +7,12 @@
 <title>Álvaro Solache · DJ para eventos en el Penedès</title>
 <meta name="description" content="DJ desde 2004 y responsable de producción del Aura Open Air Festival. Sesiones para eventos de empresa, bodas y fiestas en el Penedès y Barcelona.">
 <link rel="canonical" href="https://eventspenedes.com/dj.html">
+<!-- Versiones por idioma. Cada idioma tiene su propia URL, que es lo que
+     Google necesita para indexar las tres. -->
+<link rel="alternate" hreflang="es" href="https://eventspenedes.com/dj.html">
+<link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/dj.html">
+<link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/dj.html">
+<link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/dj.html">
 <meta name="author" content="Álvaro Solache">
 <meta name="publisher" content="Events Penedès">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -135,9 +141,9 @@
         <li><a href="index.html#contacto" data-i18n="nav.contact">Contacto</a></li>
         <li>
           <div class="lang" role="group" aria-label="Idioma">
-            <button class="lang__btn" type="button" data-lang="ca" aria-pressed="false">CA</button>
-            <button class="lang__btn" type="button" data-lang="es" aria-pressed="true">ES</button>
-            <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+            <a class="lang__btn" href="/ca/dj.html" hreflang="ca" lang="ca">CA</a>
+            <a class="lang__btn" href="/dj.html" hreflang="es" lang="es" aria-current="true">ES</a>
+            <a class="lang__btn" href="/en/dj.html" hreflang="en" lang="en">EN</a>
           </div>
         </li>
       </ul>
@@ -425,7 +431,6 @@
   </div>
 </footer>
 
-<script src="js/lang-dj.js" defer></script>
-<script src="js/i18n.js" defer></script>
+<script src="js/site.js" defer></script>
 </body>
 </html>

@@ -71,9 +71,12 @@ económico y valoración de los participantes.
 ## Enlaces
 
 - [Web](https://eventspenedes.com/): página principal, con servicios, espacios,
-  actividades y formulario de contacto.
-- [Álvaro Solache, DJ](https://eventspenedes.com/dj.html): perfil de DJ,
-  formatos de sesión y trayectoria desde 2004.
+  actividades, preguntas frecuentes y formulario de contacto. En catalán:
+  https://eventspenedes.com/ca/ · En inglés: https://eventspenedes.com/en/
+- [Álvaro Solache, DJ](https://eventspenedes.com/dj.html): perfil de DJ, sus
+  cuatro nombres, formatos de sesión y trayectoria desde 2004.
+- [La Bodega de Sara](https://labodegadesara.com): partner para catas guiadas
+  de vino y cava.
 - [TeamTowers](https://www.teamtowers.eu): taller de castells «Fent Pinya».
 - [TeamTowers Humà](https://teamtowershuma.com): consultoría de la que nace el
   proyecto.

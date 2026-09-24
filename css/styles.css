@@ -201,6 +201,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .lang__btn {
     background: none;
     border: 0;
+    text-decoration: none;
     color: var(--text-low);
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -211,12 +212,13 @@ ul { margin: 0; padding: 0; list-style: none; }
     cursor: pointer;
     transition: color 0.2s, background 0.2s;
 }
-.lang__btn:hover { color: var(--text-hi); }
-.lang__btn[aria-pressed="true"] {
+.lang__btn:hover { color: var(--text-hi); text-decoration: none; }
+.lang__btn[aria-current="true"] {
     background: var(--accent-gold);
     color: #14100a;
     font-weight: 600;
 }
+.lang__btn[aria-current="true"]:hover { color: #14100a; }
 
 .nav-toggle { display: none; }
 
@@ -986,4 +988,31 @@ ul { margin: 0; padding: 0; list-style: none; }
     margin: 0.85rem 0 0 1.75rem;
     font-size: 0.96rem;
     max-width: 70ch;
+}
+
+/* Segundo partner: el bloque se invierte para que no se lean iguales */
+@media (min-width: 900px) {
+    .partner-feature--flip { grid-template-columns: 1.15fr 0.85fr; }
+    .partner-feature--flip .partner-feature__body { order: 2; }
+}
+.partner-feature + .partner-feature { margin-top: clamp(2.5rem, 5vw, 4rem); }
+
+.partner__name {
+    font-family: var(--font-base);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.9rem;
+}
+
+/* Hueco a la espera de las fotos del partner */
+.partner-placeholder {
+    margin: 0;
+    padding: 2.5rem 1.5rem;
+    border: 1px dashed var(--glass-border-hi);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-low);
 }
