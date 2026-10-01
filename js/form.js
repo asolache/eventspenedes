@@ -13,7 +13,11 @@
     es: {
       subject: 'Solicitud de evento',
       nombre: 'Nombre',
+      persona: 'Persona de contacto',
       empresa: 'Empresa o agencia',
+      cargo: 'Cargo',
+      web: 'Web',
+      mercado: 'Clientes y mercados',
       correo: 'Correo',
       telefono: 'Teléfono',
       personas: 'Nº de personas',
@@ -26,7 +30,11 @@
     ca: {
       subject: 'Sol·licitud d’esdeveniment',
       nombre: 'Nom',
+      persona: 'Persona de contacte',
       empresa: 'Empresa o agència',
+      cargo: 'Càrrec',
+      web: 'Web',
+      mercado: 'Clients i mercats',
       correo: 'Correu',
       telefono: 'Telèfon',
       personas: 'Nre. de persones',
@@ -39,7 +47,11 @@
     en: {
       subject: 'Event enquiry',
       nombre: 'Name',
+      persona: 'Contact person',
       empresa: 'Company or agency',
+      cargo: 'Role',
+      web: 'Website',
+      mercado: 'Clients and markets',
       correo: 'Email',
       telefono: 'Phone',
       personas: 'Number of people',
@@ -51,7 +63,8 @@
     }
   };
 
-  var ORDEN = ['nombre', 'empresa', 'correo', 'telefono', 'personas', 'fecha', 'tipo'];
+  var ORDEN = ['nombre', 'persona', 'empresa', 'cargo', 'correo', 'telefono', 'web',
+               'personas', 'fecha', 'tipo', 'mercado'];
 
   function decode(token) {
     try {
@@ -72,7 +85,7 @@
   }
 
   function init() {
-    var form = document.getElementById('form-contacto');
+    var form = document.querySelector('form[data-m]');
     if (!form) { return; }
 
     var destino = decode(form.getAttribute('data-m') || '');
@@ -89,8 +102,9 @@
       var lang = document.documentElement.lang;
       var t = CAMPOS[lang] || CAMPOS.es;
 
-      var nombre = valorVisible(form, 'nombre');
-      var asunto = t.subject + (nombre ? ' — ' + nombre : '');
+      var cabecera = form.getAttribute('data-asunto') || t.subject;
+      var quien = valorVisible(form, 'nombre') || valorVisible(form, 'empresa');
+      var asunto = cabecera + (quien ? ' — ' + quien : '');
 
       var lineas = [];
       for (var i = 0; i < ORDEN.length; i++) {

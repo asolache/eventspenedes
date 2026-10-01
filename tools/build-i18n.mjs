@@ -16,6 +16,7 @@ const IDIOMAS = ['ca', 'en'];
 const PAGINAS = [
   { fuente: 'index.html', dic: 'js/lang-home.js', ruta: '' },
   { fuente: 'dj.html',    dic: 'js/lang-dj.js',   ruta: 'dj.html' },
+  { fuente: 'agencias.html', dic: 'js/lang-agencias.js', ruta: 'agencias.html' },
 ];
 
 /* Los ficheros de idioma son scripts de navegador: se evalúan con un window
@@ -92,9 +93,13 @@ function construir(pagina, idioma) {
   html = html.replace(/(href|src)="(css|js|assets)\//g, '$1="/$2/');
   html = html.replace(/href="site\.webmanifest"/g, 'href="/site.webmanifest"');
   html = html.replace(/href="\/sitemap\.xml"/g, 'href="/sitemap.xml"');
-  html = html.replace(/href="dj\.html/g, `href="/${idioma}/dj.html`);
-  html = html.replace(/href="index\.html/g, `href="/${idioma}/index.html`);
-  html = html.replace(/(<a class="brand" href=")index\.html(")/g, `$1/${idioma}/$2`);
+  /* Los enlaces entre páginas del sitio apuntan a la misma versión de idioma.
+     Se deriva de PAGINAS para que registrar una página nueva baste. */
+  for (const otra of PAGINAS) {
+    const ruta = otra.ruta || 'index.html';
+    const re = new RegExp(`href="${ruta.replace(/\./g, '\\.')}`, 'g');
+    html = html.replace(re, `href="/${idioma}/${ruta}`);
+  }
 
   /* El conmutador marca el idioma en el que estamos */
   html = html.replace(/ aria-current="true"/, '');

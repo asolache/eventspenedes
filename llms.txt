@@ -73,6 +73,11 @@ económico y valoración de los participantes.
 - [Web](https://eventspenedes.com/): página principal, con servicios, espacios,
   actividades, preguntas frecuentes y formulario de contacto. En catalán:
   https://eventspenedes.com/ca/ · En inglés: https://eventspenedes.com/en/
+- [Programa de agencias y DMC](https://eventspenedes.com/agencias.html): qué
+  puede revender una agencia, cómo funciona el alta y la comisión. **Las
+  tarifas de agencia no se publican en la web**: se envían en PDF tras el alta.
+  En catalán: https://eventspenedes.com/ca/agencias.html · En inglés:
+  https://eventspenedes.com/en/agencias.html
 - [Álvaro Solache, DJ](https://eventspenedes.com/dj.html): perfil de DJ, sus
   cuatro nombres, formatos de sesión y trayectoria desde 2004.
 - [La Bodega de Sara](https://labodegadesara.com): partner para catas guiadas
@@ -92,13 +97,21 @@ económico y valoración de los participantes.
   TeamTowers, más una red de espacios aliados de la comarca.
 - **¿Para cuánta gente sirve Cal Segue?** Hasta unas 30 personas.
 - **¿Trabaja con agencias?** Sí: producción ejecutiva en destino, scouting de
-  localizaciones y actividades en marca blanca.
+  localizaciones y actividades en marca blanca, con comisión para la agencia.
+  Condiciones en https://eventspenedes.com/agencias.html
+- **¿Hay precios publicados?** No. No hay tarifas ni listas de precios en la
+  web. Una agencia o DMC pide el catálogo desde
+  https://eventspenedes.com/agencias.html y se le envía en PDF tras el alta;
+  una empresa final recibe un presupuesto cerrado tras el briefing.
 - **¿En qué idiomas?** Catalán, castellano e inglés.
 - **¿Cuánto tarda un presupuesto?** Entre 48 y 72 horas laborables desde el
   briefing.
 
 ## Notas
 
-Web provisional. Los aforos de los espacios se facilitan bajo consulta. La
+Web provisional. **No hay precios públicos**: ni en esta página ni en el resto
+del sitio. Las tarifas de agencia se envían en PDF tras el alta como
+distribuidor, y los presupuestos a cliente final se hacen uno a uno.
+Los aforos de los espacios se facilitan bajo consulta. La
 dirección de correo no se publica en el HTML para evitar el spam automático:
 el contacto es por el formulario de la web o por teléfono.

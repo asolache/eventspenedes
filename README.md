@@ -14,6 +14,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 /
 ├── index.html          Landing en castellano (fuente de verdad)
 ├── dj.html             Perfil de DJ en castellano (fuente de verdad)
+├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
 ├── ca/, en/            Versiones generadas — no se editan a mano
 ├── tools/build-i18n.mjs  Generador de las versiones por idioma
 ├── 404.html            Página de error
@@ -26,6 +27,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── js/site.js          Correo protegido, navegación móvil e idioma del formulario
 ├── js/lang-home.js     Textos CA / EN de la portada (fuente del generador)
 ├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
+├── js/lang-agencias.js Textos CA / EN de la página de agencias
 ├── js/form.js          Envío del formulario por correo
 └── assets/
     ├── favicon.svg
@@ -43,15 +45,19 @@ Netlify sobre el dominio `eventspenedes.com`.
 Cada idioma tiene **su propia URL**, que es lo que los buscadores necesitan para
 indexar los tres:
 
-| Idioma     | Portada  | DJ             |
-|------------|----------|----------------|
-| Castellano | `/`      | `/dj.html`     |
-| Catalán    | `/ca/`   | `/ca/dj.html`  |
-| Inglés     | `/en/`   | `/en/dj.html`  |
+| Idioma     | Portada  | DJ             | Agencias             |
+|------------|----------|----------------|----------------------|
+| Castellano | `/`      | `/dj.html`     | `/agencias.html`     |
+| Catalán    | `/ca/`   | `/ca/dj.html`  | `/ca/agencias.html`  |
+| Inglés     | `/en/`   | `/en/dj.html`  | `/en/agencias.html`  |
 
-El castellano es la **fuente de verdad**: vive en `index.html` y `dj.html`. Las
-traducciones viven en `js/lang-home.js` y `js/lang-dj.js`, como diccionarios de
-clave → texto. Las carpetas `ca/` y `en/` se **generan**, no se editan a mano.
+El castellano es la **fuente de verdad**: vive en `index.html`, `dj.html` y
+`agencias.html`. Las traducciones viven en los `js/lang-*.js`, como diccionarios
+de clave → texto. Las carpetas `ca/` y `en/` se **generan**, no se editan a mano.
+
+Para añadir una página nueva basta con registrarla en el array `PAGINAS` de
+`tools/build-i18n.mjs`: de ahí sale tanto la generación como la reescritura de
+los enlaces internos al idioma correspondiente.
 
 Para tocar un texto:
 
@@ -89,11 +95,16 @@ python3 -m http.server 8000
 2. Build command: *vacío*. Publish directory: `.` (ya lo fija `netlify.toml`).
 3. **Deploy**. Cada push a `main` vuelve a publicar automáticamente.
 
-## Formulario de contacto
+## Formularios
 
 No hay servidor ni servicio de formularios: al enviar, `js/form.js` compone un
 `mailto:` con los datos y abre el programa de correo de quien escribe, que solo
 tiene que pulsar enviar. Cero configuración y cero dependencias.
+
+El mismo script sirve cualquier formulario de la web: busca `form[data-m]`, así
+que para añadir uno nuevo basta con el atributo `data-m` (destino codificado) y,
+si hace falta, `data-asunto` para el asunto del correo. Hoy hay dos: el de
+contacto de la portada y el de alta de agencia (`agencias.html#alta`).
 
 La dirección de destino **no está en el HTML en claro**: viaja codificada en el
 atributo `data-m` del formulario, igual que los enlaces de correo, y se compone
@@ -115,6 +126,30 @@ vía real de entrada, conviene pasar a **Netlify Forms** (`data-netlify="true"`,
 campo oculto `form-name`, honeypot y una notificación por correo en
 `Site configuration → Forms`), que además guarda los envíos y avisa igual por
 correo. Está en el historial del repositorio, en el commit anterior a este.
+
+## Precios: por qué no están en la web
+
+En la web **no hay ni una tarifa**, y es una decisión, no un olvido:
+
+- Un evento no tiene precio de catálogo. Depende del espacio, de cuánta gente
+  va y de la fecha. Un número suelto en una página solo sirve para que te
+  comparen mal.
+- Las **tarifas de agencia** son precios netos con comisión. Publicarlas es
+  enseñárselas al cliente final de esa misma agencia, y a la competencia.
+
+En su lugar, [`agencias.html`](agencias.html) explica **qué puede vender una
+agencia** y cómo funciona el alta, y el formulario `#alta` pide los datos para
+mandar el catálogo **en PDF, por correo, tras el alta**.
+
+**El PDF no se sube a este repositorio ni al sitio.** Una web estática no puede
+proteger un fichero: no hay sesiones ni control de acceso, cualquier ruta es
+adivinable, y basta con que alguien comparta el enlace una vez para que acabe
+indexado. Lo que no está alojado no se filtra. El PDF se adjunta al correo de
+respuesta y vive en el repositorio privado `eventspenedes-tarifas`.
+
+Lo mismo vale para los asistentes de IA: `llms.txt` dice explícitamente que no
+hay precios publicados y que el catálogo se pide desde la página de agencias,
+para que no se inventen cifras ni insinúen que existe una lista pública.
 
 ## Dominio
 

@@ -1,0 +1,162 @@
+/* =============================================================================
+   Events Penedès — textos de la página de agencias en catalán e inglés
+   ========================================================================== */
+window.EP_I18N = {
+
+  ca: {
+    'skip': 'Vés al contingut principal',
+    'nav.services': 'Serveis', 'nav.venues': 'Localitzacions', 'nav.activities': 'Activitats',
+    'nav.process': 'Com treballem', 'nav.dj': 'DJ', 'nav.contact': 'Contacte',
+    'nav.agencies': 'Agències i DMC',
+
+    'ag.crumb': 'Events Penedès', 'ag.crumb2': 'Agències',
+    'ag.eyebrow': 'Programa d’agències i DMC',
+    'ag.title': 'El teu partner al Penedès',
+    'ag.lead': 'Produïm a destinació perquè tu venguis. Espais, activitats i logística a l’Alt Penedès, amb la teva marca al davant si així ho vols, i comissió per a l’agència.',
+    'ag.cta1': 'Demanar les tarifes d’agència',
+    'ag.cta2': 'Veure localitzacions',
+
+    'ag.q.eyebrow': 'Què pots vendre',
+    'ag.q.title': 'Dues coses diferents',
+    'ag.q.lead': 'Una agència no compra el mateix que una empresa final. Això és el que posem a la teva disposició.',
+    'ag.q1.tag': 'Esdeveniments',
+    'ag.q1.title': 'Events Penedès',
+    'ag.q1.text': 'Producció completa a l’Alt Penedès: espais propis i aliats, activitats d’equip, càtering, tècnica i direcció de l’esdeveniment sobre el terreny. Executem nosaltres, signes tu.',
+    'ag.q1.i1': 'Producció executiva a destinació',
+    'ag.q1.i2': 'Scouting i reserva d’espais',
+    'ag.q1.i3': 'Activitats en marca blanca',
+    'ag.q2.tag': 'Activitat estrella',
+    'ag.q2.title': 'Taller de castells',
+    'ag.q2.text': 'El taller «Fent Pinya» de TeamTowers, operant des del 2005. De 10 a 1.000 participants, en català, castellà, anglès, alemany o francès, i a qualsevol espai amb 10 x 10 m i 5 m d’alçada lliure.',
+    'ag.q2.i1': 'Dinamitzador, monitors i músics',
+    'ag.q2.i2': 'Assegurança i material inclosos',
+    'ag.q2.i3': 'Comissió per a l’agència',
+    'ag.q3.tag': 'Consultoria',
+    'ag.q3.title': 'TeamTowers Humà',
+    'ag.q3.text': 'Consultoria d’equips i xarxes de valor, per quan el client vol anar més enllà de la jornada. És una altra venda i un altre interlocutor, però surt del mateix lloc.',
+    'ag.q3.i1': 'Recorregut llarg, no una jornada',
+    'ag.q3.i2': 'Comissió per a l’agència',
+    'ag.q3.i3': 'Condicions a convenir',
+
+    'ag.c.eyebrow': 'Com funciona',
+    'ag.c.title': 'De l’alta a la comissió',
+    'ag.c1.title': 'Alta',
+    'ag.c1.text': 'Omples el formulari d’aquí sota. Mirem que l’agència encaixi i et donem d’alta.',
+    'ag.c2.title': 'Tarifes',
+    'ag.c2.text': 'T’enviem el catàleg de preus d’agència en PDF, amb les condicions i la comissió per escrit. No està publicat al web.',
+    'ag.c3.title': 'Proposta',
+    'ag.c3.text': 'Ens passes data, persones i objectiu. Et tornem opcions i preu tancat en 48-72 h laborables, a punt perquè ho muntis a la teva proposta.',
+    'ag.c4.title': 'Esdeveniment',
+    'ag.c4.text': 'Produïm nosaltres. Tu decideixes si hi apareixem o no: podem anar en marca blanca.',
+    'ag.c.note': 'Les tarifes d’agència no es publiquen. S’envien després de l’alta, i només a agències i DMC.',
+
+    'ag.f.eyebrow': 'Alta d’agència',
+    'ag.f.title': 'Demana el catàleg de tarifes',
+    'ag.f.lead': 'Explica’ns qui ets i te’l enviem. Responem en menys de 24 h laborables.',
+    'ag.f.empresa': 'Agència o DMC', 'ag.f.web': 'Web',
+    'ag.f.persona': 'Persona de contacte', 'ag.f.cargo': 'Càrrec',
+    'ag.f.correo': 'Correu professional', 'ag.f.tel': 'Telèfon',
+    'ag.f.tipo': 'Què sou',
+    'ag.f.tipo1': 'Agència d’esdeveniments', 'ag.f.tipo2': 'DMC',
+    'ag.f.tipo3': 'Organitzador professional de congressos', 'ag.f.tipo4': 'Altres',
+    'ag.f.mercado': 'Quin tipus de client porteu i des d’on',
+    'ag.f.send': 'Demanar el catàleg',
+    'ag.f.note': 'En enviar s’obre el teu programa de correu amb les dades. Fem servir el que ens expliquis només per valorar l’alta i enviar-te les tarifes.',
+    'ag.f.fallback': 'No se t’ha obert el correu? Escriu-nos a <a class="js-mail" href="#alta" data-m="==QbvNmLjFWbAVGajFGbvNXY">la nostra adreça</a> o truca’ns al <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+
+    'foot.tagline': 'Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès.',
+    'foot.h1': 'Seccions', 'foot.h2': 'Contacte', 'foot.h3': 'Ecosistema',
+    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.rights': '© 2026 Events Penedès · Un projecte de TeamTowers Humà',
+    'foot.prov': 'Web provisional — estem preparant la versió completa.'
+  },
+
+  en: {
+    'skip': 'Skip to main content',
+    'nav.services': 'Services', 'nav.venues': 'Venues', 'nav.activities': 'Activities',
+    'nav.process': 'How we work', 'nav.dj': 'DJ', 'nav.contact': 'Contact',
+    'nav.agencies': 'Agencies & DMCs',
+
+    'ag.crumb': 'Events Penedès', 'ag.crumb2': 'Agencies',
+    'ag.eyebrow': 'Agency and DMC programme',
+    'ag.title': 'Your partner in the Penedès',
+    'ag.lead': 'We produce on the ground so you can sell. Venues, activities and logistics in the Alt Penedès, under your brand if you want it that way, with commission for the agency.',
+    'ag.cta1': 'Request agency rates',
+    'ag.cta2': 'See venues',
+
+    'ag.q.eyebrow': 'What you can sell',
+    'ag.q.title': 'Two different things',
+    'ag.q.lead': 'An agency does not buy what an end client buys. This is what we put at your disposal.',
+    'ag.q1.tag': 'Events',
+    'ag.q1.title': 'Events Penedès',
+    'ag.q1.text': 'Full production in the Alt Penedès: our own and partner venues, team activities, catering, technical setup and on-site event direction. We deliver, you sign.',
+    'ag.q1.i1': 'Executive production on site',
+    'ag.q1.i2': 'Venue scouting and booking',
+    'ag.q1.i3': 'White-label activities',
+    'ag.q2.tag': 'Flagship activity',
+    'ag.q2.title': 'Human-tower workshop',
+    'ag.q2.text': 'The TeamTowers «Fent Pinya» workshop, running since 2005. From 10 to 1,000 participants, in Catalan, Spanish, English, German or French, in any space with 10 x 10 m and 5 m of clear height.',
+    'ag.q2.i1': 'Host, instructors and musicians',
+    'ag.q2.i2': 'Insurance and equipment included',
+    'ag.q2.i3': 'Commission for the agency',
+    'ag.q3.tag': 'Consultancy',
+    'ag.q3.title': 'TeamTowers Humà',
+    'ag.q3.text': 'Team and value-network consultancy, for when the client wants more than a single day. It is a different sale and a different buyer, but it comes from the same place.',
+    'ag.q3.i1': 'A long programme, not one day',
+    'ag.q3.i2': 'Commission for the agency',
+    'ag.q3.i3': 'Terms to be agreed',
+
+    'ag.c.eyebrow': 'How it works',
+    'ag.c.title': 'From sign-up to commission',
+    'ag.c1.title': 'Sign up',
+    'ag.c1.text': 'You fill in the form below. We check the agency fits and register you.',
+    'ag.c2.title': 'Rates',
+    'ag.c2.text': 'We send you the agency price list as a PDF, with the terms and the commission in writing. It is not published on the website.',
+    'ag.c3.title': 'Proposal',
+    'ag.c3.text': 'You send us the date, headcount and objective. We come back with options and a fixed price within 48-72 working hours, ready to drop into your proposal.',
+    'ag.c4.title': 'Event',
+    'ag.c4.text': 'We produce it. You decide whether we appear or not: white label is fine.',
+    'ag.c.note': 'Agency rates are not published. They are sent after sign-up, and only to agencies and DMCs.',
+
+    'ag.f.eyebrow': 'Agency sign-up',
+    'ag.f.title': 'Request the price list',
+    'ag.f.lead': 'Tell us who you are and we will send it over. We reply within 24 working hours.',
+    'ag.f.empresa': 'Agency or DMC', 'ag.f.web': 'Website',
+    'ag.f.persona': 'Contact person', 'ag.f.cargo': 'Role',
+    'ag.f.correo': 'Work email', 'ag.f.tel': 'Phone',
+    'ag.f.tipo': 'What you are',
+    'ag.f.tipo1': 'Event agency', 'ag.f.tipo2': 'DMC',
+    'ag.f.tipo3': 'Professional congress organiser', 'ag.f.tipo4': 'Other',
+    'ag.f.mercado': 'What kind of clients you bring, and from where',
+    'ag.f.send': 'Request the price list',
+    'ag.f.note': 'Submitting opens your email client with the details. We use what you tell us only to assess the sign-up and send you the rates.',
+    'ag.f.fallback': 'Did your email client not open? Write to <a class="js-mail" href="#alta" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+
+    'foot.tagline': 'Event production, venues and activities in the Alt Penedès.',
+    'foot.h1': 'Sections', 'foot.h2': 'Contact', 'foot.h3': 'Ecosystem',
+    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.rights': '© 2026 Events Penedès · A TeamTowers Humà project',
+    'foot.prov': 'Provisional site — the full version is on its way.'
+  }
+};
+
+window.EP_META = {
+  es: {
+    title: 'Programa de agencias · Events Penedès',
+    desc: 'Trabaja con Events Penedès como agencia o DMC: producción en destino en el Alt Penedès, actividades en marca blanca y comisión. Tarifas de agencia bajo petición.',
+    social: 'Producción en destino en el Alt Penedès, actividades en marca blanca y comisión para la agencia. Tarifas bajo petición.',
+    locale: 'es_ES'
+  },
+  ca: {
+    title: 'Programa d’agències · Events Penedès',
+    desc: 'Treballa amb Events Penedès com a agència o DMC: producció a destinació a l’Alt Penedès, activitats en marca blanca i comissió. Tarifes d’agència sota petició.',
+    social: 'Producció a destinació a l’Alt Penedès, activitats en marca blanca i comissió per a l’agència. Tarifes sota petició.',
+    locale: 'ca_ES'
+  },
+  en: {
+    title: 'Agency programme · Events Penedès',
+    desc: 'Work with Events Penedès as an agency or DMC: on-the-ground production in the Alt Penedès, white-label activities and commission. Agency rates on request.',
+    social: 'On-the-ground production in the Alt Penedès, white-label activities and commission for the agency. Rates on request.',
+    locale: 'en_GB'
+  }
+};
