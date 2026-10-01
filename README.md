@@ -35,6 +35,7 @@ Netlify sobre el dominio `eventspenedes.com`.
     ├── icon-512.png    Icono grande, también usado como logo en los datos estructurados
     ├── og-image.png    Imagen para redes sociales (1200×630)
     ├── og-dj.png       Imagen para redes sociales de la página de DJ
+    ├── arte/           Ilustraciones de marca en SVG, para lo que no hay foto
     ├── fotos/          Fotografías de los espacios (ver su propio README)
     ├── dj/             Fotografías y carteles de Álvaro Solache como DJ
     └── partners/       Logotipos de los partners
@@ -126,6 +127,32 @@ vía real de entrada, conviene pasar a **Netlify Forms** (`data-netlify="true"`,
 campo oculto `form-name`, honeypot y una notificación por correo en
 `Site configuration → Forms`), que además guarda los envíos y avisa igual por
 correo. Está en el historial del repositorio, en el commit anterior a este.
+
+## Posicionamiento premium
+
+La web se dirige a **agencias, DMC, dirección de empresa y cliente corporate de
+gama alta**, y el diseño va antes que el texto: lo primero que se ve es una era
+entre viñas, no un listado de servicios.
+
+**El eje es el intangible.** La sección `#intangibles` existe porque lo que se
+vende aquí no es el metro cuadrado: es el vino con quien lo elabora, el aceite
+recién molido, la masía en privado y la hora dorada sobre la viña. Una sala de
+hotel compite en precio; esto no compite con nada.
+
+Los servicios premium —chef de autor, relaciones públicas y protocolo,
+microbuses de lujo— van marcados con `.card--premium` y su sello, y entran
+también en los datos estructurados como `Service`.
+
+### Las imágenes
+
+Cada sección con contenido visual lleva foto real. Donde no hay fotografía, en
+lugar de rellenar con un banco de imágenes genérico hay **ilustración propia en
+SVG** (`assets/arte/`), hecha con los tokens de la marca: pesa unos 3 KB,
+escala sin pixelarse y no se parece a la web de ningún competidor.
+
+**Una foto mala hace más daño que ninguna foto.** Por eso la fotografía de la
+barbacoa, con sillas de plástico apiladas al fondo, no se usa en ninguna parte:
+contradice todo lo que dice la página.
 
 ## Precios: por qué no están en la web
 

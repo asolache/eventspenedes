@@ -33,6 +33,7 @@
     --radius-sm:      8px;
     --gutter:         clamp(1.25rem, 4vw, 2.5rem);
     --section-y:      clamp(4rem, 9vw, 7.5rem);
+    --card-pad:       clamp(1.4rem, 2.6vw, 1.9rem);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -278,7 +279,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     background: var(--bg-elevated);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
-    padding: clamp(1.4rem, 2.6vw, 1.9rem);
+    padding: var(--card-pad);
     transition: border-color 0.25s ease, transform 0.25s ease;
 }
 .card:hover { border-color: var(--glass-border-hi); transform: translateY(-3px); }
@@ -1032,3 +1033,244 @@ ul { margin: 0; padding: 0; list-style: none; }
     object-fit: cover;
     display: block;
 }
+
+/* ==========================================================================
+   PREMIUM · Penedès
+   El salto de «productora de eventos» a «producción premium en el Penedès».
+   Lo que se vende aquí no es el metro cuadrado: es el intangible —el vino,
+   el aceite, la masía, la luz de la tarde—. El diseño tiene que dar eso
+   antes de que nadie lea un párrafo.
+   ========================================================================== */
+
+/* --- Hero con fotografía ------------------------------------------------- */
+
+.hero--foto { padding-block: clamp(6rem, 14vw, 11rem) clamp(4rem, 9vw, 7rem); }
+
+.hero__fons {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+.hero__fons img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 58%;
+    filter: saturate(0.82) contrast(1.06);
+}
+/* Dos capas: una oscurece para que el texto se lea, la otra devuelve el
+   dorado de la hora dorada, que es de lo que va la marca. */
+.hero__fons::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(104deg, rgba(5,5,7,0.94) 0%, rgba(5,5,7,0.80) 46%, rgba(5,5,7,0.44) 100%),
+        linear-gradient(0deg, var(--bg-dark) 2%, rgba(5,5,7,0) 48%),
+        radial-gradient(68% 58% at 76% 28%, rgba(217,164,65,0.20), transparent 72%);
+}
+
+.hero--foto h1 { max-width: 17ch; font-size: clamp(2.3rem, 6.2vw, 4.1rem); line-height: 1.04; }
+.hero--foto .lead { max-width: 54ch; }
+
+.hero__segell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(217, 164, 65, 0.42);
+    border-radius: 100px;
+    background: rgba(217, 164, 65, 0.07);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+}
+.hero__segell::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+}
+
+/* --- Los intangibles ----------------------------------------------------- */
+
+.intangibles { display: grid; gap: 1.1rem; }
+@media (min-width: 760px) {
+    .intangibles { grid-template-columns: repeat(2, 1fr); }
+    .intangibles > :first-child { grid-column: 1 / -1; }
+}
+/* Con cuatro piezas y dos columnas, la última queda coja. En pantalla ancha:
+   el destacado arriba y los otros tres en fila. */
+@media (min-width: 1000px) {
+    .intangibles { grid-template-columns: repeat(3, 1fr); }
+}
+
+.intangible {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 260px;
+    padding: 1.6rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    isolation: isolate;
+}
+.intangibles > :first-child.intangible { min-height: 340px; padding: 2.2rem; }
+.intangibles > :first-child .intangible__media::after {
+    background:
+        linear-gradient(0deg, rgba(5,5,7,0.96) 2%, rgba(5,5,7,0.74) 46%, rgba(5,5,7,0.26) 100%),
+        linear-gradient(90deg, rgba(5,5,7,0.68) 0%, rgba(5,5,7,0.10) 62%);
+}
+
+.intangible__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+.intangible__media img,
+.intangible__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+/* El texto va encima de la foto, así que el velo tiene que ser generoso: en
+   las fotos claras —una masía a mediodía— un degradado suave no da contraste
+   suficiente y el eyebrow desaparece. */
+.intangible__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(0deg, rgba(5,5,7,0.97) 0%, rgba(5,5,7,0.88) 32%,
+                               rgba(5,5,7,0.62) 62%, rgba(5,5,7,0.38) 100%),
+        linear-gradient(0deg, rgba(5,5,7,0.22), rgba(5,5,7,0.22));
+}
+.intangible:hover .intangible__media img,
+.intangible:hover .intangible__media svg { transform: scale(1.045); }
+
+.intangible__cos { position: relative; }
+.intangible h3 {
+    margin: 0.35rem 0 0.5rem;
+    font-size: clamp(1.18rem, 2.4vw, 1.6rem);
+}
+.intangibles > :first-child h3 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
+.intangible p { margin: 0; color: var(--text-mid); max-width: 56ch; font-size: 0.95rem; }
+
+/* --- Banda de imagen entre secciones ------------------------------------- */
+
+.band {
+    position: relative;
+    height: clamp(180px, 26vw, 330px);
+    overflow: hidden;
+    border-block: 1px solid var(--glass-border);
+}
+.band img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85);
+}
+.band::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(0deg, var(--bg-dark) 1%, rgba(5,5,7,0.30) 42%, rgba(5,5,7,0.62) 100%);
+}
+.band__cita {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--gutter);
+    text-align: center;
+    font-size: clamp(1rem, 2.4vw, 1.45rem);
+    font-weight: 500;
+    color: var(--text-hi);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+}
+.band__cita span { color: var(--accent-gold); }
+
+/* --- Servicio premium ---------------------------------------------------- */
+
+.card--premium {
+    border-color: rgba(217, 164, 65, 0.28);
+    background:
+        linear-gradient(180deg, rgba(217,164,65,0.07), transparent 58%),
+        var(--bg-elevated);
+}
+.card--premium .card__icon { color: var(--accent-gold); }
+.card__segell {
+    display: inline-block;
+    margin-bottom: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    background: rgba(217, 164, 65, 0.14);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+}
+
+/* --- Bloque con ilustración de fondo (microbuses) ------------------------ */
+
+.escena {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 380px;
+    padding: clamp(2rem, 5vw, 3.6rem);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    isolation: isolate;
+}
+.escena__fons { position: absolute; inset: 0; z-index: -1; }
+.escena__fons svg, .escena__fons img { width: 100%; height: 100%; object-fit: cover; }
+.escena__fons::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(96deg, rgba(5,5,7,0.95) 0%, rgba(5,5,7,0.78) 44%, rgba(5,5,7,0.30) 100%);
+}
+.escena__cos { max-width: 46ch; }
+.escena h3 { margin-top: 0.4rem; font-size: clamp(1.4rem, 3vw, 2rem); }
+
+/* --- Retoques de altura premium ------------------------------------------ */
+
+/* En pantalla ancha, siete servicios en cuatro columnas dejan una fila coja.
+   Tres columnas reparten mejor y dan más aire a cada tarjeta. */
+@media (min-width: 1000px) {
+    .grid--4.grid--premium { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* --- Foto dentro de una tarjeta ------------------------------------------ */
+
+.card__foto {
+    /* Sangra el padding de la tarjeta para que la foto llegue al borde. */
+    margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 1.1rem;
+    height: 190px;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
+    position: relative;
+}
+.card__foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.card:hover .card__foto img { transform: scale(1.05); }
+.card__foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(17,17,24,0.92) 2%, rgba(17,17,24,0.12) 60%);
+}
+.escena__llista { margin-top: 1.1rem; }
+.escena__llista li { color: var(--text-mid); }
