@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="mbT">
+  <title id="mbT">Carretera entre viñedos del Penedès al atardecer</title>
+  <defs>
+    <linearGradient id="mCel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#07070d"/><stop offset=".38" stop-color="#1d1620"/>
+      <stop offset=".66" stop-color="#4d3222"/><stop offset=".84" stop-color="#9c6630"/>
+      <stop offset="1" stop-color="#d9a441"/>
+    </linearGradient>
+    <radialGradient id="mSol" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffe9c4"/><stop offset=".35" stop-color="#ffcf87" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#ffcf87" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mVia" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9a441" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#d9a441" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mTerra" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15131a"/><stop offset="1" stop-color="#090910"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#mCel)"/>
+  <circle cx="612" cy="430" r="230" fill="url(#mSol)"/>
+  <circle cx="612" cy="430" r="40" fill="#ffeccb" opacity=".9"/>
+
+  <!-- Horizonte -->
+  <path d="M0 404 L150 356 L300 398 L450 344 L612 404 L760 352 L910 402 L1060 358 L1200 404 V600 H0Z"
+        fill="#1a1620" opacity=".95"/>
+  <path d="M0 440 Q300 412 612 436 T1200 428 V600 H0Z" fill="url(#mTerra)"/>
+
+  <!-- Hileras de viña en fuga hacia el sol -->
+  <g stroke="#2a3a26" stroke-linecap="round">
+    <path d="M-120 600 L556 444" stroke-width="7" opacity=".8"/>
+    <path d="M80 600 L574 444"  stroke-width="6" opacity=".72"/>
+    <path d="M270 600 L592 444" stroke-width="5" opacity=".64"/>
+    <path d="M1320 600 L668 444" stroke-width="7" opacity=".8"/>
+    <path d="M1120 600 L650 444" stroke-width="6" opacity=".72"/>
+    <path d="M930 600 L632 444"  stroke-width="5" opacity=".64"/>
+  </g>
+
+  <!-- El camino, y la luz de quien llega -->
+  <path d="M592 444 L632 444 L760 600 L440 600 Z" fill="#0c0c12"/>
+  <path d="M606 444 L618 444 L664 600 L548 600 Z" fill="url(#mVia)"/>
+  <ellipse cx="612" cy="452" rx="54" ry="10" fill="#ffe9c4" opacity=".5"/>
+  <ellipse cx="612" cy="452" rx="22" ry="5"  fill="#fff6e4" opacity=".75"/>
+</svg>
