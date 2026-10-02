@@ -14,6 +14,7 @@ una, igual que en `assets/fotos/`.
 | `bellesguart-facana.jpg` | Fachada con puertas de madera | Confirmada |
 | `bellesguart-torre.jpg` | Torre modernista sobre el estanque | **Por confirmar** |
 | `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | **Por confirmar** |
+| `dolicios-arbequina.jpg` | Botella de arbequina apoyada en un olivo | Confirmada |
 
 La torre y el comedor se asignaron por lectura de la propia imagen, no por
 confirmación: el comedor es el mismo que se ve por la puerta en

@@ -5,6 +5,7 @@
 window.EP_I18N = {
 
     ca: {
+      'svc.s8.alt': 'Ampolla d’oli arbequina de D’Oliciós recolzada al tronc d’una olivera',
       'ven.v3.alt': 'Sala de banquet de la Masia Torreblanca amb taules rodones i finestrals al camp',
       'ven.v3.alt2': 'Galeria d’arcs de pedra de la Masia Torreblanca, amb bigues de fusta i palmeres',
       'ven.v3.alt3': 'Pèrgola al costat de la piscina de la Masia Torreblanca, amb vistes a les vinyes',
@@ -319,6 +320,7 @@ window.EP_I18N = {
     },
 
     en: {
+      'svc.s8.alt': 'Bottle of D\'Oliciós arbequina olive oil resting against an olive trunk',
       'ven.v3.alt': 'Banquet hall at Masia Torreblanca with round tables and windows onto the countryside',
       'ven.v3.alt2': 'Stone arched gallery at Masia Torreblanca, with wooden beams and palm trees',
       'ven.v3.alt3': 'Pergola by the pool at Masia Torreblanca, overlooking the vineyards',
