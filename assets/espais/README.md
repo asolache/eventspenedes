@@ -12,14 +12,14 @@ una, igual que en `assets/fotos/`.
 | `torre-del-gall-aeria.jpg` | Vista aérea entre viñedos | Confirmada |
 | `torre-del-gall-vinya.jpg` | Viñedo con Montserrat al fondo | Confirmada |
 | `bellesguart-facana.jpg` | Fachada con puertas de madera | Confirmada |
-| `bellesguart-torre.jpg` | Torre modernista sobre el estanque | **Por confirmar** |
-| `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | **Por confirmar** |
+| `bellesguart-torre.jpg` | Torre modernista sobre el estanque | Confirmada |
+| `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | Confirmada |
 | `dolicios-arbequina.jpg` | Botella de arbequina apoyada en un olivo | Confirmada |
 
-La torre y el comedor se asignaron por lectura de la propia imagen, no por
-confirmación: el comedor es el mismo que se ve por la puerta en
-`bellesguart-facana.jpg`, y la torre modernista encaja con el edificio de 1889.
-Si alguna no es de Bellesguart, se renombra y se cambia el `src`.
+La torre y el comedor se asignaron primero por lectura de la propia imagen —el
+comedor es el mismo que se ve por la puerta en `bellesguart-facana.jpg`, y la
+torre modernista encaja con el edificio de 1889— y **Álvaro las confirmó el
+02/10/2026**. No queda ninguna asignación pendiente de confirmar.
 
 El viñedo con Montserrat estuvo un rato en Bellesguart por error; es de La
 Torre del Gall. **La lección: una foto de viña se parece a otra foto de viña.**
