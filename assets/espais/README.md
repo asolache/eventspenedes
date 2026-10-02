@@ -1,0 +1,25 @@
+# Fotos de los espacios aliados
+
+Cedidas por los propios espacios. El nombre dice a qué espacio pertenece cada
+una, igual que en `assets/fotos/`.
+
+| Fichero | Qué se ve | Asignación |
+|---|---|---|
+| `torreblanca-sala.jpg` | Sala de banquete con mesas redondas | Confirmada |
+| `torreblanca-galeria.jpg` | Galería de arcos de piedra | Confirmada |
+| `torreblanca-piscina.jpg` | Pérgola junto a la piscina | Confirmada |
+| `torre-del-gall-jardi-nit.jpg` | Jardín de noche con guirnaldas | Confirmada |
+| `torre-del-gall-aeria.jpg` | Vista aérea entre viñedos | Confirmada |
+| `bellesguart-facana.jpg` | Fachada con puertas de madera | Confirmada |
+| `bellesguart-vinya.jpg` | Viñedo con Montserrat al fondo | Confirmada |
+| `bellesguart-torre.jpg` | Torre modernista sobre el estanque | **Por confirmar** |
+| `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | **Por confirmar** |
+
+Las dos últimas se asignaron por lectura de la propia imagen, no por
+confirmación: el comedor es el mismo que se ve por la puerta en
+`bellesguart-facana.jpg`, y la torre modernista encaja con el edificio de 1889.
+Si alguna no es de Bellesguart, se renombra y se cambia el `src`.
+
+**Antes de publicarlas hace falta el permiso del espacio.** Una foto cedida para
+un dossier no está cedida para una web; se pide por escrito, aunque sea un
+correo de dos líneas, y se anota aquí quién la cedió y cuándo.

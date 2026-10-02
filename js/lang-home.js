@@ -5,6 +5,15 @@
 window.EP_I18N = {
 
     ca: {
+      'ven.v3.alt': 'Sala de banquet de la Masia Torreblanca amb taules rodones i finestrals al camp',
+      'ven.v3.alt2': 'Galeria d’arcs de pedra de la Masia Torreblanca, amb bigues de fusta i palmeres',
+      'ven.v3.alt3': 'Pèrgola al costat de la piscina de la Masia Torreblanca, amb vistes a les vinyes',
+      'ven.v5.alt': 'Jardí de La Torre del Gall de nit, amb taules sota els arbres i garlandes de llums',
+      'ven.v5.alt2': 'Vista aèria de La Torre del Gall envoltada de vinyes i arbreda',
+      'ven.v6.alt': 'Façana de Bellesguart amb les portes de fusta obertes sobre el menjador',
+      'ven.v6.alt2': 'Torre modernista de Bellesguart sobre l’estany, entre vegetació',
+      'ven.v6.alt3': 'Taula llarga de fusta sota llums de vidre al menjador de Bellesguart',
+      'ven.v6.alt4': 'Vinya de Bellesguart amb Montserrat al fons',
       'svc.s8.tag': 'Premium',
       'svc.s8.title': 'Tast d’oli · D’Oliciós',
       'svc.s8.text': 'Tast d’oli d’oliva verge extra en un molí ecològic de l’Arboç, amb la premsa al costat i l’oli premiat que s’hi elabora. Funciona tot l’any, a diferència de la verema, i sorprèn fins i tot qui ja ha fet tres tasts de vi.',
@@ -310,6 +319,15 @@ window.EP_I18N = {
     },
 
     en: {
+      'ven.v3.alt': 'Banquet hall at Masia Torreblanca with round tables and windows onto the countryside',
+      'ven.v3.alt2': 'Stone arched gallery at Masia Torreblanca, with wooden beams and palm trees',
+      'ven.v3.alt3': 'Pergola by the pool at Masia Torreblanca, overlooking the vineyards',
+      'ven.v5.alt': 'The garden at La Torre del Gall at night, with tables under the trees and string lights',
+      'ven.v5.alt2': 'Aerial view of La Torre del Gall surrounded by vineyards and woodland',
+      'ven.v6.alt': 'The front of Bellesguart with its wooden doors open onto the dining room',
+      'ven.v6.alt2': 'The modernist tower at Bellesguart above the pond, among the greenery',
+      'ven.v6.alt3': 'Long wooden table under glass lamps in the dining room at Bellesguart',
+      'ven.v6.alt4': 'Bellesguart vineyard with Montserrat in the distance',
       'svc.s8.tag': 'Premium',
       'svc.s8.title': 'Olive oil tasting · D’Oliciós',
       'svc.s8.text': 'Extra virgin olive oil tasting at an organic mill in L’Arboç, with the press right there and the award-winning oil made on site. It works all year round, unlike the grape harvest, and surprises even those who have already done three wine tastings.',
