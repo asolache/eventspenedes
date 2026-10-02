@@ -10,15 +10,19 @@ una, igual que en `assets/fotos/`.
 | `torreblanca-piscina.jpg` | Pérgola junto a la piscina | Confirmada |
 | `torre-del-gall-jardi-nit.jpg` | Jardín de noche con guirnaldas | Confirmada |
 | `torre-del-gall-aeria.jpg` | Vista aérea entre viñedos | Confirmada |
+| `torre-del-gall-vinya.jpg` | Viñedo con Montserrat al fondo | Confirmada |
 | `bellesguart-facana.jpg` | Fachada con puertas de madera | Confirmada |
-| `bellesguart-vinya.jpg` | Viñedo con Montserrat al fondo | Confirmada |
 | `bellesguart-torre.jpg` | Torre modernista sobre el estanque | **Por confirmar** |
 | `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | **Por confirmar** |
 
-Las dos últimas se asignaron por lectura de la propia imagen, no por
+La torre y el comedor se asignaron por lectura de la propia imagen, no por
 confirmación: el comedor es el mismo que se ve por la puerta en
 `bellesguart-facana.jpg`, y la torre modernista encaja con el edificio de 1889.
 Si alguna no es de Bellesguart, se renombra y se cambia el `src`.
+
+El viñedo con Montserrat estuvo un rato en Bellesguart por error; es de La
+Torre del Gall. **La lección: una foto de viña se parece a otra foto de viña.**
+Cuando llegue una tanda sin nombre, se pregunta antes de publicarla.
 
 **Antes de publicarlas hace falta el permiso del espacio.** Una foto cedida para
 un dossier no está cedida para una web; se pide por escrito, aunque sea un
