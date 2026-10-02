@@ -1243,11 +1243,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* --- Retoques de altura premium ------------------------------------------ */
 
-/* En pantalla ancha, siete servicios en cuatro columnas dejan una fila coja.
-   Tres columnas reparten mejor y dan más aire a cada tarjeta. */
-@media (min-width: 1000px) {
-    .grid--4.grid--premium { grid-template-columns: repeat(3, 1fr); }
-}
+
 
 /* --- Foto dentro de una tarjeta ------------------------------------------ */
 
@@ -1274,3 +1270,74 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .escena__llista { margin-top: 1.1rem; }
 .escena__llista li { color: var(--text-mid); }
+
+/* --- Ficha técnica de un espacio ----------------------------------------- */
+/* Lo que de verdad decide si un espacio sirve: cuánta gente cabe, qué se
+   puede celebrar, si hay cocina —o si el catering es exclusivo, que cambia
+   el presupuesto entero— y si hay sala para reunirse. */
+
+.venue__fitxa {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+@media (min-width: 560px) { .venue__fitxa { grid-template-columns: repeat(2, 1fr); } }
+
+.venue__fitxa li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.015);
+    font-size: 0.88rem;
+    line-height: 1.35;
+}
+.venue__fitxa svg {
+    flex: none;
+    width: 17px;
+    height: 17px;
+    margin-top: 1px;
+    color: var(--accent-gold);
+}
+.venue__fitxa b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-low);
+}
+.venue__fitxa span { color: var(--text-mid); }
+
+/* Un dato que condiciona el presupuesto se marca; uno que falta, se apaga. */
+.venue__fitxa li.es-clau { border-color: rgba(217, 164, 65, 0.32); }
+.venue__fitxa li.es-clau span { color: var(--text-hi); }
+.venue__fitxa li.es-consulta svg { color: var(--text-low); }
+
+.venue__web {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.venue__web::after { content: "↗"; font-size: 0.85em; }
+
+/* Marco para el espacio sin fotografía propia: no se enlazan las imágenes de
+   la web del espacio —son suyas y el enlace se rompe el día que las cambien—,
+   así que hasta tener fotos cedidas va el dibujo de la casa. */
+.venue__media--dibuix {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    background:
+        radial-gradient(70% 70% at 50% 30%, rgba(217,164,65,0.10), transparent 70%),
+        var(--bg-panel);
+}
+.venue__media--dibuix svg { width: min(100%, 230px); color: var(--accent-gold); opacity: 0.55; }
