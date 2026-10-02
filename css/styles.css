@@ -1341,3 +1341,7 @@ ul { margin: 0; padding: 0; list-style: none; }
         var(--bg-panel);
 }
 .venue__media--dibuix svg { width: min(100%, 230px); color: var(--accent-gold); opacity: 0.55; }
+
+/* La botella de arbequina vive en el tercio izquierdo de la foto: con el
+   recorte por defecto se queda fuera y solo se ve el tronco. */
+.intangible__media img[src$="dolicios-arbequina.jpg"] { object-position: 32% center; }
