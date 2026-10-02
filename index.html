@@ -135,7 +135,7 @@
       "parentOrganization": {
         "@id": "https://eventspenedes.com/#organization"
       },
-      "description": "Producción premium de eventos corporativos en el Alt Penedès: espacios privados, enoturismo, gastronomía de autor, transporte de lujo y actividades de equipo, para agencias, DMC y dirección de empresa.",
+      "description": "Producción premium de eventos corporativos en el Alt Penedès: masías y fincas privadas, enoturismo, cata de aceite, gastronomía de autor, transporte de lujo y actividades de equipo, para agencias, DMC y dirección de empresa.",
       "telephone": "+34629867715",
       "address": {
         "@type": "PostalAddress",
@@ -480,6 +480,54 @@
       ]
     },
     {
+      "@type": "EventVenue",
+      "@id": "https://eventspenedes.com/#torre-del-gall",
+      "name": "La Torre del Gall",
+      "description": "Finca del siglo XV en Sant Cugat Sesgarrigues con cinco hectáreas de viñedo, tres espacios interiores y seis exteriores, cocina propia y salas de reunión. Espacio aliado de Events Penedès.",
+      "url": "http://www.latorredelgall.com",
+      "maximumAttendeeCapacity": 350,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Sant Cugat Sesgarrigues",
+        "addressRegion": "Barcelona",
+        "addressCountry": "ES"
+      },
+      "amenityFeature": [
+        { "@type": "LocationFeatureSpecification", "name": "Cocina propia", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Salas de reunión", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Espacio exterior", "value": true }
+      ]
+    },
+    {
+      "@type": "EventVenue",
+      "@id": "https://eventspenedes.com/#bellesguart",
+      "name": "Bellesguart",
+      "description": "Finca familiar en un edificio modernista de 1889 en L'Arboç, a menos de 45 minutos de Barcelona y de Tarragona. Comparte casa con la almazara ecológica D'Oliciós, donde se hace la cata de aceite. Espacio aliado de Events Penedès.",
+      "url": "https://www.bellesguart.cat",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Mossèn Cinto Verdaguer, 37",
+        "postalCode": "43720",
+        "addressLocality": "L'Arboç",
+        "addressRegion": "Tarragona",
+        "addressCountry": "ES"
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://eventspenedes.com/#servicio-cata-aceite",
+      "name": "Cata de aceite de oliva virgen extra",
+      "serviceType": "Cata de aceite para empresas",
+      "description": "Cata guiada de aceite de oliva virgen extra en una almazara ecológica de L'Arboç, con maridajes y comidas temáticas. Disponible todo el año.",
+      "provider": { "@id": "https://eventspenedes.com/#business" },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Alt Penedès" },
+        { "@type": "AdministrativeArea", "name": "Baix Penedès" },
+        { "@type": "AdministrativeArea", "name": "Barcelona" }
+      ],
+      "availableLanguage": ["ca", "es", "en"]
+    },
+    {
       "@type": "Person",
       "@id": "https://eventspenedes.com/#alvaro-solache",
       "name": "Álvaro Solache",
@@ -785,7 +833,7 @@
         <h2 data-i18n="svc.title">Qué hacemos</h2>
         <p data-i18n="svc.lead">Puedes contratarlo entero o solo la pieza que te falte.</p>
       </div>
-      <div class="grid grid--4 grid--premium">
+      <div class="grid grid--4">
 
         <article class="card">
           <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -868,6 +916,23 @@
 
         <article class="card card--premium">
           <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M12 3c3.4 4.6 5.6 7.4 5.6 10.4A5.6 5.6 0 0 1 6.4 13.4C6.4 10.4 8.6 7.6 12 3Z" stroke-linejoin="round"/>
+            <path d="M9.6 14.4a2.9 2.9 0 0 0 2.9 2.9" stroke-linecap="round"/>
+          </svg>
+          <p class="card__segell" data-i18n="svc.s8.tag">Premium</p>
+          <h3 data-i18n="svc.s8.title">Cata de aceite · D'Oliciós</h3>
+          <p data-i18n="svc.s8.text">Cata de aceite de oliva virgen extra en una almazara ecológica de L'Arboç, con el molino al lado y el aceite premiado que se elabora allí mismo. Funciona todo el año, a diferencia de la vendimia, y sorprende incluso a quien ya ha hecho tres catas de vino.</p>
+          <ul class="card__list">
+            <li data-i18n="svc.s8.i1">Cata guiada en la propia almazara</li>
+            <li data-i18n="svc.s8.i2">Maridajes y comidas temáticas con trufa y aceite</li>
+            <li data-i18n="svc.s8.i3">Se combina con el espacio de Bellesguart, en la misma casa</li>
+            <li data-i18n="svc.s8.i4">Alternativa a la cata de vino fuera de temporada</li>
+          </ul>
+          <p class="card__more"><a href="https://dolicios.com" target="_blank" rel="noopener" data-i18n="svc.s8.link">dolicios.com</a></p>
+        </article>
+
+        <article class="card card--premium">
+          <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
             <path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1Z" stroke-linejoin="round"/>
             <path d="M16.5 8.5a5 5 0 0 1 0 7M19.5 5.5a9 9 0 0 1 0 13" stroke-linecap="round"/>
           </svg>
@@ -910,7 +975,7 @@
       <div class="section__head">
         <p class="eyebrow" data-i18n="ven.eyebrow">Localizaciones</p>
         <h2 data-i18n="ven.title">Nuestros espacios en el Penedès</h2>
-        <p data-i18n="ven.lead">Empezamos por los dos espacios que gestionamos directamente, junto a TeamTowers, y los completamos con la red de espacios aliados de la comarca.</p>
+        <p data-i18n="ven.lead">Dos espacios propios, que gestionamos directamente junto a TeamTowers, y tres aliados con los que trabajamos a menudo. Cada ficha dice lo que de verdad decide: cuánta gente cabe, qué se puede celebrar, si hay cocina y si hay sala para reunirse.</p>
       </div>
 
       <article class="venue">
@@ -922,11 +987,23 @@
           <p class="venue__tag" data-i18n="ven.v1.tag">Espacio propio · TeamTowers</p>
           <h3 data-i18n="ven.v1.title">Cal Segue</h3>
           <p data-i18n="ven.v1.text">En Cal Segue alquilamos el espacio exterior: la era enlosada, el porche cubierto con barbacoa y el jardín, rodeado de viñas y con la sierra al fondo. Es el sitio para una cata, un taller de castells o una comida al aire libre, con grupos de hasta unas 30 personas. El interior de la casa no se alquila.</p>
-          <ul class="venue__specs">
-            <li data-i18n="ven.v1.s1">Barri Cusconar, Torrelles de Foix</li>
-            <li data-i18n="ven.v1.s2">Solo espacio exterior</li>
-            <li data-i18n="ven.v1.s3">Porche cubierto con barbacoa</li>
-            <li data-i18n="ven.v1.s4">Hasta 30 personas</li>
+          <ul class="venue__fitxa">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.aforo">Aforo máximo</b><span data-i18n="ven.v1.f1">30 personas</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18" stroke-linecap="round"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+              <span><b data-i18n="ven.l.events">Tipo de evento</b><span data-i18n="ven.v1.f2">Catas, taller de castells, comidas al aire libre</span></span>
+            </li>
+            <li class="es-clau">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 2v8a3 3 0 0 0 6 0V2M10 10v12" stroke-linecap="round"/><path d="M18 2c-1.8 1.4-2.6 3.4-2.6 6 0 1.8.6 3 1.8 3.6V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b data-i18n="ven.l.cuina">Cocina</b><span data-i18n="ven.v1.f3">Barbacoa; el catering entra de fuera</span></span>
+            </li>
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 13h20" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.reunio">Salas de reunión</b><span data-i18n="ven.v1.f4">No: solo espacio exterior</span></span>
+            </li>
           </ul>
         </div>
       </article>
@@ -953,12 +1030,26 @@
           <p class="venue__tag" data-i18n="ven.v2.tag">Espacio propio · TeamTowers</p>
           <h3 data-i18n="ven.v2.title">El Taller de Castells</h3>
           <p data-i18n="ven.v2.text">Espacio abierto de entrenamiento casteller, adaptado a grupos de empresa. Es la sede natural del taller «Fent Pinya»: se hace llueva o no, con monitores casteller@s y todo el material de seguridad. El taller es de TeamTowers &mdash; ficha completa en <a href="https://www.teamtowers.eu" target="_blank" rel="noopener">teamtowers.eu</a>.</p>
-          <ul class="venue__specs">
-            <li data-i18n="ven.v2.s1">Al aire libre</li>
-            <li data-i18n="ven.v2.s2">Grupos de 11 a 50</li>
-            <li data-i18n="ven.v2.s3">Material didáctico y tradicional incluido</li>
-            <li data-i18n="ven.v2.s4">Monitores expertos</li>
+          <ul class="venue__fitxa">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.aforo">Aforo máximo</b><span data-i18n="ven.v2.f1">50 personas</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18" stroke-linecap="round"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+              <span><b data-i18n="ven.l.events">Tipo de evento</b><span data-i18n="ven.v2.f2">Team building y taller de castells</span></span>
+            </li>
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 2v8a3 3 0 0 0 6 0V2M10 10v12" stroke-linecap="round"/><path d="M18 2c-1.8 1.4-2.6 3.4-2.6 6 0 1.8.6 3 1.8 3.6V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b data-i18n="ven.l.cuina">Cocina</b><span data-i18n="ven.v2.f3">No; se combina con otro espacio</span></span>
+            </li>
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 13h20" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.reunio">Salas de reunión</b><span data-i18n="ven.v2.f4">No: espacio abierto</span></span>
+            </li>
           </ul>
+          <a class="venue__web" href="https://www.teamtowers.eu" target="_blank" rel="noopener"
+             data-i18n="ven.v2.web">teamtowers.eu</a>
         </div>
       </article>
 
@@ -976,12 +1067,105 @@
           <p class="venue__tag" data-i18n="ven.v3.tag">Espacio aliado</p>
           <h3 data-i18n="ven.v3.title">Masia Torreblanca</h3>
           <p data-i18n="ven.v3.text">Masía en Olèrdola, entre viñedos y a un paso del parque de Olèrdola. Espacios interiores y exteriores para convenciones, comidas de empresa y actividades. Nosotros gestionamos la reserva y la producción del evento.</p>
-          <ul class="venue__specs">
-            <li data-i18n="ven.v3.s1">Olèrdola</li>
-            <li data-i18n="ven.v3.s2">Interior + exterior</li>
-            <li data-i18n="ven.v3.s3">Entre viñedos</li>
-            <li data-i18n="ven.v3.s4">Aforo a consultar</li>
+          <ul class="venue__fitxa">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.aforo">Aforo máximo</b><span data-i18n="ven.v3.f1">Hasta 500 personas</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18" stroke-linecap="round"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+              <span><b data-i18n="ven.l.events">Tipo de evento</b><span data-i18n="ven.v3.f2">Convenciones, presentaciones, comidas de empresa y bodas</span></span>
+            </li>
+            <li class="es-clau">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 2v8a3 3 0 0 0 6 0V2M10 10v12" stroke-linecap="round"/><path d="M18 2c-1.8 1.4-2.6 3.4-2.6 6 0 1.8.6 3 1.8 3.6V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b data-i18n="ven.l.cuina">Cocina</b><span data-i18n="ven.v3.f3">Catering en exclusiva de Cal Blay</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 13h20" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.reunio">Salas de reunión</b><span data-i18n="ven.v3.f4">Sí, varias salas y la torre lateral</span></span>
+            </li>
           </ul>
+          <a class="venue__web" href="https://masiatorreblanca.com/es/home/" target="_blank" rel="noopener"
+             data-i18n="ven.v3.web">masiatorreblanca.com</a>
+        </div>
+      </article>
+
+
+      <article class="venue venue--flip">
+        <div class="venue__media venue__media--dibuix">
+          <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M10 104h180" stroke-linecap="round"/>
+            <path d="M28 104V52h58v52" stroke-linejoin="round"/>
+            <path d="M22 52 57 28l35 24" stroke-linejoin="round"/>
+            <path d="M92 104V40h46v64" stroke-linejoin="round"/>
+            <path d="M86 40l29-18 29 18" stroke-linejoin="round"/>
+            <path d="M144 104V66h34v38M138 66l23-14 23 14" stroke-linejoin="round"/>
+            <path d="M44 72h10v12H44zM62 72h10v12H62zM106 60h10v14h-10zM124 60h10v14h-10z"/>
+            <path d="M54 104V88h12v16" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="venue__body">
+          <p class="venue__tag" data-i18n="ven.v5.tag">Espacio aliado</p>
+          <h3 data-i18n="ven.v5.title">La Torre del Gall</h3>
+          <p data-i18n="ven.v5.text">Finca del siglo XV en Sant Cugat Sesgarrigues, con cinco hectáreas de viñedo propio, tres espacios interiores y seis exteriores. Es el espacio que resuelve una jornada entera sin mover al grupo: cocina propia en la misma finca, salas para reunirse y exclusividad de la finca a partir de 100 personas. A 40 minutos de Barcelona y 20 de Sitges.</p>
+          <ul class="venue__fitxa">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.aforo">Aforo máximo</b><span data-i18n="ven.v5.f1">350 de pie · 280 sentados</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18" stroke-linecap="round"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+              <span><b data-i18n="ven.l.events">Tipo de evento</b><span data-i18n="ven.v5.f2">Convenciones, jornadas de empresa, banquetes y calçotades</span></span>
+            </li>
+            <li class="es-clau">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 2v8a3 3 0 0 0 6 0V2M10 10v12" stroke-linecap="round"/><path d="M18 2c-1.8 1.4-2.6 3.4-2.6 6 0 1.8.6 3 1.8 3.6V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b data-i18n="ven.l.cuina">Cocina</b><span data-i18n="ven.v5.f3">Propia, 700 m², en la misma finca</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 13h20" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.reunio">Salas de reunión</b><span data-i18n="ven.v5.f4">Sí, salas privadas en la torre</span></span>
+            </li>
+          </ul>
+          <a class="venue__web" href="http://www.latorredelgall.com" target="_blank" rel="noopener"
+             data-i18n="ven.v5.web">latorredelgall.com</a>
+        </div>
+      </article>
+
+      <article class="venue">
+        <div class="venue__media venue__media--dibuix">
+          <svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M10 104h180" stroke-linecap="round"/>
+            <path d="M46 104V36h108v68" stroke-linejoin="round"/>
+            <path d="M40 36 100 14l60 22" stroke-linejoin="round"/>
+            <path d="M66 58a10 10 0 0 1 20 0v20H66zM114 58a10 10 0 0 1 20 0v20h-20z" stroke-linejoin="round"/>
+            <path d="M88 104V84a12 12 0 0 1 24 0v20" stroke-linejoin="round"/>
+            <path d="M100 14V4M92 24h16" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="venue__body">
+          <p class="venue__tag" data-i18n="ven.v6.tag">Espacio aliado</p>
+          <h3 data-i18n="ven.v6.title">Bellesguart</h3>
+          <p data-i18n="ven.v6.text">Finca familiar en un edificio modernista de 1889, en L'Arboç, a menos de 45 minutos tanto de Barcelona como de Tarragona. Comparte casa con la almazara ecológica D'Oliciós, así que la cata de aceite se hace allí mismo: es el único sitio de la red donde el espacio y la experiencia son la misma dirección.</p>
+          <ul class="venue__fitxa">
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.aforo">Aforo máximo</b><span data-i18n="ven.v6.f1">A consultar</span></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18" stroke-linecap="round"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+              <span><b data-i18n="ven.l.events">Tipo de evento</b><span data-i18n="ven.v6.f2">Celebraciones, eventos de empresa y catas de aceite</span></span>
+            </li>
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 2v8a3 3 0 0 0 6 0V2M10 10v12" stroke-linecap="round"/><path d="M18 2c-1.8 1.4-2.6 3.4-2.6 6 0 1.8.6 3 1.8 3.6V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b data-i18n="ven.l.cuina">Cocina</b><span data-i18n="ven.v6.f3">A consultar</span></span>
+            </li>
+            <li class="es-consulta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 13h20" stroke-linecap="round"/></svg>
+              <span><b data-i18n="ven.l.reunio">Salas de reunión</b><span data-i18n="ven.v6.f4">A consultar</span></span>
+            </li>
+          </ul>
+          <a class="venue__web" href="https://www.bellesguart.cat" target="_blank" rel="noopener"
+             data-i18n="ven.v6.web">bellesguart.cat</a>
         </div>
       </article>
 
