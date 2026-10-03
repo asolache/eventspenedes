@@ -72,6 +72,28 @@ comprueba('queda constancia del consentimiento con su fecha',
 comprueba('sin ZOHO_CAMPO_MARCA no se inventa el campo',
   !('Marca' in (cuerpoOk.lead || {})));
 
+/* 1b · El formulario de contacto, que tiene otras opciones y menos campos */
+const CONTACTO = JSON.stringify({
+  form_name: 'contacto',
+  created_at: '2026-10-03T21:50:51.363Z',
+  data: { idioma: 'es', nombre: 'Álvaro Rodríguez', correo: 'a@example.com',
+          telefono: '+34629867715', tipo: 'team-building', fecha: '2026-10-31',
+          personas: '45', mensaje: 'tees', consentimiento: 'si' },
+});
+const c = await (await handler(peticion(CONTACTO, firmar(CONTACTO)))).json();
+comprueba('el nombre del formulario corto también llega', c.lead?.Last_Name === 'Álvaro Rodríguez');
+comprueba('sin empresa, Company es «Particular» y no el nombre de la persona',
+  c.lead?.Company === 'Particular');
+comprueba('las opciones del formulario de contacto se traducen',
+  /Jornada de equipo \/ team building/.test(c.lead?.Description || ''));
+
+/* Y que «agencia» no signifique lo mismo en los dos formularios */
+const AG = JSON.stringify({ form_name: 'agencia', created_at: '2026-10-03T21:00:00.000Z',
+  data: { empresa: 'DMC Example', persona: 'Nuria', correo: 'n@example.com', tipo: 'agencia' } });
+const a = await (await handler(peticion(AG, firmar(AG)))).json();
+comprueba('«agencia» se lee según el formulario del que viene',
+  /Tipo de evento: Agencia de eventos/.test(a.lead?.Description || ''));
+
 /* 2 · Los caminos malos, que son los que de verdad hay que probar */
 comprueba('sin firma se rechaza', (await handler(peticion(AVISO, null))).status === 401);
 comprueba('con otro secreto se rechaza',
