@@ -8,6 +8,11 @@
 [build.processing]
   skip_processing = false
 
+# La función que lleva los envíos de formulario a Zoho. Netlify la encuentra
+# aquí por convención, pero declararlo evita sorpresas si algún día cambia.
+[functions]
+  directory = "netlify/functions"
+
 # Cabeceras de seguridad y caché
 [[headers]]
   for = "/*"
