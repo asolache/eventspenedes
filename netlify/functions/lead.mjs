@@ -136,7 +136,27 @@ const VALORES = {
   idioma: { es: 'castellano', ca: 'catalán', en: 'inglés' },
 };
 
-const legible = (campo, v) => (VALORES[campo] && VALORES[campo][v]) || v;
+/* Cada formulario tiene sus propias opciones, y «agencia» no significa lo mismo
+   en el de contacto («soy agencia y busco partner») que en el de alta («agencia
+   de eventos»). Por eso la traducción es por formulario y no una sola tabla. */
+const POR_FORM = {
+  contacto: {
+    tipo: { 'team-building': 'Jornada de equipo / team building',
+            convencion: 'Convención o kick-off', incentivo: 'Incentivo',
+            celebracion: 'Celebración de empresa',
+            agencia: 'Es una agencia y busca partner local',
+            dj: 'Sesión de DJ', otro: 'Otro' },
+  },
+  agencia: {
+    tipo: { agencia: 'Agencia de eventos', dmc: 'DMC',
+            organizador: 'Organizador profesional de congresos', otro: 'Otro' },
+  },
+};
+
+const legible = (form, campo, v) =>
+  (POR_FORM[form] && POR_FORM[form][campo] && POR_FORM[form][campo][v])
+  || (VALORES[campo] && VALORES[campo][v])
+  || v;
 
 const EXPERIENCIAS = {
   exp_castells: 'Taller de castells',
@@ -148,11 +168,11 @@ const EXPERIENCIAS = {
 };
 
 function ficha(form, d, cuando) {
-  const l = [`Formulario: ${form}`, `Idioma de la web: ${legible('idioma', d.idioma) || '—'}`,
+  const l = [`Formulario: ${form}`, `Idioma de la web: ${legible(form, 'idioma', d.idioma) || '—'}`,
              `Recibido: ${cuando}`, ''];
   for (const [campo, etiqueta] of Object.entries(ETIQUETAS)) {
     const v = (d[campo] || '').toString().trim();
-    if (v) { l.push(`${etiqueta}: ${legible(campo, v)}`); }
+    if (v) { l.push(`${etiqueta}: ${legible(form, campo, v)}`); }
   }
   const exp = Object.entries(EXPERIENCIAS).filter(([k]) => d[k]).map(([, v]) => v);
   if (exp.length) { l.push(`Experiencias marcadas: ${exp.join(', ')}`); }
@@ -165,12 +185,16 @@ function ficha(form, d, cuando) {
 function lead(form, d, cuando) {
   const persona = (d.persona || d.nombre || '').trim();
   const empresa = (d.empresa || '').trim();
-  /* Zoho exige Last_Name y Company. Antes que fallar la alta por un campo
+  /* Zoho exige Last_Name y Company. Antes que fallar el alta por un campo
      vacío, se rellenan con lo que haya: un lead sin nombre sigue siendo un
-     lead, y el correo está. */
+     lead, y el correo está.
+     Company no se rellena con el nombre de la persona: en el CRM, una empresa
+     que se llama igual que el contacto parece un error de datos, y al convertir
+     el lead crearía una cuenta con nombre de persona. «Particular» es lo que
+     es. */
   const r = {
     Last_Name: persona || empresa || (d.correo || 'Sin nombre'),
-    Company: empresa || persona || 'Particular',
+    Company: empresa || 'Particular',
     Email: (d.correo || '').trim() || undefined,
     Phone: (d.telefono || '').trim() || undefined,
     Website: (d.web || '').trim() || undefined,
