@@ -11,6 +11,7 @@ window.EP_I18N = {
     'nav.activities': 'Activitats',
     'nav.dj': 'DJ',
     'nav.agencies': 'Agències i DMC',
+    'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat',
     'nav.contact': 'Contacte',
 
     'dj.alt1': 'Álvaro Solache punxant en un escenari a l’aire lliure, amb samarreta de PSYKATXU',
@@ -112,6 +113,7 @@ window.EP_I18N = {
     'nav.activities': 'Activities',
     'nav.dj': 'DJ',
     'nav.agencies': 'Agencies & DMCs',
+    'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice',
     'nav.contact': 'Contact',
 
     'dj.alt1': 'Álvaro Solache playing on an open-air stage, wearing a PSYKATXU t-shirt',

@@ -1345,3 +1345,75 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* La botella de arbequina vive en el tercio izquierdo de la foto: con el
    recorte por defecto se queda fuera y solo se ve el tronco. */
 .intangible__media img[src$="dolicios-arbequina.jpg"] { object-position: 32% center; }
+
+/* --- El briefing largo --------------------------------------------------- */
+/* Un formulario de veinte campos espanta. La mitad se esconde detrás de un
+   `details`, que es el elemento que hace esto sin una línea de JavaScript y
+   sigue funcionando si el JavaScript no carga. */
+
+.honeypot { position: absolute; left: -9999px; }
+
+.form__h {
+    font-size: 1.05rem;
+    margin: 1.4rem 0 -0.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--glass-border);
+}
+.form > .form__h:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+
+.field__hint { font-size: 0.82rem; color: var(--text-low); line-height: 1.5; }
+
+.form__mas {
+    background: var(--bg-elevated);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 0 1.1rem;
+}
+.form__mas > summary {
+    cursor: pointer;
+    padding: 1rem 0;
+    font-weight: 600;
+    list-style-position: inside;
+}
+.form__mas > summary span { color: var(--text-low); font-weight: 400; }
+.form__mas[open] > summary { border-bottom: 1px solid var(--glass-border); }
+.form__mas > :not(summary) { margin-block: 1rem; }
+.form__mas > :last-child { margin-bottom: 1.3rem; }
+
+.opts { border: 0; padding: 0; margin: 1rem 0; display: grid; gap: 0.55rem; }
+.opts legend {
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-low);
+    padding: 0 0 0.6rem;
+}
+@media (min-width: 620px) { .opts { grid-template-columns: 1fr 1fr; } }
+
+/* La casilla y su texto van en la misma línea y todo el texto es clicable:
+   en un móvil, una casilla de 13 px sin etiqueta asociada no se marca. */
+.field--check { margin: 0; }
+.field--check label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    align-items: start;
+    cursor: pointer;
+    font-size: 0.93rem;
+    line-height: 1.5;
+}
+.field--check input { width: 1.05rem; height: 1.05rem; margin-top: 0.2rem; accent-color: var(--accent-gold); }
+.field--consent { padding-top: 0.6rem; border-top: 1px solid var(--glass-border); }
+
+/* Qué pasa después: una lista numerada que se lee como un camino */
+.pasos { display: grid; gap: 1rem; margin: 0; padding-left: 1.2rem; }
+.pasos li { line-height: 1.6; }
+.pasos strong { display: block; color: var(--text-hi); }
+.pasos span { color: var(--text-low); }
+
+/* Páginas de texto largo: una medida que se pueda leer */
+.wrap--texto { max-width: 68ch; }
+.wrap--texto h2 { margin: 2.2rem 0 0.6rem; font-size: 1.15rem; }
+.wrap--texto p, .wrap--texto li { line-height: 1.7; }
+.wrap--texto ul { display: grid; gap: 0.6rem; padding-left: 1.2rem; margin: 0.6rem 0; }

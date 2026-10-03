@@ -17,6 +17,9 @@ const PAGINAS = [
   { fuente: 'index.html', dic: 'js/lang-home.js', ruta: '' },
   { fuente: 'dj.html',    dic: 'js/lang-dj.js',   ruta: 'dj.html' },
   { fuente: 'agencias.html', dic: 'js/lang-agencias.js', ruta: 'agencias.html' },
+  { fuente: 'propuesta.html', dic: 'js/lang-propuesta.js', ruta: 'propuesta.html' },
+  { fuente: 'gracias.html', dic: 'js/lang-gracias.js', ruta: 'gracias.html' },
+  { fuente: 'privacidad.html', dic: 'js/lang-privacidad.js', ruta: 'privacidad.html' },
 ];
 
 /* Los ficheros de idioma son scripts de navegador: se evalúan con un window
@@ -100,6 +103,10 @@ function construir(pagina, idioma) {
     const re = new RegExp(`href="${ruta.replace(/\./g, '\\.')}`, 'g');
     html = html.replace(re, `href="/${idioma}/${ruta}`);
   }
+  /* El `action` de un formulario también es un enlace interno: si no se
+     traduce, quien envía desde /ca/ acaba en la página de gracias en
+     castellano. */
+  html = html.replace(/action="\/(gracias\.html)"/g, `action="/${idioma}/$1"`);
 
   /* El conmutador marca el idioma en el que estamos */
   html = html.replace(/ aria-current="true"/, '');

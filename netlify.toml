@@ -8,6 +8,11 @@
 [build.processing]
   skip_processing = false
 
+# La función que lleva los envíos de formulario a Zoho. Netlify la encuentra
+# aquí por convención, pero declararlo evita sorpresas si algún día cambia.
+[functions]
+  directory = "netlify/functions"
+
 # Cabeceras de seguridad y caché
 [[headers]]
   for = "/*"
@@ -61,3 +66,82 @@
   to = "https://eventspenedes.com/:splat"
   status = 301
   force = true
+
+# URLs sin extensión. Un enlace compartido a mano se escribe sin «.html», y sin
+# estas reglas acaba en el 404 —que además, con rutas relativas, salía sin
+# estilos—. Redirección permanente a la página real: una sola URL canónica.
+
+[[redirects]]
+  from = "/dj"
+  to = "/dj.html"
+  status = 301
+
+[[redirects]]
+  from = "/ca/dj"
+  to = "/ca/dj.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/dj"
+  to = "/en/dj.html"
+  status = 301
+
+[[redirects]]
+  from = "/agencias"
+  to = "/agencias.html"
+  status = 301
+
+[[redirects]]
+  from = "/ca/agencias"
+  to = "/ca/agencias.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/agencias"
+  to = "/en/agencias.html"
+  status = 301
+
+[[redirects]]
+  from = "/propuesta"
+  to = "/propuesta.html"
+  status = 301
+
+[[redirects]]
+  from = "/ca/propuesta"
+  to = "/ca/propuesta.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/propuesta"
+  to = "/en/propuesta.html"
+  status = 301
+
+[[redirects]]
+  from = "/gracias"
+  to = "/gracias.html"
+  status = 301
+
+[[redirects]]
+  from = "/ca/gracias"
+  to = "/ca/gracias.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/gracias"
+  to = "/en/gracias.html"
+  status = 301
+
+[[redirects]]
+  from = "/privacidad"
+  to = "/privacidad.html"
+  status = 301
+
+[[redirects]]
+  from = "/ca/privacidad"
+  to = "/ca/privacidad.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/privacidad"
+  to = "/en/privacidad.html"
+  status = 301

@@ -103,8 +103,10 @@ las encuestas internas posteriores al evento, no de un estudio externo.
 
 ## Cómo trabajan
 
-1. Briefing sin compromiso. 2. Propuesta con opciones de espacio, programa y
-presupuesto cerrado, normalmente en 48–72 h laborables. 3. Producción: reservas,
+1. Briefing sin compromiso, por teléfono o con el formulario de
+https://eventspenedes.com/propuesta.html. 2. Propuesta a medida **sin precio**
+con opciones de espacio y programa, normalmente en 48–72 h laborables; el
+presupuesto llega cuando el programa encaja. 3. Producción: reservas,
 proveedores, permisos y plan B. 4. Dirección del evento y, después, cierre
 económico y valoración de los participantes.
 
@@ -113,6 +115,17 @@ económico y valoración de los participantes.
 - [Web](https://eventspenedes.com/): página principal, con servicios, espacios,
   actividades, preguntas frecuentes y formulario de contacto. En catalán:
   https://eventspenedes.com/ca/ · En inglés: https://eventspenedes.com/en/
+- [Briefing para la propuesta](https://eventspenedes.com/propuesta.html): el
+  formulario largo con el que se pide una propuesta a medida. Lo esencial son
+  seis campos; el resto es opcional y afina el resultado. **La propuesta se
+  envía sin precio**: primero se acuerda el programa y el presupuesto va
+  después. La producción se factura **por horas**, no con comisión sobre los
+  servicios de terceros. En catalán:
+  https://eventspenedes.com/ca/propuesta.html · En inglés:
+  https://eventspenedes.com/en/propuesta.html
+- [Aviso de privacidad](https://eventspenedes.com/privacidad.html): quién es el
+  responsable, qué datos se recogen, cuánto se guardan y cómo ejercer los
+  derechos.
 - [Programa de agencias y DMC](https://eventspenedes.com/agencias.html): qué
   puede revender una agencia, cómo funciona el alta y la comisión. **Las
   tarifas de agencia no se publican en la web**: se envían en PDF tras el alta.

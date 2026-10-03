@@ -159,6 +159,7 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ',
       'nav.agencies': 'Agències i DMC',
+      'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat',
       'svc.s4.title': 'DJ per a esdeveniments',
       'svc.s4.text': 'Sessió de DJ amb més de vint anys d’ofici al darrere. Repertori sense límits gràcies a les plataformes de streaming professionals: la música s’ajusta al públic que tens al davant, no al que cap en un disc dur.',
       'svc.s4.i1': 'Recepció, sopar, festa i after',
@@ -307,8 +308,8 @@ window.EP_I18N = {
       'cta.f.t6': 'Altres',
       'cta.f.msg': 'Explica’ns',
       'cta.f.send': 'Enviar sol·licitud',
-      'cta.f.note': 'En enviar s’obre el teu programa de correu amb les dades ja escrites; només has de fer-hi clic a enviar. No publiquem l’adreça per evitar el correu brossa automàtic, però la veuràs allà.',
-      'cta.f.fallback': 'No se t’ha obert el correu? Escriu-nos a <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">la nostra adreça</a> o truca’ns al <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+      'cta.f.note': 'Responem en menys de 24 h laborables. Si ja tens clar l’esdeveniment, el <a href="propuesta.html">briefing llarg</a> ens estalvia una reunió a tots dos.',
+      'cta.f.consent': 'He llegit i accepto l’<a href="privacidad.html">avís de privacitat</a>.',
 
       'foot.tagline': 'Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès.',
       'foot.h1': 'Seccions',
@@ -474,6 +475,7 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ',
       'nav.agencies': 'Agencies & DMCs',
+      'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice',
       'svc.s4.title': 'DJ for events',
       'svc.s4.text': 'A DJ set backed by more than twenty years behind the decks. No repertoire limits, thanks to professional streaming platforms: the music follows the room in front of you, not what fits on a hard drive.',
       'svc.s4.i1': 'Reception, dinner, party and after',
@@ -622,8 +624,8 @@ window.EP_I18N = {
       'cta.f.t6': 'Other',
       'cta.f.msg': 'Tell us more',
       'cta.f.send': 'Send request',
-      'cta.f.note': 'Submitting opens your email client with everything already written; you just press send. We do not publish the address, to keep automated spam away, but you will see it there.',
-      'cta.f.fallback': 'Did your email client not open? Write to <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+      'cta.f.note': 'We reply within 24 working hours. If the event is already clear in your head, the <a href="propuesta.html">full briefing</a> saves us both a meeting.',
+      'cta.f.consent': 'I have read and accept the <a href="privacidad.html">privacy notice</a>.',
 
       'foot.tagline': 'Event production, venues and activities in the Alt Penedès.',
       'foot.h1': 'Sections',
