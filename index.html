@@ -1423,8 +1423,11 @@
           </dl>
         </div>
 
-        <form class="form" id="form-contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">
+        <form class="form" id="form-contacto" name="contacto" method="POST"
+              action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contacto">
           <input type="hidden" name="idioma" value="es">
+          <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
           <div class="form__row">
             <p class="field">
               <label for="f-name" data-i18n="cta.f.name">Nombre</label>
@@ -1472,8 +1475,11 @@
             <textarea id="f-msg" name="mensaje" rows="5" maxlength="1200"></textarea>
           </p>
           <p><button class="btn btn--primary" type="submit" data-i18n="cta.f.send">Enviar solicitud</button></p>
-          <p class="form__note" data-i18n="cta.f.note">Al enviar se abre tu programa de correo con los datos ya escritos; solo tienes que darle a enviar. No publicamos la dirección para evitar el spam automático, pero la verás ahí.</p>
-          <p class="form__fallback" id="form-fallback" hidden data-i18n="cta.f.fallback">¿No se ha abierto tu correo? Escríbenos a <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">nuestra dirección</a> o llámanos al <a href="tel:+34629867715">+34 629 86 77 15</a>.</p>
+          <p class="field--check field--consent">
+            <label><input type="checkbox" name="consentimiento" value="si" required>
+            <span data-i18n="cta.f.consent">He leído y acepto el <a href="privacidad.html">aviso de privacidad</a>.</span></label>
+          </p>
+          <p class="form__note" data-i18n="cta.f.note">Respondemos en menos de 24 h laborables. Si ya tienes claro el evento, el <a href="propuesta.html">briefing largo</a> nos ahorra una reunión a los dos.</p>
         </form>
       </div>
     </div>
@@ -1504,6 +1510,7 @@
           <li><a href="#proceso" data-i18n="nav.process">Cómo trabajamos</a></li>
           <li><a href="dj.html" data-i18n="nav.dj">DJ</a></li>
           <li><a href="agencias.html" data-i18n="nav.agencies">Agencias y DMC</a></li>
+          <li><a href="propuesta.html" data-i18n="nav.brief">Pedir propuesta</a></li>
         </ul>
       </div>
       <div>
@@ -1524,12 +1531,11 @@
     </div>
     <div class="site-footer__bottom">
       <p data-i18n="foot.rights">© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
-      <p data-i18n="foot.prov">Web provisional — estamos preparando la versión completa.</p>
+      <p><a href="privacidad.html" data-i18n="foot.priv">Aviso de privacidad</a> <span aria-hidden="true">·</span> <span data-i18n="foot.prov">Web provisional — estamos preparando la versión completa.</span></p>
     </div>
   </div>
 </footer>
 
-<script src="js/form.js" defer></script>
 <script src="js/site.js" defer></script>
 </body>
 </html>

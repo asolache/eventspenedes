@@ -1415,8 +1415,11 @@
           </dl>
         </div>
 
-        <form class="form" id="form-contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">
+        <form class="form" id="form-contacto" name="contacto" method="POST"
+              action="/en/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contacto">
           <input type="hidden" name="idioma" value="es">
+          <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
           <div class="form__row">
             <p class="field">
               <label for="f-name" data-i18n="cta.f.name">Name</label>
@@ -1464,8 +1467,11 @@
             <textarea id="f-msg" name="mensaje" rows="5" maxlength="1200"></textarea>
           </p>
           <p><button class="btn btn--primary" type="submit" data-i18n="cta.f.send">Send request</button></p>
-          <p class="form__note" data-i18n="cta.f.note">Submitting opens your email client with everything already written; you just press send. We do not publish the address, to keep automated spam away, but you will see it there.</p>
-          <p class="form__fallback" id="form-fallback" hidden data-i18n="cta.f.fallback">Did your email client not open? Write to <a class="js-mail" href="#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.</p>
+          <p class="field--check field--consent">
+            <label><input type="checkbox" name="consentimiento" value="si" required>
+            <span data-i18n="cta.f.consent">I have read and accept the <a href="/en/privacidad.html">privacy notice</a>.</span></label>
+          </p>
+          <p class="form__note" data-i18n="cta.f.note">We reply within 24 working hours. If the event is already clear in your head, the <a href="/en/propuesta.html">full briefing</a> saves us both a meeting.</p>
         </form>
       </div>
     </div>
@@ -1496,6 +1502,7 @@
           <li><a href="#proceso" data-i18n="nav.process">How we work</a></li>
           <li><a href="/en/dj.html" data-i18n="nav.dj">DJ</a></li>
           <li><a href="/en/agencias.html" data-i18n="nav.agencies">Agencies & DMCs</a></li>
+          <li><a href="/en/propuesta.html" data-i18n="nav.brief">Request a proposal</a></li>
         </ul>
       </div>
       <div>
@@ -1516,12 +1523,11 @@
     </div>
     <div class="site-footer__bottom">
       <p data-i18n="foot.rights">© 2026 Events Penedès · A TeamTowers Humà project</p>
-      <p data-i18n="foot.prov">Provisional site — the full version is on its way.</p>
+      <p><a href="/en/privacidad.html" data-i18n="foot.priv">Privacy notice</a> <span aria-hidden="true">·</span> <span data-i18n="foot.prov">Provisional site — the full version is on its way.</span></p>
     </div>
   </div>
 </footer>
 
-<script src="/js/form.js" defer></script>
 <script src="/js/site.js" defer></script>
 </body>
 </html>

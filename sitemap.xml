@@ -106,4 +106,59 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://eventspenedes.com/propuesta.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/propuesta.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/ca/propuesta.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/propuesta.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/en/propuesta.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/propuesta.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/propuesta.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/privacidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/privacidad.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/ca/privacidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/privacidad.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.2</priority>
+  </url>
+
+  <url>
+    <loc>https://eventspenedes.com/en/privacidad.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/privacidad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/privacidad.html"/>
+    <lastmod>2026-10-03</lastmod>
+    <priority>0.2</priority>
+  </url>
 </urlset>

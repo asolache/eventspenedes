@@ -200,8 +200,11 @@
         <p class="lead" data-i18n="ag.f.lead">Tell us who you are and we will send it over. We reply within 24 working hours.</p>
       </div>
 
-      <form class="form" id="form-agencia" data-m="==QbvNmLjFWbAVGajFGbvNXY" data-asunto="Alta de agencia">
+      <form class="form" id="form-agencia" name="agencia" method="POST"
+            action="/en/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="agencia">
         <input type="hidden" name="idioma" value="es">
+        <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
         <div class="form__row">
           <p class="field">
             <label for="a-empresa" data-i18n="ag.f.empresa">Agency or DMC</label>
@@ -246,8 +249,11 @@
           <textarea id="a-mercado" name="mercado" rows="4" maxlength="800"></textarea>
         </p>
         <p><button class="btn btn--primary" type="submit" data-i18n="ag.f.send">Request the price list</button></p>
-        <p class="form__note" data-i18n="ag.f.note">Submitting opens your email client with the details. We use what you tell us only to assess the sign-up and send you the rates.</p>
-        <p class="form__fallback" id="form-fallback" hidden data-i18n="ag.f.fallback">Did your email client not open? Write to <a class="js-mail" href="#alta" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.</p>
+        <p class="field--check field--consent">
+          <label><input type="checkbox" name="consentimiento" value="si" required>
+          <span data-i18n="ag.f.consent">I have read and accept the <a href="/en/privacidad.html">privacy notice</a>.</span></label>
+        </p>
+        <p class="form__note" data-i18n="ag.f.note">We use what you tell us only to assess the application and send you the rates. We reply within 24 working hours.</p>
       </form>
     </div>
   </section>
@@ -277,6 +283,7 @@
           <li><a href="/en/index.html#proceso" data-i18n="nav.process">How we work</a></li>
           <li><a href="/en/dj.html" data-i18n="nav.dj">DJ</a></li>
           <li><a href="/en/agencias.html" data-i18n="nav.agencies">Agencies & DMCs</a></li>
+          <li><a href="/en/propuesta.html" data-i18n="nav.brief">Request a proposal</a></li>
         </ul>
       </div>
       <div>
@@ -297,13 +304,12 @@
     </div>
     <div class="site-footer__bottom">
       <p data-i18n="foot.rights">© 2026 Events Penedès · A TeamTowers Humà project</p>
-      <p data-i18n="foot.prov">Provisional site — the full version is on its way.</p>
+      <p><a href="/en/privacidad.html" data-i18n="foot.priv">Privacy notice</a> <span aria-hidden="true">·</span> <span data-i18n="foot.prov">Provisional site — the full version is on its way.</span></p>
     </div>
   </div>
 </footer>
 
 <script src="/js/lang-agencias.js" defer></script>
-<script src="/js/form.js" defer></script>
 <script src="/js/site.js" defer></script>
 </body>
 </html>

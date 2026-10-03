@@ -8,6 +8,7 @@ window.EP_I18N = {
     'nav.services': 'Serveis', 'nav.venues': 'Localitzacions', 'nav.activities': 'Activitats',
     'nav.process': 'Com treballem', 'nav.dj': 'DJ', 'nav.contact': 'Contacte',
     'nav.agencies': 'Agències i DMC',
+    'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat',
 
     'ag.crumb': 'Events Penedès', 'ag.crumb2': 'Agències',
     'ag.eyebrow': 'Programa d’agències i DMC',
@@ -61,8 +62,8 @@ window.EP_I18N = {
     'ag.f.tipo3': 'Organitzador professional de congressos', 'ag.f.tipo4': 'Altres',
     'ag.f.mercado': 'Quin tipus de client porteu i des d’on',
     'ag.f.send': 'Demanar el catàleg',
-    'ag.f.note': 'En enviar s’obre el teu programa de correu amb les dades. Fem servir el que ens expliquis només per valorar l’alta i enviar-te les tarifes.',
-    'ag.f.fallback': 'No se t’ha obert el correu? Escriu-nos a <a class="js-mail" href="#alta" data-m="==QbvNmLjFWbAVGajFGbvNXY">la nostra adreça</a> o truca’ns al <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+    'ag.f.note': 'Fem servir el que ens expliquis només per valorar l’alta i enviar-te les tarifes. Responem en menys de 24 h laborables.',
+    'ag.f.consent': 'He llegit i accepto l’<a href="privacidad.html">avís de privacitat</a>.',
 
     'foot.tagline': 'Producció d’esdeveniments, localitzacions i activitats a l’Alt Penedès.',
     'foot.h1': 'Seccions', 'foot.h2': 'Contacte', 'foot.h3': 'Ecosistema',
@@ -76,6 +77,7 @@ window.EP_I18N = {
     'nav.services': 'Services', 'nav.venues': 'Venues', 'nav.activities': 'Activities',
     'nav.process': 'How we work', 'nav.dj': 'DJ', 'nav.contact': 'Contact',
     'nav.agencies': 'Agencies & DMCs',
+    'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice',
 
     'ag.crumb': 'Events Penedès', 'ag.crumb2': 'Agencies',
     'ag.eyebrow': 'Agency and DMC programme',
@@ -129,8 +131,8 @@ window.EP_I18N = {
     'ag.f.tipo3': 'Professional congress organiser', 'ag.f.tipo4': 'Other',
     'ag.f.mercado': 'What kind of clients you bring, and from where',
     'ag.f.send': 'Request the price list',
-    'ag.f.note': 'Submitting opens your email client with the details. We use what you tell us only to assess the sign-up and send you the rates.',
-    'ag.f.fallback': 'Did your email client not open? Write to <a class="js-mail" href="#alta" data-m="==QbvNmLjFWbAVGajFGbvNXY">our address</a> or call us on <a href="tel:+34629867715">+34 629 86 77 15</a>.',
+    'ag.f.note': 'We use what you tell us only to assess the application and send you the rates. We reply within 24 working hours.',
+    'ag.f.consent': 'I have read and accept the <a href="privacidad.html">privacy notice</a>.',
 
     'foot.tagline': 'Event production, venues and activities in the Alt Penedès.',
     'foot.h1': 'Sections', 'foot.h2': 'Contact', 'foot.h3': 'Ecosystem',
