@@ -60,6 +60,15 @@
   [headers.values]
     Content-Type = "application/xml; charset=utf-8"
 
+# La página privada del borrador de una propuesta. El enlace lleva el evento
+# dentro, cifrado, así que no hay identificador que adivinar: sin la clave del
+# sitio no se abre. La función pone sus propias cabeceras —noindex y no-store—
+# porque lo que sirve son datos de un cliente.
+[[redirects]]
+  from = "/p"
+  to = "/.netlify/functions/borrador"
+  status = 200
+
 # Dominio canónico: todo el tráfico de www va al dominio raíz
 [[redirects]]
   from = "https://www.eventspenedes.com/*"

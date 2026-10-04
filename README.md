@@ -18,7 +18,9 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── ca/, en/            Versiones generadas — no se editan a mano
 ├── tools/build-i18n.mjs  Generador de las versiones por idioma
 ├── 404.html            Página de error
-├── netlify.toml        Publicación, cabeceras y redirección de www
+├── netlify.toml        Publicación, cabeceras, URLs limpias y redirección de www
+├── netlify/functions/  Las funciones: leads a Zoho y la página del borrador
+├── netlify/propuesta/  GENERADO · copia de los módulos del repositorio privado
 ├── robots.txt          Acceso de rastreadores, incluidos los de IA
 ├── llms.txt            Resumen del negocio en texto plano para asistentes de IA
 ├── site.webmanifest    Nombre, colores e iconos de la aplicación web
@@ -28,7 +30,6 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── js/lang-home.js     Textos CA / EN de la portada (fuente del generador)
 ├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
 ├── js/lang-agencias.js Textos CA / EN de la página de agencias
-├── js/form.js          Envío del formulario por correo
 └── assets/
     ├── favicon.svg
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
@@ -98,35 +99,78 @@ python3 -m http.server 8000
 
 ## Formularios
 
-No hay servidor ni servicio de formularios: al enviar, `js/form.js` compone un
-`mailto:` con los datos y abre el programa de correo de quien escribe, que solo
-tiene que pulsar enviar. Cero configuración y cero dependencias.
+Los tres formularios del sitio —contacto de la portada, alta de agencia
+(`agencias.html#alta`) y briefing de propuesta (`propuesta.html`)— van por
+**Netlify Forms**: `data-netlify="true"`, campo oculto `form-name`, honeypot y
+aviso por correo. El envío queda guardado en Netlify, así que no se pierde nada
+si el correo falla.
 
-El mismo script sirve cualquier formulario de la web: busca `form[data-m]`, así
-que para añadir uno nuevo basta con el atributo `data-m` (destino codificado) y,
-si hace falta, `data-asunto` para el asunto del correo. Hoy hay dos: el de
-contacto de la portada y el de alta de agencia (`agencias.html#alta`).
+Antes se componía un `mailto:` en el navegador. Se cambió por una razón concreta:
+en un portátil de empresa con webmail, un `mailto:` sin cliente de correo
+asociado **no envía nada y no avisa**, así que el lead se perdía sin que nadie se
+enterara. Está en el historial, por si hace falta mirarlo.
 
-La dirección de destino **no está en el HTML en claro**: viaja codificada en el
-atributo `data-m` del formulario, igual que los enlaces de correo, y se compone
-en el navegador.
+### De ahí a Zoho, y al borrador de la propuesta
 
-El correo llega con los campos etiquetados y en el idioma que la persona estaba
-viendo. El `<textarea>` tiene `maxlength="1200"` a propósito: algunos clientes
-de correo truncan un `mailto:` muy largo, así que es mejor limitarlo de forma
-visible que perder texto en silencio.
+Netlify avisa a `netlify/functions/lead.mjs` en cada envío (*Forms →
+Notifications → HTTP POST request*, con el **JWS secret** puesto). La función
+comprueba la firma —y también el `sha256` del cuerpo que va dentro del JWS, para
+que no valga reenviar un aviso viejo con el cuerpo cambiado—, arma la ficha y la
+mete en **Zoho CRM** con `upsert` por correo, así que quien ya escribió no se
+duplica.
 
-Si el navegador no tiene cliente de correo asociado no pasa nada visible, así
-que tras enviar aparece bajo el formulario una nota con la dirección y el
-teléfono.
+Y cuando el formulario es el de propuesta hace una segunda cosa: **monta el
+borrador de la propuesta** y deja en la ficha un enlace privado para leerlo
+(`/p?d=…`, que sirve `netlify/functions/borrador.mjs`).
 
-**Qué tiene de malo esta vía**, para cuando toque decidir: quien use webmail en
-el móvil puede acabar en una app que no usa, no queda registro de los envíos en
-ninguna parte, y no hay protección antispam. Si el formulario empieza a ser una
-vía real de entrada, conviene pasar a **Netlify Forms** (`data-netlify="true"`,
-campo oculto `form-name`, honeypot y una notificación por correo en
-`Site configuration → Forms`), que además guarda los envíos y avisa igual por
-correo. Está en el historial del repositorio, en el commit anterior a este.
+El borrador **no se guarda en ninguna parte**: el evento viaja dentro del propio
+enlace, comprimido y cifrado con `PROPUESTA_SECRET`. Es la decisión de
+privacidad, no una optimización —un borrador lleva el nombre, el correo y el
+teléfono de un cliente, y lo que no se guarda no hay que protegerlo, respaldarlo
+ni vaciarlo a los 24 meses—. El enlace caduca solo, porque la caducidad va
+firmada dentro, y se revoca entero rotando la clave.
+
+El PDF **no** se genera aquí: Chromium no cabe en una función de Netlify. Se
+genera en la máquina de Álvaro, desde el repositorio privado, con el enlace. Que
+además es el orden correcto: el correo que lo lleva adjunto lo escribe una
+persona.
+
+```
+netlify/functions/lead.mjs       del formulario a Zoho, y monta el borrador
+netlify/functions/borrador.mjs   sirve la página privada del borrador
+netlify/propuesta/*.mjs          GENERADO · copia del repositorio privado
+tools/test-lead.mjs              prueba la función de leads
+tools/test-borrador.mjs          prueba el borrador: lo que abre y lo que no
+```
+
+Lo de `netlify/propuesta/` **no se edita aquí**. Es una copia del repositorio
+privado `eventspenedes-tarifas`, que es donde está el catálogo y donde corren
+las guardas; allí se edita y se pasa con `node tools/sync-web.mjs --web
+../eventspenedes`. Así la página privada y el PDF son literalmente el mismo
+documento: si fueran dos códigos, el día que se cambie un párrafo se cambiaría
+en uno de los dos.
+
+### Variables de entorno
+
+En *Site configuration → Environment variables*, marcadas como **secretas** y con
+alcance que incluya las funciones. No van en el repositorio ni se pegan en un
+chat.
+
+| Variable | Qué es |
+|---|---|
+| `NETLIFY_WEBHOOK_JWS_SECRET` | el mismo secreto que en la notificación del formulario |
+| `ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET`, `ZOHO_REFRESH_TOKEN` | el cliente propio de Zoho |
+| `ZOHO_DC` | `eu` o `com`. Por defecto `eu` |
+| `ZOHO_LEAD_SOURCE`, `ZOHO_CAMPO_MARCA` | opcionales · un valor y un campo que ya existan en tu Zoho |
+| `PROPUESTA_SECRET` | 32 caracteres aleatorios o más. Cierra y abre el enlace del borrador |
+| `BORRADOR_DIAS` | opcional · días que vale el enlace. Por defecto 30 |
+
+Cambiar una variable **no** aplica hasta el siguiente despliegue.
+
+Si falta `PROPUESTA_SECRET`, el sitio sigue funcionando: entra el lead y llega el
+aviso por correo, y lo único que falta es el borrador. Si falta
+`NETLIFY_WEBHOOK_JWS_SECRET`, la función **rechaza** los avisos a propósito: un
+endpoint abierto es una vía para llenar el CRM de basura.
 
 ## Posicionamiento premium
 
