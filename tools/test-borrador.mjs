@@ -135,13 +135,15 @@ const avisar = async (form, data) => {
   const res = await lead(new Request('https://eventspenedes.com/.netlify/functions/lead', {
     method: 'POST', headers: { 'x-webhook-signature': firmar(c), 'content-type': 'application/json' }, body: c,
   }));
-  return (await res.json()).lead;
+  /* El borrador va en una nota aparte del lead, no en su descripción. */
+  const j = await res.json();
+  return { ...j.lead, nota: j.nota || '' };
 };
 
 const fichaPropuesta = await avisar('propuesta', BRIEFING);
-const enlace = (fichaPropuesta.Description.match(/https:\/\/eventspenedes\.com\/p\?d=\S+/) || [])[0];
-comprueba('la ficha del lead lleva el enlace del borrador', Boolean(enlace));
-comprueba('la ficha dice que no se ha enviado', /No se ha enviado a nadie/.test(fichaPropuesta.Description));
+const enlace = (fichaPropuesta.nota.match(/https:\/\/eventspenedes\.com\/p\?d=\S+/) || [])[0];
+comprueba('la nota del lead lleva el enlace del borrador', Boolean(enlace));
+comprueba('la nota dice que no se ha enviado', /No se ha enviado a nadie/.test(fichaPropuesta.nota));
 comprueba('la ficha avisa de lo que no encaja', /Cata de aceite/.test(fichaPropuesta.Description));
 comprueba('el presupuesto orientativo sigue en la ficha, que es donde sirve',
   /15\.000/.test(fichaPropuesta.Description));
@@ -156,14 +158,14 @@ if (enlace) {
 }
 
 const fichaContacto = await avisar('contacto', { nombre: 'Quien Sea', correo: 'q@ejemplo.test', tipo: 'otro' });
-comprueba('el formulario de contacto no monta borradores', !/\/p\?d=/.test(fichaContacto.Description));
+comprueba('el formulario de contacto no monta borradores', !/\/p\?d=/.test(fichaContacto.Description + fichaContacto.nota));
 
 /* Y si no hay clave, el lead sigue entrando: lo importante no se pierde por lo
    cómodo. */
 delete process.env.PROPUESTA_SECRET;
 const sinClave = await avisar('propuesta', BRIEFING);
 comprueba('sin clave, el lead se crea igual y solo falta el borrador',
-  sinClave.Email === 'marta@acme.example' && !/\/p\?d=/.test(sinClave.Description));
+  sinClave.Email === 'marta@acme.example' && !/\/p\?d=/.test(sinClave.Description + sinClave.nota));
 process.env.PROPUESTA_SECRET = SECRETO;
 
 console.log('');
