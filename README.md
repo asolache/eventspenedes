@@ -166,6 +166,7 @@ chat.
 | `ZOHO_LEAD_SOURCE`, `ZOHO_CAMPO_MARCA` | opcionales · un valor y un campo que ya existan en tu Zoho |
 | `PROPUESTA_SECRET` | 32 caracteres aleatorios o más. Cierra y abre el enlace del borrador |
 | `BORRADOR_DIAS` | opcional · días que vale el enlace. Por defecto 30 |
+| `ZOHO_ETAPA_PROPUESTA` | opcional · nombre EXACTO de la etapa de una oportunidad nueva. Con ella, una petición de propuesta entra como cuenta + contacto + oportunidad, y el borrador cuelga de la oportunidad. Necesita un token con permiso sobre cuentas, contactos, oportunidades y notas. Si Zoho rechaza la oportunidad, entra como lead |
 
 Cambiar una variable **no** aplica hasta el siguiente despliegue.
 

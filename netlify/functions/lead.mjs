@@ -26,6 +26,9 @@
      ZOHO_LEAD_SOURCE             opcional · valor EXISTENTE de tu lista
      ZOHO_CAMPO_MARCA             opcional · nombre de API de tu campo «Marca»
      ZOHO_DRY_RUN                 '1' para no llamar a Zoho (pruebas)
+     ZOHO_ETAPA_PROPUESTA         opcional · etapa EXACTA de una oportunidad nueva.
+                                  Con ella, la propuesta entra como cuenta +
+                                  contacto + oportunidad; sin ella, como lead
      PROPUESTA_SECRET             opcional · sin ella no se monta el borrador
                                   (el borrador va en una nota del lead: el
                                   token de Zoho necesita permiso de notas)
@@ -280,8 +283,71 @@ async function zoho(ruta, cuerpo) {
 const upsert = registro =>
   zoho('Leads/upsert', { data: [registro], duplicate_check_fields: ['Email'] });
 
-const nota = (id, titulo, texto) =>
-  zoho(`Leads/${id}/Notes`, { data: [{ Note_Title: titulo, Note_Content: texto }] });
+const nota = (modulo, id, titulo, texto) =>
+  zoho(`${modulo}/${id}/Notes`, { data: [{ Note_Title: titulo, Note_Content: texto }] });
+
+/* --- La propuesta como oportunidad -----------------------------------------
+   Quien pide una propuesta ya no es un lead por cualificar: quiere un evento.
+   Así que, si está configurada la etapa, el briefing entra como CUENTA (la
+   empresa), CONTACTO (la persona) y una OPORTUNIDAD por propuesta. La cuenta y
+   el contacto se reutilizan si ya existen; la oportunidad es siempre nueva, y
+   así un cliente que repite guarda todas sus propuestas, cada una en su etapa.
+
+   ZOHO_ETAPA_PROPUESTA es el valor EXACTO de la etapa en tu Zoho: si no
+   coincide, Zoho rechaza la oportunidad y el briefing entra como lead, que es
+   lo que pasaba antes. Sin la variable, todo sigue entrando como lead. */
+
+const FECHA = /^\d{4}-\d{2}-\d{2}$/;
+
+function oportunidad(d, cuando, descripcion) {
+  const persona = (d.persona || d.nombre || '').trim();
+  const empresa = (d.empresa || '').trim();
+  const correo = (d.correo || '').trim();
+  const telefono = (d.telefono || '').trim() || undefined;
+  const origen = process.env.ZOHO_LEAD_SOURCE ? { Lead_Source: process.env.ZOHO_LEAD_SOURCE } : {};
+
+  /* Sin empresa no se inventa una cuenta: un particular es un contacto y su
+     oportunidad, sin cuenta. Una cuenta llamada como una persona parece un
+     error de datos. */
+  const cuenta = empresa ? { Account_Name: empresa, Phone: telefono } : null;
+  const contacto = correo
+    ? { Last_Name: persona || empresa || correo, Email: correo, Phone: telefono, ...origen }
+    : null;
+
+  /* Zoho exige fecha de cierre. La del evento es la que manda: si se celebra,
+     la venta se ha cerrado antes. Sin fecha, a 30 días de la petición. */
+  const fecha = FECHA.test(d.fecha || '') ? d.fecha
+    : new Date(Date.parse(cuando) + 30 * 864e5).toISOString().slice(0, 10);
+  const tipo = legible('propuesta', 'tipo', d.tipo) || 'Evento';
+  const trato = {
+    Deal_Name: `${empresa || persona || correo || 'Sin nombre'} · ${tipo} · ${FECHA.test(d.fecha || '') ? d.fecha : 'sin fecha'}`.slice(0, 120),
+    Stage: process.env.ZOHO_ETAPA_PROPUESTA,
+    Closing_Date: fecha,
+    Description: descripcion,
+    ...origen,
+  };
+  if (process.env.ZOHO_CAMPO_MARCA) { trato[process.env.ZOHO_CAMPO_MARCA] = 'Events Penedès'; }
+  return { cuenta, contacto, trato };
+}
+
+const idDe = j => j.data?.[0]?.details?.id;
+
+async function crearOportunidad({ cuenta, contacto, trato }) {
+  const ids = {};
+  if (cuenta) {
+    ids.cuenta = idDe(await zoho('Accounts/upsert', { data: [cuenta], duplicate_check_fields: ['Account_Name'] }));
+  }
+  if (contacto) {
+    const c = ids.cuenta ? { ...contacto, Account_Name: { id: ids.cuenta } } : contacto;
+    ids.contacto = idDe(await zoho('Contacts/upsert', { data: [c], duplicate_check_fields: ['Email'] }));
+  }
+  const t = { ...trato };
+  if (ids.cuenta) { t.Account_Name = { id: ids.cuenta }; }
+  if (ids.contacto) { t.Contact_Name = { id: ids.contacto }; }
+  ids.trato = idDe(await zoho('Deals', { data: [t] }));
+  if (!ids.trato) { throw new Error('Zoho no devolvió el id de la oportunidad'); }
+  return ids;
+}
 
 /* La descripción de un lead en Zoho puede quedarse en 2.000 caracteres según
    cómo esté el campo. Un briefing con el enlace cifrado del borrador los pasa
@@ -337,33 +403,51 @@ export default async (req) => {
   }
   registro.Description = recortar(registro.Description);
 
+  const comoOportunidad = form === 'propuesta' && Boolean(process.env.ZOHO_ETAPA_PROPUESTA);
+  const op = comoOportunidad ? oportunidad(d, cuando, registro.Description) : null;
+
   if (process.env.ZOHO_DRY_RUN === '1') {
-    console.log('DRY RUN · lead que se habría creado:', JSON.stringify(registro, null, 2));
-    return Response.json({ ok: true, dry_run: true, lead: registro, nota: b?.nota || null });
+    console.log('DRY RUN · lo que se habría creado:', JSON.stringify(op || registro, null, 2));
+    return Response.json({ ok: true, dry_run: true, lead: op ? null : registro, oportunidad: op, nota: b?.nota || null });
   }
 
-  let id;
-  try {
-    const j = await upsert(registro);
-    id = j.data?.[0]?.details?.id;
-    console.log(`Lead de ${form} en Zoho:`, JSON.stringify(j.data?.[0]?.details || j));
-  } catch (e) {
-    /* Se responde 200 a posta: el envío ya está guardado en Netlify y el aviso
-       por correo ya ha salido, así que no se pierde nada. Lo que no puede
-       pasar es que el fallo sea invisible, y por eso queda en el registro. */
-    console.error('No se pudo crear el lead en Zoho:', e.message);
-    return Response.json({ ok: false, error: e.message });
-  }
-
-  /* El borrador, en una nota del lead. Si falla, el lead ya está dentro y el
-     enlace en el registro de la función: se avisa y se sigue. */
-  if (b && id) {
+  /* Primero la oportunidad, si toca. Si Zoho la rechaza —una etapa que no
+     existe, un token sin permiso—, el briefing entra como lead: perder la
+     petición por organizarla mejor sería cambiar lo importante por lo cómodo. */
+  let modulo = 'Leads', id;
+  if (op) {
     try {
-      await nota(id, 'Borrador de propuesta', b.nota.trim());
+      const ids = await crearOportunidad(op);
+      modulo = 'Deals'; id = ids.trato;
+      console.log('Propuesta en Zoho como oportunidad:', JSON.stringify(ids));
     } catch (e) {
-      console.error('El lead está en Zoho, pero no la nota del borrador:', e.message);
-      return Response.json({ ok: true, nota: false, error: e.message });
+      console.error('No se pudo crear la oportunidad; entra como lead:', e.message);
     }
   }
-  return Response.json({ ok: true });
+
+  if (!id) {
+    try {
+      const j = await upsert(registro);
+      id = idDe(j);
+      console.log(`Lead de ${form} en Zoho:`, JSON.stringify(j.data?.[0]?.details || j));
+    } catch (e) {
+      /* Se responde 200 a posta: el envío ya está guardado en Netlify y el aviso
+         por correo ya ha salido, así que no se pierde nada. Lo que no puede
+         pasar es que el fallo sea invisible, y por eso queda en el registro. */
+      console.error('No se pudo crear el lead en Zoho:', e.message);
+      return Response.json({ ok: false, error: e.message });
+    }
+  }
+
+  /* El borrador, en una nota de la oportunidad o del lead. Si falla, la ficha
+     ya está dentro y el enlace en el registro de la función: se avisa y se sigue. */
+  if (b && id) {
+    try {
+      await nota(modulo, id, 'Borrador de propuesta', b.nota.trim());
+    } catch (e) {
+      console.error(`La ficha está en Zoho (${modulo}), pero no la nota del borrador:`, e.message);
+      return Response.json({ ok: true, modulo, nota: false, error: e.message });
+    }
+  }
+  return Response.json({ ok: true, modulo });
 };
