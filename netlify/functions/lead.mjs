@@ -6,9 +6,15 @@
    el aviso viene de verdad de Netlify, arma la ficha del lead y la mete en
    Zoho sin duplicar.
 
+   Y cuando el formulario es el de propuesta, hace una segunda cosa: **monta el
+   borrador de la propuesta** y deja en la ficha un enlace privado para leerlo.
+   El borrador sale solo; enviarlo, no. Lo que vende es el párrafo que responde
+   a lo que el cliente escribió, y eso lo escribe una persona.
+
    Lo que NO hace, a propósito: escribir nada en ningún repositorio. Un briefing
    lleva nombre, correo y teléfono de un cliente, y el historial de git es para
-   siempre.
+   siempre. Tampoco guarda el borrador en ningún sitio: viaja dentro de su
+   propio enlace, cifrado —ver `netlify/propuesta/sobre.mjs`—.
 
    Variables de entorno (en Netlify, nunca en el repositorio):
      NETLIFY_WEBHOOK_JWS_SECRET   el mismo secreto que en la notificación
@@ -19,8 +25,13 @@
      ZOHO_LEAD_SOURCE             opcional · valor EXISTENTE de tu lista
      ZOHO_CAMPO_MARCA             opcional · nombre de API de tu campo «Marca»
      ZOHO_DRY_RUN                 '1' para no llamar a Zoho (pruebas)
+     PROPUESTA_SECRET             opcional · sin ella no se monta el borrador
+     BORRADOR_DIAS                opcional · cuántos días vale el enlace (30)
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
+import { cerrar } from '../propuesta/sobre.mjs';
+import { briefingAEvento } from '../propuesta/briefing-a-evento.mjs';
+import { opciones, espacios } from '../propuesta/catalogo.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -205,6 +216,40 @@ function lead(form, d, cuando) {
   return r;
 }
 
+/* --- El borrador ---------------------------------------------------------
+   Se monta aquí porque es el único momento en que el briefing está completo y
+   en memoria. Si algo falla, **el lead sigue**: perder una ficha de cliente por
+   un borrador que no sale sería cambiar lo importante por lo cómodo. */
+
+function borrador(d, cuando, base) {
+  if (!process.env.PROPUESTA_SECRET) {
+    console.log('Sin PROPUESTA_SECRET: no se monta el borrador. El briefing está en la ficha.');
+    return null;
+  }
+  try {
+    const { evento, descartes, avisos } = briefingAEvento(d, { opciones, espacios, recibido: cuando });
+    const dias = Number.parseInt(process.env.BORRADOR_DIAS || '30', 10) || 30;
+    const sobre = cerrar({ evento, descartes, avisos }, process.env.PROPUESTA_SECRET, dias * 24 * 3600);
+    const enlace = `${base}/p?d=${sobre}`;
+
+    const l = ['', '— Borrador de propuesta montado solo —', enlace,
+               `Caduca en ${dias} días. No se ha enviado a nadie.`];
+    if (descartes.length) {
+      l.push('', 'Pidió cosas que no encajan y están fuera del documento:');
+      descartes.forEach(x => l.push(`· ${x.motivo}`));
+    }
+    if (avisos.length) {
+      l.push('', 'Antes de enviarlo:');
+      avisos.forEach(a => l.push(`· ${a}`));
+    }
+    l.push('', `El PDF se genera desde tu máquina: node tools/briefing.mjs "<este enlace>"`);
+    return { enlace, nota: l.join('\n'), evento };
+  } catch (e) {
+    console.error('No se pudo montar el borrador:', e.message);
+    return null;
+  }
+}
+
 async function upsert(registro) {
   const dc = process.env.ZOHO_DC || 'eu';
   const token = await accessToken();
@@ -254,6 +299,19 @@ export default async (req) => {
   const d = aviso.data || {};
   const cuando = aviso.created_at || new Date().toISOString();
   const registro = lead(form, d, cuando);
+
+  /* Solo el formulario de propuesta trae briefing. Los de contacto y de alta de
+     agencia no tienen con qué montar un programa, y un borrador vacío es ruido
+     en la ficha. */
+  if (form === 'propuesta') {
+    const b = borrador(d, cuando, process.env.URL || 'https://eventspenedes.com');
+    if (b) {
+      registro.Description += '\n' + b.nota;
+      /* También al registro: si la ficha del CRM se edita a mano y se pierde el
+         enlace, aquí sigue. */
+      console.log(`Borrador de ${b.evento.id}: ${b.enlace}`);
+    }
+  }
 
   if (process.env.ZOHO_DRY_RUN === '1') {
     console.log('DRY RUN · lead que se habría creado:', JSON.stringify(registro, null, 2));

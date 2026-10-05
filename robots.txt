@@ -6,6 +6,10 @@
 # aquí a propósito, porque un rastreador bloqueado no puede leer esa etiqueta.
 User-agent: *
 Allow: /
+# Los borradores de propuesta llevan datos de un cliente. Aquí se declara
+# además de la cabecera noindex que pone la función: un enlace así no se
+# comparte, pero si alguien lo pega en algún sitio, que no acabe en un índice.
+Disallow: /p
 
 # Rastreadores de IA, declarados explícitamente para que no quede ambiguo
 User-agent: GPTBot
