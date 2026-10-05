@@ -12,9 +12,12 @@
    El enlace caduca solo porque la caducidad va firmada dentro, y se revoca
    entero rotando la clave.
 
-   **Lo que esta página NO hace:** enviarse. Es para leerla y decidir. El PDF se
-   genera en la máquina de Álvaro —Chromium no cabe en una función de Netlify—
-   y lo adjunta una persona a un correo que escribe una persona.
+   **Lo que esta página NO hace:** enviarse. Es para leerla y decidir. Con
+   `&vista=cliente` sirve el documento del cliente, que se retoca en el propio
+   navegador y se guarda como PDF desde él —Chromium no cabe en una función de
+   Netlify, pero el navegador de quien lo lee ya lo es—. Los retoques no se
+   guardan en ningún sitio, y el PDF lo adjunta una persona a un correo que
+   escribe una persona.
 
    Variables de entorno (en Netlify, nunca en el repositorio):
      PROPUESTA_SECRET   la misma que usa la función de leads para cerrar el sobre
@@ -72,7 +75,7 @@ export default async (req) => {
        sobre tocado— responden lo mismo: aquí no hay nada. */
     if (e.message === 'enlace caducado') {
       return aviso('El enlace ha caducado',
-        'Los borradores caducan a propósito. El briefing sigue guardado: vuelve a montarlo desde tu máquina.', 410);
+        'Los borradores caducan a propósito. El briefing sigue guardado en la ficha de Zoho y en Netlify.', 410);
     }
     console.error('Sobre que no abre:', e.message);
     return aviso('Aquí no hay nada', 'Este enlace no es válido.', 404);
@@ -86,15 +89,93 @@ export default async (req) => {
   const pedido = url.searchParams.get('idioma');
   const idioma = IDIOMAS.includes(pedido) ? pedido : (evento.idioma || 'es');
 
+  /* Dos vistas del mismo enlace. La de borrador es para leerla tú, con los
+     avisos. La de cliente es el documento que se envía: se puede retocar en el
+     navegador y guardar como PDF, sin terminal. Los avisos no se esconden con
+     CSS: en la vista de cliente ese HTML no se escribe. */
+  const cliente = url.searchParams.get('vista') === 'cliente';
+  const marca = { ...(evento.marca || { modo: 'propia' }) };
+  const pedidaMarca = url.searchParams.get('marca');
+  if (MARCAS.includes(pedidaMarca)) { marca.modo = pedidaMarca; }
+  const de = (url.searchParams.get('de') || '').trim().slice(0, 80);
+  if (de) { marca.de = de; }
+  if (marca.modo !== 'propia' && !marca.de) {
+    return aviso('Falta la agencia', 'En marca blanca o coproducida hace falta el nombre de la agencia.', 400);
+  }
+
   try {
-    const { html } = render({
-      ev: evento, opciones, espacios, idioma,
-      marca: evento.marca || { modo: 'propia' },
-      modo: 'borrador', descartes, avisos,
+    /* El párrafo a medida es lo que vende y no lo escribe la máquina: en la
+       vista de cliente se deja su hueco, vacío y editable. Vacío no se imprime. */
+    const ev = cliente && !evento.a_medida ? { ...evento, a_medida: HUECO } : evento;
+    let { html } = render({
+      ev, opciones, espacios, idioma, marca,
+      modo: cliente ? 'cliente' : 'borrador', descartes, avisos,
     });
+    html = cliente
+      ? html.replace(`<p>${HUECO}</p>`, '<p class="a-medida" data-hueco="Escribe aquí el párrafo que responde a lo que pidió el cliente"></p>')
+            .replace('<div class="hoja">', '<div class="hoja" contenteditable="true" spellcheck="true">')
+            .replace('</body>', barraCliente(url, idioma, marca) + '</body>')
+      : html.replace('</body>', barraBorrador(url, idioma) + '</body>');
     return new Response(html, { status: 200, headers: CABECERAS });
   } catch (e) {
     console.error('No se pudo montar el borrador:', e.message);
     return aviso('No se ha podido montar', 'El borrador tiene algo que no encaja. Móntalo desde tu máquina para ver qué.', 500);
   }
 };
+
+/* --- Las barras ------------------------------------------------------------
+   Solo botones y enlaces: no llevan ningún dato del cliente, así que ocultarlas
+   al imprimir con CSS no deja nada dentro del PDF. */
+
+const MARCAS = ['propia', 'coproducida', 'blanca'];
+const HUECO = '\u2063';
+
+const ESTILO_BARRA = `<style>
+  .barra { position:fixed; left:0; right:0; bottom:0; z-index:10; display:flex; flex-wrap:wrap; gap:.5rem 1rem;
+           align-items:center; padding:.75rem 1rem; background:#050507; color:#f4f4f6;
+           font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .barra a, .barra button { color:#050507; background:#d9a441; border:0; border-radius:6px; padding:.45rem .8rem;
+           font:inherit; font-weight:600; text-decoration:none; cursor:pointer; }
+  .barra a.suave { background:transparent; color:#d9a441; padding:.45rem .2rem; font-weight:400; }
+  .barra a.activo { text-decoration:underline; }
+  .barra select, .barra input { font:inherit; padding:.35rem .5rem; border-radius:6px; border:1px solid #555; }
+  .barra small { color:#a0a0ae; flex-basis:100%; }
+  body { padding-bottom:7rem; }
+  .a-medida:empty::before { content:attr(data-hueco); color:#a0a0ae; font-style:italic; }
+  .a-medida:empty { border:1px dashed #d9a441; padding:.6rem; }
+  @media print { .barra { display:none; } body { padding-bottom:0; }
+                 .a-medida:empty { display:none; } }
+</style>`;
+
+const enlace = (url, cambios) => {
+  const u = new URL(url);
+  for (const [k, v] of Object.entries(cambios)) {
+    if (v === null) { u.searchParams.delete(k); } else { u.searchParams.set(k, v); }
+  }
+  return u.pathname + u.search;
+};
+const escA = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+function barraBorrador(url, idioma) {
+  return `${ESTILO_BARRA}<div class="barra">
+  <a href="${escA(enlace(url, { vista: 'cliente' }))}">Preparar la versión para el cliente</a>
+  ${['es', 'ca', 'en'].map(i => `<a class="suave${i === idioma ? ' activo' : ''}" href="${escA(enlace(url, { idioma: i }))}">${i}</a>`).join('')}
+  <small>Esto es el borrador con los avisos. La versión para el cliente se puede retocar y guardar como PDF.</small>
+</div>`;
+}
+
+function barraCliente(url, idioma, marca) {
+  const base = new URL(url);
+  const ocultos = ['d', 'vista'].map(k => base.searchParams.get(k) === null ? ''
+    : `<input type="hidden" name="${k}" value="${escA(base.searchParams.get(k))}">`).join('');
+  return `${ESTILO_BARRA}<form class="barra" method="get" action="/p" onsubmit="return confirm('Al cambiar idioma o marca se pierden los retoques. ¿Seguir?')">
+  ${ocultos}
+  <button type="button" onclick="window.print()">Guardar PDF</button>
+  <select name="idioma" aria-label="Idioma">${['es', 'ca', 'en'].map(i => `<option${i === idioma ? ' selected' : ''}>${i}</option>`).join('')}</select>
+  <select name="marca" aria-label="Marca">${MARCAS.map(m => `<option${m === marca.modo ? ' selected' : ''}>${m}</option>`).join('')}</select>
+  <input name="de" placeholder="Agencia (marca blanca)" value="${escA(marca.de || '')}" aria-label="Agencia">
+  <button type="submit">Aplicar</button>
+  <a class="suave" href="${escA(enlace(url, { vista: null }))}">Volver al borrador</a>
+  <small>Elige idioma y marca primero. Luego haz clic en cualquier texto para cambiarlo y pulsa «Guardar PDF» (en el diálogo, «Guardar como PDF» y sin encabezados). Los retoques no se guardan en ningún sitio: se pierden al recargar.</small>
+</form>`;
+}
