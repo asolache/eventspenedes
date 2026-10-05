@@ -135,6 +135,61 @@ const zerr = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
 comprueba('un error de Zoho dentro de un 2xx NO se da por bueno',
   zerr.ok === false && /MAX_LENGTH_EXCEEDED/.test(zerr.error));
 
+/* 1e · Con etapa configurada, la propuesta entra como cuenta + contacto +
+   oportunidad, y el borrador cuelga de la oportunidad */
+process.env.ZOHO_ETAPA_PROPUESTA = 'Borrador listo';
+const zohoSimulado = (falla = {}) => {
+  llamadas.length = 0;
+  globalThis.fetch = async (url, op) => {
+    const u = String(url);
+    llamadas.push({ url: u, cuerpo: op?.body ? JSON.parse(op.body) : null });
+    if (/oauth/.test(u)) { return Response.json({ access_token: 't', expires_in: 3600 }); }
+    const ok = id => Response.json({ data: [{ status: 'success', details: { id } }] }, { status: 201 });
+    if (/Accounts\/upsert/.test(u)) { return ok('acc1'); }
+    if (/Contacts\/upsert/.test(u)) { return ok('con1'); }
+    if (/\/Deals$/.test(u)) {
+      return falla.trato ? Response.json({ data: [{ status: 'error', code: 'INVALID_DATA', details: { api_name: 'Stage' } }] }, { status: 202 }) : ok('deal1');
+    }
+    if (/Leads\/upsert/.test(u)) { return ok('lead1'); }
+    return ok('nota1');
+  };
+};
+const de = re => llamadas.find(x => re.test(x.url));
+
+zohoSimulado();
+const o = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
+comprueba('la propuesta entra como oportunidad', o.ok && o.modulo === 'Deals');
+comprueba('la cuenta es la empresa', de(/Accounts\/upsert/)?.cuerpo.data[0].Account_Name === 'Acme SL');
+comprueba('el contacto cuelga de la cuenta y se busca por correo',
+  de(/Contacts\/upsert/)?.cuerpo.data[0].Account_Name?.id === 'acc1'
+  && de(/Contacts\/upsert/)?.cuerpo.duplicate_check_fields[0] === 'Email');
+const trato = de(/\/Deals$/)?.cuerpo.data[0] || {};
+comprueba('la oportunidad va a la cuenta y al contacto, en la etapa configurada',
+  trato.Account_Name?.id === 'acc1' && trato.Contact_Name?.id === 'con1' && trato.Stage === 'Borrador listo');
+comprueba('la fecha de cierre es la del evento', trato.Closing_Date === '2026-05-14');
+comprueba('el nombre de la oportunidad dice quién, qué y cuándo', /Acme SL · Convención.* · 2026-05-14/.test(trato.Deal_Name || ''));
+comprueba('el borrador cuelga de la oportunidad', !!de(/Deals\/deal1\/Notes/));
+comprueba('y no se crea ningún lead', !de(/Leads/));
+
+const PARTICULAR = JSON.stringify({ form_name: 'propuesta', created_at: '2026-10-03T19:00:00.000Z',
+  data: { persona: 'Joan', correo: 'joan@example.com', tipo: 'celebracion' } });
+zohoSimulado();
+await handler(peticion(PARTICULAR, firmar(PARTICULAR)));
+comprueba('un particular no crea una cuenta con su nombre', !de(/Accounts/) && !!de(/Contacts\/upsert/));
+comprueba('sin fecha, el cierre va a 30 días de la petición', de(/\/Deals$/)?.cuerpo.data[0].Closing_Date === '2026-11-02');
+
+zohoSimulado({ trato: true });
+const caida = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
+comprueba('si Zoho rechaza la oportunidad, entra como lead y no se pierde', caida.ok && caida.modulo === 'Leads' && !!de(/Leads\/upsert/));
+comprueba('y el borrador cuelga del lead', !!de(/Leads\/lead1\/Notes/));
+
+const CONTACTO2 = JSON.stringify({ form_name: 'contacto', created_at: '2026-10-03T19:00:00.000Z',
+  data: { nombre: 'Ana', correo: 'ana@example.com' } });
+zohoSimulado();
+const cc = await (await handler(peticion(CONTACTO2, firmar(CONTACTO2)))).json();
+comprueba('el formulario de contacto sigue entrando como lead', cc.modulo === 'Leads' && !de(/Deals/));
+delete process.env.ZOHO_ETAPA_PROPUESTA;
+
 globalThis.fetch = fetchReal;
 process.env.ZOHO_DRY_RUN = '1';
 delete process.env.PROPUESTA_SECRET;
