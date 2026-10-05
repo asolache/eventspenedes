@@ -245,7 +245,7 @@ function borrador(d, cuando, base) {
       l.push('', 'Antes de enviarlo:');
       avisos.forEach(a => l.push(`· ${a}`));
     }
-    l.push('', `El PDF se genera desde tu máquina: node tools/briefing.mjs "<este enlace>"`);
+    l.push('', 'Para enviarlo: abre el enlace → «Preparar la versión para el cliente» → retoca → «Guardar PDF».');
     return { enlace, nota: l.join('\n'), evento };
   } catch (e) {
     console.error('No se pudo montar el borrador:', e.message);

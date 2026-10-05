@@ -130,10 +130,12 @@ teléfono de un cliente, y lo que no se guarda no hay que protegerlo, respaldarl
 ni vaciarlo a los 24 meses—. El enlace caduca solo, porque la caducidad va
 firmada dentro, y se revoca entero rotando la clave.
 
-El PDF **no** se genera aquí: Chromium no cabe en una función de Netlify. Se
-genera en la máquina de Álvaro, desde el repositorio privado, con el enlace. Que
-además es el orden correcto: el correo que lo lleva adjunto lo escribe una
-persona.
+El PDF lo genera **el navegador de quien lo envía**: Chromium no cabe en una
+función de Netlify, pero no hace falta. En la página del borrador, «Preparar la
+versión para el cliente» abre el documento sin avisos (`&vista=cliente`), se
+elige idioma y marca, se retoca el texto en la propia página y «Guardar PDF»
+abre el diálogo de imprimir. Los retoques no se guardan en ningún sitio. El
+correo que lo lleva adjunto lo escribe una persona.
 
 ```
 netlify/functions/lead.mjs       del formulario a Zoho, y monta el borrador

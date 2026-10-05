@@ -123,6 +123,31 @@ comprueba('el documento del cliente no lleva lo que se descartó', !/no encajan/
 comprueba('el documento del cliente tampoco lleva importes',
   !IMPORTE.test(cliente.replace(/<style>[\s\S]*?<\/style>/g, '')));
 
+/* --- 4b · La vista de cliente del mismo enlace --------------------------
+   Es la que se retoca en el navegador y se guarda como PDF: tiene que ser el
+   documento del cliente, no el borrador con una capa de CSS encima. */
+const vc = await (await get('?vista=cliente&d=' + bueno)).text();
+const vcCuerpo = vc.replace(/<style>[\s\S]*?<\/style>/g, '');
+comprueba('la vista de cliente no dice «borrador» ni lleva los avisos',
+  !/Borrador autom.tico/.test(vc) && !/no encajan/.test(vc));
+comprueba('la vista de cliente no lleva el teléfono ni el correo del contacto',
+  !vc.includes('marta@acme.example') && !vc.includes('+34 600 000 000'));
+comprueba('la vista de cliente no lleva importes', !IMPORTE.test(vcCuerpo));
+comprueba('la vista de cliente se puede retocar', /class="hoja" contenteditable="true"/.test(vc));
+comprueba('deja el hueco del párrafo a medida, vacío', /<p class="a-medida"[^>]*><\/p>/.test(vc));
+comprueba('y no queda el carácter de relleno en ninguna parte', !vc.includes('\u2063'));
+comprueba('lleva el botón de guardar PDF y la barra no se imprime',
+  /window\.print\(\)/.test(vc) && /@media print \{ \.barra \{ display:none/.test(vc));
+comprueba('la vista de cliente tampoco se cachea',
+  /no-store/.test((await get('?vista=cliente&d=' + bueno)).headers.get('cache-control') || ''));
+comprueba('marca blanca sin agencia no se monta',
+  (await get('?vista=cliente&marca=blanca&d=' + bueno)).status === 400);
+const blanca = await (await get('?vista=cliente&marca=blanca&de=WE%20Events&d=' + bueno)).text();
+comprueba('en marca blanca firma la agencia y no queda Events Penedès en el documento',
+  blanca.includes('WE Events') && !/Events Pened[eè]s/.test(blanca.replace(/<style>[\s\S]*?<\/style>/g, '').replace(/<form class="barra"[\s\S]*?<\/form>/, '')));
+comprueba('una marca inventada no rompe nada', (await get('?vista=cliente&marca=xx&d=' + bueno)).status === 200);
+comprueba('el borrador enlaza a la vista de cliente', /vista=cliente/.test(html));
+
 /* --- 5 · El enlace llega a la ficha del CRM ------------------------------ */
 const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
 const firmar = (c) => {
