@@ -7,7 +7,8 @@
    Zoho sin duplicar.
 
    Y cuando el formulario es el de propuesta, hace una segunda cosa: **monta el
-   borrador de la propuesta** y deja en la ficha un enlace privado para leerlo.
+   borrador de la propuesta** y deja en una nota del lead un enlace privado
+   para leerlo.
    El borrador sale solo; enviarlo, no. Lo que vende es el párrafo que responde
    a lo que el cliente escribió, y eso lo escribe una persona.
 
@@ -26,6 +27,8 @@
      ZOHO_CAMPO_MARCA             opcional · nombre de API de tu campo «Marca»
      ZOHO_DRY_RUN                 '1' para no llamar a Zoho (pruebas)
      PROPUESTA_SECRET             opcional · sin ella no se monta el borrador
+                                  (el borrador va en una nota del lead: el
+                                  token de Zoho necesita permiso de notas)
      BORRADOR_DIAS                opcional · cuántos días vale el enlace (30)
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
@@ -250,23 +253,45 @@ function borrador(d, cuando, base) {
   }
 }
 
-async function upsert(registro) {
+async function zoho(ruta, cuerpo) {
   const dc = process.env.ZOHO_DC || 'eu';
   const token = await accessToken();
-  const r = await fetch(`https://www.zohoapis.${dc}/crm/v2/Leads/upsert`, {
+  const r = await fetch(`https://www.zohoapis.${dc}/crm/v2/${ruta}`, {
     method: 'POST',
     headers: {
       Authorization: `Zoho-oauthtoken ${token}`,
       'content-type': 'application/json',
     },
-    /* Upsert por correo: si ya escribió hace un mes, se actualiza su ficha en
-       vez de crear un duplicado que luego hay que fusionar a mano. */
-    body: JSON.stringify({ data: [registro], duplicate_check_fields: ['Email'] }),
+    body: JSON.stringify(cuerpo),
   });
   const j = await r.json().catch(() => ({}));
-  if (!r.ok) { throw new Error(`Zoho ${r.status}: ${JSON.stringify(j)}`); }
+  /* Zoho responde 200 o 202 con el error DENTRO cuando falla un registro
+     concreto («MAX_LENGTH_EXCEEDED», «INVALID_DATA»…). Mirar solo el estado
+     HTTP da por bueno un lead que no se ha creado. */
+  const fila = j.data?.[0];
+  if (!r.ok || (fila && fila.status === 'error')) {
+    throw new Error(`Zoho ${r.status}: ${JSON.stringify(fila || j)}`);
+  }
   return j;
 }
+
+/* Upsert por correo: si ya escribió hace un mes, se actualiza su ficha en vez
+   de crear un duplicado que luego hay que fusionar a mano. */
+const upsert = registro =>
+  zoho('Leads/upsert', { data: [registro], duplicate_check_fields: ['Email'] });
+
+const nota = (id, titulo, texto) =>
+  zoho(`Leads/${id}/Notes`, { data: [{ Note_Title: titulo, Note_Content: texto }] });
+
+/* La descripción de un lead en Zoho puede quedarse en 2.000 caracteres según
+   cómo esté el campo. Un briefing con el enlace cifrado del borrador los pasa
+   —el enlace solo ya ronda los mil—, y entonces Zoho rechaza el lead entero.
+   Por eso el borrador va en una nota aparte y la ficha se recorta si hiciera
+   falta: lo que no puede pasar es perder el lead. */
+const MAX_DESCRIPCION = 2000;
+const COLA = '\n… (recortado; el envío completo está en Netlify)';
+const recortar = t => (t.length <= MAX_DESCRIPCION ? t
+  : t.slice(0, MAX_DESCRIPCION - COLA.length) + COLA);
 
 /* --- La función ---------------------------------------------------------- */
 
@@ -303,25 +328,25 @@ export default async (req) => {
   /* Solo el formulario de propuesta trae briefing. Los de contacto y de alta de
      agencia no tienen con qué montar un programa, y un borrador vacío es ruido
      en la ficha. */
-  if (form === 'propuesta') {
-    const b = borrador(d, cuando, process.env.URL || 'https://eventspenedes.com');
-    if (b) {
-      registro.Description += '\n' + b.nota;
-      /* También al registro: si la ficha del CRM se edita a mano y se pierde el
-         enlace, aquí sigue. */
-      console.log(`Borrador de ${b.evento.id}: ${b.enlace}`);
-    }
+  const b = form === 'propuesta'
+    ? borrador(d, cuando, process.env.URL || 'https://eventspenedes.com')
+    : null;
+  if (b) {
+    /* También al registro: si la nota no se crea o se borra a mano, aquí sigue. */
+    console.log(`Borrador de ${b.evento.id}: ${b.enlace}`);
   }
+  registro.Description = recortar(registro.Description);
 
   if (process.env.ZOHO_DRY_RUN === '1') {
     console.log('DRY RUN · lead que se habría creado:', JSON.stringify(registro, null, 2));
-    return Response.json({ ok: true, dry_run: true, lead: registro });
+    return Response.json({ ok: true, dry_run: true, lead: registro, nota: b?.nota || null });
   }
 
+  let id;
   try {
     const j = await upsert(registro);
+    id = j.data?.[0]?.details?.id;
     console.log(`Lead de ${form} en Zoho:`, JSON.stringify(j.data?.[0]?.details || j));
-    return Response.json({ ok: true });
   } catch (e) {
     /* Se responde 200 a posta: el envío ya está guardado en Netlify y el aviso
        por correo ya ha salido, así que no se pierde nada. Lo que no puede
@@ -329,4 +354,16 @@ export default async (req) => {
     console.error('No se pudo crear el lead en Zoho:', e.message);
     return Response.json({ ok: false, error: e.message });
   }
+
+  /* El borrador, en una nota del lead. Si falla, el lead ya está dentro y el
+     enlace en el registro de la función: se avisa y se sigue. */
+  if (b && id) {
+    try {
+      await nota(id, 'Borrador de propuesta', b.nota.trim());
+    } catch (e) {
+      console.error('El lead está en Zoho, pero no la nota del borrador:', e.message);
+      return Response.json({ ok: true, nota: false, error: e.message });
+    }
+  }
+  return Response.json({ ok: true });
 };

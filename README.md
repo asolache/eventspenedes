@@ -120,7 +120,7 @@ mete en **Zoho CRM** con `upsert` por correo, así que quien ya escribió no se
 duplica.
 
 Y cuando el formulario es el de propuesta hace una segunda cosa: **monta el
-borrador de la propuesta** y deja en la ficha un enlace privado para leerlo
+borrador de la propuesta** y deja en una nota del lead un enlace privado para leerlo
 (`/p?d=…`, que sirve `netlify/functions/borrador.mjs`).
 
 El borrador **no se guarda en ninguna parte**: el evento viaja dentro del propio

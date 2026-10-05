@@ -94,6 +94,51 @@ const a = await (await handler(peticion(AG, firmar(AG)))).json();
 comprueba('«agencia» se lee según el formulario del que viene',
   /Tipo de evento: Agencia de eventos/.test(a.lead?.Description || ''));
 
+/* 1c · La propuesta con borrador: el lead tiene que caber en Zoho */
+process.env.PROPUESTA_SECRET = 'clave-de-prueba-no-usar-0123456789abcdef';
+const LARGA = JSON.stringify({ ...JSON.parse(AVISO),
+  data: { ...JSON.parse(AVISO).data, pax: '445', espacio: 'cal-segue' } });
+const pb = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
+comprueba('con borrador, la descripción cabe en los 2.000 caracteres de Zoho',
+  (pb.lead?.Description || '').length <= 2000);
+comprueba('el enlace del borrador NO va en la descripción', !/\/p\?d=/.test(pb.lead?.Description || ''));
+comprueba('el enlace del borrador va en la nota', /\/p\?d=v1\./.test(pb.nota || ''));
+
+const enorme = JSON.stringify({ ...JSON.parse(AVISO),
+  data: { ...JSON.parse(AVISO).data, objetivo: 'x'.repeat(5000) } });
+const pe = await (await handler(peticion(enorme, firmar(enorme)))).json();
+comprueba('un briefing enorme se recorta en vez de perder el lead',
+  pe.lead?.Description.length <= 2000 && /recortado/.test(pe.lead.Description));
+
+/* 1d · Contra Zoho de verdad, con fetch simulado */
+delete process.env.ZOHO_DRY_RUN;
+const fetchReal = globalThis.fetch;
+const llamadas = [];
+const simular = upsert => {
+  llamadas.length = 0;
+  globalThis.fetch = async (url, op) => {
+    llamadas.push({ url: String(url), cuerpo: op?.body });
+    if (/oauth/.test(url)) { return Response.json({ access_token: 't', expires_in: 3600 }); }
+    if (/upsert/.test(url)) { return upsert(); }
+    return Response.json({ data: [{ status: 'success', details: { id: 'nota1' } }] }, { status: 201 });
+  };
+};
+
+simular(() => Response.json({ data: [{ status: 'success', details: { id: '123' } }] }));
+const z = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
+const aNota = llamadas.find(x => /Leads\/123\/Notes/.test(x.url));
+comprueba('con el lead creado, el borrador se cuelga como nota de ESE lead', z.ok && !!aNota);
+comprueba('la nota lleva el enlace', /\/p\?d=v1\./.test(aNota?.cuerpo || ''));
+
+simular(() => Response.json({ data: [{ status: 'error', code: 'MAX_LENGTH_EXCEEDED' }] }, { status: 202 }));
+const zerr = await (await handler(peticion(LARGA, firmar(LARGA)))).json();
+comprueba('un error de Zoho dentro de un 2xx NO se da por bueno',
+  zerr.ok === false && /MAX_LENGTH_EXCEEDED/.test(zerr.error));
+
+globalThis.fetch = fetchReal;
+process.env.ZOHO_DRY_RUN = '1';
+delete process.env.PROPUESTA_SECRET;
+
 /* 2 · Los caminos malos, que son los que de verdad hay que probar */
 comprueba('sin firma se rechaza', (await handler(peticion(AVISO, null))).status === 401);
 comprueba('con otro secreto se rechaza',
