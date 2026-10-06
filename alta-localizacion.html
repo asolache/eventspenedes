@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Ficha de localización · Events Penedès</title>
+<meta name="description" content="Ficha de un espacio para la red de localizaciones de Events Penedès: salas, cocina, mobiliario, equipo, cata y alojamiento.">
+<!-- No se indexa: es una herramienta de trabajo, y el enlace puede llevar
+     datos de contacto prerrellenados. netlify.toml lo repite en cabecera. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="assets/icon-256.png" sizes="256x256">
+<meta name="theme-color" content="#050507">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Ir al contenido principal</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 4 6 14v20l18 10 18-10V14L24 4Z" stroke="currentColor" stroke-width="2" opacity=".35"/>
+        <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
+      </svg>
+      <span class="brand__name">Events <span>Penedès</span></span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero hero--dj" id="top">
+    <div class="wrap">
+      <p class="eyebrow">Red de localizaciones</p>
+      <h1>Ficha de localización</h1>
+      <p class="lead">Lo único obligatorio es el nombre y el tipo. El resto, lo que se sepa: lo que se deja en blanco queda como «sin dato», que es mejor que un número a ojo. Se guarda sola en este dispositivo mientras se rellena, así que se puede hacer durante la visita y enviar al salir.</p>
+    </div>
+  </section>
+
+  <section class="section section--panel" id="ficha">
+    <div class="wrap">
+
+      <form class="form" id="form-localizacion" name="localizacion" method="POST"
+            action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="localizacion">
+        <input type="hidden" name="idioma" value="es">
+        <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
+
+        <p class="form__estado" data-estado hidden></p>
+
+        <!-- campos: generado por tools/build-localizacion.mjs, no editar -->
+        <h2 class="form__h" id="sec-espacio">El espacio</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-nombre">Nombre del espacio</label>
+            <input id="l-nombre" name="nombre" type="text" maxlength="300" required>
+          </p>
+          <p class="field">
+            <label for="l-tipo">Tipo</label>
+            <select id="l-tipo" name="tipo" required>
+              <option value="">Elige una opción</option>
+              <option value="finca">Finca o masía</option>
+              <option value="bodega">Bodega o cava</option>
+              <option value="hotel">Hotel</option>
+              <option value="casa-rural">Casa rural</option>
+              <option value="restaurante">Restaurante</option>
+              <option value="singular">Espacio singular o patrimonial</option>
+              <option value="natural">Espacio natural o al aire libre</option>
+              <option value="otro">Otro</option>
+            </select>
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-relacion">Relación con nosotros</label>
+            <select id="l-relacion" name="relacion">
+              <option value="">Sin dato</option>
+              <option value="evaluando">En evaluación</option>
+              <option value="aliado">Espacio aliado</option>
+              <option value="propio">Espacio propio</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-direccion">Dirección</label>
+            <input id="l-direccion" name="direccion" type="text" autocomplete="street-address" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-poblacion">Población</label>
+            <input id="l-poblacion" name="poblacion" type="text" autocomplete="address-level2" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="l-cp">Código postal</label>
+            <input id="l-cp" name="cp" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-web">Web</label>
+            <input id="l-web" name="web" type="url" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="l-telefono">Teléfono del espacio</label>
+            <input id="l-telefono" name="telefono" type="tel" maxlength="300">
+            <span class="field__hint">El general, con extensión si la hay. El de la persona va abajo.</span>
+          </p>
+        </div>
+        <p class="field">
+          <label for="l-minutos-bcn">Minutos desde Barcelona</label>
+          <input id="l-minutos-bcn" name="minutos_bcn" type="number" min="0" max="100000" inputmode="numeric">
+        </p>
+        <p class="field">
+          <label for="l-descripcion">Qué lo hace único</label>
+          <textarea id="l-descripcion" name="descripcion" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Lo que no tiene ningún otro: la historia, el paisaje, quién lo lleva. Es el párrafo de la ficha pública.</span>
+        </p>
+
+        <h2 class="form__h" id="sec-contacto">Persona de contacto</h2>
+        <p class="field__hint">Va a Zoho y a ningún otro sitio: no se publica.</p>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-contacto-persona">Nombre</label>
+            <input id="l-contacto-persona" name="contacto_persona" type="text" autocomplete="off" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="l-contacto-cargo">Cargo</label>
+            <input id="l-contacto-cargo" name="contacto_cargo" type="text" autocomplete="off" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-contacto-movil">Móvil</label>
+            <input id="l-contacto-movil" name="contacto_movil" type="tel" autocomplete="off" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="l-contacto-correo">Correo</label>
+            <input id="l-contacto-correo" name="contacto_correo" type="email" autocomplete="off" maxlength="300">
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-capacidad">Capacidad</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-aforo-banquete">Máximo sentados a mesa</label>
+            <input id="l-aforo-banquete" name="aforo_banquete" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-aforo-coctel">Máximo de pie (cóctel)</label>
+            <input id="l-aforo-coctel" name="aforo_coctel" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-aforo-teatro">Máximo en teatro</label>
+            <input id="l-aforo-teatro" name="aforo_teatro" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-pax-minimo">Mínimo de personas</label>
+            <input id="l-pax-minimo" name="pax_minimo" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-exclusividad">Exclusividad del espacio</label>
+            <select id="l-exclusividad" name="exclusividad">
+              <option value="">Sin dato</option>
+              <option value="siempre">Siempre en exclusiva</option>
+              <option value="desde">En exclusiva a partir de un mínimo</option>
+              <option value="no">Se comparte con otros eventos</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-exclusividad-desde">Exclusiva a partir de (personas)</label>
+            <input id="l-exclusividad-desde" name="exclusividad_desde" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-salas">Salas y espacios</h2>
+        <p class="field__hint">Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie.</p>
+        <fieldset class="sala" data-sala="1">
+          <legend>Sala o espacio 1</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-nombre">Nombre</label>
+              <input id="l-sala1-nombre" name="sala1_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala1-tipo">Es</label>
+              <select id="l-sala1-tipo" name="sala1_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-m2">m²</label>
+              <input id="l-sala1-m2" name="sala1_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala1-banquete">Banquete sentado</label>
+              <input id="l-sala1-banquete" name="sala1_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-coctel">Cóctel de pie</label>
+              <input id="l-sala1-coctel" name="sala1_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala1-teatro">Teatro</label>
+              <input id="l-sala1-teatro" name="sala1_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-escuela">Escuela o reunión</label>
+              <input id="l-sala1-escuela" name="sala1_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala1-luz">Luz natural</label>
+              <select id="l-sala1-luz" name="sala1_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-clima">Climatizada</label>
+              <select id="l-sala1-clima" name="sala1_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala1-notas">Notas</label>
+              <input id="l-sala1-notas" name="sala1_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-sala="2">
+          <legend>Sala o espacio 2</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-nombre">Nombre</label>
+              <input id="l-sala2-nombre" name="sala2_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala2-tipo">Es</label>
+              <select id="l-sala2-tipo" name="sala2_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-m2">m²</label>
+              <input id="l-sala2-m2" name="sala2_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala2-banquete">Banquete sentado</label>
+              <input id="l-sala2-banquete" name="sala2_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-coctel">Cóctel de pie</label>
+              <input id="l-sala2-coctel" name="sala2_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala2-teatro">Teatro</label>
+              <input id="l-sala2-teatro" name="sala2_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-escuela">Escuela o reunión</label>
+              <input id="l-sala2-escuela" name="sala2_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala2-luz">Luz natural</label>
+              <select id="l-sala2-luz" name="sala2_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-clima">Climatizada</label>
+              <select id="l-sala2-clima" name="sala2_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala2-notas">Notas</label>
+              <input id="l-sala2-notas" name="sala2_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-sala="3">
+          <legend>Sala o espacio 3</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-nombre">Nombre</label>
+              <input id="l-sala3-nombre" name="sala3_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala3-tipo">Es</label>
+              <select id="l-sala3-tipo" name="sala3_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-m2">m²</label>
+              <input id="l-sala3-m2" name="sala3_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala3-banquete">Banquete sentado</label>
+              <input id="l-sala3-banquete" name="sala3_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-coctel">Cóctel de pie</label>
+              <input id="l-sala3-coctel" name="sala3_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala3-teatro">Teatro</label>
+              <input id="l-sala3-teatro" name="sala3_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-escuela">Escuela o reunión</label>
+              <input id="l-sala3-escuela" name="sala3_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala3-luz">Luz natural</label>
+              <select id="l-sala3-luz" name="sala3_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-clima">Climatizada</label>
+              <select id="l-sala3-clima" name="sala3_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala3-notas">Notas</label>
+              <input id="l-sala3-notas" name="sala3_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-sala="4">
+          <legend>Sala o espacio 4</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-nombre">Nombre</label>
+              <input id="l-sala4-nombre" name="sala4_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala4-tipo">Es</label>
+              <select id="l-sala4-tipo" name="sala4_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-m2">m²</label>
+              <input id="l-sala4-m2" name="sala4_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala4-banquete">Banquete sentado</label>
+              <input id="l-sala4-banquete" name="sala4_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-coctel">Cóctel de pie</label>
+              <input id="l-sala4-coctel" name="sala4_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala4-teatro">Teatro</label>
+              <input id="l-sala4-teatro" name="sala4_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-escuela">Escuela o reunión</label>
+              <input id="l-sala4-escuela" name="sala4_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala4-luz">Luz natural</label>
+              <select id="l-sala4-luz" name="sala4_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-clima">Climatizada</label>
+              <select id="l-sala4-clima" name="sala4_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala4-notas">Notas</label>
+              <input id="l-sala4-notas" name="sala4_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-sala="5">
+          <legend>Sala o espacio 5</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-nombre">Nombre</label>
+              <input id="l-sala5-nombre" name="sala5_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala5-tipo">Es</label>
+              <select id="l-sala5-tipo" name="sala5_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-m2">m²</label>
+              <input id="l-sala5-m2" name="sala5_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala5-banquete">Banquete sentado</label>
+              <input id="l-sala5-banquete" name="sala5_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-coctel">Cóctel de pie</label>
+              <input id="l-sala5-coctel" name="sala5_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala5-teatro">Teatro</label>
+              <input id="l-sala5-teatro" name="sala5_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-escuela">Escuela o reunión</label>
+              <input id="l-sala5-escuela" name="sala5_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala5-luz">Luz natural</label>
+              <select id="l-sala5-luz" name="sala5_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-clima">Climatizada</label>
+              <select id="l-sala5-clima" name="sala5_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala5-notas">Notas</label>
+              <input id="l-sala5-notas" name="sala5_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-sala="6">
+          <legend>Sala o espacio 6</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-nombre">Nombre</label>
+              <input id="l-sala6-nombre" name="sala6_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-sala6-tipo">Es</label>
+              <select id="l-sala6-tipo" name="sala6_tipo">
+                <option value="">Sin dato</option>
+                <option value="interior">Interior</option>
+                <option value="cubierto">Exterior cubierto</option>
+                <option value="exterior">Exterior</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-m2">m²</label>
+              <input id="l-sala6-m2" name="sala6_m2" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala6-banquete">Banquete sentado</label>
+              <input id="l-sala6-banquete" name="sala6_banquete" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-coctel">Cóctel de pie</label>
+              <input id="l-sala6-coctel" name="sala6_coctel" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala6-teatro">Teatro</label>
+              <input id="l-sala6-teatro" name="sala6_teatro" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-escuela">Escuela o reunión</label>
+              <input id="l-sala6-escuela" name="sala6_escuela" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-sala6-luz">Luz natural</label>
+              <select id="l-sala6-luz" name="sala6_luz">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-clima">Climatizada</label>
+              <select id="l-sala6-clima" name="sala6_clima">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-sala6-notas">Notas</label>
+              <input id="l-sala6-notas" name="sala6_notas" type="text" maxlength="300">
+            </p>
+          </div>
+        </fieldset>
+        <p class="sala__mas" hidden><button class="btn btn--ghost" type="button" data-sala-mas>Añadir otra sala</button></p>
+
+        <h2 class="form__h" id="sec-cocina">Cocina y catering</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-cocina">Cocina</label>
+            <select id="l-cocina" name="cocina">
+              <option value="">Sin dato</option>
+              <option value="equipada">Cocina propia equipada</option>
+              <option value="office">Office de apoyo para emplatar</option>
+              <option value="no">No hay cocina</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-cocina-m2">m² de cocina</label>
+            <input id="l-cocina-m2" name="cocina_m2" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-catering">Catering</label>
+            <select id="l-catering" name="catering">
+              <option value="">Sin dato</option>
+              <option value="libre">Libre: entra el que elijamos</option>
+              <option value="lista">De una lista de homologados</option>
+              <option value="exclusiva">En exclusiva con uno</option>
+              <option value="propio">Lo da el propio espacio</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-catering-quien">Qué caterings (exclusiva u homologados)</label>
+            <input id="l-catering-quien" name="catering_quien" type="text" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-catering-canon">Canon por catering externo</label>
+            <select id="l-catering-canon" name="catering_canon">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-brasa">Barbacoa o brasa</label>
+            <select id="l-brasa" name="brasa">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+        </div>
+        <p class="field">
+          <label for="l-cocina-notas">Notas de cocina</label>
+          <textarea id="l-cocina-notas" name="cocina_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Fuegos, cámaras, agua y luz para el catering, por dónde entra.</span>
+        </p>
+
+        <h2 class="form__h" id="sec-mobiliario">Mobiliario</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-mesas-redondas">Mesas redondas</label>
+            <input id="l-mesas-redondas" name="mesas_redondas" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-mesas-redondas-pax">Comensales por mesa redonda</label>
+            <input id="l-mesas-redondas-pax" name="mesas_redondas_pax" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-mesas-rect">Mesas rectangulares o imperiales</label>
+            <input id="l-mesas-rect" name="mesas_rect" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-mesas-coctel">Mesas altas de cóctel</label>
+            <input id="l-mesas-coctel" name="mesas_coctel" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-sillas">Sillas</label>
+            <input id="l-sillas" name="sillas" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-manteleria">Mantelería incluida</label>
+            <select id="l-manteleria" name="manteleria">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+        </div>
+        <p class="field">
+          <label for="l-carpa">Carpa o cubierta para exterior</label>
+          <select id="l-carpa" name="carpa">
+            <option value="">Sin dato</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </p>
+        <p class="field">
+          <label for="l-mobiliario-notas">Notas de mobiliario</label>
+          <textarea id="l-mobiliario-notas" name="mobiliario_notas" rows="3" maxlength="2000"></textarea>
+        </p>
+
+        <h2 class="form__h" id="sec-tecnica">Equipo técnico</h2>
+        <fieldset class="opts">
+          <legend>Qué tiene</legend>
+          <p class="field--check"><label><input type="checkbox" name="equipo_proyector" value="si"> <span>Proyector</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_pantalla" value="si"> <span>Pantalla</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_tv" value="si"> <span>Pantalla de TV o monitor</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_sonido" value="si"> <span>Megafonía o sonido</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_micros" value="si"> <span>Micrófonos</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_escenario" value="si"> <span>Escenario o tarima</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_iluminacion" value="si"> <span>Iluminación ambiental</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_wifi" value="si"> <span>Wifi para el grupo</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="equipo_trifasica" value="si"> <span>Toma trifásica</span></label></p>
+        </fieldset>
+        <p class="field">
+          <label for="l-tecnica-notas">Notas técnicas</label>
+          <textarea id="l-tecnica-notas" name="tecnica_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Cuántos micros, potencia eléctrica, si el sonido tiene límite de decibelios.</span>
+        </p>
+
+        <h2 class="form__h" id="sec-logistica">Acceso y logística</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-parking">Plazas de aparcamiento</label>
+            <input id="l-parking" name="parking" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-autocar">Llega un autocar grande</label>
+            <select id="l-autocar" name="autocar">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-pmr">Accesible en silla de ruedas</label>
+            <select id="l-pmr" name="pmr">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="l-aseos">Aseos</label>
+            <input id="l-aseos" name="aseos" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-hora-fin">Hora límite del evento</label>
+            <input id="l-hora-fin" name="hora_fin" type="text" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="l-musica-limite">Límite de música o ruido</label>
+            <input id="l-musica-limite" name="musica_limite" type="text" maxlength="300">
+          </p>
+        </div>
+        <p class="field">
+          <label for="l-montaje">Montaje y desmontaje</label>
+          <input id="l-montaje" name="montaje" type="text" maxlength="300">
+          <span class="field__hint">Desde cuándo se puede montar y hasta cuándo desmontar.</span>
+        </p>
+        <p class="field">
+          <label for="l-plan-lluvia">Plan B si llueve</label>
+          <textarea id="l-plan-lluvia" name="plan_lluvia" rows="3" maxlength="2000"></textarea>
+        </p>
+
+        <h2 class="form__h" id="sec-cata">Visita y cata</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_cata" value="si" data-tipos="bodega"> <span>Ofrece visita o cata</span></label></p>
+        <div class="form__cond" data-si="ofrece_cata">
+          <fieldset class="opts">
+            <legend>Qué ofrece</legend>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_visita" value="si"> <span>Visita a la bodega o las cavas</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_vinos" value="si"> <span>Cata de vinos</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_cavas" value="si"> <span>Cata de cavas</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_maridaje" value="si"> <span>Cata con maridaje</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_vina" value="si"> <span>Paseo o actividad en la viña</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_vendimia" value="si"> <span>Vendimia (en temporada)</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_ensamblaje" value="si"> <span>Taller de ensamblaje o enología</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_tipos_tienda" value="si"> <span>Tienda</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-cata-duracion">Duración de la visita con cata</label>
+              <input id="l-cata-duracion" name="cata_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-cata-grupo">Personas por grupo de cata</label>
+              <input id="l-cata-grupo" name="cata_grupo" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <p class="field">
+            <label for="l-cata-sala">Aforo de la sala de catas</label>
+            <input id="l-cata-sala" name="cata_sala" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <fieldset class="opts">
+            <legend>Idiomas de la visita</legend>
+            <p class="field--check"><label><input type="checkbox" name="cata_idiomas_ca" value="si"> <span>Catalán</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_idiomas_es" value="si"> <span>Castellano</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_idiomas_en" value="si"> <span>Inglés</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_idiomas_fr" value="si"> <span>Francés</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_idiomas_de" value="si"> <span>Alemán</span></label></p>
+          </fieldset>
+          <p class="field">
+            <label for="l-cata-notas">Notas de la visita</label>
+            <textarea id="l-cata-notas" name="cata_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Quién la guía, qué se cata, si se adapta a empresa.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-alojamiento">Alojamiento</h2>
+        <p class="field--check"><label><input type="checkbox" name="tiene_alojamiento" value="si" data-tipos="hotel casa-rural"> <span>Tiene alojamiento</span></label></p>
+        <div class="form__cond" data-si="tiene_alojamiento">
+          <div class="form__row">
+            <p class="field">
+              <label for="l-habitaciones">Habitaciones</label>
+              <input id="l-habitaciones" name="habitaciones" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-plazas">Plazas para dormir</label>
+              <input id="l-plazas" name="plazas" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-habitaciones-tipos">Tipos de habitación</label>
+              <input id="l-habitaciones-tipos" name="habitaciones_tipos" type="text" maxlength="300">
+              <span class="field__hint">Dobles, suites, familiares, literas…</span>
+            </p>
+            <p class="field">
+              <label for="l-alojamiento-exclusiva">Se alquila entera</label>
+              <select id="l-alojamiento-exclusiva" name="alojamiento_exclusiva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <p class="field">
+            <label for="l-desayuno">Desayuno incluido</label>
+            <select id="l-desayuno" name="desayuno">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+          <fieldset class="opts">
+            <legend>Qué más tiene</legend>
+            <p class="field--check"><label><input type="checkbox" name="extras_piscina" value="si"> <span>Piscina</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="extras_spa" value="si"> <span>Spa</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="extras_gimnasio" value="si"> <span>Gimnasio</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="extras_restaurante" value="si"> <span>Restaurante propio</span></label></p>
+          </fieldset>
+          <p class="field">
+            <label for="l-alojamiento-notas">Notas de alojamiento</label>
+            <textarea id="l-alojamiento-notas" name="alojamiento_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Entrada y salida, estancia mínima, temporada.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-eventos">Para qué sirve</h2>
+        <fieldset class="opts">
+          <legend>Tipos de evento</legend>
+          <p class="field--check"><label><input type="checkbox" name="eventos_convencion" value="si"> <span>Convención o jornada</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_comida" value="si"> <span>Comida o cena de empresa</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_gala" value="si"> <span>Cena de gala</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_teambuilding" value="si"> <span>Team building</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_incentivo" value="si"> <span>Incentivo</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_presentacion" value="si"> <span>Presentación de producto</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_boda" value="si"> <span>Boda o celebración</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_calcotada" value="si"> <span>Calçotada o comida popular</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="eventos_rodaje" value="si"> <span>Rodaje o sesión de fotos</span></label></p>
+        </fieldset>
+        <p class="field">
+          <label for="l-actividades">Actividades que se hacen allí</label>
+          <textarea id="l-actividades" name="actividades" rows="3" maxlength="2000"></textarea>
+        </p>
+
+        <h2 class="form__h" id="sec-fotos">Fotos</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-fotos-enlace">Enlace a las fotos o al dossier</label>
+            <input id="l-fotos-enlace" name="fotos_enlace" type="url" maxlength="300">
+            <span class="field__hint">Drive, Dropbox o la web del espacio. Las fotos no se suben aquí.</span>
+          </p>
+          <p class="field">
+            <label for="l-fotos-permiso">Permiso para publicarlas</label>
+            <select id="l-fotos-permiso" name="fotos_permiso">
+              <option value="">Sin dato</option>
+              <option value="escrito">Sí, por escrito</option>
+              <option value="verbal">De palabra: falta por escrito</option>
+              <option value="no">No</option>
+              <option value="pedir">Hay que pedirlo</option>
+            </select>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-comercial">Condiciones</h2>
+        <p class="field__hint">Interno: nunca se publica. Precios sin IVA salvo que se diga.</p>
+        <p class="field">
+          <label for="l-tarifa">Tarifa de alquiler</label>
+          <textarea id="l-tarifa" name="tarifa" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Por franja, por día, por persona. Tal cual lo dicen.</span>
+        </p>
+        <p class="field">
+          <label for="l-comision">Comisión o precio de agencia</label>
+          <input id="l-comision" name="comision" type="text" maxlength="300">
+        </p>
+        <p class="field">
+          <label for="l-reserva">Reserva y cancelación</label>
+          <textarea id="l-reserva" name="reserva" rows="3" maxlength="2000"></textarea>
+        </p>
+        <p class="field">
+          <label for="l-temporada">Temporada y fechas bloqueadas</label>
+          <input id="l-temporada" name="temporada" type="text" maxlength="300">
+        </p>
+
+        <h2 class="form__h" id="sec-visita">Notas de la visita</h2>
+        <p class="field">
+          <label for="l-visita-fecha">Fecha de la visita</label>
+          <input id="l-visita-fecha" name="visita_fecha" type="date">
+        </p>
+        <p class="field">
+          <label for="l-visita-notas">Lo que hemos visto</label>
+          <textarea id="l-visita-notas" name="visita_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Lo bueno, lo que no encaja, para qué cliente lo propondríamos.</span>
+        </p>
+        <p class="field">
+          <label for="l-pendiente">Lo que queda por saber</label>
+          <textarea id="l-pendiente" name="pendiente" rows="3" maxlength="2000"></textarea>
+        </p>
+        <p class="field">
+          <label for="l-publicar">Publicación</label>
+          <select id="l-publicar" name="publicar">
+            <option value="">Sin dato</option>
+            <option value="no">No publicar todavía</option>
+            <option value="revisar">Propuesta para la web: revisar y aprobar</option>
+          </select>
+        </p>
+        <!-- /campos -->
+
+        <p class="field--check field--consent">
+          <label><input type="checkbox" name="consentimiento" value="si" required>
+          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Si relleno la ficha por otra persona, sabe que guardamos sus datos de contacto.</span></label>
+        </p>
+
+        <p class="form__acciones">
+          <button class="btn btn--primary" type="submit">Enviar la ficha</button>
+          <button class="btn btn--ghost" type="button" data-borrar hidden>Vaciar y empezar otra</button>
+        </p>
+        <p class="form__note">La ficha entra en el CRM con la etiqueta «Localización» y su tipo. No se publica nada hasta que se revisa y se aprueba: la página pública del espacio sale de la ficha aprobada, no del envío.</p>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__bottom">
+      <p>© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
+      <p><a href="privacidad.html">Aviso de privacidad</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/localizacion.js" defer></script>
+</body>
+</html>

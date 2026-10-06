@@ -190,6 +190,41 @@ const cc = await (await handler(peticion(CONTACTO2, firmar(CONTACTO2)))).json();
 comprueba('el formulario de contacto sigue entrando como lead', cc.modulo === 'Leads' && !de(/Deals/));
 delete process.env.ZOHO_ETAPA_PROPUESTA;
 
+/* 1f · La ficha de una localización: cuenta con etiquetas, contacto y nota */
+const LOCAL = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-07T10:00:00.000Z',
+  data: { nombre: 'Celler Exemple', tipo: 'bodega', telefono: '+34 930 000 000', web: 'https://exemple.example',
+          direccion: 'Carrer Major 1', poblacion: 'Vilobí del Penedès', cp: '08735',
+          contacto_persona: 'Laia Exemple', contacto_cargo: 'Eventos', contacto_movil: '+34 600 111 222',
+          contacto_correo: 'laia@exemple.example',
+          aforo_banquete: '180', sala1_nombre: 'Sala de barricas', sala1_tipo: 'interior', sala1_banquete: '120',
+          sala2_nombre: '', equipo_proyector: 'si', ofrece_cata: 'si', cata_tipos_cavas: 'si',
+          habitaciones: '12', tarifa: '1.500 € por día', consentimiento: 'si', inventado: 'no entra' } });
+zohoSimulado();
+const lz = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
+const cuentaL = de(/Accounts\/upsert/)?.cuerpo.data[0] || {};
+comprueba('la localización entra como cuenta, no como lead', lz.ok && lz.modulo === 'Accounts' && !de(/Leads/));
+comprueba('la cuenta lleva nombre, teléfono, web y dirección',
+  cuentaL.Account_Name === 'Celler Exemple' && cuentaL.Phone === '+34 930 000 000'
+  && cuentaL.Billing_City === 'Vilobí del Penedès' && cuentaL.Billing_Code === '08735');
+comprueba('la cuenta NO pisa la descripción de lo que ya hubiera', !('Description' in cuentaL));
+comprueba('lleva la etiqueta Localización y la de su tipo',
+  /Accounts\/acc1\/actions\/add_tags\?tag_names=Localizaci%C3%B3n%2CBodega/.test(de(/add_tags/)?.url || ''));
+const contL = de(/Contacts\/upsert/)?.cuerpo.data[0] || {};
+comprueba('la persona es contacto de la cuenta, con móvil y cargo',
+  contL.Account_Name?.id === 'acc1' && contL.Mobile === '+34 600 111 222' && contL.Title === 'Eventos');
+const notaL = de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0].Note_Content || '';
+comprueba('la ficha va en una nota de la cuenta', /## Salas y espacios/.test(notaL) && /Sala de barricas — Es: Interior · Banquete sentado: 120/.test(notaL));
+comprueba('la ficha lee los valores, no los identificadores', /Cata de cavas/.test(notaL) && /Proyector/.test(notaL));
+comprueba('el bloque de alojamiento no sale si no está marcado', !/Habitaciones/.test(notaL));
+comprueba('las condiciones salen marcadas como internas', /## Condiciones \(interno\)/.test(notaL));
+comprueba('un campo que no está en el esquema no entra', !/no entra/.test(notaL));
+
+zohoSimulado();
+globalThis.fetch = (f => async (url, op) => (/add_tags/.test(String(url))
+  ? Response.json({ data: [{ status: 'error', code: 'INVALID_DATA' }] }, { status: 400 }) : f(url, op)))(globalThis.fetch);
+const lz2 = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
+comprueba('si fallan las etiquetas, la cuenta y la nota siguen', lz2.ok && lz2.avisos.length === 1 && !!de(/Accounts\/acc1\/Notes/));
+
 globalThis.fetch = fetchReal;
 process.env.ZOHO_DRY_RUN = '1';
 delete process.env.PROPUESTA_SECRET;

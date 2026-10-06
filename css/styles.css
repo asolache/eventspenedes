@@ -1417,3 +1417,34 @@ ul { margin: 0; padding: 0; list-style: none; }
 .wrap--texto h2 { margin: 2.2rem 0 0.6rem; font-size: 1.15rem; }
 .wrap--texto p, .wrap--texto li { line-height: 1.7; }
 .wrap--texto ul { display: grid; gap: 0.6rem; padding-left: 1.2rem; margin: 0.6rem 0; }
+
+/* --- La ficha de localización ----------------------------------------------
+   Se rellena de pie, con el móvil, durante una visita: los campos son grandes,
+   el estado del envío se ve arriba y cada sala va en su propio recuadro. */
+.form__estado {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border-hi);
+    background: var(--bg-elevated);
+    font-size: 0.93rem;
+}
+.form__estado[data-tipo="ok"] { border-color: var(--accent-green); }
+.form__estado[data-tipo="error"] { border-color: var(--accent-wine); background: rgba(140, 47, 57, 0.18); }
+.form__cond { display: grid; gap: 1rem; padding-left: 0.9rem; border-left: 2px solid var(--accent-gold); }
+.form__cond[hidden], .sala[hidden] { display: none; }
+.sala {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem 1.1rem 1.2rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+}
+.sala legend { padding: 0 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.06em; }
+.sala__mas, .form__acciones { margin: 0; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+@media (max-width: 619px) {
+    /* 16 px como mínimo: con menos, Safari en iPhone amplía la página al
+       tocar un campo y hay que volver a encuadrarla. */
+    #form-localizacion .field input, #form-localizacion .field select, #form-localizacion .field textarea { font-size: 16px; }
+}
