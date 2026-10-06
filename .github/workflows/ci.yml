@@ -36,3 +36,13 @@ jobs:
             echo "::error::ca/, en/ o los datos estructurados no corresponden a las páginas en castellano. Regenera con: node tools/build-i18n.mjs"
             exit 1
           }
+
+      # Los campos de la ficha de localización salen del mismo esquema que la
+      # ficha que llega a Zoho. Si alguien los toca a mano, se separan.
+      - name: El formulario de localizaciones es el que sale del esquema
+        run: |
+          node tools/build-localizacion.mjs
+          git diff --exit-code -- alta-localizacion.html || {
+            echo "::error::alta-localizacion.html no corresponde a netlify/localizacion/esquema.mjs. Regenera con: node tools/build-localizacion.mjs"
+            exit 1
+          }

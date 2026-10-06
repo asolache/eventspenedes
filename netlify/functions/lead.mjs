@@ -6,6 +6,10 @@
    el aviso viene de verdad de Netlify, arma la ficha del lead y la mete en
    Zoho sin duplicar.
 
+   Cuando el formulario es la ficha de una localización, el espacio entra como
+   CUENTA con la etiqueta «Localización» y la de su tipo, la persona como
+   CONTACTO de esa cuenta, y la ficha entera como nota. Ver `localizacion()`.
+
    Y cuando el formulario es el de propuesta, hace una segunda cosa: **monta el
    borrador de la propuesta** y deja en una nota del lead un enlace privado
    para leerlo.
@@ -33,11 +37,14 @@
                                   (el borrador va en una nota del lead: el
                                   token de Zoho necesita permiso de notas)
      BORRADOR_DIAS                opcional · cuántos días vale el enlace (30)
+     ZOHO_ETIQUETA_LOCALIZACION   opcional · etiqueta de las cuentas de espacios
+                                  («Localización»)
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
 import { briefingAEvento } from '../propuesta/briefing-a-evento.mjs';
 import { opciones, espacios } from '../propuesta/catalogo.mjs';
+import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto } from '../localizacion/esquema.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -359,6 +366,75 @@ const COLA = '\n… (recortado; el envío completo está en Netlify)';
 const recortar = t => (t.length <= MAX_DESCRIPCION ? t
   : t.slice(0, MAX_DESCRIPCION - COLA.length) + COLA);
 
+/* --- La localización como cuenta -------------------------------------------
+   Un espacio no es un lead: no se le vende nada, se trabaja con él. Entra como
+   CUENTA, con dos etiquetas —«Localización» y su tipo— para poder filtrarlos
+   en el CRM, y la persona como CONTACTO de esa cuenta.
+
+   La cuenta se busca por nombre y solo se le escriben datos de hecho (teléfono,
+   web, dirección), nunca la descripción: si el espacio ya estaba en Zoho por
+   otro motivo, no se le pisa lo que tuviera. La ficha va en una NOTA, así que
+   cada visita o corrección deja la suya y se ve cómo ha cambiado. */
+
+const AUTORIZA = { si: 'Web autorizada', revisar: 'Web por revisar', no: 'Web no autorizada' };
+
+function localizacion(d, cuando) {
+  const v = k => (d[k] || '').toString().trim() || undefined;
+  const nombre = v('nombre') || 'Localización sin nombre';
+  const cuenta = {
+    Account_Name: nombre,
+    Phone: v('telefono'),
+    Website: v('web'),
+    Billing_Street: v('direccion'),
+    Billing_City: v('poblacion'),
+    Billing_Code: v('cp'),
+  };
+  if (process.env.ZOHO_CAMPO_MARCA) { cuenta[process.env.ZOHO_CAMPO_MARCA] = 'Events Penedès'; }
+  const persona = v('contacto_persona');
+  const correo = v('contacto_correo');
+  const movil = v('contacto_movil');
+  const contacto = (persona || correo || movil)
+    ? { Last_Name: persona || correo || movil, Email: correo, Mobile: movil, Title: v('contacto_cargo') }
+    : null;
+  const etiquetas = [process.env.ZOHO_ETIQUETA_LOCALIZACION || 'Localización'];
+  if (ETIQUETA_TIPO[d.tipo]) { etiquetas.push(ETIQUETA_TIPO[d.tipo]); }
+  /* La autorización de publicar, también como etiqueta: es el filtro con el
+     que se decide qué ficha se puede pasar a la web. */
+  if (AUTORIZA[d.autoriza]) { etiquetas.push(AUTORIZA[d.autoriza]); }
+  const nota = [`Ficha de localización · recibida ${cuando}`,
+                `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`,
+                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`, '', fichaTexto(d)];
+  if (d.consentimiento) { nota.push('', `Aviso de privacidad aceptado el ${cuando}.`); }
+  return { cuenta, contacto, etiquetas, nota: nota.join('\n') };
+}
+
+async function crearLocalizacion({ cuenta, contacto, etiquetas, nota: texto }) {
+  const ids = {};
+  ids.cuenta = idDe(await zoho('Accounts/upsert', { data: [cuenta], duplicate_check_fields: ['Account_Name'] }));
+  if (!ids.cuenta) { throw new Error('Zoho no devolvió el id de la cuenta'); }
+
+  /* Lo que viene después de la cuenta no puede tumbarla: si falla una
+     etiqueta o el contacto, el espacio ya está dentro y queda en el registro. */
+  const avisos = [];
+  try {
+    const q = encodeURIComponent(etiquetas.join(','));
+    await zoho(`Accounts/${ids.cuenta}/actions/add_tags?tag_names=${q}&over_write=false`, {});
+  } catch (e) { avisos.push('etiquetas: ' + e.message); }
+  if (contacto) {
+    try {
+      const c = { ...contacto, Account_Name: { id: ids.cuenta } };
+      /* Sin correo no hay con qué deduplicar: se crea. */
+      ids.contacto = idDe(contacto.Email
+        ? await zoho('Contacts/upsert', { data: [c], duplicate_check_fields: ['Email'] })
+        : await zoho('Contacts', { data: [c] }));
+    } catch (e) { avisos.push('contacto: ' + e.message); }
+  }
+  try {
+    await nota('Accounts', ids.cuenta, 'Ficha de localización', texto);
+  } catch (e) { avisos.push('nota: ' + e.message); }
+  return { ids, avisos };
+}
+
 /* --- La función ---------------------------------------------------------- */
 
 export default async (req) => {
@@ -389,6 +465,36 @@ export default async (req) => {
   const form = aviso.form_name || 'desconocido';
   const d = aviso.data || {};
   const cuando = aviso.created_at || new Date().toISOString();
+
+  if (form === FORM_LOCALIZACION) {
+    const loc = localizacion(d, cuando);
+    if (process.env.ZOHO_DRY_RUN === '1') {
+      console.log('DRY RUN · localización:', JSON.stringify(loc, null, 2));
+      return Response.json({ ok: true, dry_run: true, localizacion: loc });
+    }
+    try {
+      const { ids, avisos } = await crearLocalizacion(loc);
+      console.log('Localización en Zoho:', JSON.stringify(ids));
+      if (avisos.length) { console.error('La cuenta está, pero:', avisos.join(' · ')); }
+      return Response.json({ ok: true, modulo: 'Accounts', avisos });
+    } catch (e) {
+      /* Si la cuenta no entra, entra como lead con la ficha: perder una visita
+         entera por organizarla mejor sería cambiar lo importante por lo cómodo. */
+      console.error('No se pudo crear la cuenta del espacio; entra como lead:', e.message);
+      try {
+        const r = { Last_Name: (d.contacto_persona || d.nombre || 'Localización').trim(),
+                    Company: (d.nombre || 'Localización').trim(),
+                    Email: (d.contacto_correo || '').trim() || undefined,
+                    Phone: (d.telefono || '').trim() || undefined,
+                    Description: recortar(loc.nota) };
+        await upsert(r);
+        return Response.json({ ok: true, modulo: 'Leads' });
+      } catch (e2) {
+        console.error('Tampoco como lead:', e2.message);
+        return Response.json({ ok: false, error: e2.message });
+      }
+    }
+  }
   const registro = lead(form, d, cuando);
 
   /* Solo el formulario de propuesta trae briefing. Los de contacto y de alta de

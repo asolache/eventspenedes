@@ -69,6 +69,21 @@
   to = "/.netlify/functions/borrador"
   status = 200
 
+# La ficha de localización es una herramienta de trabajo, no una página: no se
+# indexa, y su enlace puede llevar datos de contacto prerrellenados en la URL,
+# así que no viaja en el Referer ni se queda en ninguna caché.
+[[headers]]
+  for = "/alta-localizacion*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-store"
+
+[[redirects]]
+  from = "/alta-localizacion"
+  to = "/alta-localizacion.html"
+  status = 200
+
 # Dominio canónico: todo el tráfico de www va al dominio raíz
 [[redirects]]
   from = "https://www.eventspenedes.com/*"

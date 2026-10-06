@@ -15,6 +15,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── index.html          Landing en castellano (fuente de verdad)
 ├── dj.html             Perfil de DJ en castellano (fuente de verdad)
 ├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
+├── alta-localizacion.html  Ficha de un espacio, de uso interno (no se indexa)
 ├── ca/, en/            Versiones generadas — no se editan a mano
 ├── tools/build-i18n.mjs  Generador de las versiones por idioma
 ├── 404.html            Página de error
@@ -152,6 +153,38 @@ las guardas; allí se edita y se pasa con `node tools/sync-web.mjs --web
 documento: si fueran dos códigos, el día que se cambie un párrafo se cambiaría
 en uno de los dos.
 
+### La ficha de una localización
+
+`alta-localizacion.html` (`/alta-localizacion`) es la ficha de un espacio:
+salas con su aforo por formato, cocina y catering, mobiliario, equipo técnico,
+acceso, y los bloques de **visita y cata** y de **alojamiento**, que se abren
+solos para bodegas, hoteles y casas rurales. Está pensada para rellenarse
+**con el móvil durante la visita**: se guarda sola en el dispositivo, se envía
+sin salir de la página y, si no hay cobertura, lo dice y no borra nada.
+
+Los campos **no se editan en el HTML**: salen de
+`netlify/localizacion/esquema.mjs` con `node tools/build-localizacion.mjs`, y
+la función arma la ficha de Zoho con el mismo esquema. CI falla si el HTML no es
+el que sale del esquema.
+
+En Zoho el espacio entra como **cuenta** con las etiquetas «Localización» y su
+tipo («Bodega», «Hotel»…), la persona como **contacto** de esa cuenta y la
+ficha entera como **nota**. Cada envío deja su nota, así que una segunda visita
+no borra la primera. Nada se publica desde aquí: la página pública de un
+espacio sale de la ficha **aprobada** en el repositorio privado.
+
+La ficha la puede rellenar **el propio espacio**: lo que rellenamos nosotros
+en la visita (la relación y las notas de la visita) solo aparece con
+`?interno=1`, y el dispositivo lo recuerda. Las **tarifas** van en números
+—todo el espacio por franja, cada sala, por persona según el tamaño del grupo,
+suplementos y comisión— para poder calcular franjas de precio más adelante; van
+a Zoho y nunca a la web. La **autorización de publicar** la da el espacio en la
+propia ficha y entra también como etiqueta («Web autorizada», «Web por
+revisar», «Web no autorizada»): es el filtro para pasar una ficha a la web.
+
+Se puede abrir con campos ya rellenos (`/alta-localizacion?nombre=…&tipo=bodega`),
+que solo llenan lo vacío y desaparecen de la barra de direcciones.
+
 ### Variables de entorno
 
 En *Site configuration → Environment variables*, marcadas como **secretas** y con
@@ -166,6 +199,7 @@ chat.
 | `ZOHO_LEAD_SOURCE`, `ZOHO_CAMPO_MARCA` | opcionales · un valor y un campo que ya existan en tu Zoho |
 | `PROPUESTA_SECRET` | 32 caracteres aleatorios o más. Cierra y abre el enlace del borrador |
 | `BORRADOR_DIAS` | opcional · días que vale el enlace. Por defecto 30 |
+| `ZOHO_ETIQUETA_LOCALIZACION` | opcional · etiqueta de las cuentas de espacios. Por defecto `Localización` |
 | `ZOHO_ETAPA_PROPUESTA` | opcional · nombre EXACTO de la etapa de una oportunidad nueva. Con ella, una petición de propuesta entra como cuenta + contacto + oportunidad, y el borrador cuelga de la oportunidad. Necesita un token con permiso sobre cuentas, contactos, oportunidades y notas. Si Zoho rechaza la oportunidad, entra como lead |
 
 Cambiar una variable **no** aplica hasta el siguiente despliegue.
