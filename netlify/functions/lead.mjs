@@ -376,6 +376,8 @@ const recortar = t => (t.length <= MAX_DESCRIPCION ? t
    otro motivo, no se le pisa lo que tuviera. La ficha va en una NOTA, así que
    cada visita o corrección deja la suya y se ve cómo ha cambiado. */
 
+const AUTORIZA = { si: 'Web autorizada', revisar: 'Web por revisar', no: 'Web no autorizada' };
+
 function localizacion(d, cuando) {
   const v = k => (d[k] || '').toString().trim() || undefined;
   const nombre = v('nombre') || 'Localización sin nombre';
@@ -396,8 +398,12 @@ function localizacion(d, cuando) {
     : null;
   const etiquetas = [process.env.ZOHO_ETIQUETA_LOCALIZACION || 'Localización'];
   if (ETIQUETA_TIPO[d.tipo]) { etiquetas.push(ETIQUETA_TIPO[d.tipo]); }
+  /* La autorización de publicar, también como etiqueta: es el filtro con el
+     que se decide qué ficha se puede pasar a la web. */
+  if (AUTORIZA[d.autoriza]) { etiquetas.push(AUTORIZA[d.autoriza]); }
   const nota = [`Ficha de localización · recibida ${cuando}`,
-                `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`, '', fichaTexto(d)];
+                `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`,
+                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`, '', fichaTexto(d)];
   if (d.consentimiento) { nota.push('', `Aviso de privacidad aceptado el ${cuando}.`); }
   return { cuenta, contacto, etiquetas, nota: nota.join('\n') };
 }

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Ficha de localización · Events Penedès</title>
+<title>Ficha del espacio · Events Penedès</title>
 <meta name="description" content="Ficha de un espacio para la red de localizaciones de Events Penedès: salas, cocina, mobiliario, equipo, cata y alojamiento.">
 <!-- No se indexa: es una herramienta de trabajo, y el enlace puede llevar
      datos de contacto prerrellenados. netlify.toml lo repite en cabecera. -->
@@ -42,9 +42,14 @@
 
   <section class="hero hero--dj" id="top">
     <div class="wrap">
-      <p class="eyebrow">Red de localizaciones</p>
-      <h1>Ficha de localización</h1>
-      <p class="lead">Lo único obligatorio es el nombre y el tipo. El resto, lo que se sepa: lo que se deja en blanco queda como «sin dato», que es mejor que un número a ojo. Se guarda sola en este dispositivo mientras se rellena, así que se puede hacer durante la visita y enviar al salir.</p>
+      <p class="eyebrow">Red de espacios de Events Penedès</p>
+      <h1>Ficha del espacio</h1>
+      <p class="lead">Con esta ficha sabemos qué grupos encajan en vuestro espacio antes de proponerlo a un cliente. Solo son obligatorios el nombre y el tipo; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
+      <ol class="pasos">
+        <li><strong>Nos llega a nosotros</strong> <span>La ficha llega a Events Penedès y a nadie más. No se publica nada al enviarla.</span></li>
+        <li><strong>La revisamos con vosotros</strong> <span>Si falta algo o hay dudas, os llamamos.</span></li>
+        <li><strong>Solo con vuestra autorización</strong> <span>Si la autorizáis, publicamos la ficha del espacio en eventspenedes.com, sin precios ni datos de contacto. Las tarifas son solo para preparar presupuestos.</span></li>
+      </ol>
     </div>
   </section>
 
@@ -82,7 +87,7 @@
           </p>
         </div>
         <div class="form__row">
-          <p class="field">
+          <p class="field solo-interno">
             <label for="l-relacion">Relación con nosotros</label>
             <select id="l-relacion" name="relacion">
               <option value="">Sin dato</option>
@@ -188,7 +193,7 @@
         </div>
 
         <h2 class="form__h" id="sec-salas">Salas y espacios</h2>
-        <p class="field__hint">Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie.</p>
+        <p class="field__hint">Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie. Si la sala se alquila por separado, su precio; si no, en blanco.</p>
         <fieldset class="sala" data-sala="1">
           <legend>Sala o espacio 1</legend>
           <div class="form__row">
@@ -248,6 +253,16 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-sala1-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala1-precio-media" name="sala1_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala1-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala1-precio-dia" name="sala1_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
               <label for="l-sala1-notas">Notas</label>
@@ -316,6 +331,16 @@
               </select>
             </p>
             <p class="field">
+              <label for="l-sala2-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala2-precio-media" name="sala2_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala2-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala2-precio-dia" name="sala2_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
               <label for="l-sala2-notas">Notas</label>
               <input id="l-sala2-notas" name="sala2_notas" type="text" maxlength="300">
             </p>
@@ -380,6 +405,16 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-sala3-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala3-precio-media" name="sala3_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala3-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala3-precio-dia" name="sala3_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
               <label for="l-sala3-notas">Notas</label>
@@ -448,6 +483,16 @@
               </select>
             </p>
             <p class="field">
+              <label for="l-sala4-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala4-precio-media" name="sala4_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala4-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala4-precio-dia" name="sala4_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
               <label for="l-sala4-notas">Notas</label>
               <input id="l-sala4-notas" name="sala4_notas" type="text" maxlength="300">
             </p>
@@ -514,6 +559,16 @@
               </select>
             </p>
             <p class="field">
+              <label for="l-sala5-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala5-precio-media" name="sala5_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala5-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala5-precio-dia" name="sala5_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
               <label for="l-sala5-notas">Notas</label>
               <input id="l-sala5-notas" name="sala5_notas" type="text" maxlength="300">
             </p>
@@ -578,6 +633,16 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-sala6-precio-media">Alquiler media jornada (€)</label>
+              <input id="l-sala6-precio-media" name="sala6_precio_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-sala6-precio-dia">Alquiler jornada completa (€)</label>
+              <input id="l-sala6-precio-dia" name="sala6_precio_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
               <label for="l-sala6-notas">Notas</label>
@@ -870,7 +935,7 @@
           <textarea id="l-actividades" name="actividades" rows="3" maxlength="2000"></textarea>
         </p>
 
-        <h2 class="form__h" id="sec-fotos">Fotos</h2>
+        <h2 class="form__h" id="sec-fotos">Fotos y publicación</h2>
         <div class="form__row">
           <p class="field">
             <label for="l-fotos-enlace">Enlace a las fotos o al dossier</label>
@@ -878,7 +943,7 @@
             <span class="field__hint">Drive, Dropbox o la web del espacio. Las fotos no se suben aquí.</span>
           </p>
           <p class="field">
-            <label for="l-fotos-permiso">Permiso para publicarlas</label>
+            <label for="l-fotos-permiso">Permiso para publicar las fotos</label>
             <select id="l-fotos-permiso" name="fotos_permiso">
               <option value="">Sin dato</option>
               <option value="escrito">Sí, por escrito</option>
@@ -888,27 +953,127 @@
             </select>
           </p>
         </div>
-
-        <h2 class="form__h" id="sec-comercial">Condiciones</h2>
-        <p class="field__hint">Interno: nunca se publica. Precios sin IVA salvo que se diga.</p>
         <p class="field">
-          <label for="l-tarifa">Tarifa de alquiler</label>
-          <textarea id="l-tarifa" name="tarifa" rows="3" maxlength="2000"></textarea>
-          <span class="field__hint">Por franja, por día, por persona. Tal cual lo dicen.</span>
+          <label for="l-autoriza">Publicar la ficha en eventspenedes.com</label>
+          <select id="l-autoriza" name="autoriza">
+            <option value="">Sin dato</option>
+            <option value="si">Sí, sin precios ni datos de contacto</option>
+            <option value="revisar">Quiero revisarla antes</option>
+            <option value="no">No por ahora</option>
+          </select>
+          <span class="field__hint">Nada se publica sin esta autorización. Los precios y las personas de contacto no se publican nunca.</span>
         </p>
+
+        <h2 class="form__h" id="sec-tarifas">Tarifas</h2>
+        <p class="field__hint">No se publican: sirven para preparar presupuestos. Lo que no tenga precio fijo, en blanco y explicado en las notas.</p>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-iva-incluido">Los precios llevan IVA</label>
+            <select id="l-iva-incluido" name="iva_incluido">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+            <span class="field__hint">Si no se dice, se entienden sin IVA.</span>
+          </p>
+          <p class="field">
+            <label for="l-alquiler-media">Todo el espacio · media jornada (€)</label>
+            <input id="l-alquiler-media" name="alquiler_media" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            <span class="field__hint">Hasta unas 5 horas.</span>
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-alquiler-dia">Todo el espacio · jornada completa (€)</label>
+            <input id="l-alquiler-dia" name="alquiler_dia" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field">
+            <label for="l-alquiler-noche">Todo el espacio · noche o cena (€)</label>
+            <input id="l-alquiler-noche" name="alquiler_noche" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-hora-extra">Hora extra (€)</label>
+            <input id="l-hora-extra" name="hora_extra" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field">
+            <label for="l-suplemento-finde">Suplemento fin de semana o festivo (%)</label>
+            <input id="l-suplemento-finde" name="suplemento_finde" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-suplemento-alta">Suplemento temporada alta (%)</label>
+            <input id="l-suplemento-alta" name="suplemento_alta" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="l-temporada">Temporada alta y fechas bloqueadas</label>
+            <input id="l-temporada" name="temporada" type="text" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-pax-25">Por persona · hasta 25 (€)</label>
+            <input id="l-pax-25" name="pax_25" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field">
+            <label for="l-pax-50">Por persona · de 26 a 50 (€)</label>
+            <input id="l-pax-50" name="pax_50" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-pax-100">Por persona · de 51 a 100 (€)</label>
+            <input id="l-pax-100" name="pax_100" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field">
+            <label for="l-pax-mas">Por persona · más de 100 (€)</label>
+            <input id="l-pax-mas" name="pax_mas" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-pax-incluye">Qué incluye el precio por persona</label>
+            <input id="l-pax-incluye" name="pax_incluye" type="text" maxlength="300">
+            <span class="field__hint">Visita con cata, cóctel, menú, solo canon…</span>
+          </p>
+          <p class="field">
+            <label for="l-minimo-facturacion">Facturación mínima (€)</label>
+            <input id="l-minimo-facturacion" name="minimo_facturacion" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-canon-catering">Canon por catering externo (€ por persona)</label>
+            <input id="l-canon-catering" name="canon_catering" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field">
+            <label for="l-comision">Comisión para agencias (%)</label>
+            <input id="l-comision" name="comision" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+        </div>
         <p class="field">
-          <label for="l-comision">Comisión o precio de agencia</label>
-          <input id="l-comision" name="comision" type="text" maxlength="300">
+          <label for="l-precio-neto">O, en su lugar, precio neto para agencias</label>
+          <select id="l-precio-neto" name="precio_neto">
+            <option value="">Sin dato</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+          <span class="field__hint">Sí si los precios de arriba ya son netos para agencia.</span>
         </p>
         <p class="field">
           <label for="l-reserva">Reserva y cancelación</label>
           <textarea id="l-reserva" name="reserva" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Señal, plazos, qué pasa si se cancela.</span>
         </p>
         <p class="field">
-          <label for="l-temporada">Temporada y fechas bloqueadas</label>
-          <input id="l-temporada" name="temporada" type="text" maxlength="300">
+          <label for="l-tarifa-notas">Notas de tarifas</label>
+          <textarea id="l-tarifa-notas" name="tarifa_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Lo que no cabe arriba, tal cual lo dicen.</span>
         </p>
 
+        <div class="solo-interno form">
         <h2 class="form__h" id="sec-visita">Notas de la visita</h2>
         <p class="field">
           <label for="l-visita-fecha">Fecha de la visita</label>
@@ -931,18 +1096,19 @@
             <option value="revisar">Propuesta para la web: revisar y aprobar</option>
           </select>
         </p>
+        </div>
         <!-- /campos -->
 
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
-          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Si relleno la ficha por otra persona, sabe que guardamos sus datos de contacto.</span></label>
+          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
         </p>
 
         <p class="form__acciones">
           <button class="btn btn--primary" type="submit">Enviar la ficha</button>
           <button class="btn btn--ghost" type="button" data-borrar hidden>Vaciar y empezar otra</button>
         </p>
-        <p class="form__note">La ficha entra en el CRM con la etiqueta «Localización» y su tipo. No se publica nada hasta que se revisa y se aprueba: la página pública del espacio sale de la ficha aprobada, no del envío.</p>
+        <p class="form__note">Al enviarla, la ficha nos llega a nosotros. Lo que se publique saldrá de la ficha revisada y solo si habéis autorizado su publicación; podéis cambiar de opinión en cualquier momento escribiéndonos.</p>
       </form>
 
     </div>

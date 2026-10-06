@@ -173,6 +173,15 @@ ficha entera como **nota**. Cada envío deja su nota, así que una segunda visit
 no borra la primera. Nada se publica desde aquí: la página pública de un
 espacio sale de la ficha **aprobada** en el repositorio privado.
 
+La ficha la puede rellenar **el propio espacio**: lo que rellenamos nosotros
+en la visita (la relación y las notas de la visita) solo aparece con
+`?interno=1`, y el dispositivo lo recuerda. Las **tarifas** van en números
+—todo el espacio por franja, cada sala, por persona según el tamaño del grupo,
+suplementos y comisión— para poder calcular franjas de precio más adelante; van
+a Zoho y nunca a la web. La **autorización de publicar** la da el espacio en la
+propia ficha y entra también como etiqueta («Web autorizada», «Web por
+revisar», «Web no autorizada»): es el filtro para pasar una ficha a la web.
+
 Se puede abrir con campos ya rellenos (`/alta-localizacion?nombre=…&tipo=bodega`),
 que solo llenan lo vacío y desaparecen de la barra de direcciones.
 

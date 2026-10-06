@@ -7,6 +7,9 @@
      guardada; solo se borra cuando Netlify confirma que la tiene.
    · Acepta campos prerrellenados en la URL (?nombre=…&contacto_persona=…),
      que solo llenan lo vacío, y los quita de la barra de direcciones.
+   · Con ?interno=1 enseña lo que rellenamos nosotros (relación, notas de la
+     visita); sin él, la ficha es la que puede rellenar el propio espacio.
+     Este dispositivo lo recuerda.
    · Abre los bloques de cata y alojamiento según el tipo, y enseña las salas
      de una en una.
    Sin JavaScript el formulario funciona igual: todo visible y envío normal.
@@ -15,6 +18,7 @@
   'use strict';
 
   var CLAVE = 'ep-ficha-localizacion';
+  var CLAVE_INTERNO = 'ep-ficha-interno';
   var form = document.getElementById('form-localizacion');
   if (!form) { return; }
   var estado = form.querySelector('[data-estado]');
@@ -69,6 +73,11 @@
       borrar.hidden = false;
     }
     var q = new URLSearchParams(location.search);
+    try {
+      if (q.get('interno') === '1') { localStorage.setItem(CLAVE_INTERNO, '1'); }
+      if (q.get('interno') === '0') { localStorage.removeItem(CLAVE_INTERNO); }
+      if (localStorage.getItem(CLAVE_INTERNO) === '1') { form.setAttribute('data-interno', ''); }
+    } catch (e) { if (q.get('interno') === '1') { form.setAttribute('data-interno', ''); } }
     var prellenado = false;
     q.forEach(function (v, k) { if (form.elements[k]) { poner(k, v, true); prellenado = true; } });
     if (prellenado) {
@@ -151,7 +160,7 @@
       porTipo();
       mostrarSalas();
       borrar.hidden = true;
-      decir('Enviada: «' + nombre + '» ya está en el CRM. El formulario queda vacío para la siguiente.', 'ok');
+      decir('Enviada: la ficha de «' + nombre + '» nos ha llegado. Gracias. No se publica nada sin vuestra autorización.', 'ok');
       window.scrollTo(0, 0);
     }).catch(function () {
       decir('No se ha podido enviar (¿sin cobertura?). La ficha sigue guardada en este dispositivo: vuelve a pulsar «Enviar la ficha» cuando haya red.', 'error');

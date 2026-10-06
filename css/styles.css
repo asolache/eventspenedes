@@ -1433,6 +1433,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .form__estado[data-tipo="error"] { border-color: var(--accent-wine); background: rgba(140, 47, 57, 0.18); }
 .form__cond { display: grid; gap: 1rem; padding-left: 0.9rem; border-left: 2px solid var(--accent-gold); }
 .form__cond[hidden], .sala[hidden] { display: none; }
+#form-localizacion:not([data-interno]) .solo-interno { display: none; }
 .sala {
     display: grid;
     gap: 1rem;

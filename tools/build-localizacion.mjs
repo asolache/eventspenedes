@@ -22,8 +22,8 @@ const INICIO = '<!-- campos: generado por tools/build-localizacion.mjs, no edita
 const FIN = '<!-- /campos -->';
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const CORTOS = new Set(['text', 'tel', 'email', 'url', 'number', 'date', 'select', 'sino']);
-const TIPO_INPUT = { text: 'text', tel: 'tel', email: 'email', url: 'url', number: 'number', date: 'date' };
+const CORTOS = new Set(['text', 'tel', 'email', 'url', 'number', 'eur', 'date', 'select', 'sino']);
+const TIPO_INPUT = { eur: 'number', text: 'text', tel: 'tel', email: 'email', url: 'url', number: 'number', date: 'date' };
 
 function campo(c, nombre, sangria) {
   const id = `l-${nombre.replace(/_/g, '-')}`;
@@ -37,7 +37,7 @@ function campo(c, nombre, sangria) {
     l.push(`${s}</fieldset>`);
     return l.join('\n');
   }
-  const l = [`${s}<p class="field">`, `${s}  <label for="${id}">${esc(c.l)}</label>`];
+  const l = [`${s}<p class="field${c.interno ? ' solo-interno' : ''}">`, `${s}  <label for="${id}">${esc(c.l)}</label>`];
   if (c.t === 'select' || c.t === 'sino') {
     const op = c.t === 'sino' ? { si: 'Sí', no: 'No' } : c.op;
     const vacia = c.req ? 'Elige una opción' : 'Sin dato';
@@ -50,6 +50,7 @@ function campo(c, nombre, sangria) {
   } else {
     const extra = [];
     if (c.t === 'number') { extra.push('min="0"', 'max="100000"', 'inputmode="numeric"'); }
+    if (c.t === 'eur') { extra.push('min="0"', 'max="1000000"', 'step="0.01"', 'inputmode="decimal"'); }
     if (c.ac) { extra.push(`autocomplete="${c.ac}"`); }
     if (c.im) { extra.push(`inputmode="${c.im}"`); }
     if (['text', 'tel', 'email', 'url'].includes(c.t)) { extra.push('maxlength="300"'); }
@@ -88,6 +89,7 @@ const S = '        ';
 const bloques = [];
 for (const sec of SECCIONES) {
   const b = [`${S}<h2 class="form__h" id="sec-${sec.id}">${esc(sec.titulo)}</h2>`];
+  if (sec.interno) { b[0] = `${S}<div class="solo-interno form">\n` + b[0]; }
   if (sec.nota) { b.push(`${S}<p class="field__hint">${esc(sec.nota)}</p>`); }
   if (sec.si) {
     b.push(`${S}<p class="field--check"><label><input type="checkbox" name="${sec.si}" value="si" data-tipos="${(ABRE[sec.si] || []).join(' ')}"> <span>${esc(sec.interruptor)}</span></label></p>`);
@@ -105,6 +107,7 @@ for (const sec of SECCIONES) {
   } else {
     b.push(campos(sec.campos.map(c => [c, c.n]), S));
   }
+  if (sec.interno) { b.push(`${S}</div>`); }
   bloques.push(b.join('\n'));
 }
 

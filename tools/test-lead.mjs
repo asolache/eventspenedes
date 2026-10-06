@@ -198,7 +198,7 @@ const LOCAL = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-0
           contacto_correo: 'laia@exemple.example',
           aforo_banquete: '180', sala1_nombre: 'Sala de barricas', sala1_tipo: 'interior', sala1_banquete: '120',
           sala2_nombre: '', equipo_proyector: 'si', ofrece_cata: 'si', cata_tipos_cavas: 'si',
-          habitaciones: '12', tarifa: '1.500 € por día', consentimiento: 'si', inventado: 'no entra' } });
+          habitaciones: '12', alquiler_dia: '1500', pax_50: '35', sala1_precio_media: '600', autoriza: 'revisar', consentimiento: 'si', inventado: 'no entra' } });
 zohoSimulado();
 const lz = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
 const cuentaL = de(/Accounts\/upsert/)?.cuerpo.data[0] || {};
@@ -216,7 +216,11 @@ const notaL = de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0].Note_Content || '';
 comprueba('la ficha va en una nota de la cuenta', /## Salas y espacios/.test(notaL) && /Sala de barricas — Es: Interior · Banquete sentado: 120/.test(notaL));
 comprueba('la ficha lee los valores, no los identificadores', /Cata de cavas/.test(notaL) && /Proyector/.test(notaL));
 comprueba('el bloque de alojamiento no sale si no está marcado', !/Habitaciones/.test(notaL));
-comprueba('las condiciones salen marcadas como internas', /## Condiciones \(interno\)/.test(notaL));
+comprueba('las tarifas salen marcadas como internas y con su unidad',
+  /## Tarifas \(interno\)/.test(notaL) && /jornada completa \(€\): 1500 €/.test(notaL) && /de 26 a 50 \(€\): 35 €/.test(notaL));
+comprueba('la tarifa de cada sala va con su sala', /Sala de barricas — .*media jornada \(€\): 600 €/.test(notaL));
+comprueba('la autorización de publicar va en la nota y como etiqueta',
+  /Publicar en la web: Web por revisar/.test(notaL) && /Web%20por%20revisar/.test(de(/add_tags/)?.url || ''));
 comprueba('un campo que no está en el esquema no entra', !/no entra/.test(notaL));
 
 zohoSimulado();

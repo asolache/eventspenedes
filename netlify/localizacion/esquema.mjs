@@ -18,6 +18,11 @@
      sino      sí / no / sin dato. Lo que no se sabe se queda sin dato: no se
                adivina, porque un dato inventado acaba en una propuesta
      checks    casillas; cada una es su propio campo `<n>_<clave>`
+     eur       importe en euros, sin IVA salvo que `iva_incluido` diga otra
+               cosa. Número y no texto: es lo que permitirá calcular franjas
+
+   `interno: true` en un campo o una sección: solo se ve con `?interno=1`.
+   Es lo que rellenamos nosotros en la visita y no le toca al espacio.
    ========================================================================== */
 
 export const FORM = 'localizacion';
@@ -58,6 +63,8 @@ const SALA = [
   { n: 'escuela', l: 'Escuela o reunión', t: 'number' },
   { n: 'luz', l: 'Luz natural', t: 'sino' },
   { n: 'clima', l: 'Climatizada', t: 'sino' },
+  { n: 'precio_media', l: 'Alquiler media jornada (€)', t: 'eur' },
+  { n: 'precio_dia', l: 'Alquiler jornada completa (€)', t: 'eur' },
   { n: 'notas', l: 'Notas', t: 'text' },
 ];
 
@@ -67,7 +74,7 @@ export const SECCIONES = [
     campos: [
       { n: 'nombre', l: 'Nombre del espacio', t: 'text', req: true },
       { n: 'tipo', l: 'Tipo', t: 'select', op: TIPOS, req: true },
-      { n: 'relacion', l: 'Relación con nosotros', t: 'select',
+      { n: 'relacion', l: 'Relación con nosotros', t: 'select', interno: true,
         op: { evaluando: 'En evaluación', aliado: 'Espacio aliado', propio: 'Espacio propio' } },
       { n: 'direccion', l: 'Dirección', t: 'text', ac: 'street-address' },
       { n: 'poblacion', l: 'Población', t: 'text', ac: 'address-level2' },
@@ -103,7 +110,7 @@ export const SECCIONES = [
   },
   {
     id: 'salas', titulo: 'Salas y espacios', destino: 'web', salas: true,
-    nota: 'Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie.',
+    nota: 'Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie. Si la sala se alquila por separado, su precio; si no, en blanco.',
   },
   {
     id: 'cocina', titulo: 'Cocina y catering', destino: 'web',
@@ -195,25 +202,43 @@ export const SECCIONES = [
     ],
   },
   {
-    id: 'fotos', titulo: 'Fotos', destino: 'web',
+    id: 'fotos', titulo: 'Fotos y publicación', destino: 'web',
     campos: [
       { n: 'fotos_enlace', l: 'Enlace a las fotos o al dossier', t: 'url', hint: 'Drive, Dropbox o la web del espacio. Las fotos no se suben aquí.' },
-      { n: 'fotos_permiso', l: 'Permiso para publicarlas', t: 'select',
+      { n: 'fotos_permiso', l: 'Permiso para publicar las fotos', t: 'select',
         op: { escrito: 'Sí, por escrito', verbal: 'De palabra: falta por escrito', no: 'No', pedir: 'Hay que pedirlo' } },
+      { n: 'autoriza', l: 'Publicar la ficha en eventspenedes.com', t: 'select',
+        op: { si: 'Sí, sin precios ni datos de contacto', revisar: 'Quiero revisarla antes', no: 'No por ahora' },
+        hint: 'Nada se publica sin esta autorización. Los precios y las personas de contacto no se publican nunca.' },
     ],
   },
   {
-    id: 'comercial', titulo: 'Condiciones', destino: 'interno',
-    nota: 'Interno: nunca se publica. Precios sin IVA salvo que se diga.',
+    id: 'tarifas', titulo: 'Tarifas', destino: 'interno',
+    nota: 'No se publican: sirven para preparar presupuestos. Lo que no tenga precio fijo, en blanco y explicado en las notas.',
     campos: [
-      { n: 'tarifa', l: 'Tarifa de alquiler', t: 'textarea', hint: 'Por franja, por día, por persona. Tal cual lo dicen.' },
-      { n: 'comision', l: 'Comisión o precio de agencia', t: 'text' },
-      { n: 'reserva', l: 'Reserva y cancelación', t: 'textarea' },
-      { n: 'temporada', l: 'Temporada y fechas bloqueadas', t: 'text' },
+      { n: 'iva_incluido', l: 'Los precios llevan IVA', t: 'sino', hint: 'Si no se dice, se entienden sin IVA.' },
+      { n: 'alquiler_media', l: 'Todo el espacio · media jornada (€)', t: 'eur', hint: 'Hasta unas 5 horas.' },
+      { n: 'alquiler_dia', l: 'Todo el espacio · jornada completa (€)', t: 'eur' },
+      { n: 'alquiler_noche', l: 'Todo el espacio · noche o cena (€)', t: 'eur' },
+      { n: 'hora_extra', l: 'Hora extra (€)', t: 'eur' },
+      { n: 'suplemento_finde', l: 'Suplemento fin de semana o festivo (%)', t: 'number' },
+      { n: 'suplemento_alta', l: 'Suplemento temporada alta (%)', t: 'number' },
+      { n: 'temporada', l: 'Temporada alta y fechas bloqueadas', t: 'text' },
+      { n: 'pax_25', l: 'Por persona · hasta 25 (€)', t: 'eur' },
+      { n: 'pax_50', l: 'Por persona · de 26 a 50 (€)', t: 'eur' },
+      { n: 'pax_100', l: 'Por persona · de 51 a 100 (€)', t: 'eur' },
+      { n: 'pax_mas', l: 'Por persona · más de 100 (€)', t: 'eur' },
+      { n: 'pax_incluye', l: 'Qué incluye el precio por persona', t: 'text', hint: 'Visita con cata, cóctel, menú, solo canon…' },
+      { n: 'minimo_facturacion', l: 'Facturación mínima (€)', t: 'eur' },
+      { n: 'canon_catering', l: 'Canon por catering externo (€ por persona)', t: 'eur' },
+      { n: 'comision', l: 'Comisión para agencias (%)', t: 'number' },
+      { n: 'precio_neto', l: 'O, en su lugar, precio neto para agencias', t: 'sino', hint: 'Sí si los precios de arriba ya son netos para agencia.' },
+      { n: 'reserva', l: 'Reserva y cancelación', t: 'textarea', hint: 'Señal, plazos, qué pasa si se cancela.' },
+      { n: 'tarifa_notas', l: 'Notas de tarifas', t: 'textarea', hint: 'Lo que no cabe arriba, tal cual lo dicen.' },
     ],
   },
   {
-    id: 'visita', titulo: 'Notas de la visita', destino: 'interno',
+    id: 'visita', titulo: 'Notas de la visita', destino: 'interno', interno: true,
     campos: [
       { n: 'visita_fecha', l: 'Fecha de la visita', t: 'date' },
       { n: 'visita_notas', l: 'Lo que hemos visto', t: 'textarea', hint: 'Lo bueno, lo que no encaja, para qué cliente lo propondríamos.' },
@@ -254,6 +279,7 @@ export function legible(campo, v) {
   if (v === undefined || v === null || String(v).trim() === '') { return null; }
   if (campo.t === 'sino') { return SINO[v] || v; }
   if (campo.t === 'select') { return campo.op[v] || v; }
+  if (campo.t === 'eur') { return `${String(v).trim()} €`; }
   return String(v).trim();
 }
 
