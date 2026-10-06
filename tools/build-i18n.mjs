@@ -62,6 +62,25 @@ function reemplazarMeta(html, attr, nombre, valor) {
   return html.replace(re, (todo, a, _viejo, c) => a + escaparAtributo(valor) + c);
 }
 
+/* Las preguntas frecuentes de los datos estructurados salen de las que se ven
+   en la página. Google pide que coincidan, y así no se teclean dos veces ni se
+   quedan en castellano en /ca/ y /en/. */
+function faqEstructurado(html) {
+  const limpiar = t => t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const preguntas = [...html.matchAll(
+    /<details class="faq__item"[^>]*>\s*<summary[^>]*>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>/g)]
+    .map(([, q, a]) => ({
+      '@type': 'Question',
+      name: limpiar(q),
+      acceptedAnswer: { '@type': 'Answer', text: limpiar(a) },
+    }));
+  if (!preguntas.length) return html;
+  const sangria = '      ';
+  const json = JSON.stringify(preguntas, null, 2)
+    .split('\n').map((l, i) => i ? sangria + l : l).join('\n');
+  return html.replace(/"mainEntity": \[[\s\S]*?\n      \]/, `"mainEntity": ${json}`);
+}
+
 function construir(pagina, idioma) {
   const { textos, meta } = cargarDiccionario(pagina.dic);
   const dic = textos[idioma];
@@ -115,6 +134,7 @@ function construir(pagina, idioma) {
 
   /* Los datos estructurados apuntan a esta versión */
   html = html.replace(/"inLanguage": \[[^\]]*\]/g, `"inLanguage": "${idioma}"`);
+  html = faqEstructurado(html);
 
   const destino = join(RAIZ, idioma, pagina.ruta || 'index.html');
   mkdirSync(dirname(destino), { recursive: true });
@@ -123,6 +143,15 @@ function construir(pagina, idioma) {
   const sinTraducir = [...html.matchAll(/data-i18n="([^"]+)"/g)]
     .map(x => x[1]).filter(k => typeof dic[k] !== 'string');
   return { destino: destino.replace(RAIZ + '/', ''), sinTraducir };
+}
+
+/* La fuente en castellano también lleva sus preguntas en los datos
+   estructurados: se reescriben desde las visibles, igual que las traducidas. */
+for (const pagina of PAGINAS) {
+  const ruta = join(RAIZ, pagina.fuente);
+  const antes = readFileSync(ruta, 'utf8');
+  const despues = faqEstructurado(antes);
+  if (despues !== antes) writeFileSync(ruta, despues, 'utf8');
 }
 
 let fallos = 0;
