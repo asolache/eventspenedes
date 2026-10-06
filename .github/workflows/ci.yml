@@ -27,11 +27,12 @@ jobs:
 
       # ca/ y en/ se generan del castellano. Si están desincronizadas, alguien
       # ha editado una página generada a mano y el próximo build se lo llevará
-      # por delante.
+      # por delante. Las preguntas frecuentes de los datos estructurados de las
+      # fuentes también se generan: tienen que ser las que se ven.
       - name: Las versiones por idioma son las que saldrían ahora
         run: |
           node tools/build-i18n.mjs
-          git diff --exit-code -- ca/ en/ || {
-            echo "::error::ca/ o en/ no corresponden a las páginas en castellano. Regenera con: node tools/build-i18n.mjs"
+          git diff --exit-code -- ca/ en/ index.html dj.html agencias.html propuesta.html gracias.html privacidad.html || {
+            echo "::error::ca/, en/ o los datos estructurados no corresponden a las páginas en castellano. Regenera con: node tools/build-i18n.mjs"
             exit 1
           }
