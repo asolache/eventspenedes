@@ -358,9 +358,9 @@ export const espacios = [
       "cocina": {
         "propia": null,
         "texto": {
-          "es": "Catering en exclusiva de Cal Blay",
-          "ca": "Càtering en exclusiva de Cal Blay",
-          "en": "Catering exclusive to Cal Blay"
+          "es": "A consultar",
+          "ca": "A consultar",
+          "en": "On request"
         }
       },
       "salas_reunion": {
@@ -372,14 +372,8 @@ export const espacios = [
         }
       }
     },
-    "restricciones": [
-      {
-        "tipo": "catering_exclusivo",
-        "valor": "Cal Blay",
-        "motivo": "El espacio tiene el catering en exclusiva, y eso condiciona el presupuesto"
-      }
-    ],
-    "actualizado": "2026-10-03"
+    "restricciones": [],
+    "actualizado": "2026-10-06"
   },
   {
     "id": "torre-del-gall",
