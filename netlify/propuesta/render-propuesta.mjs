@@ -185,7 +185,7 @@ export function render({ ev, opciones, espacios, idioma = 'es', marca = {}, modo
               : modoMarca === 'coproducida' ? `${marca.de} · Events Penedès`
               : 'Events Penedès';
   const PIE = modoMarca === 'blanca' ? esc(marca.de)
-            : 'Events Penedès · Vilafranca del Penedès · +34 629 86 77 15';
+            : 'Events Penedès · Torrelles de Foix · +34 629 86 77 15';
 
   const confirmado = ev2.espacio_confirmado === true;
   const estadoFecha = confirmado ? T.confirmada : T.pendiente;

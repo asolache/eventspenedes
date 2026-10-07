@@ -17,7 +17,7 @@ window.EP_I18N = {
     'foot.h1': 'Seccions',
     'foot.h2': 'Contacte',
     'foot.h3': 'Ecosistema',
-    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.city': 'Torrelles de Foix, Barcelona',
     'foot.rights': '© 2026 Events Penedès · Un projecte de TeamTowers Humà',
     'foot.prov': 'Web provisional — estem preparant la versió completa.',
 
@@ -53,7 +53,7 @@ window.EP_I18N = {
     'foot.h1': 'Sections',
     'foot.h2': 'Contact',
     'foot.h3': 'Ecosystem',
-    'foot.city': 'Vilafranca del Penedès, Barcelona',
+    'foot.city': 'Torrelles de Foix, Barcelona',
     'foot.rights': '© 2026 Events Penedès · A TeamTowers Humà project',
     'foot.prov': 'Provisional site — the full version is on its way.',
 
