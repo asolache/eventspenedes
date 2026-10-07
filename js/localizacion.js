@@ -6,7 +6,9 @@
    · Se envía sin salir de la página. Si no hay red, lo dice y la ficha sigue
      guardada; solo se borra cuando Netlify confirma que la tiene.
    · Acepta campos prerrellenados en la URL (?nombre=…&contacto_persona=…),
-     que solo llenan lo vacío, y los quita de la barra de direcciones.
+     que solo llenan lo vacío, y los quita de la barra de direcciones. Avisa
+     de que viene prellenada. Los enlaces salen del repositorio privado:
+     `node tools/enlace-localizacion.mjs <id> --web ../eventspenedes`.
    · Con ?interno=1 enseña lo que rellenamos nosotros (relación, notas de la
      visita); sin él, la ficha es la que puede rellenar el propio espacio.
      Este dispositivo lo recuerda.
@@ -83,6 +85,11 @@
     if (prellenado) {
       history.replaceState(null, '', location.pathname);
       guardar();
+      /* El enlace prellenado se lo mandamos al espacio con lo que dice su
+         catálogo: tiene que saber que es un borrador nuestro, no su ficha. */
+      decir(form.hasAttribute('data-interno')
+        ? 'Ficha prellenada desde el catálogo. Revísala y completa lo que veas en la visita.'
+        : 'Os hemos adelantado la ficha con lo que dice vuestro catálogo. Revisadla, corregid lo que no esté bien, decidnos si autorizáis publicarla y enviadla: hasta entonces no nos llega nada.');
     }
   }
 
