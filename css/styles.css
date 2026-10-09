@@ -1434,7 +1434,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .form__cond { display: grid; gap: 1rem; padding-left: 0.9rem; border-left: 2px solid var(--accent-gold); }
 .form__cond[hidden], .sala[hidden] { display: none; }
 #form-localizacion:not([data-interno]) .solo-interno { display: none; }
-.sala {
+.sala, .grupo {
     display: grid;
     gap: 1rem;
     margin: 0;
@@ -1442,7 +1442,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
 }
-.sala legend { padding: 0 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.06em; }
+.sala legend, .grupo legend { padding: 0 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.06em; }
 .sala__mas, .form__acciones { margin: 0; display: flex; flex-wrap: wrap; gap: 0.8rem; }
 @media (max-width: 619px) {
     /* 16 px como mínimo: con menos, Safari en iPhone amplía la página al
