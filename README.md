@@ -16,6 +16,9 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── dj.html             Perfil de DJ en castellano (fuente de verdad)
 ├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
 ├── alta-localizacion.html  Ficha de un espacio, de uso interno (no se indexa)
+├── recursos.html       Recursos públicos por temas. La lista se genera de data/recursos.json
+├── data/recursos.json  GENERADO · copia de la capa pública del índice del repositorio privado
+├── tools/build-recursos.mjs  Generador de la lista de recursos
 ├── ca/, en/            Versiones generadas — no se editan a mano
 ├── tools/build-i18n.mjs  Generador de las versiones por idioma
 ├── 404.html            Página de error

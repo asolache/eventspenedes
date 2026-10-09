@@ -46,3 +46,13 @@ jobs:
             echo "::error::alta-localizacion.html no corresponde a netlify/localizacion/esquema.mjs. Regenera con: node tools/build-localizacion.mjs"
             exit 1
           }
+
+      # La lista de recursos sale de data/recursos.json, que llega del índice
+      # de documentación del repositorio privado. Nadie la escribe a mano.
+      - name: La página de recursos es la que sale de los datos
+        run: |
+          node tools/build-recursos.mjs
+          git diff --exit-code -- recursos.html || {
+            echo "::error::recursos.html no corresponde a data/recursos.json. Regenera con: node tools/build-recursos.mjs"
+            exit 1
+          }
