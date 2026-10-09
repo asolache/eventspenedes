@@ -317,6 +317,45 @@ export function nombres() {
 
 const SINO = { si: 'Sí', no: 'No' };
 
+/* Cada nombre de campo con su etiqueta legible y su definición. Las casillas
+   (`equipo_proyector`) se leen como «Qué tiene: Proyector». */
+export function campos() {
+  const m = new Map();
+  for (const s of SECCIONES) {
+    if (s.si) { m.set(s.si, { campo: { t: 'check' }, l: s.interruptor }); }
+    if (s.salas) {
+      for (let i = 1; i <= SALAS; i++) {
+        for (const c of SALA) { m.set(salaCampo(i, c.n), { campo: c, l: `Sala ${i} · ${c.l}` }); }
+      }
+      continue;
+    }
+    for (const c of s.campos) {
+      if (c.t === 'checks') {
+        for (const [k, t] of Object.entries(c.op)) { m.set(`${c.n}_${k}`, { campo: { t: 'check' }, l: `${c.l}: ${t}` }); }
+      } else { m.set(c.n, { campo: c, l: c.l }); }
+    }
+  }
+  return m;
+}
+
+/* El registro de cambios: qué campos difieren entre la versión de partida (el
+   borrador que les mandamos, o su último envío) y lo que envían ahora. Solo
+   campos del esquema; los vacíos cuentan como «sin dato». */
+export function cambios(antes, ahora) {
+  const out = [];
+  const leer = (c, v) => (c.campo.t === 'check' ? (v ? 'sí' : null) : legible(c.campo, v));
+  for (const [n, c] of campos()) {
+    const a = leer(c, antes[n]);
+    const b = leer(c, ahora[n]);
+    if (a !== b) { out.push({ campo: n, etiqueta: c.l, antes: a, ahora: b }); }
+  }
+  return out;
+}
+
+export function cambiosTexto(lista) {
+  return lista.map(x => `· ${x.etiqueta}: ${x.antes ?? 'sin dato'} → ${x.ahora ?? 'sin dato'}`).join('\n');
+}
+
 /* El valor tal como se lee en una ficha: «Bodega o cava», no «bodega». */
 export function legible(campo, v) {
   if (v === undefined || v === null || String(v).trim() === '') { return null; }

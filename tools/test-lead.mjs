@@ -226,6 +226,22 @@ comprueba('la tarifa de cada sala va con su sala', /Sala de barricas — .*media
 comprueba('la autorización de publicar va en la nota y como etiqueta',
   /Publicar en la web: Web por revisar/.test(notaL) && /Web%20por%20revisar/.test(de(/add_tags/)?.url || ''));
 comprueba('un campo que no está en el esquema no entra', !/no entra/.test(notaL));
+comprueba('sin borrador, la nota dice que es la primera versión y quién la envía',
+  /Primera versión/.test(notaL) && /Enviada por: laia@exemple\.example/.test(notaL));
+
+/* 1g · El registro de cambios: la nota dice qué cambió respecto al borrador */
+const borrador = { nombre: 'Celler Exemple', tipo: 'bodega', aforo_banquete: '150', taller_precio: '250', equipo_proyector: '1', contacto_correo: 'laia@exemple.example' };
+const CAMBIOS = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-08T10:00:00.000Z',
+  data: { nombre: 'Celler Exemple', tipo: 'bodega', aforo_banquete: '180', taller_precio: '250', excl_precio: '900',
+          contacto_correo: 'laia@exemple.example', borrador: JSON.stringify(borrador) } });
+zohoSimulado();
+await handler(peticion(CAMBIOS, firmar(CAMBIOS)));
+const notaC = de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0] || {};
+comprueba('el registro de cambios lista lo que cambió, lo nuevo y lo quitado, con su etiqueta',
+  /Máximo sentados a mesa: 150 → 180/.test(notaC.Note_Content) && /Con exclusiva · precio laborable \(€\): sin dato → 900 €/.test(notaC.Note_Content)
+  && /Qué tiene: Proyector: sí → sin dato/.test(notaC.Note_Content) && notaC.Note_Title === 'Ficha de localización · 3 cambios');
+comprueba('lo que no cambió no sale en el registro', !/precio laborable \(€\): 250 € →/.test(notaC.Note_Content));
+comprueba('el borrador no se cuela en la ficha como texto', !/"aforo_banquete"/.test(notaC.Note_Content));
 
 zohoSimulado();
 globalThis.fetch = (f => async (url, op) => (/add_tags/.test(String(url))

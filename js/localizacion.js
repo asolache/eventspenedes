@@ -9,6 +9,11 @@
      que solo llenan lo vacío, y los quita de la barra de direcciones. Avisa
      de que viene prellenada. Los enlaces salen del repositorio privado:
      `node tools/enlace-localizacion.mjs <id> --web ../eventspenedes`.
+   · Registro de cambios: el campo oculto `borrador` lleva la versión de la
+     que parte la ficha (la prellenada o el último envío desde este
+     dispositivo). La función compara y deja en la nota de Zoho qué cambió.
+     Tras enviar, la ficha se queda como se envió y ofrece un enlace para
+     volver a abrirla así desde cualquier sitio.
    · Con ?interno=1 enseña lo que rellenamos nosotros (relación, notas de la
      visita); sin él, la ficha es la que puede rellenar el propio espacio.
      Este dispositivo lo recuerda.
@@ -21,8 +26,10 @@
 
   var CLAVE = 'ep-ficha-localizacion';
   var CLAVE_INTERNO = 'ep-ficha-interno';
+  var CLAVE_PARTIDA = 'ep-ficha-partida';
   var form = document.getElementById('form-localizacion');
   if (!form) { return; }
+  var partida = form.elements.borrador;
   var estado = form.querySelector('[data-estado]');
   var borrar = form.querySelector('[data-borrar]');
 
@@ -66,7 +73,21 @@
     } catch (e) { /* sin almacenamiento: el formulario sigue funcionando */ }
   }
 
+  function fijarPartida(datos) {
+    if (!partida) { return; }
+    partida.value = JSON.stringify(datos);
+    try { localStorage.setItem(CLAVE_PARTIDA, partida.value); } catch (e) { /* nada */ }
+  }
+
+  /* El enlace que vuelve a abrir la ficha tal como se ha enviado */
+  function enlaceDe(datos) {
+    var q = new URLSearchParams();
+    Object.keys(datos).forEach(function (k) { if (k !== 'consentimiento') { q.set(k, datos[k]); } });
+    return location.origin + location.pathname + '?' + q.toString();
+  }
+
   function recuperar() {
+    try { if (partida) { partida.value = localStorage.getItem(CLAVE_PARTIDA) || ''; } } catch (e) { /* nada */ }
     var guardado = null;
     try { guardado = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { guardado = null; }
     if (guardado) {
@@ -81,8 +102,12 @@
       if (localStorage.getItem(CLAVE_INTERNO) === '1') { form.setAttribute('data-interno', ''); }
     } catch (e) { if (q.get('interno') === '1') { form.setAttribute('data-interno', ''); } }
     var prellenado = false;
-    q.forEach(function (v, k) { if (form.elements[k]) { poner(k, v, true); prellenado = true; } });
+    var deEnlace = {};
+    q.forEach(function (v, k) {
+      if (form.elements[k] && form.elements[k].type !== 'hidden') { poner(k, v, true); deEnlace[k] = v; prellenado = true; }
+    });
     if (prellenado) {
+      fijarPartida(deEnlace);
       history.replaceState(null, '', location.pathname);
       guardar();
       /* El enlace prellenado se lo mandamos al espacio con lo que dice su
@@ -162,12 +187,17 @@
     }).then(function (r) {
       if (!r.ok) { throw new Error('HTTP ' + r.status); }
       var nombre = form.elements.nombre.value;
-      try { localStorage.removeItem(CLAVE); } catch (e) { /* nada */ }
-      form.reset();
-      porTipo();
-      mostrarSalas();
-      borrar.hidden = true;
-      decir('Enviada: la ficha de «' + nombre + '» nos ha llegado. Gracias. No se publica nada sin vuestra autorización.', 'ok');
+      /* La ficha se queda como se ha enviado y pasa a ser la versión de
+         partida: el próximo envío nos llegará con lo que cambie respecto a esta. */
+      var enviada = leer();
+      fijarPartida(enviada);
+      decir('Enviada: la ficha de «' + nombre + '» nos ha llegado. Gracias. No se publica nada sin vuestra autorización. '
+        + 'Podéis cambiarla cuando queráis y volver a enviarla: nos llega con lo que ha cambiado.', 'ok');
+      var enlace = document.createElement('a');
+      enlace.href = enlaceDe(enviada);
+      enlace.textContent = 'Enlace para volver a abrir la ficha tal como la habéis enviado';
+      estado.appendChild(document.createElement('br'));
+      estado.appendChild(enlace);
       window.scrollTo(0, 0);
     }).catch(function () {
       decir('No se ha podido enviar (¿sin cobertura?). La ficha sigue guardada en este dispositivo: vuelve a pulsar «Enviar la ficha» cuando haya red.', 'error');
@@ -177,8 +207,9 @@
 
   borrar.addEventListener('click', function () {
     if (!window.confirm('¿Vaciar la ficha? Lo que no se haya enviado se pierde.')) { return; }
-    try { localStorage.removeItem(CLAVE); } catch (e) { /* nada */ }
+    try { localStorage.removeItem(CLAVE); localStorage.removeItem(CLAVE_PARTIDA); } catch (e) { /* nada */ }
     form.reset();
+    if (partida) { partida.value = ''; }
     porTipo();
     mostrarSalas();
     borrar.hidden = true;
