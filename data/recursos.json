@@ -1,0 +1,60 @@
+{
+  "_nota": "Generado por tools/build-cerebro.mjs. Solo la capa pública del cerebro.",
+  "proyecto": "Events Penedès",
+  "temas": [
+    {
+      "id": "quienes-somos",
+      "nombre": "Quiénes somos"
+    },
+    {
+      "id": "pedir-evento",
+      "nombre": "Pedir un evento"
+    },
+    {
+      "id": "agencias",
+      "nombre": "Agencias y clientes"
+    },
+    {
+      "id": "legal",
+      "nombre": "Legal"
+    }
+  ],
+  "entradas": [
+    {
+      "titulo": "Inicio",
+      "tema": "quienes-somos",
+      "url": "https://eventspenedes.com/",
+      "resumen": "Qué hacemos, para quién y dónde, en castellano, catalán e inglés"
+    },
+    {
+      "titulo": "llms.txt",
+      "tema": "quienes-somos",
+      "url": "https://eventspenedes.com/llms.txt",
+      "resumen": "El negocio en texto plano, para buscadores y asistentes de IA"
+    },
+    {
+      "titulo": "Agencias y DMC",
+      "tema": "agencias",
+      "url": "https://eventspenedes.com/agencias.html",
+      "resumen": "El programa de partner local y producción en marca blanca"
+    },
+    {
+      "titulo": "DJ para eventos",
+      "tema": "quienes-somos",
+      "url": "https://eventspenedes.com/dj.html",
+      "resumen": "Perfil y formatos de la sesión"
+    },
+    {
+      "titulo": "Pide tu propuesta",
+      "tema": "pedir-evento",
+      "url": "https://eventspenedes.com/propuesta.html",
+      "resumen": "El formulario para pedir un evento"
+    },
+    {
+      "titulo": "Privacidad",
+      "tema": "legal",
+      "url": "https://eventspenedes.com/privacidad.html",
+      "resumen": "Cómo se tratan los datos del formulario"
+    }
+  ]
+}
