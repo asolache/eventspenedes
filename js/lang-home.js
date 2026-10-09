@@ -159,7 +159,7 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ',
       'nav.agencies': 'Agències i DMC',
-      'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat',
+      'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat', 'foot.res': 'Recursos',
       'svc.s4.title': 'DJ per a esdeveniments',
       'svc.s4.text': 'Sessió de DJ amb més de vint anys d’ofici al darrere. Repertori sense límits gràcies a les plataformes de streaming professionals: la música s’ajusta al públic que tens al davant, no al que cap en un disc dur.',
       'svc.s4.i1': 'Recepció, sopar, festa i after',
@@ -479,7 +479,7 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ',
       'nav.agencies': 'Agencies & DMCs',
-      'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice',
+      'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice', 'foot.res': 'Resources',
       'svc.s4.title': 'DJ for events',
       'svc.s4.text': 'A DJ set backed by more than twenty years behind the decks. No repertoire limits, thanks to professional streaming platforms: the music follows the room in front of you, not what fits on a hard drive.',
       'svc.s4.i1': 'Reception, dinner, party and after',
