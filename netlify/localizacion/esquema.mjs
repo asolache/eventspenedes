@@ -68,6 +68,34 @@ const SALA = [
   { n: 'notas', l: 'Notas', t: 'text' },
 ];
 
+/* Un paquete es siempre lo mismo para que se pueda comparar entre espacios:
+   precio, cuándo, para cuántos, cuánto dura y qué incluye. */
+const UNIDAD = { evento: 'por evento', persona: 'por persona', hora: 'por hora', unidad: 'por unidad' };
+function paquete(p, nombre, hint) {
+  return [
+    { n: `${p}_precio`, l: `${nombre} · precio laborable (€)`, t: 'eur', hint },
+    { n: `${p}_precio_finde`, l: `${nombre} · precio fin de semana o festivo (€)`, t: 'eur' },
+    { n: `${p}_unidad`, l: `${nombre} · el precio es`, t: 'select', op: { evento: UNIDAD.evento, persona: UNIDAD.persona } },
+    { n: `${p}_horas`, l: `${nombre} · horas incluidas`, t: 'number' },
+    { n: `${p}_pax`, l: `${nombre} · máximo de personas`, t: 'number' },
+    { n: `${p}_espacio`, l: `${nombre} · qué espacio`, t: 'text', hint: 'El jardín, la sala, toda la finca…' },
+    { n: `${p}_incluye`, l: `${nombre} · qué incluye`, t: 'textarea', hint: 'Mobiliario, limpieza, personal, plan B si llueve. Lo que no esté aquí es un extra.' },
+  ];
+}
+export const EXTRAS = 6;
+function extras() {
+  const out = [];
+  for (let i = 1; i <= EXTRAS; i++) {
+    out.push(
+      { n: `extra${i}_nombre`, l: `Extra ${i}`, t: 'text', hint: i === 1 ? 'Hora extra, visita con cata, cambio a interior si llueve, técnico de sonido…' : undefined },
+      { n: `extra${i}_precio`, l: `Extra ${i} · precio (€)`, t: 'eur' },
+      { n: `extra${i}_unidad`, l: `Extra ${i} · el precio es`, t: 'select', op: UNIDAD },
+      { n: `extra${i}_iva`, l: `Extra ${i} · lleva IVA`, t: 'sino' },
+    );
+  }
+  return out;
+}
+
 export const SECCIONES = [
   {
     id: 'espacio', titulo: 'El espacio', destino: 'web',
@@ -213,7 +241,22 @@ export const SECCIONES = [
     ],
   },
   {
-    id: 'tarifas', titulo: 'Tarifas', destino: 'interno',
+    id: 'paquetes', titulo: 'Paquetes para Events Penedès', destino: 'interno',
+    nota: 'Lo que nos cuesta usar el espacio, en paquetes cerrados y comparables entre espacios. Precio neto para Events Penedès, sin IVA salvo que se diga. Si un paquete no lo ofrecéis, dejadlo en blanco. No se publica.',
+    campos: [
+      ...paquete('taller', 'Solo taller, sin exclusiva', 'El espacio para un taller o actividad mientras la finca sigue abierta a otros visitantes.'),
+      ...paquete('excl', 'Con exclusiva', 'Toda la finca solo para el grupo.'),
+      ...extras(),
+      { n: 'extras_notas', l: 'Notas de los extras', t: 'textarea', hint: 'Lo que no cabe en una línea: mínimos, suplementos, lo que depende del día.' },
+    ],
+    grupos: [
+      ['Solo taller · sin exclusiva', /^taller_/],
+      ['Con exclusiva', /^excl_/],
+      ['Extras, cada uno con su precio', /^extra(\d+_|s_)/],
+    ],
+  },
+  {
+    id: 'tarifas', titulo: 'Otras tarifas', destino: 'interno',
     nota: 'No se publican: sirven para preparar presupuestos. Lo que no tenga precio fijo, en blanco y explicado en las notas.',
     campos: [
       { n: 'iva_incluido', l: 'Los precios llevan IVA', t: 'sino', hint: 'Si no se dice, se entienden sin IVA.' },

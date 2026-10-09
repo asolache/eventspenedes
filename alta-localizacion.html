@@ -964,7 +964,287 @@
           <span class="field__hint">Nada se publica sin esta autorización. Los precios y las personas de contacto no se publican nunca.</span>
         </p>
 
-        <h2 class="form__h" id="sec-tarifas">Tarifas</h2>
+        <h2 class="form__h" id="sec-paquetes">Paquetes para Events Penedès</h2>
+        <p class="field__hint">Lo que nos cuesta usar el espacio, en paquetes cerrados y comparables entre espacios. Precio neto para Events Penedès, sin IVA salvo que se diga. Si un paquete no lo ofrecéis, dejadlo en blanco. No se publica.</p>
+        <fieldset class="grupo">
+          <legend>Solo taller · sin exclusiva</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-taller-precio">Precio laborable (€)</label>
+              <input id="l-taller-precio" name="taller_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+              <span class="field__hint">El espacio para un taller o actividad mientras la finca sigue abierta a otros visitantes.</span>
+            </p>
+            <p class="field">
+              <label for="l-taller-precio-finde">Precio fin de semana o festivo (€)</label>
+              <input id="l-taller-precio-finde" name="taller_precio_finde" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-taller-unidad">El precio es</label>
+              <select id="l-taller-unidad" name="taller_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-taller-horas">Horas incluidas</label>
+              <input id="l-taller-horas" name="taller_horas" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-taller-pax">Máximo de personas</label>
+              <input id="l-taller-pax" name="taller_pax" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-taller-espacio">Qué espacio</label>
+              <input id="l-taller-espacio" name="taller_espacio" type="text" maxlength="300">
+              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="l-taller-incluye">Qué incluye</label>
+            <textarea id="l-taller-incluye" name="taller_incluye" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Mobiliario, limpieza, personal, plan B si llueve. Lo que no esté aquí es un extra.</span>
+          </p>
+        </fieldset>
+        <fieldset class="grupo">
+          <legend>Con exclusiva</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-excl-precio">Precio laborable (€)</label>
+              <input id="l-excl-precio" name="excl_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+              <span class="field__hint">Toda la finca solo para el grupo.</span>
+            </p>
+            <p class="field">
+              <label for="l-excl-precio-finde">Precio fin de semana o festivo (€)</label>
+              <input id="l-excl-precio-finde" name="excl_precio_finde" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-excl-unidad">El precio es</label>
+              <select id="l-excl-unidad" name="excl_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-excl-horas">Horas incluidas</label>
+              <input id="l-excl-horas" name="excl_horas" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-excl-pax">Máximo de personas</label>
+              <input id="l-excl-pax" name="excl_pax" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="l-excl-espacio">Qué espacio</label>
+              <input id="l-excl-espacio" name="excl_espacio" type="text" maxlength="300">
+              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="l-excl-incluye">Qué incluye</label>
+            <textarea id="l-excl-incluye" name="excl_incluye" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Mobiliario, limpieza, personal, plan B si llueve. Lo que no esté aquí es un extra.</span>
+          </p>
+        </fieldset>
+        <fieldset class="grupo">
+          <legend>Extras, cada uno con su precio</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra1-nombre">Extra 1</label>
+              <input id="l-extra1-nombre" name="extra1_nombre" type="text" maxlength="300">
+              <span class="field__hint">Hora extra, visita con cata, cambio a interior si llueve, técnico de sonido…</span>
+            </p>
+            <p class="field">
+              <label for="l-extra1-precio">Precio (€)</label>
+              <input id="l-extra1-precio" name="extra1_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra1-unidad">El precio es</label>
+              <select id="l-extra1-unidad" name="extra1_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra1-iva">Lleva IVA</label>
+              <select id="l-extra1-iva" name="extra1_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra2-nombre">Extra 2</label>
+              <input id="l-extra2-nombre" name="extra2_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-extra2-precio">Precio (€)</label>
+              <input id="l-extra2-precio" name="extra2_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra2-unidad">El precio es</label>
+              <select id="l-extra2-unidad" name="extra2_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra2-iva">Lleva IVA</label>
+              <select id="l-extra2-iva" name="extra2_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra3-nombre">Extra 3</label>
+              <input id="l-extra3-nombre" name="extra3_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-extra3-precio">Precio (€)</label>
+              <input id="l-extra3-precio" name="extra3_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra3-unidad">El precio es</label>
+              <select id="l-extra3-unidad" name="extra3_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra3-iva">Lleva IVA</label>
+              <select id="l-extra3-iva" name="extra3_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra4-nombre">Extra 4</label>
+              <input id="l-extra4-nombre" name="extra4_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-extra4-precio">Precio (€)</label>
+              <input id="l-extra4-precio" name="extra4_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra4-unidad">El precio es</label>
+              <select id="l-extra4-unidad" name="extra4_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra4-iva">Lleva IVA</label>
+              <select id="l-extra4-iva" name="extra4_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra5-nombre">Extra 5</label>
+              <input id="l-extra5-nombre" name="extra5_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-extra5-precio">Precio (€)</label>
+              <input id="l-extra5-precio" name="extra5_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra5-unidad">El precio es</label>
+              <select id="l-extra5-unidad" name="extra5_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra5-iva">Lleva IVA</label>
+              <select id="l-extra5-iva" name="extra5_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra6-nombre">Extra 6</label>
+              <input id="l-extra6-nombre" name="extra6_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="l-extra6-precio">Precio (€)</label>
+              <input id="l-extra6-precio" name="extra6_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-extra6-unidad">El precio es</label>
+              <select id="l-extra6-unidad" name="extra6_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="l-extra6-iva">Lleva IVA</label>
+              <select id="l-extra6-iva" name="extra6_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <p class="field">
+            <label for="l-extras-notas">Notas de los extras</label>
+            <textarea id="l-extras-notas" name="extras_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Lo que no cabe en una línea: mínimos, suplementos, lo que depende del día.</span>
+          </p>
+        </fieldset>
+
+        <h2 class="form__h" id="sec-tarifas">Otras tarifas</h2>
         <p class="field__hint">No se publican: sirven para preparar presupuestos. Lo que no tenga precio fijo, en blanco y explicado en las notas.</p>
         <div class="form__row">
           <p class="field">

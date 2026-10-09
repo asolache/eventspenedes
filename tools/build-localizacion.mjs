@@ -104,6 +104,18 @@ for (const sec of SECCIONES) {
       b.push(`${S}</fieldset>`);
     }
     b.push(`${S}<p class="sala__mas" hidden><button class="btn btn--ghost" type="button" data-sala-mas>Añadir otra sala</button></p>`);
+  } else if (sec.grupos) {
+    /* Agrupar solo cambia cómo se ve: los nombres de campo siguen planos */
+    const sueltos = sec.campos.filter(c => !sec.grupos.some(([, re]) => re.test(c.n)));
+    for (const [leyenda, re] of sec.grupos) {
+      b.push(`${S}<fieldset class="grupo">`);
+      b.push(`${S}  <legend>${esc(leyenda)}</legend>`);
+      /* Dentro del grupo sobra repetir el nombre del paquete en cada etiqueta */
+      const corta = c => ({ ...c, l: c.l.replace(/^[^·]+· (.)/, (m, x) => x.toUpperCase()) });
+      b.push(campos(sec.campos.filter(c => re.test(c.n)).map(c => [corta(c), c.n]), S + '  '));
+      b.push(`${S}</fieldset>`);
+    }
+    if (sueltos.length) { b.push(campos(sueltos.map(c => [c, c.n]), S)); }
   } else {
     b.push(campos(sec.campos.map(c => [c, c.n]), S));
   }
