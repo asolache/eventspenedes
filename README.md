@@ -185,6 +185,48 @@ revisar», «Web no autorizada»): es el filtro para pasar una ficha a la web.
 Se puede abrir con campos ya rellenos (`/alta-localizacion?nombre=…&tipo=bodega`),
 que solo llenan lo vacío y desaparecen de la barra de direcciones.
 
+#### Importar desde la web o el catálogo del espacio
+
+Arriba de la ficha, el espacio pega la dirección de su web o de su dossier
+(también un enlace de Drive o Dropbox) o sube el PDF (hasta 4 MB), y pulsa
+«Importar a la ficha». La función `importar-catalogo`
+(`/api/importar-catalogo`) lee la web, las páginas de eventos de esa misma web y
+los PDF que enlaza, y devuelve los campos de la ficha que salen de ahí, cada uno
+con la frase de la que sale. En el navegador solo llenan los campos vacíos y
+quedan **marcados en dorado** con esa frase hasta que el espacio los toca. No se
+guarda ni se envía nada: es su envío, revisado, el que nos llega.
+
+- **Con `ANTHROPIC_API_KEY`**, Claude lee el PDF entero (tablas y maquetación) y
+  las páginas, con la lista de campos del esquema y la regla de no poner nada
+  que la fuente no diga. Un PDF de más de 20 MB va por la API de ficheros y se
+  borra al acabar.
+- **Sin clave, o si falla**, reglas fijas en `netlify/localizacion/importar.mjs`:
+  schema.org de la web, teléfono, código postal y población, aforos solo cuando
+  la frase dice el formato («hasta 120 personas sentadas»), comisión y
+  servicios con nombre (wifi, proyector, cata, bodas…). El texto de los PDF lo
+  saca `pdf-texto.mjs`, sin dependencias (también los de Canva).
+- Todo pasa por `validar()`: solo campos del esquema, con valores que el
+  formulario acepta. Nunca importa lo que decide el espacio (autorizar la web,
+  permiso de las fotos) ni lo nuestro (relación, notas de visita, modelo).
+- La función solo sale a direcciones públicas (comprueba cada redirección),
+  solo responde a la propia página y tiene un límite de 6 llamadas por minuto
+  y por IP. `node tools/test-importar.mjs` lo prueba en CI.
+
+El campo oculto `importado` dice de dónde salió la ficha; la nota de Zoho lo
+recoge, y el registro de cambios cuenta lo que el espacio corrigió sobre lo
+importado.
+
+#### Pendiente de visita y aviso
+
+Mientras una ficha no traiga **fecha de visita**, la cuenta lleva la etiqueta
+«Pendiente de visita» y la nota lo dice. La primera vez, se crea una **tarea
+en Zoho** colgada de la cuenta («Visitar … : ficha de localización nueva», a 7
+días) con el tipo, de dónde se importó y el contacto: es el aviso de que ha
+llegado un espacio. Las correcciones siguientes no crean otra. La ficha que
+enviamos nosotros tras la visita, con su fecha, quita la etiqueta. Nada de
+esto publica nada: la web sale solo de `data/espacios.json`, en el repositorio
+privado.
+
 ### Variables de entorno
 
 En *Site configuration → Environment variables*, marcadas como **secretas** y con
@@ -200,6 +242,10 @@ chat.
 | `PROPUESTA_SECRET` | 32 caracteres aleatorios o más. Cierra y abre el enlace del borrador |
 | `BORRADOR_DIAS` | opcional · días que vale el enlace. Por defecto 30 |
 | `ZOHO_ETIQUETA_LOCALIZACION` | opcional · etiqueta de las cuentas de espacios. Por defecto `Localización` |
+| `ZOHO_ETIQUETA_PENDIENTE` | opcional · etiqueta de los espacios sin visitar. Por defecto `Pendiente de visita` |
+| `ZOHO_AVISO_TAREA` | opcional · `0` para no crear la tarea de visita de un espacio nuevo. El token necesita permiso sobre tareas |
+| `ANTHROPIC_API_KEY` | opcional · para que «Importar» lea los catálogos con Claude. Sin ella, reglas fijas |
+| `ANTHROPIC_MODEL` | opcional · por defecto `claude-opus-5-5` |
 | `ZOHO_ETAPA_PROPUESTA` | opcional · nombre EXACTO de la etapa de una oportunidad nueva. Con ella, una petición de propuesta entra como cuenta + contacto + oportunidad, y el borrador cuelga de la oportunidad. Necesita un token con permiso sobre cuentas, contactos, oportunidades y notas. Si Zoho rechaza la oportunidad, entra como lead |
 
 Cambiar una variable **no** aplica hasta el siguiente despliegue.

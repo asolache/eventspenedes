@@ -25,6 +25,12 @@ jobs:
       - name: El borrador se monta solo y no se abre con otro enlace
         run: node tools/test-borrador.mjs
 
+      # La importación de catálogos lee webs ajenas desde nuestro servidor y
+      # escribe en una ficha que acaba en un presupuesto: que no salga a la red
+      # interna y que no ponga nada que la fuente no diga.
+      - name: La importación de catálogos solo pone lo que la fuente dice
+        run: node tools/test-importar.mjs
+
       # ca/ y en/ se generan del castellano. Si están desincronizadas, alguien
       # ha editado una página generada a mano y el próximo build se lo llevará
       # por delante. Las preguntas frecuentes de los datos estructurados de las
