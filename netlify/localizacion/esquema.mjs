@@ -78,6 +78,7 @@ function paquete(p, nombre, hint) {
     { n: `${p}_unidad`, l: `${nombre} · el precio es`, t: 'select', op: { evento: UNIDAD.evento, persona: UNIDAD.persona } },
     { n: `${p}_horas`, l: `${nombre} · horas incluidas`, t: 'number' },
     { n: `${p}_pax`, l: `${nombre} · máximo de personas`, t: 'number' },
+    { n: `${p}_comision`, l: `${nombre} · comisión para Events Penedès (%)`, t: 'number', hint: '0 si no es comisionable.' },
     { n: `${p}_espacio`, l: `${nombre} · qué espacio`, t: 'text', hint: 'El jardín, la sala, toda la finca…' },
     { n: `${p}_incluye`, l: `${nombre} · qué incluye`, t: 'textarea', hint: 'Mobiliario, limpieza, personal, plan B si llueve. Lo que no esté aquí es un extra.' },
   ];
@@ -91,6 +92,7 @@ function extras() {
       { n: `extra${i}_precio`, l: `Extra ${i} · precio (€)`, t: 'eur' },
       { n: `extra${i}_unidad`, l: `Extra ${i} · el precio es`, t: 'select', op: UNIDAD },
       { n: `extra${i}_iva`, l: `Extra ${i} · lleva IVA`, t: 'sino' },
+      { n: `extra${i}_comision`, l: `Extra ${i} · comisión (%)`, t: 'number' },
     );
   }
   return out;
@@ -285,6 +287,12 @@ export const SECCIONES = [
     campos: [
       { n: 'visita_fecha', l: 'Fecha de la visita', t: 'date' },
       { n: 'visita_notas', l: 'Lo que hemos visto', t: 'textarea', hint: 'Lo bueno, lo que no encaja, para qué cliente lo propondríamos.' },
+      { n: 'modelo', l: 'Cómo ganamos con este espacio', t: 'checks', op: {
+        servicio: 'Nuestras horas (servicio facturado al cliente)',
+        comision: 'Comisión del espacio, que cobramos',
+        descuento: 'Comisión del espacio, pasada al cliente como descuento',
+        neto: 'Precio neto de agencia, con nuestro margen encima' } },
+      { n: 'modelo_notas', l: 'El modelo, en detalle', t: 'textarea', hint: 'Sobre qué cobra comisión y sobre qué no, gratuidades, lo pendiente de decidir.' },
       { n: 'pendiente', l: 'Lo que queda por saber', t: 'textarea' },
       { n: 'publicar', l: 'Publicación', t: 'select',
         op: { no: 'No publicar todavía', revisar: 'Propuesta para la web: revisar y aprobar' } },
