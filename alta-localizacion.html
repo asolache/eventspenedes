@@ -1020,16 +1020,27 @@
               <input id="l-taller-pax" name="taller_pax" type="number" min="0" max="100000" inputmode="numeric">
             </p>
             <p class="field">
-              <label for="l-taller-comision">Comisión para Events Penedès (%)</label>
-              <input id="l-taller-comision" name="taller_comision" type="number" min="0" max="100000" inputmode="numeric">
-              <span class="field__hint">0 si no es comisionable.</span>
+              <label for="l-taller-comision">Comisión para Events Penedès</label>
+              <input id="l-taller-comision" name="taller_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general (en «Otras tarifas»). 0 si no es comisionable.</span>
             </p>
           </div>
-          <p class="field">
-            <label for="l-taller-espacio">Qué espacio</label>
-            <input id="l-taller-espacio" name="taller_espacio" type="text" maxlength="300">
-            <span class="field__hint">El jardín, la sala, toda la finca…</span>
-          </p>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-taller-comision-tipo">La comisión es</label>
+              <select id="l-taller-comision-tipo" name="taller_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+              <span class="field__hint">En euros, va por lo mismo que el precio: por persona, por evento… Si no se dice, es un porcentaje.</span>
+            </p>
+            <p class="field">
+              <label for="l-taller-espacio">Qué espacio</label>
+              <input id="l-taller-espacio" name="taller_espacio" type="text" maxlength="300">
+              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+            </p>
+          </div>
           <p class="field">
             <label for="l-taller-incluye">Qué incluye</label>
             <textarea id="l-taller-incluye" name="taller_incluye" rows="3" maxlength="2000"></textarea>
@@ -1069,16 +1080,27 @@
               <input id="l-excl-pax" name="excl_pax" type="number" min="0" max="100000" inputmode="numeric">
             </p>
             <p class="field">
-              <label for="l-excl-comision">Comisión para Events Penedès (%)</label>
-              <input id="l-excl-comision" name="excl_comision" type="number" min="0" max="100000" inputmode="numeric">
-              <span class="field__hint">0 si no es comisionable.</span>
+              <label for="l-excl-comision">Comisión para Events Penedès</label>
+              <input id="l-excl-comision" name="excl_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general (en «Otras tarifas»). 0 si no es comisionable.</span>
             </p>
           </div>
-          <p class="field">
-            <label for="l-excl-espacio">Qué espacio</label>
-            <input id="l-excl-espacio" name="excl_espacio" type="text" maxlength="300">
-            <span class="field__hint">El jardín, la sala, toda la finca…</span>
-          </p>
+          <div class="form__row">
+            <p class="field">
+              <label for="l-excl-comision-tipo">La comisión es</label>
+              <select id="l-excl-comision-tipo" name="excl_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+              <span class="field__hint">En euros, va por lo mismo que el precio: por persona, por evento… Si no se dice, es un porcentaje.</span>
+            </p>
+            <p class="field">
+              <label for="l-excl-espacio">Qué espacio</label>
+              <input id="l-excl-espacio" name="excl_espacio" type="text" maxlength="300">
+              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+            </p>
+          </div>
           <p class="field">
             <label for="l-excl-incluye">Qué incluye</label>
             <textarea id="l-excl-incluye" name="excl_incluye" rows="3" maxlength="2000"></textarea>
@@ -1120,19 +1142,29 @@
           </div>
           <div class="form__row">
             <p class="field">
-              <label for="l-extra1-comision">Comisión (%)</label>
-              <input id="l-extra1-comision" name="extra1_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra1-comision">Comisión</label>
+              <input id="l-extra1-comision" name="extra1_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
-              <label for="l-extra2-nombre">Extra 2</label>
-              <input id="l-extra2-nombre" name="extra2_nombre" type="text" maxlength="300">
+              <label for="l-extra1-comision-tipo">La comisión es</label>
+              <select id="l-extra1-comision-tipo" name="extra1_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra2-nombre">Extra 2</label>
+              <input id="l-extra2-nombre" name="extra2_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
               <label for="l-extra2-precio">Precio (€)</label>
               <input id="l-extra2-precio" name="extra2_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra2-unidad">El precio es</label>
               <select id="l-extra2-unidad" name="extra2_unidad">
@@ -1143,8 +1175,6 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra2-iva">Lleva IVA</label>
               <select id="l-extra2-iva" name="extra2_iva">
@@ -1153,9 +1183,19 @@
                 <option value="no">No</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
-              <label for="l-extra2-comision">Comisión (%)</label>
-              <input id="l-extra2-comision" name="extra2_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra2-comision">Comisión</label>
+              <input id="l-extra2-comision" name="extra2_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
+              <label for="l-extra2-comision-tipo">La comisión es</label>
+              <select id="l-extra2-comision-tipo" name="extra2_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <div class="form__row">
@@ -1190,19 +1230,29 @@
           </div>
           <div class="form__row">
             <p class="field">
-              <label for="l-extra3-comision">Comisión (%)</label>
-              <input id="l-extra3-comision" name="extra3_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra3-comision">Comisión</label>
+              <input id="l-extra3-comision" name="extra3_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
-              <label for="l-extra4-nombre">Extra 4</label>
-              <input id="l-extra4-nombre" name="extra4_nombre" type="text" maxlength="300">
+              <label for="l-extra3-comision-tipo">La comisión es</label>
+              <select id="l-extra3-comision-tipo" name="extra3_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra4-nombre">Extra 4</label>
+              <input id="l-extra4-nombre" name="extra4_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
               <label for="l-extra4-precio">Precio (€)</label>
               <input id="l-extra4-precio" name="extra4_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra4-unidad">El precio es</label>
               <select id="l-extra4-unidad" name="extra4_unidad">
@@ -1213,8 +1263,6 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra4-iva">Lleva IVA</label>
               <select id="l-extra4-iva" name="extra4_iva">
@@ -1223,9 +1271,19 @@
                 <option value="no">No</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
-              <label for="l-extra4-comision">Comisión (%)</label>
-              <input id="l-extra4-comision" name="extra4_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra4-comision">Comisión</label>
+              <input id="l-extra4-comision" name="extra4_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
+              <label for="l-extra4-comision-tipo">La comisión es</label>
+              <select id="l-extra4-comision-tipo" name="extra4_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <div class="form__row">
@@ -1260,19 +1318,29 @@
           </div>
           <div class="form__row">
             <p class="field">
-              <label for="l-extra5-comision">Comisión (%)</label>
-              <input id="l-extra5-comision" name="extra5_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra5-comision">Comisión</label>
+              <input id="l-extra5-comision" name="extra5_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
             </p>
             <p class="field">
-              <label for="l-extra6-nombre">Extra 6</label>
-              <input id="l-extra6-nombre" name="extra6_nombre" type="text" maxlength="300">
+              <label for="l-extra5-comision-tipo">La comisión es</label>
+              <select id="l-extra5-comision-tipo" name="extra5_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra6-nombre">Extra 6</label>
+              <input id="l-extra6-nombre" name="extra6_nombre" type="text" maxlength="300">
+            </p>
+            <p class="field">
               <label for="l-extra6-precio">Precio (€)</label>
               <input id="l-extra6-precio" name="extra6_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra6-unidad">El precio es</label>
               <select id="l-extra6-unidad" name="extra6_unidad">
@@ -1283,8 +1351,6 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra6-iva">Lleva IVA</label>
               <select id="l-extra6-iva" name="extra6_iva">
@@ -1293,9 +1359,19 @@
                 <option value="no">No</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
-              <label for="l-extra6-comision">Comisión (%)</label>
-              <input id="l-extra6-comision" name="extra6_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <label for="l-extra6-comision">Comisión</label>
+              <input id="l-extra6-comision" name="extra6_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+            </p>
+            <p class="field">
+              <label for="l-extra6-comision-tipo">La comisión es</label>
+              <select id="l-extra6-comision-tipo" name="extra6_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
             </p>
           </div>
           <p class="field">
@@ -1390,19 +1466,32 @@
             <input id="l-canon-catering" name="canon_catering" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
           </p>
           <p class="field">
-            <label for="l-comision">Comisión para agencias (%)</label>
-            <input id="l-comision" name="comision" type="number" min="0" max="100000" inputmode="numeric">
+            <label for="l-comision">Comisión general para Events Penedès</label>
+            <input id="l-comision" name="comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+            <span class="field__hint">Vale para todo lo que no lleve la suya en los paquetes o los extras. Para un evento concreto se puede pactar otra.</span>
           </p>
         </div>
-        <p class="field">
-          <label for="l-precio-neto">O, en su lugar, precio neto para agencias</label>
-          <select id="l-precio-neto" name="precio_neto">
-            <option value="">Sin dato</option>
-            <option value="si">Sí</option>
-            <option value="no">No</option>
-          </select>
-          <span class="field__hint">Sí si los precios de arriba ya son netos para agencia.</span>
-        </p>
+        <div class="form__row">
+          <p class="field">
+            <label for="l-comision-tipo">La comisión general es</label>
+            <select id="l-comision-tipo" name="comision_tipo">
+              <option value="">Sin dato</option>
+              <option value="porcentaje">% de lo que se contrata</option>
+              <option value="persona">€ por persona</option>
+              <option value="evento">€ por evento</option>
+            </select>
+            <span class="field__hint">Si no se dice, es un porcentaje.</span>
+          </p>
+          <p class="field">
+            <label for="l-precio-neto">O, en su lugar, precio neto para agencias</label>
+            <select id="l-precio-neto" name="precio_neto">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+            <span class="field__hint">Sí si los precios de arriba ya son netos para agencia.</span>
+          </p>
+        </div>
         <p class="field">
           <label for="l-reserva">Reserva y cancelación</label>
           <textarea id="l-reserva" name="reserva" rows="3" maxlength="2000"></textarea>

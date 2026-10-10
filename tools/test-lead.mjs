@@ -198,7 +198,7 @@ const LOCAL = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-0
           contacto_correo: 'laia@exemple.example',
           aforo_banquete: '180', sala1_nombre: 'Sala de barricas', sala1_tipo: 'interior', sala1_banquete: '120',
           sala2_nombre: '', equipo_proyector: 'si', ofrece_cata: 'si', cata_tipos_cavas: 'si',
-          habitaciones: '12', alquiler_dia: '1500', taller_precio: '300', taller_unidad: 'evento', excl_precio: '1000', extra1_nombre: 'Hora extra', extra1_precio: '80', extra1_unidad: 'hora', extra1_iva: 'no', extra1_comision: '10', modelo_servicio: 'si', modelo_descuento: 'si', pax_50: '35', sala1_precio_media: '600', autoriza: 'revisar', consentimiento: 'si', inventado: 'no entra' } });
+          habitaciones: '12', alquiler_dia: '1500', taller_precio: '300', taller_unidad: 'evento', excl_precio: '1000', extra1_nombre: 'Hora extra', extra1_precio: '80', extra1_unidad: 'hora', extra1_iva: 'no', extra1_comision: '10', extra2_nombre: 'Comida', extra2_precio: '30', extra2_unidad: 'persona', extra2_comision: '4.5', extra2_comision_tipo: 'importe', comision: '8', comision_tipo: 'evento', excl_comision: '0', modelo_servicio: 'si', modelo_descuento: 'si', pax_50: '35', sala1_precio_media: '600', autoriza: 'revisar', consentimiento: 'si', inventado: 'no entra' } });
 zohoSimulado();
 const lz = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
 const cuentaL = de(/Accounts\/upsert/)?.cuerpo.data[0] || {};
@@ -221,7 +221,10 @@ comprueba('las tarifas salen marcadas como internas y con su unidad',
 comprueba('los paquetes salen internos, cada precio con su paquete y su unidad',
   /## Paquetes para Events Penedès \(interno\)/.test(notaL) && /Solo taller, sin exclusiva · precio laborable \(€\): 300 €/.test(notaL)
   && /Solo taller, sin exclusiva · el precio es: por evento/.test(notaL) && /Con exclusiva · precio laborable \(€\): 1000 €/.test(notaL)
-  && /Extra 1: Hora extra/.test(notaL) && /Extra 1 · el precio es: por hora/.test(notaL) && /Extra 1 · comisión \(%\): 10/.test(notaL));
+  && /Extra 1: Hora extra/.test(notaL) && /Extra 1 · el precio es: por hora/.test(notaL) && /Extra 1 · comisión: 10 %/.test(notaL));
+comprueba('cada comisión sale en una línea, con su tipo y la unidad de su precio',
+  /Extra 2 · comisión: 4\.5 € por persona/.test(notaL) && /Comisión general para Events Penedès: 8 € por evento/.test(notaL)
+  && /Con exclusiva · comisión para Events Penedès: 0, no es comisionable/.test(notaL) && !/la comisión es/.test(notaL));
 comprueba('el modelo de ingreso va en la nota, como interno', /Cómo ganamos con este espacio: Nuestras horas .*pasada al cliente como descuento/.test(notaL));
 comprueba('la tarifa de cada sala va con su sala', /Sala de barricas — .*media jornada \(€\): 600 €/.test(notaL));
 comprueba('la autorización de publicar va en la nota y como etiqueta',

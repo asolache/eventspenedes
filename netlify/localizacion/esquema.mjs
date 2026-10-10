@@ -71,6 +71,12 @@ const SALA = [
 /* Un paquete es siempre lo mismo para que se pueda comparar entre espacios:
    precio, cuándo, para cuántos, cuánto dura y qué incluye. */
 const UNIDAD = { evento: 'por evento', persona: 'por persona', hora: 'por hora', unidad: 'por unidad' };
+/* La comisión de un paquete o extra: un porcentaje del precio, o unos euros
+   con la misma unidad que el precio (4 € por persona, 50 € por evento). La
+   general, un porcentaje de todo, o euros por persona o por evento. La de un
+   paquete o extra gana a la general; para un evento concreto se pacta otra. */
+const COMISION_TIPO = { porcentaje: '% del precio', importe: '€ en la unidad del precio' };
+const COMISION_GENERAL = { porcentaje: '% de lo que se contrata', persona: '€ por persona', evento: '€ por evento' };
 function paquete(p, nombre, hint) {
   return [
     { n: `${p}_precio`, l: `${nombre} · precio laborable (€)`, t: 'eur', hint },
@@ -78,7 +84,8 @@ function paquete(p, nombre, hint) {
     { n: `${p}_unidad`, l: `${nombre} · el precio es`, t: 'select', op: { evento: UNIDAD.evento, persona: UNIDAD.persona } },
     { n: `${p}_horas`, l: `${nombre} · horas incluidas`, t: 'number' },
     { n: `${p}_pax`, l: `${nombre} · máximo de personas`, t: 'number' },
-    { n: `${p}_comision`, l: `${nombre} · comisión para Events Penedès (%)`, t: 'number', hint: '0 si no es comisionable.' },
+    { n: `${p}_comision`, l: `${nombre} · comisión para Events Penedès`, t: 'number', dec: true, hint: 'En blanco, vale la general (en «Otras tarifas»). 0 si no es comisionable.' },
+    { n: `${p}_comision_tipo`, l: `${nombre} · la comisión es`, t: 'select', op: COMISION_TIPO, hint: 'En euros, va por lo mismo que el precio: por persona, por evento… Si no se dice, es un porcentaje.' },
     { n: `${p}_espacio`, l: `${nombre} · qué espacio`, t: 'text', hint: 'El jardín, la sala, toda la finca…' },
     { n: `${p}_incluye`, l: `${nombre} · qué incluye`, t: 'textarea', hint: 'Mobiliario, limpieza, personal, plan B si llueve. Lo que no esté aquí es un extra.' },
   ];
@@ -92,7 +99,8 @@ function extras() {
       { n: `extra${i}_precio`, l: `Extra ${i} · precio (€)`, t: 'eur' },
       { n: `extra${i}_unidad`, l: `Extra ${i} · el precio es`, t: 'select', op: UNIDAD },
       { n: `extra${i}_iva`, l: `Extra ${i} · lleva IVA`, t: 'sino' },
-      { n: `extra${i}_comision`, l: `Extra ${i} · comisión (%)`, t: 'number' },
+      { n: `extra${i}_comision`, l: `Extra ${i} · comisión`, t: 'number', dec: true },
+      { n: `extra${i}_comision_tipo`, l: `Extra ${i} · la comisión es`, t: 'select', op: COMISION_TIPO },
     );
   }
   return out;
@@ -276,7 +284,9 @@ export const SECCIONES = [
       { n: 'pax_incluye', l: 'Qué incluye el precio por persona', t: 'text', hint: 'Visita con cata, cóctel, menú, solo canon…' },
       { n: 'minimo_facturacion', l: 'Facturación mínima (€)', t: 'eur' },
       { n: 'canon_catering', l: 'Canon por catering externo (€ por persona)', t: 'eur' },
-      { n: 'comision', l: 'Comisión para agencias (%)', t: 'number' },
+      { n: 'comision', l: 'Comisión general para Events Penedès', t: 'number', dec: true,
+        hint: 'Vale para todo lo que no lleve la suya en los paquetes o los extras. Para un evento concreto se puede pactar otra.' },
+      { n: 'comision_tipo', l: 'La comisión general es', t: 'select', op: COMISION_GENERAL, hint: 'Si no se dice, es un porcentaje.' },
       { n: 'precio_neto', l: 'O, en su lugar, precio neto para agencias', t: 'sino', hint: 'Sí si los precios de arriba ya son netos para agencia.' },
       { n: 'reserva', l: 'Reserva y cancelación', t: 'textarea', hint: 'Señal, plazos, qué pasa si se cancela.' },
       { n: 'tarifa_notas', l: 'Notas de tarifas', t: 'textarea', hint: 'Lo que no cabe arriba, tal cual lo dicen.' },
@@ -373,6 +383,22 @@ export function legible(campo, v) {
   return String(v).trim();
 }
 
+/* Una comisión tal como se lee: «10 %», «4 € por persona», «0, no es
+   comisionable». Sin tipo, es un porcentaje: así se pedía antes. */
+export function comisionLegible(d, n) {
+  const v = d[n];
+  if (v === undefined || v === null || String(v).trim() === '') { return null; }
+  const cifra = String(v).trim();
+  if (Number(cifra) === 0) { return '0, no es comisionable'; }
+  const tipo = d[`${n}_tipo`] || 'porcentaje';
+  if (tipo === 'porcentaje') { return `${cifra} %`; }
+  if (tipo === 'persona' || tipo === 'evento') { return `${cifra} € por ${tipo}`; }
+  const unidad = UNIDAD[d[n.replace(/comision$/, 'unidad')]];
+  return `${cifra} €${unidad ? ' ' + unidad : ''}`;
+}
+const ES_COMISION = /(^|_)comision$/;
+const ES_TIPO_COMISION = /(^|_)comision_tipo$/;
+
 /* La ficha en texto plano, por secciones. Lo que no se rellenó no sale: una
    ficha llena de «—» esconde lo que sí se sabe. */
 export function fichaTexto(d) {
@@ -396,7 +422,9 @@ export function fichaTexto(d) {
           if (marcadas.length) { filas.push(`${c.l}: ${marcadas.join(', ')}`); }
           continue;
         }
-        const v = legible(c, d[c.n]);
+        /* La comisión y su tipo, en una sola línea */
+        if (ES_TIPO_COMISION.test(c.n)) { continue; }
+        const v = ES_COMISION.test(c.n) ? comisionLegible(d, c.n) : legible(c, d[c.n]);
         if (v) { filas.push(`${c.l}: ${v}`); }
       }
     }
