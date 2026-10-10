@@ -200,7 +200,7 @@ window.EP_I18N = {
       'ven.v4.s2': 'Hotels amb sales',
       'ven.v4.s3': 'Vinyes i natura',
       'ven.v4.s4': '40 min de Barcelona',
-      'ven.note': 'Gestiones un espai al Penedès i vols formar part de la xarxa? Escriu-nos.',
+      'ven.note': 'Gestiones un espai al Penedès i vols formar part de la xarxa? <a href=\"red.html\">Escriu-nos</a>.',
 
       'ven.v1.alt': 'Porxo cobert de Cal Segue amb taules i barbacoa, al costat de l\u2019era enrajolada',
       'ven.v1.alt2': 'Jard\u00ed i era de Cal Segue, amb la tanca vegetal i les vinyes al fons',
@@ -245,7 +245,7 @@ window.EP_I18N = {
       'par.t6': 'Al celler o desplaçada',
       'par.link2': 'labodegadesara.com',
       'par.alt2': 'Tast a La Bodega de Sara: descorxant una ampolla i olorant el suro',
-      'par.note': 'Imatges de tallers «Fent Pinya» de TeamTowers, en espais diferents i amb grups d’empresa. Tens un espai, un celler o un servei al Penedès i vols entrar a la xarxa? Escriu-nos.',
+      'par.note': 'Imatges de tallers «Fent Pinya» de TeamTowers, en espais diferents i amb grups d’empresa. Tens un espai, un celler o un servei al Penedès i vols entrar a la xarxa? <a href=\"red.html\">Escriu-nos</a>.',
       'act.eyebrow': 'Activitats',
       'act.title': 'Experiències que es fan aquí',
       'act.lead': 'Activitats pròpies i de partners locals, adaptades a la mida del grup, l’idioma i l’objectiu.',
@@ -266,7 +266,7 @@ window.EP_I18N = {
       'par.g2': 'Castell constru\u00eft dins d\u2019una sala durant un taller d\u2019empresa',
       'par.g3': 'Participants amb mocador vermell celebrant el castell completat',
       'par.g4': 'Una participant a dalt de tot, amb el grup aplaudint des de baix',
-      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? Get in touch.',
+      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? <a href=\"red.html\">Get in touch</a>.',
       'proc.eyebrow': 'Com treballem',
       'proc.title': 'De la trucada a l’esdeveniment',
       'proc.p1.title': 'Briefing',
@@ -321,7 +321,6 @@ window.EP_I18N = {
       'foot.city': 'Torrelles de Foix, Barcelona',
       'foot.h3': 'Ecosistema',
       'foot.rights': '© 2026 Events Penedès · Un projecte de TeamTowers Humà',
-      'foot.prov': 'Web provisional — estem preparant la versió completa.'
     },
 
     en: {
@@ -520,7 +519,7 @@ window.EP_I18N = {
       'ven.v4.s2': 'Hotels with meeting rooms',
       'ven.v4.s3': 'Vineyards and nature',
       'ven.v4.s4': '40 min from Barcelona',
-      'ven.note': 'Do you run a space in the Penedès and want to join the network? Get in touch.',
+      'ven.note': 'Do you run a space in the Penedès and want to join the network? <a href=\"red.html\">Get in touch</a>.',
 
       'ven.v1.alt': 'The covered porch at Cal Segue with tables and a barbecue, next to the tiled terrace',
       'ven.v1.alt2': 'The garden and terrace at Cal Segue, with the hedge and the vineyards behind',
@@ -565,7 +564,7 @@ window.EP_I18N = {
       'par.t6': 'At the winery or on site',
       'par.link2': 'labodegadesara.com',
       'par.alt2': 'A tasting at La Bodega de Sara: uncorking a bottle and smelling the cork',
-      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? Get in touch.',
+      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? <a href=\"red.html\">Get in touch</a>.',
       'act.eyebrow': 'Activities',
       'act.title': 'Experiences that belong here',
       'act.lead': 'Our own activities and those of local partners, adapted to group size, language and objective.',
@@ -586,7 +585,7 @@ window.EP_I18N = {
       'par.g2': 'A human tower built indoors during a company workshop',
       'par.g3': 'Participants in red headscarves celebrating the completed tower',
       'par.g4': 'A participant at the very top, with the group applauding from below',
-      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? Get in touch.',
+      'par.note': 'Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? <a href=\"red.html\">Get in touch</a>.',
       'proc.eyebrow': 'How we work',
       'proc.title': 'From the call to the event',
       'proc.p1.title': 'Briefing',
@@ -641,7 +640,6 @@ window.EP_I18N = {
       'foot.city': 'Torrelles de Foix, Barcelona',
       'foot.h3': 'Ecosystem',
       'foot.rights': '© 2026 Events Penedès · A TeamTowers Humà project',
-      'foot.prov': 'Provisional site — the full version is on its way.'
     }
 };
 

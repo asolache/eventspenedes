@@ -53,6 +53,7 @@ export const DE_CASILLA = {
   exp_chef: 'chef-autor',
   exp_gincana: 'gincana-vinyes',
   exp_rrpp: 'rrpp-protocolo',
+  exp_dj: 'dj-sesion',
 };
 
 /* El orden del día. No es el orden en que se marcan las casillas: una cata de
@@ -113,7 +114,7 @@ export function briefingAEvento(d = {}, { opciones, espacios, recibido = new Dat
   if (txt('movilidad') === 'microbus') { pedidas.push('microbus'); }
   /* Un showcooking es un chef, lo haya marcado o no en las experiencias. */
   if (txt('catering') === 'showcooking' && !pedidas.includes('chef-autor')) { pedidas.push('chef-autor'); }
-  if (duracion === 'jornada-noche') { pedidas.push('dj-sesion'); }
+  if (duracion === 'jornada-noche' && !pedidas.includes('dj-sesion')) { pedidas.push('dj-sesion'); }
 
   const ordenadas = ORDEN.filter(id => pedidas.includes(id))
     .concat(pedidas.filter(id => !ORDEN.includes(id)));

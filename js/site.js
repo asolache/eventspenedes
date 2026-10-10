@@ -30,6 +30,53 @@
     if (campo) { campo.value = document.documentElement.lang || 'es'; }
   }
 
+  /* De dónde llegó quien escribe: la primera página que vio en esta visita,
+     la web que le trajo y la campaña, si la hay. Va en el campo `origen` del
+     formulario y acaba en la ficha del CRM. Sin cookies: sessionStorage se
+     borra al cerrar la pestaña. */
+  function marcarOrigen() {
+    var clave = 'ep-origen', origen = null;
+    try { origen = sessionStorage.getItem(clave); } catch (e) { /* sin almacenamiento */ }
+    if (!origen) {
+      var partes = ['página ' + location.pathname];
+      var ref = '';
+      try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { ref = ''; }
+      if (ref && ref !== location.hostname) { partes.push('desde ' + ref); }
+      var q = new URLSearchParams(location.search);
+      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (k) {
+        var v = q.get(k);
+        if (v) { partes.push(k.slice(4) + ' ' + v.slice(0, 60)); }
+      });
+      origen = partes.join(' · ');
+      try { sessionStorage.setItem(clave, origen); } catch (e) { /* sin almacenamiento */ }
+    }
+    var campos = document.querySelectorAll('input[name="origen"]');
+    for (var i = 0; i < campos.length; i++) { campos[i].value = origen; }
+  }
+
+  /* Un enlace puede llegar con el tipo ya elegido (?tipo=dj desde la página
+     de DJ): se marca solo si el formulario tiene esa opción. */
+  function preseleccionar() {
+    var tipo = new URLSearchParams(location.search).get('tipo');
+    var sel = document.querySelector('#form-contacto select[name="tipo"]');
+    if (!tipo || !sel) { return; }
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === tipo) { sel.value = tipo; return; }
+    }
+  }
+
+  /* La cita en la agenda solo aparece si hay una página de reservas puesta
+     en data-agenda. Sin ella, la página de gracias queda como estaba. */
+  function mostrarAgenda() {
+    var bloque = document.querySelector('[data-agenda]');
+    if (!bloque) { return; }
+    var url = bloque.getAttribute('data-agenda');
+    var enlace = bloque.querySelector('a.js-agenda');
+    if (!/^https:\/\//.test(url) || !enlace) { return; }
+    enlace.setAttribute('href', url);
+    bloque.hidden = false;
+  }
+
   function initNav() {
     var toggle = document.querySelector('.nav-toggle');
     var nav = document.getElementById('nav');
@@ -52,6 +99,9 @@
   function init() {
     revealMail();
     marcarIdioma();
+    marcarOrigen();
+    preseleccionar();
+    mostrarAgenda();
     initNav();
   }
 

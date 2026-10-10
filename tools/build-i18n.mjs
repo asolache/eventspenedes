@@ -20,6 +20,7 @@ const PAGINAS = [
   { fuente: 'propuesta.html', dic: 'js/lang-propuesta.js', ruta: 'propuesta.html' },
   { fuente: 'gracias.html', dic: 'js/lang-gracias.js', ruta: 'gracias.html' },
   { fuente: 'privacidad.html', dic: 'js/lang-privacidad.js', ruta: 'privacidad.html' },
+  { fuente: 'red.html', dic: 'js/lang-red.js', ruta: 'red.html' },
 ];
 
 /* Los ficheros de idioma son scripts de navegador: se evalúan con un window

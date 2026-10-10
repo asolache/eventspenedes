@@ -141,6 +141,9 @@ const ETIQUETAS = {
   web: 'Web',
   mensaje: 'Mensaje',
   personas: 'Personas',
+  perfil: 'Perfil de partner',
+  poblacion: 'Población',
+  origen: 'Llegó por',
 };
 
 /* Los `value` de los desplegables son identificadores, no castellano. En la
@@ -182,6 +185,14 @@ const POR_FORM = {
     tipo: { agencia: 'Agencia de eventos', dmc: 'DMC',
             organizador: 'Organizador profesional de congresos', otro: 'Otro' },
   },
+  /* «Entra en la red»: un espacio o un proveedor que se presenta. */
+  red: {
+    perfil: { localizacion: 'Espacio (localización)', restauracion: 'Restauración y catering',
+              catas: 'Catas de vino, cava o aceite', guias: 'Guías y actividades',
+              transporte: 'Transporte', alojamiento: 'Alojamiento', musica: 'Música',
+              ocio: 'Ocio y experiencias', rrpp: 'RRPP, protocolo y fotografía',
+              eventos: 'Producción y técnica de eventos', otro: 'Otro' },
+  },
 };
 
 const legible = (form, campo, v) =>
@@ -190,6 +201,7 @@ const legible = (form, campo, v) =>
   || v;
 
 const EXPERIENCIAS = {
+  exp_dj: 'Sesión de DJ',
   exp_castells: 'Taller de castells',
   exp_cata_vino: 'Cata de vino o cava',
   exp_cata_aceite: 'Cata de aceite',
