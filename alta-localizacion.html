@@ -61,9 +61,29 @@
         <input type="hidden" name="form-name" value="localizacion">
         <input type="hidden" name="idioma" value="es">
         <input type="hidden" name="borrador" value="">
+        <input type="hidden" name="importado" value="">
         <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
 
         <p class="form__estado" data-estado hidden></p>
+
+        <!-- Importar: no son campos de la ficha (sin name), no se envían -->
+        <fieldset class="importar" data-importar hidden>
+          <legend>Empezar desde vuestra web o vuestro catálogo</legend>
+          <p class="field__hint">Pegad la dirección de vuestra web o de vuestro dossier (también Drive o Dropbox), o subid el PDF. Rellenamos lo que encontremos, solo en los campos vacíos y marcado para que lo reviséis. No se guarda ni se nos envía nada hasta que pulséis «Enviar la ficha».</p>
+          <div class="form__row">
+            <p class="field">
+              <label for="i-url">Web o enlace al catálogo</label>
+              <input id="i-url" type="url" inputmode="url" placeholder="https://" maxlength="500">
+            </p>
+            <p class="field">
+              <label for="i-pdf">O el catálogo en PDF</label>
+              <input id="i-pdf" type="file" accept="application/pdf,.pdf">
+              <span class="field__hint">Hasta 4 MB. Si pesa más, el enlace de Drive o Dropbox.</span>
+            </p>
+          </div>
+          <p class="form__acciones"><button class="btn btn--ghost" type="button" data-importar-boton>Importar a la ficha</button></p>
+          <p class="importar__estado" data-importar-estado hidden></p>
+        </fieldset>
 
         <!-- campos: generado por tools/build-localizacion.mjs, no editar -->
         <h2 class="form__h" id="sec-espacio">El espacio</h2>

@@ -14,6 +14,12 @@
      dispositivo). La función compara y deja en la nota de Zoho qué cambió.
      Tras enviar, la ficha se queda como se envió y ofrece un enlace para
      volver a abrirla así desde cualquier sitio.
+   · Importar: con la web del espacio o su catálogo en PDF, la función
+     /api/importar-catalogo devuelve los campos que salen de ahí. Solo llenan
+     lo vacío, quedan marcados (con la frase de la que salen) hasta que el
+     espacio los toca, y el campo oculto `importado` dice de dónde vinieron.
+     Lo importado pasa a ser la versión de partida si no había otra: así la
+     nota de Zoho dice qué corrigió el espacio sobre lo que leímos.
    · Con ?interno=1 enseña lo que rellenamos nosotros (relación, notas de la
      visita); sin él, la ficha es la que puede rellenar el propio espacio.
      Este dispositivo lo recuerda.
@@ -27,6 +33,7 @@
   var CLAVE = 'ep-ficha-localizacion';
   var CLAVE_INTERNO = 'ep-ficha-interno';
   var CLAVE_PARTIDA = 'ep-ficha-partida';
+  var CLAVE_IMPORTADO = 'ep-ficha-importado';
   var form = document.getElementById('form-localizacion');
   if (!form) { return; }
   var partida = form.elements.borrador;
@@ -88,6 +95,7 @@
 
   function recuperar() {
     try { if (partida) { partida.value = localStorage.getItem(CLAVE_PARTIDA) || ''; } } catch (e) { /* nada */ }
+    try { if (form.elements.importado) { form.elements.importado.value = localStorage.getItem(CLAVE_IMPORTADO) || ''; } } catch (e) { /* nada */ }
     var guardado = null;
     try { guardado = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { guardado = null; }
     if (guardado) {
@@ -171,6 +179,124 @@
     mas.hidden = !form.querySelector('fieldset.sala[hidden]');
   });
 
+  /* --- Importar desde la web o el catálogo -------------------------------- */
+
+  var importar = form.querySelector('[data-importar]');
+  var iPdfCampo = form.querySelector('#i-pdf');
+  var iBoton = form.querySelector('[data-importar-boton]');
+  var iEstado = form.querySelector('[data-importar-estado]');
+  var MAX_PDF = 4 * 1024 * 1024;
+
+  function iDecir(texto, lista) {
+    iEstado.textContent = texto;
+    if (lista && lista.length) {
+      var ul = document.createElement('ul');
+      lista.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      iEstado.appendChild(ul);
+    }
+    iEstado.hidden = false;
+  }
+
+  function marcar(el, cita) {
+    el.setAttribute('data-importado', '');
+    if (cita) { el.title = 'Importado: ' + cita; }
+    var campo = el.closest('.field');
+    if (campo && cita && !campo.querySelector('.field__origen')) {
+      var nota = document.createElement('span');
+      nota.className = 'field__origen';
+      nota.textContent = 'Importado · revisadlo: ' + cita;
+      campo.appendChild(nota);
+    }
+  }
+
+  function desmarcar(el) {
+    if (!el || !el.hasAttribute || !el.hasAttribute('data-importado')) { return; }
+    el.removeAttribute('data-importado');
+    el.removeAttribute('title');
+    var campo = el.closest('.field');
+    var nota = campo && campo.querySelector('.field__origen');
+    if (nota) { nota.parentNode.removeChild(nota); }
+  }
+
+  function desmarcarTodo() {
+    var marcados = form.querySelectorAll('[data-importado]');
+    for (var i = 0; i < marcados.length; i++) { desmarcar(marcados[i]); }
+    if (iEstado) { iEstado.hidden = true; }
+  }
+
+  function enBase64(fichero) {
+    return new Promise(function (ok, mal) {
+      var r = new FileReader();
+      r.onload = function () { ok(String(r.result).split(',')[1] || ''); };
+      r.onerror = function () { mal(new Error('No se ha podido leer el fichero')); };
+      r.readAsDataURL(fichero);
+    });
+  }
+
+  function aplicar(res) {
+    var puestos = 0, yaEstaban = 0;
+    Object.keys(res.datos || {}).forEach(function (k) {
+      var el = form.elements[k];
+      if (!el || el.type === 'hidden' || !el.closest) { return; }
+      var vacio = el.type === 'checkbox' ? !el.checked : !el.value;
+      if (!vacio) { yaEstaban++; return; }
+      poner(k, res.datos[k], true);
+      if (el.type === 'checkbox' ? el.checked : el.value) { marcar(el, (res.origen || {})[k]); puestos++; }
+    });
+    porTipo();
+    condicionales();
+    mostrarSalas();
+    var fuente = (res.fuentes || []).join(' · ') + (res.metodo === 'claude' ? ' (lectura completa)' : ' (reglas fijas)');
+    if (form.elements.importado) {
+      form.elements.importado.value = fuente.slice(0, 500);
+      try { localStorage.setItem(CLAVE_IMPORTADO, form.elements.importado.value); } catch (e) { /* nada */ }
+    }
+    /* Lo importado es la versión de partida, salvo que ya hubiera otra (una
+       ficha prellenada que les mandamos): así sabremos qué han corregido. */
+    if (partida && !partida.value) { fijarPartida(leer()); }
+    guardar();
+    var avisos = (res.avisos || []).slice(0, 8);
+    if (puestos) {
+      iDecir('Hemos puesto ' + puestos + (puestos === 1 ? ' dato' : ' datos') + ' en la ficha, marcados en dorado con la frase de la que salen. Revisadlos uno a uno y corregid lo que no esté bien'
+        + (yaEstaban === 1 ? '; un campo que ya teníais relleno no se ha tocado.' : yaEstaban ? '; ' + yaEstaban + ' campos que ya teníais rellenos no se han tocado.' : '.'), avisos);
+      var primero = form.querySelector('[data-importado]');
+      if (primero) { primero.scrollIntoView({ block: 'center' }); }
+    } else {
+      iDecir(yaEstaban ? 'Lo que hemos encontrado ya estaba en la ficha: no hemos cambiado nada.'
+        : 'No hemos encontrado datos que podamos poner con seguridad. Rellenad la ficha a mano, o probad con el PDF del dossier.', avisos);
+    }
+  }
+
+  if (importar && window.fetch && window.FileReader) {
+    importar.hidden = false;
+    var iUrl = form.querySelector('#i-url');
+    var iPdf = form.querySelector('#i-pdf');
+    iBoton.addEventListener('click', function () {
+      var url = iUrl.value.trim();
+      var fichero = iPdf.files && iPdf.files[0];
+      if (!url && !fichero) { iDecir('Pegad la dirección de la web o elegid el PDF.'); return; }
+      if (fichero && fichero.size > MAX_PDF) { iDecir('El PDF pesa más de 4 MB. Subidlo a Drive o Dropbox y pegad aquí el enlace.'); return; }
+      iBoton.disabled = true;
+      iDecir('Leyendo… Un catálogo largo puede tardar hasta un minuto.');
+      (fichero ? enBase64(fichero) : Promise.resolve(null)).then(function (b64) {
+        var cuerpo = {};
+        if (url) { cuerpo.url = url; }
+        if (b64) { cuerpo.pdf = b64; cuerpo.nombre = fichero.name; }
+        return fetch('/api/importar-catalogo', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo),
+        });
+      }).then(function (r) {
+        if (r.status === 429) { throw new Error('Demasiados intentos seguidos: esperad un minuto.'); }
+        return r.json().catch(function () { throw new Error('El servidor no ha respondido bien (HTTP ' + r.status + ').'); });
+      }).then(function (res) {
+        if (!res.ok) { throw new Error(res.error || 'No se ha podido leer.'); }
+        aplicar(res);
+      }).catch(function (e) {
+        iDecir((e && e.message) || 'No se ha podido importar. La ficha sigue como estaba.');
+      }).then(function () { iBoton.disabled = false; });
+    });
+  }
+
   /* --- Envío --------------------------------------------------------------- */
 
   form.addEventListener('submit', function (ev) {
@@ -207,9 +333,11 @@
 
   borrar.addEventListener('click', function () {
     if (!window.confirm('¿Vaciar la ficha? Lo que no se haya enviado se pierde.')) { return; }
-    try { localStorage.removeItem(CLAVE); localStorage.removeItem(CLAVE_PARTIDA); } catch (e) { /* nada */ }
+    try { localStorage.removeItem(CLAVE); localStorage.removeItem(CLAVE_PARTIDA); localStorage.removeItem(CLAVE_IMPORTADO); } catch (e) { /* nada */ }
     form.reset();
     if (partida) { partida.value = ''; }
+    if (form.elements.importado) { form.elements.importado.value = ''; }
+    desmarcarTodo();
     porTipo();
     mostrarSalas();
     borrar.hidden = true;
@@ -223,8 +351,9 @@
   mostrarSalas();
 
   var espera;
-  form.addEventListener('input', function () { clearTimeout(espera); espera = setTimeout(guardar, 300); });
+  form.addEventListener('input', function (ev) { desmarcar(ev.target); clearTimeout(espera); espera = setTimeout(guardar, 300); });
   form.addEventListener('change', function (ev) {
+    if (ev.target !== iPdfCampo) { desmarcar(ev.target); }
     if (ev.target === tipo) { porTipo(); }
     if (ev.target.hasAttribute && ev.target.hasAttribute('data-tipos')) { condicionales(); }
     guardar();

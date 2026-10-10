@@ -8,7 +8,10 @@
 
    Cuando el formulario es la ficha de una localización, el espacio entra como
    CUENTA con la etiqueta «Localización» y la de su tipo, la persona como
-   CONTACTO de esa cuenta, y la ficha entera como nota. Ver `localizacion()`.
+   CONTACTO de esa cuenta, y la ficha entera como nota. Mientras la ficha no
+   traiga fecha de visita, la cuenta lleva «Pendiente de visita», y la primera
+   vez que la lleva se crea una TAREA para visitarla: es el aviso de que ha
+   llegado un espacio. Ver `localizacion()`.
 
    Y cuando el formulario es el de propuesta, hace una segunda cosa: **monta el
    borrador de la propuesta** y deja en una nota del lead un enlace privado
@@ -39,6 +42,10 @@
      BORRADOR_DIAS                opcional · cuántos días vale el enlace (30)
      ZOHO_ETIQUETA_LOCALIZACION   opcional · etiqueta de las cuentas de espacios
                                   («Localización»)
+     ZOHO_ETIQUETA_PENDIENTE      opcional · etiqueta de los espacios sin visitar
+                                  («Pendiente de visita»)
+     ZOHO_AVISO_TAREA             opcional · '0' para no crear la tarea de aviso
+                                  cuando llega un espacio nuevo
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
@@ -285,6 +292,18 @@ async function zoho(ruta, cuerpo) {
   return j;
 }
 
+async function zohoGet(ruta) {
+  const dc = process.env.ZOHO_DC || 'eu';
+  const token = await accessToken();
+  const r = await fetch(`https://www.zohoapis.${dc}/crm/v2/${ruta}`, {
+    headers: { Authorization: `Zoho-oauthtoken ${token}` },
+  });
+  if (r.status === 204) { return {}; }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { throw new Error(`Zoho ${r.status}: ${JSON.stringify(j)}`); }
+  return j;
+}
+
 /* Upsert por correo: si ya escribió hace un mes, se actualiza su ficha en vez
    de crear un duplicado que luego hay que fusionar a mano. */
 const upsert = registro =>
@@ -401,6 +420,14 @@ function localizacion(d, cuando) {
   /* La autorización de publicar, también como etiqueta: es el filtro con el
      que se decide qué ficha se puede pasar a la web. */
   if (AUTORIZA[d.autoriza]) { etiquetas.push(AUTORIZA[d.autoriza]); }
+  /* Pendiente de visita hasta que una ficha llegue con la fecha de la visita.
+     Un espacio que se da de alta solo, o que importa su catálogo, entra así:
+     no se publica nada de él (la web sale solo de data/espacios.json, en el
+     repositorio privado) y nos llega una tarea para ir a verlo. */
+  const pendiente = process.env.ZOHO_ETIQUETA_PENDIENTE || 'Pendiente de visita';
+  const visitado = Boolean(v('visita_fecha'));
+  if (!visitado) { etiquetas.push(pendiente); }
+  const importado = v('importado');
   /* El registro de cambios. `borrador` es la versión de la que partió el
      formulario: la ficha prellenada que les mandamos o su envío anterior. Las
      notas se archivan en la cuenta y la persona se reconoce por su correo, así
@@ -414,13 +441,24 @@ function localizacion(d, cuando) {
   const nota = [`Ficha de localización · recibida ${cuando}`,
                 `Enviada por: ${correo || persona || 'sin correo'}`,
                 `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`,
-                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`, '', ...registro, '', fichaTexto(d)];
+                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`,
+                `Visita: ${visitado ? `hecha el ${v('visita_fecha')}` : 'pendiente'}`,
+                ...(importado ? [`Importada de: ${importado.slice(0, 500)} · el espacio la ha revisado antes de enviarla`] : []),
+                '', ...registro, '', fichaTexto(d)];
   if (d.consentimiento) { nota.push('', `Aviso de privacidad aceptado el ${cuando}.`); }
   const titulo = lista === null ? 'Ficha de localización' : `Ficha de localización · ${lista.length} cambios`;
-  return { cuenta, contacto, etiquetas, titulo, nota: nota.join('\n') };
+  const tarea = !visitado && process.env.ZOHO_AVISO_TAREA !== '0' ? {
+    Subject: `Visitar ${nombre}: ficha de localización nueva`,
+    Due_Date: new Date(Date.parse(cuando) + 7 * 864e5 || Date.now() + 7 * 864e5).toISOString().slice(0, 10),
+    Description: [`Ha llegado la ficha de «${nombre}» (${TIPOS[d.tipo] || d.tipo || 'sin tipo'}).`,
+      importado ? `La han importado de su web o catálogo: ${importado.slice(0, 300)}.` : 'La han rellenado a mano.',
+      `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}. No se publica nada hasta visitarla y validarla.`,
+      `Contacto: ${[persona, movil, correo].filter(Boolean).join(' · ') || 'sin contacto'}.`].join('\n'),
+  } : null;
+  return { cuenta, contacto, etiquetas, quitar: visitado ? [pendiente] : [], pendiente, tarea, titulo, nota: nota.join('\n') };
 }
 
-async function crearLocalizacion({ cuenta, contacto, etiquetas, titulo, nota: texto }) {
+async function crearLocalizacion({ cuenta, contacto, etiquetas, quitar, pendiente, tarea, titulo, nota: texto }) {
   const ids = {};
   ids.cuenta = idDe(await zoho('Accounts/upsert', { data: [cuenta], duplicate_check_fields: ['Account_Name'] }));
   if (!ids.cuenta) { throw new Error('Zoho no devolvió el id de la cuenta'); }
@@ -428,6 +466,22 @@ async function crearLocalizacion({ cuenta, contacto, etiquetas, titulo, nota: te
   /* Lo que viene después de la cuenta no puede tumbarla: si falla una
      etiqueta o el contacto, el espacio ya está dentro y queda en el registro. */
   const avisos = [];
+  /* ¿Ya estaba pendiente de visita? Entonces ya hay tarea: cada corrección
+     del espacio no puede crear otra. Si no se puede saber, se crea: un aviso
+     de más se borra; uno de menos es un espacio que nadie va a ver. */
+  let yaPendiente = false;
+  if (tarea) {
+    try {
+      const j = await zohoGet(`Accounts/${ids.cuenta}?fields=Tag`);
+      yaPendiente = (j.data?.[0]?.Tag || []).some(t => t.name === pendiente);
+    } catch (e) { avisos.push('etiquetas previas: ' + e.message); }
+  }
+  if (quitar?.length) {
+    try {
+      const q = encodeURIComponent(quitar.join(','));
+      await zoho(`Accounts/${ids.cuenta}/actions/remove_tags?tag_names=${q}`, {});
+    } catch (e) { avisos.push('quitar etiquetas: ' + e.message); }
+  }
   try {
     const q = encodeURIComponent(etiquetas.join(','));
     await zoho(`Accounts/${ids.cuenta}/actions/add_tags?tag_names=${q}&over_write=false`, {});
@@ -444,6 +498,11 @@ async function crearLocalizacion({ cuenta, contacto, etiquetas, titulo, nota: te
   try {
     await nota('Accounts', ids.cuenta, titulo, texto);
   } catch (e) { avisos.push('nota: ' + e.message); }
+  if (tarea && !yaPendiente) {
+    try {
+      ids.tarea = idDe(await zoho('Tasks', { data: [{ ...tarea, What_Id: { id: ids.cuenta }, $se_module: 'Accounts' }] }));
+    } catch (e) { avisos.push('tarea: ' + e.message); }
+  }
   return { ids, avisos };
 }
 

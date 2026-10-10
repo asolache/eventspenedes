@@ -1449,3 +1449,21 @@ ul { margin: 0; padding: 0; list-style: none; }
        tocar un campo y hay que volver a encuadrarla. */
     #form-localizacion .field input, #form-localizacion .field select, #form-localizacion .field textarea { font-size: 16px; }
 }
+
+/* Importar desde la web o el catálogo: lo importado se marca hasta que el
+   espacio lo toca, para que se vea qué es suyo y qué hay que revisar. */
+.importar {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem 1.1rem 1.2rem;
+    border: 1px dashed var(--accent-gold);
+    border-radius: var(--radius);
+}
+.importar[hidden], .importar__estado[hidden] { display: none; }
+.importar legend { padding: 0 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.06em; }
+.importar__estado { margin: 0; font-size: 0.93rem; }
+.importar__estado ul { margin: 0.4rem 0 0; padding-left: 1.2rem; color: var(--text-low); }
+#form-localizacion [data-importado] { border-color: var(--accent-gold); box-shadow: 0 0 0 1px var(--accent-gold); }
+#form-localizacion .field--check [data-importado] { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
+.field__origen { display: block; font-size: 0.78rem; color: var(--accent-gold); }

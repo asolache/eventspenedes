@@ -244,6 +244,36 @@ comprueba('el registro de cambios lista lo que cambió, lo nuevo y lo quitado, c
 comprueba('lo que no cambió no sale en el registro', !/precio laborable \(€\): 250 € →/.test(notaC.Note_Content));
 comprueba('el borrador no se cuela en la ficha como texto', !/"aforo_banquete"/.test(notaC.Note_Content));
 
+/* 1h · Pendiente de visita: etiqueta, y una tarea solo la primera vez */
+comprueba('sin fecha de visita, la cuenta queda «Pendiente de visita»',
+  /Pendiente%20de%20visita/.test(de(/add_tags/)?.url || '') && /Visita: pendiente/.test(notaC.Note_Content));
+zohoSimulado();
+await handler(peticion(LOCAL, firmar(LOCAL)));
+const tarea = de(/\/Tasks$/)?.cuerpo?.data?.[0] || {};
+comprueba('un espacio nuevo crea la tarea de visitarlo, colgada de su cuenta',
+  /^Visitar Celler Exemple/.test(tarea.Subject || '') && tarea.What_Id?.id === 'acc1' && tarea.$se_module === 'Accounts'
+  && tarea.Due_Date === '2026-10-14' && /laia@exemple\.example/.test(tarea.Description || ''));
+const conTag = f => async (url, op) => (/Accounts\/acc1\?fields=Tag/.test(String(url))
+  ? Response.json({ data: [{ Tag: [{ name: 'Localización' }, { name: 'Pendiente de visita' }] }] }) : f(url, op));
+zohoSimulado();
+globalThis.fetch = conTag(globalThis.fetch);
+await handler(peticion(LOCAL, firmar(LOCAL)));
+comprueba('si ya estaba pendiente, una corrección no crea otra tarea', !de(/\/Tasks$/) && !!de(/Accounts\/acc1\/Notes/));
+const VISITADA = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-09T10:00:00.000Z',
+  data: { nombre: 'Celler Exemple', tipo: 'bodega', visita_fecha: '2026-10-09' } });
+zohoSimulado();
+await handler(peticion(VISITADA, firmar(VISITADA)));
+comprueba('con fecha de visita se quita la etiqueta y no hay tarea',
+  /remove_tags\?tag_names=Pendiente%20de%20visita/.test(de(/remove_tags/)?.url || '')
+  && !/Pendiente/.test(de(/add_tags/)?.url || '') && !de(/\/Tasks$/));
+const IMPORTADA = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-09T10:00:00.000Z',
+  data: { nombre: 'Celler Exemple', tipo: 'bodega', importado: 'https://exemple.example/ · dossier.pdf (lectura completa)' } });
+zohoSimulado();
+await handler(peticion(IMPORTADA, firmar(IMPORTADA)));
+comprueba('la nota y la tarea dicen de dónde se importó la ficha',
+  /Importada de: https:\/\/exemple\.example\/ · dossier\.pdf/.test(de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0].Note_Content || '')
+  && /importado de su web o catálogo|importado/i.test(de(/\/Tasks$/)?.cuerpo.data[0].Description || ''));
+
 zohoSimulado();
 globalThis.fetch = (f => async (url, op) => (/add_tags/.test(String(url))
   ? Response.json({ data: [{ status: 'error', code: 'INVALID_DATA' }] }, { status: 400 }) : f(url, op)))(globalThis.fetch);
