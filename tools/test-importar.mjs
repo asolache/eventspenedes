@@ -163,7 +163,7 @@ const sinClaude = await importar({ url: 'https://www.celler.example/es/', fetch:
 comprueba('sin clave, importa con reglas y lo dice', sinClaude.metodo === 'reglas');
 comprueba('lee la portada, la página de eventos y el dossier', sinClaude.fuentes.length === 3);
 comprueba('del dossier saca aforo sentado, comisión y catas',
-  sinClaude.datos.aforo_banquete === '120' && sinClaude.datos.comision === '10'
+  sinClaude.datos.aforo_banquete === '120' && sinClaude.datos.comision === '10' && sinClaude.datos.comision_tipo === 'porcentaje'
   && sinClaude.datos.cata_tipos_visita === 'si' && sinClaude.datos.cata_tipos_vinos === 'si' && sinClaude.datos.ofrece_cata === 'si');
 comprueba('de la página de eventos, los tipos de evento', sinClaude.datos.eventos_gala === 'si' && sinClaude.datos.eventos_convencion === 'si');
 comprueba('una redirección a la red interna se corta',
@@ -189,6 +189,8 @@ const RESPUESTA = {
       { campo: 'sala1_nombre', valor: 'Sala de barricas', cita: 'p. 1: La sala de barricas' },
       { campo: 'sala1_banquete', valor: '120', cita: 'p. 1: banquetes de hasta 120 personas sentadas' },
       { campo: 'extra1_comision', valor: '10', cita: 'COMISIÓN: 10%' },
+      { campo: 'extra2_comision', valor: '4,5', cita: '4,50 € por comensal' },
+      { campo: 'extra2_comision_tipo', valor: 'importe', cita: '4,50 € por comensal' },
       { campo: 'autoriza', valor: 'si', cita: 'inventado' },
     ],
     avisos: ['Los precios no dicen si llevan IVA.'],
@@ -208,6 +210,7 @@ comprueba('el esquema solo admite nombres de campo importables',
 comprueba('cabeceras de la API', pet.op.headers['x-api-key'] === 'sk-prueba' && pet.op.headers['anthropic-version'] === '2023-06-01');
 comprueba('lo que devuelve Claude pasa por la lista blanca',
   conC.datos.sala1_banquete === '120' && conC.datos.extra1_comision === '10' && !('autoriza' in conC.datos) && conC.datos.web === 'https://www.celler.example/');
+comprueba('una comisión en euros entra con decimales y con su tipo', conC.datos.extra2_comision === '4.5' && conC.datos.extra2_comision_tipo === 'importe');
 comprueba('los avisos de Claude llegan al espacio', conC.avisos.includes('Los precios no dicen si llevan IVA.'));
 
 const negado = await importar({ url: 'https://www.celler.example/es/', apiKey: 'sk', fetch: claude({ stop_reason: 'refusal', content: [] }), lookup: publica });

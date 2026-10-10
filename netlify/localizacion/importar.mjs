@@ -99,7 +99,7 @@ function normalizar(def, v) {
   const s = String(v).trim();
   if (!s) { return null; }
   switch (def.t) {
-    case 'number': { const n = numero(s, false); return n !== null && Number(n) <= 100000 ? n : null; }
+    case 'number': { const n = numero(s, Boolean(def.dec)); return n !== null && Number(n) <= 100000 ? n : null; }
     case 'eur': { const n = numero(s, true); return n !== null && Number(n) <= 1000000 ? n : null; }
     case 'sino': return sino(s);
     case 'check': return sino(s) === 'si' ? 'si' : null;
@@ -385,7 +385,11 @@ export function reglas({ url, paginas = [], textos = [] }) {
     const park = /\b(\d{1,4})\s+plazas de (?:parking|aparcamiento)|(?:parking|aparcament) (?:per a|de|para) (\d{1,4}) (?:cotxes|coches|vehículos|vehicles|plazas|places)/i.exec(texto);
     if (park) { pon('parking', park[1] || park[2], `${de}: «${cita(texto, park.index, park[0].length)}»`); }
     const com = /comisi[oó]n(?: para agencias)?(?: del?| de un)?\s*:?\s*(\d{1,2}(?:[.,]\d)?)\s?%|(\d{1,2}(?:[.,]\d)?)\s?% de comisi[oó]n|comissi[oó](?: del?)?\s*(\d{1,2})\s?%/i.exec(texto);
-    if (com) { pon('comision', (com[1] || com[2] || com[3]).replace(',', '.'), `${de}: «${cita(texto, com.index, com[0].length)}»`); }
+    if (com) {
+      const c = `${de}: «${cita(texto, com.index, com[0].length)}»`;
+      pon('comision', (com[1] || com[2] || com[3]).replace(',', '.'), c);
+      pon('comision_tipo', 'porcentaje', c);
+    }
     for (const [re, campo, valor = 'si'] of PALABRAS) {
       const m = re.exec(texto);
       if (m) { pon(campo, valor, `${de}: «${cita(texto, m.index, m[0].length)}»`); }
@@ -402,6 +406,7 @@ function guiaDeCampos() {
   for (const [n, d] of definiciones()) {
     if (d.sec !== sec) { sec = d.sec; l.push(`\n## ${sec}`); }
     let tipo = { number: 'número entero', eur: 'importe en euros sin IVA salvo que la fuente diga lo contrario', sino: '"si" o "no"', check: '"si" si la fuente lo dice', textarea: 'texto', text: 'texto corto', tel: 'teléfono', email: 'correo', url: 'dirección web' }[d.t] || d.t;
+    if (d.t === 'number' && d.dec) { tipo = 'número, con decimales si hace falta'; }
     if (d.t === 'select') { tipo = 'uno de: ' + Object.entries(d.op).map(([k, t]) => `"${k}" (${t})`).join(', '); }
     l.push(`- ${n}: ${d.l} — ${tipo}${d.hint ? `. ${d.hint}` : ''}`);
   }
@@ -415,7 +420,7 @@ Reglas, por orden de importancia:
 2. "cita" es el fragmento literal (máximo 200 caracteres) del que sale el valor, con la página del PDF si la sabes ("p. 18: …").
 3. Las salas: una por sala, porche, terraza o jardín que el catálogo describa con nombre, en el orden del catálogo (sala1_*, sala2_*… hasta ${SALAS}). Aforo por formato solo si el catálogo lo da por formato. Si dice "imperial 25", eso es la disposición de la mesa: va en sala*_notas, no en banquete, salvo que diga cuántos comensales caben sentados.
 4. Precios: tal cual el catálogo, en euros, sin IVA salvo que diga que lo lleva (entonces iva_incluido = "si"). Los paquetes (taller_* sin exclusiva, excl_* con exclusiva del espacio entero) y extras (extra1..6) solo si el catálogo los ofrece así. El precio de alquiler de una sala va en sala*_precio_media o sala*_precio_dia.
-5. Comisiones para agencias: si el catálogo las da, ponlas donde tocan. "comision" es la general; taller_comision, excl_comision y extra*_comision, las de cada paquete y extra. Si dice que algo no es comisionable ("sin comisión en espacios"), eso es 0 para ese paquete o extra, con su cita. Si no dice nada, no pongas nada.
+5. Comisiones para agencias: si el catálogo las da, ponlas donde tocan. "comision" es la general; taller_comision, excl_comision y extra*_comision, las de cada paquete y extra. El número va en el campo y si es un porcentaje o euros en su *_comision_tipo: "porcentaje" para un %; en un paquete o extra, "importe" para euros con la misma unidad que su precio; en la general, "persona" o "evento" para euros por persona o por evento. Si dice que algo no es comisionable ("sin comisión en espacios"), eso es 0 para ese paquete o extra, con su cita. Si no dice nada, no pongas nada.
 6. "descripcion" es el párrafo que hace único el espacio, en castellano, con las palabras del catálogo: historia, paisaje, quién lo lleva. Máximo 600 caracteres.
 7. Los textos (notas, qué incluye) en castellano y breves, aunque la fuente esté en catalán o inglés. Los nombres propios, tal cual.
 8. Las casillas ("si") solo cuando la fuente lo dice expresamente.

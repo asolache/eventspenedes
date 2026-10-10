@@ -181,7 +181,10 @@ en la visita (la relación y las notas de la visita) solo aparece con
 `?interno=1`, y el dispositivo lo recuerda. Las **tarifas** van en números
 —todo el espacio por franja, cada sala, por persona según el tamaño del grupo,
 suplementos y comisión— para poder calcular franjas de precio más adelante; van
-a Zoho y nunca a la web. La **autorización de publicar** la da el espacio en la
+a Zoho y nunca a la web. La **comisión** se pide en dos niveles: una general y,
+si cambia, la de cada paquete o extra, que gana a la general. Cada una en % o
+en € (por persona, por evento, o en la unidad del precio del paquete o extra);
+para un evento concreto se pacta aparte. La **autorización de publicar** la da el espacio en la
 propia ficha y entra también como etiqueta («Web autorizada», «Web por
 revisar», «Web no autorizada»): es el filtro para pasar una ficha a la web.
 

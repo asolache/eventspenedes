@@ -49,7 +49,7 @@ function campo(c, nombre, sangria) {
     l.push(`${s}  <textarea id="${id}" name="${nombre}" rows="3" maxlength="2000"></textarea>`);
   } else {
     const extra = [];
-    if (c.t === 'number') { extra.push('min="0"', 'max="100000"', 'inputmode="numeric"'); }
+    if (c.t === 'number') { extra.push('min="0"', 'max="100000"', ...(c.dec ? ['step="0.01"', 'inputmode="decimal"'] : ['inputmode="numeric"'])); }
     if (c.t === 'eur') { extra.push('min="0"', 'max="1000000"', 'step="0.01"', 'inputmode="decimal"'); }
     if (c.ac) { extra.push(`autocomplete="${c.ac}"`); }
     if (c.im) { extra.push(`inputmode="${c.im}"`); }
