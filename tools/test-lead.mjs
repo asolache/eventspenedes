@@ -198,7 +198,7 @@ const LOCAL = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-0
           contacto_correo: 'laia@exemple.example',
           aforo_banquete: '180', sala1_nombre: 'Sala de barricas', sala1_tipo: 'interior', sala1_banquete: '120',
           sala2_nombre: '', equipo_proyector: 'si', ofrece_cata: 'si', cata_tipos_cavas: 'si',
-          habitaciones: '12', alquiler_dia: '1500', taller_precio: '300', taller_unidad: 'evento', excl_precio: '1000', extra1_nombre: 'Hora extra', extra1_precio: '80', extra1_unidad: 'hora', extra1_iva: 'no', pax_50: '35', sala1_precio_media: '600', autoriza: 'revisar', consentimiento: 'si', inventado: 'no entra' } });
+          habitaciones: '12', alquiler_dia: '1500', taller_precio: '300', taller_unidad: 'evento', excl_precio: '1000', extra1_nombre: 'Hora extra', extra1_precio: '80', extra1_unidad: 'hora', extra1_iva: 'no', extra1_comision: '10', modelo_servicio: 'si', modelo_descuento: 'si', pax_50: '35', sala1_precio_media: '600', autoriza: 'revisar', consentimiento: 'si', inventado: 'no entra' } });
 zohoSimulado();
 const lz = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
 const cuentaL = de(/Accounts\/upsert/)?.cuerpo.data[0] || {};
@@ -221,11 +221,28 @@ comprueba('las tarifas salen marcadas como internas y con su unidad',
 comprueba('los paquetes salen internos, cada precio con su paquete y su unidad',
   /## Paquetes para Events Penedès \(interno\)/.test(notaL) && /Solo taller, sin exclusiva · precio laborable \(€\): 300 €/.test(notaL)
   && /Solo taller, sin exclusiva · el precio es: por evento/.test(notaL) && /Con exclusiva · precio laborable \(€\): 1000 €/.test(notaL)
-  && /Extra 1: Hora extra/.test(notaL) && /Extra 1 · el precio es: por hora/.test(notaL));
+  && /Extra 1: Hora extra/.test(notaL) && /Extra 1 · el precio es: por hora/.test(notaL) && /Extra 1 · comisión \(%\): 10/.test(notaL));
+comprueba('el modelo de ingreso va en la nota, como interno', /Cómo ganamos con este espacio: Nuestras horas .*pasada al cliente como descuento/.test(notaL));
 comprueba('la tarifa de cada sala va con su sala', /Sala de barricas — .*media jornada \(€\): 600 €/.test(notaL));
 comprueba('la autorización de publicar va en la nota y como etiqueta',
   /Publicar en la web: Web por revisar/.test(notaL) && /Web%20por%20revisar/.test(de(/add_tags/)?.url || ''));
 comprueba('un campo que no está en el esquema no entra', !/no entra/.test(notaL));
+comprueba('sin borrador, la nota dice que es la primera versión y quién la envía',
+  /Primera versión/.test(notaL) && /Enviada por: laia@exemple\.example/.test(notaL));
+
+/* 1g · El registro de cambios: la nota dice qué cambió respecto al borrador */
+const borrador = { nombre: 'Celler Exemple', tipo: 'bodega', aforo_banquete: '150', taller_precio: '250', equipo_proyector: '1', contacto_correo: 'laia@exemple.example' };
+const CAMBIOS = JSON.stringify({ form_name: 'localizacion', created_at: '2026-10-08T10:00:00.000Z',
+  data: { nombre: 'Celler Exemple', tipo: 'bodega', aforo_banquete: '180', taller_precio: '250', excl_precio: '900',
+          contacto_correo: 'laia@exemple.example', borrador: JSON.stringify(borrador) } });
+zohoSimulado();
+await handler(peticion(CAMBIOS, firmar(CAMBIOS)));
+const notaC = de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0] || {};
+comprueba('el registro de cambios lista lo que cambió, lo nuevo y lo quitado, con su etiqueta',
+  /Máximo sentados a mesa: 150 → 180/.test(notaC.Note_Content) && /Con exclusiva · precio laborable \(€\): sin dato → 900 €/.test(notaC.Note_Content)
+  && /Qué tiene: Proyector: sí → sin dato/.test(notaC.Note_Content) && notaC.Note_Title === 'Ficha de localización · 3 cambios');
+comprueba('lo que no cambió no sale en el registro', !/precio laborable \(€\): 250 € →/.test(notaC.Note_Content));
+comprueba('el borrador no se cuela en la ficha como texto', !/"aforo_banquete"/.test(notaC.Note_Content));
 
 zohoSimulado();
 globalThis.fetch = (f => async (url, op) => (/add_tags/.test(String(url))

@@ -44,7 +44,7 @@ import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
 import { briefingAEvento } from '../propuesta/briefing-a-evento.mjs';
 import { opciones, espacios } from '../propuesta/catalogo.mjs';
-import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto } from '../localizacion/esquema.mjs';
+import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto, cambios, cambiosTexto } from '../localizacion/esquema.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -401,14 +401,26 @@ function localizacion(d, cuando) {
   /* La autorización de publicar, también como etiqueta: es el filtro con el
      que se decide qué ficha se puede pasar a la web. */
   if (AUTORIZA[d.autoriza]) { etiquetas.push(AUTORIZA[d.autoriza]); }
+  /* El registro de cambios. `borrador` es la versión de la que partió el
+     formulario: la ficha prellenada que les mandamos o su envío anterior. Las
+     notas se archivan en la cuenta y la persona se reconoce por su correo, así
+     que cada envío deja su versión y lo que cambió respecto a la anterior. */
+  let partida = null;
+  try { partida = d.borrador ? JSON.parse(String(d.borrador).slice(0, 50000)) : null; } catch { partida = null; }
+  const lista = partida && typeof partida === 'object' ? cambios(partida, d) : null;
+  const registro = lista === null
+    ? ['## Cambios', 'Primera versión: no partía de ningún borrador.']
+    : ['## Cambios respecto a la versión anterior', lista.length ? cambiosTexto(lista) : 'Ninguno: la confirman tal cual.'];
   const nota = [`Ficha de localización · recibida ${cuando}`,
+                `Enviada por: ${correo || persona || 'sin correo'}`,
                 `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`,
-                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`, '', fichaTexto(d)];
+                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`, '', ...registro, '', fichaTexto(d)];
   if (d.consentimiento) { nota.push('', `Aviso de privacidad aceptado el ${cuando}.`); }
-  return { cuenta, contacto, etiquetas, nota: nota.join('\n') };
+  const titulo = lista === null ? 'Ficha de localización' : `Ficha de localización · ${lista.length} cambios`;
+  return { cuenta, contacto, etiquetas, titulo, nota: nota.join('\n') };
 }
 
-async function crearLocalizacion({ cuenta, contacto, etiquetas, nota: texto }) {
+async function crearLocalizacion({ cuenta, contacto, etiquetas, titulo, nota: texto }) {
   const ids = {};
   ids.cuenta = idDe(await zoho('Accounts/upsert', { data: [cuenta], duplicate_check_fields: ['Account_Name'] }));
   if (!ids.cuenta) { throw new Error('Zoho no devolvió el id de la cuenta'); }
@@ -430,7 +442,7 @@ async function crearLocalizacion({ cuenta, contacto, etiquetas, nota: texto }) {
     } catch (e) { avisos.push('contacto: ' + e.message); }
   }
   try {
-    await nota('Accounts', ids.cuenta, 'Ficha de localización', texto);
+    await nota('Accounts', ids.cuenta, titulo, texto);
   } catch (e) { avisos.push('nota: ' + e.message); }
   return { ids, avisos };
 }

@@ -60,6 +60,7 @@
             action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="localizacion">
         <input type="hidden" name="idioma" value="es">
+        <input type="hidden" name="borrador" value="">
         <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
 
         <p class="form__estado" data-estado hidden></p>
@@ -999,11 +1000,16 @@
               <input id="l-taller-pax" name="taller_pax" type="number" min="0" max="100000" inputmode="numeric">
             </p>
             <p class="field">
-              <label for="l-taller-espacio">Qué espacio</label>
-              <input id="l-taller-espacio" name="taller_espacio" type="text" maxlength="300">
-              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+              <label for="l-taller-comision">Comisión para Events Penedès (%)</label>
+              <input id="l-taller-comision" name="taller_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <span class="field__hint">0 si no es comisionable.</span>
             </p>
           </div>
+          <p class="field">
+            <label for="l-taller-espacio">Qué espacio</label>
+            <input id="l-taller-espacio" name="taller_espacio" type="text" maxlength="300">
+            <span class="field__hint">El jardín, la sala, toda la finca…</span>
+          </p>
           <p class="field">
             <label for="l-taller-incluye">Qué incluye</label>
             <textarea id="l-taller-incluye" name="taller_incluye" rows="3" maxlength="2000"></textarea>
@@ -1043,11 +1049,16 @@
               <input id="l-excl-pax" name="excl_pax" type="number" min="0" max="100000" inputmode="numeric">
             </p>
             <p class="field">
-              <label for="l-excl-espacio">Qué espacio</label>
-              <input id="l-excl-espacio" name="excl_espacio" type="text" maxlength="300">
-              <span class="field__hint">El jardín, la sala, toda la finca…</span>
+              <label for="l-excl-comision">Comisión para Events Penedès (%)</label>
+              <input id="l-excl-comision" name="excl_comision" type="number" min="0" max="100000" inputmode="numeric">
+              <span class="field__hint">0 si no es comisionable.</span>
             </p>
           </div>
+          <p class="field">
+            <label for="l-excl-espacio">Qué espacio</label>
+            <input id="l-excl-espacio" name="excl_espacio" type="text" maxlength="300">
+            <span class="field__hint">El jardín, la sala, toda la finca…</span>
+          </p>
           <p class="field">
             <label for="l-excl-incluye">Qué incluye</label>
             <textarea id="l-excl-incluye" name="excl_incluye" rows="3" maxlength="2000"></textarea>
@@ -1089,15 +1100,19 @@
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra1-comision">Comisión (%)</label>
+              <input id="l-extra1-comision" name="extra1_comision" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
               <label for="l-extra2-nombre">Extra 2</label>
               <input id="l-extra2-nombre" name="extra2_nombre" type="text" maxlength="300">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra2-precio">Precio (€)</label>
               <input id="l-extra2-precio" name="extra2_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra2-unidad">El precio es</label>
               <select id="l-extra2-unidad" name="extra2_unidad">
@@ -1108,6 +1123,8 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra2-iva">Lleva IVA</label>
               <select id="l-extra2-iva" name="extra2_iva">
@@ -1115,6 +1132,10 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-extra2-comision">Comisión (%)</label>
+              <input id="l-extra2-comision" name="extra2_comision" type="number" min="0" max="100000" inputmode="numeric">
             </p>
           </div>
           <div class="form__row">
@@ -1149,15 +1170,19 @@
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra3-comision">Comisión (%)</label>
+              <input id="l-extra3-comision" name="extra3_comision" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
               <label for="l-extra4-nombre">Extra 4</label>
               <input id="l-extra4-nombre" name="extra4_nombre" type="text" maxlength="300">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra4-precio">Precio (€)</label>
               <input id="l-extra4-precio" name="extra4_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra4-unidad">El precio es</label>
               <select id="l-extra4-unidad" name="extra4_unidad">
@@ -1168,6 +1193,8 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra4-iva">Lleva IVA</label>
               <select id="l-extra4-iva" name="extra4_iva">
@@ -1175,6 +1202,10 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-extra4-comision">Comisión (%)</label>
+              <input id="l-extra4-comision" name="extra4_comision" type="number" min="0" max="100000" inputmode="numeric">
             </p>
           </div>
           <div class="form__row">
@@ -1209,15 +1240,19 @@
           </div>
           <div class="form__row">
             <p class="field">
+              <label for="l-extra5-comision">Comisión (%)</label>
+              <input id="l-extra5-comision" name="extra5_comision" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
               <label for="l-extra6-nombre">Extra 6</label>
               <input id="l-extra6-nombre" name="extra6_nombre" type="text" maxlength="300">
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra6-precio">Precio (€)</label>
               <input id="l-extra6-precio" name="extra6_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
             </p>
-          </div>
-          <div class="form__row">
             <p class="field">
               <label for="l-extra6-unidad">El precio es</label>
               <select id="l-extra6-unidad" name="extra6_unidad">
@@ -1228,6 +1263,8 @@
                 <option value="unidad">por unidad</option>
               </select>
             </p>
+          </div>
+          <div class="form__row">
             <p class="field">
               <label for="l-extra6-iva">Lleva IVA</label>
               <select id="l-extra6-iva" name="extra6_iva">
@@ -1235,6 +1272,10 @@
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
+            </p>
+            <p class="field">
+              <label for="l-extra6-comision">Comisión (%)</label>
+              <input id="l-extra6-comision" name="extra6_comision" type="number" min="0" max="100000" inputmode="numeric">
             </p>
           </div>
           <p class="field">
@@ -1363,6 +1404,18 @@
           <label for="l-visita-notas">Lo que hemos visto</label>
           <textarea id="l-visita-notas" name="visita_notas" rows="3" maxlength="2000"></textarea>
           <span class="field__hint">Lo bueno, lo que no encaja, para qué cliente lo propondríamos.</span>
+        </p>
+        <fieldset class="opts">
+          <legend>Cómo ganamos con este espacio</legend>
+          <p class="field--check"><label><input type="checkbox" name="modelo_servicio" value="si"> <span>Nuestras horas (servicio facturado al cliente)</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_comision" value="si"> <span>Comisión del espacio, que cobramos</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_descuento" value="si"> <span>Comisión del espacio, pasada al cliente como descuento</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_neto" value="si"> <span>Precio neto de agencia, con nuestro margen encima</span></label></p>
+        </fieldset>
+        <p class="field">
+          <label for="l-modelo-notas">El modelo, en detalle</label>
+          <textarea id="l-modelo-notas" name="modelo_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Sobre qué cobra comisión y sobre qué no, gratuidades, lo pendiente de decidir.</span>
         </p>
         <p class="field">
           <label for="l-pendiente">Lo que queda por saber</label>
