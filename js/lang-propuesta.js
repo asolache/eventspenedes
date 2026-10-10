@@ -19,7 +19,6 @@ window.EP_I18N = {
     'foot.h3': 'Ecosistema',
     'foot.city': 'Torrelles de Foix, Barcelona',
     'foot.rights': '© 2026 Events Penedès · Un projecte de TeamTowers Humà',
-    'foot.prov': 'Web provisional — estem preparant la versió completa.',
 
     'pr.crumb': 'Events Penedès',
     'pr.crumb2': 'Briefing',
@@ -69,6 +68,7 @@ window.EP_I18N = {
     'pr.f.exp4': 'Xef d’autor o showcooking',
     'pr.f.exp5': 'Gimcana entre vinyes',
     'pr.f.exp6': 'Protocol, amfitriones i cobertura fotogràfica',
+    'pr.f.exp7': 'Sessió de DJ',
     'pr.f.catering': 'Àpat',
     'pr.f.cat0': 'Encara no ho sé',
     'pr.f.cat1': 'Menú assegut',
@@ -126,7 +126,6 @@ window.EP_I18N = {
     'foot.h3': 'Ecosystem',
     'foot.city': 'Torrelles de Foix, Barcelona',
     'foot.rights': '© 2026 Events Penedès · A TeamTowers Humà project',
-    'foot.prov': 'Provisional site — the full version is on its way.',
 
     'pr.crumb': 'Events Penedès',
     'pr.crumb2': 'Briefing',
@@ -176,6 +175,7 @@ window.EP_I18N = {
     'pr.f.exp4': 'Signature chef or showcooking',
     'pr.f.exp5': 'Treasure hunt among the vines',
     'pr.f.exp6': 'Protocol, hosts and photo coverage',
+    'pr.f.exp7': 'DJ set',
     'pr.f.catering': 'Food',
     'pr.f.cat0': 'Not sure yet',
     'pr.f.cat1': 'Seated menu',

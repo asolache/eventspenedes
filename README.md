@@ -1,6 +1,6 @@
 # eventspenedes.com
 
-Web provisional de **Events Penedès** — producción de eventos, localizaciones y
+Web de **Events Penedès** — producción de eventos, localizaciones y
 actividades en el Alt Penedès, para agencias, espacios y empresas finales.
 
 Sitio estático (HTML + CSS + JS vanilla, sin frameworks ni build). Se publica con
@@ -34,6 +34,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── js/lang-home.js     Textos CA / EN de la portada (fuente del generador)
 ├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
 ├── js/lang-agencias.js Textos CA / EN de la página de agencias
+├── js/lang-red.js      Textos CA / EN de «Entra en la red»
 └── assets/
     ├── favicon.svg
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
@@ -103,11 +104,21 @@ python3 -m http.server 8000
 
 ## Formularios
 
-Los tres formularios del sitio —contacto de la portada, alta de agencia
-(`agencias.html#alta`) y briefing de propuesta (`propuesta.html`)— van por
+Los formularios del sitio —contacto de la portada, alta de agencia
+(`agencias.html#alta`), briefing de propuesta (`propuesta.html`) y «Entra en la
+red» para espacios y proveedores (`red.html#alta`)— van por
 **Netlify Forms**: `data-netlify="true"`, campo oculto `form-name`, honeypot y
 aviso por correo. El envío queda guardado en Netlify, así que no se pierde nada
 si el correo falla.
+
+Todos llevan un campo oculto `origen` que rellena `js/site.js`: la primera
+página vista en la visita, la web de la que llegó y la campaña (`utm_*`). Sin
+cookies: se guarda en `sessionStorage` y se borra al cerrar la pestaña. En Zoho
+sale como «Llegó por». `?tipo=dj` en la portada preselecciona el tipo.
+
+La página de gracias tiene un bloque para reservar la llamada que solo aparece
+si `data-agenda` (en `gracias.html`) lleva la URL `https://` de una página de
+reservas, por ejemplo la de Google Calendar.
 
 Antes se componía un `mailto:` en el navegador. Se cambió por una razón concreta:
 en un portátil de empresa con webmail, un `mailto:` sin cliente de correo

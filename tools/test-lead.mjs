@@ -94,6 +94,17 @@ const a = await (await handler(peticion(AG, firmar(AG)))).json();
 comprueba('«agencia» se lee según el formulario del que viene',
   /Tipo de evento: Agencia de eventos/.test(a.lead?.Description || ''));
 
+/* «Entra en la red»: un proveedor que se presenta, con su perfil legible y
+   de dónde llegó */
+const RED = JSON.stringify({ form_name: 'red', created_at: '2026-10-10T10:00:00.000Z',
+  data: { empresa: 'Celler Exemple', perfil: 'catas', poblacion: 'Subirats', persona: 'Pau',
+          correo: 'pau@example.com', origen: 'página /red.html · desde google.com', consentimiento: 'si' } });
+const rd = await (await handler(peticion(RED, firmar(RED)))).json();
+comprueba('«red» entra como lead con el negocio como empresa', rd.ok && rd.lead?.Company === 'Celler Exemple');
+comprueba('el perfil y la población salen legibles',
+  /Perfil de partner: Catas de vino, cava o aceite/.test(rd.lead?.Description || '') && /Población: Subirats/.test(rd.lead?.Description || ''));
+comprueba('la ficha dice de dónde llegó', /Llegó por: página \/red\.html · desde google\.com/.test(rd.lead?.Description || ''));
+
 /* 1c · La propuesta con borrador: el lead tiene que caber en Zoho */
 process.env.PROPUESTA_SECRET = 'clave-de-prueba-no-usar-0123456789abcdef';
 const LARGA = JSON.stringify({ ...JSON.parse(AVISO),
