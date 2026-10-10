@@ -1467,3 +1467,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 #form-localizacion [data-importado] { border-color: var(--accent-gold); box-shadow: 0 0 0 1px var(--accent-gold); }
 #form-localizacion .field--check [data-importado] { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
 .field__origen { display: block; font-size: 0.78rem; color: var(--accent-gold); }
+
+/* Kit para agencias: el botón dice que ya está copiado sin cambiar de texto */
+.js-copiar[data-copiado]::after { content: " ✓"; }

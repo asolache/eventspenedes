@@ -37,9 +37,10 @@ jobs:
       # fuentes también se generan: tienen que ser las que se ven.
       - name: Las versiones por idioma son las que saldrían ahora
         run: |
+          node tools/build-kit.mjs
           node tools/build-i18n.mjs
-          git diff --exit-code -- ca/ en/ index.html dj.html agencias.html propuesta.html gracias.html privacidad.html red.html || {
-            echo "::error::ca/, en/ o los datos estructurados no corresponden a las páginas en castellano. Regenera con: node tools/build-i18n.mjs"
+          git diff --exit-code -- ca/ en/ index.html dj.html agencias.html propuesta.html gracias.html privacidad.html red.html valoracion.html kit-agencias.html js/lang-kit.js || {
+            echo "::error::ca/, en/ o los datos estructurados no corresponden a las páginas en castellano. Regenera con: node tools/build-kit.mjs && node tools/build-i18n.mjs"
             exit 1
           }
 

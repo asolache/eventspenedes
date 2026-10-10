@@ -578,6 +578,14 @@ export default async (req) => {
       }
     }
   }
+  /* La valoración de un evento no es un lead: quien la manda ya es cliente, y
+     un upsert por correo le abriría una ficha nueva. Se queda en Netlify, con
+     sus fotos, y llega por el aviso de correo del formulario. */
+  if (form === 'valoracion') {
+    console.log(`Valoración de «${(d.evento || '').toString().slice(0, 120)}»: ${d.nota ?? '—'}/10, permiso ${d.permiso || 'no'}. No va a Zoho.`);
+    return Response.json({ ok: true, modulo: null });
+  }
+
   const registro = lead(form, d, cuando);
 
   /* Solo el formulario de propuesta trae briefing. Los de contacto y de alta de
