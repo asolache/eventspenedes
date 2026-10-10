@@ -105,6 +105,12 @@ comprueba('el perfil y la población salen legibles',
   /Perfil de partner: Catas de vino, cava o aceite/.test(rd.lead?.Description || '') && /Población: Subirats/.test(rd.lead?.Description || ''));
 comprueba('la ficha dice de dónde llegó', /Llegó por: página \/red\.html · desde google\.com/.test(rd.lead?.Description || ''));
 
+/* La valoración de un evento no abre un lead: el cliente ya existe */
+const VAL = JSON.stringify({ form_name: 'valoracion', created_at: '2026-10-10T10:00:00.000Z',
+  data: { evento: 'Jornada Acme', nota: '9', correo: 'marta@acme.example', permiso: 'anonimo' } });
+const vl = await (await handler(peticion(VAL, firmar(VAL)))).json();
+comprueba('la valoración se acepta y no crea nada en Zoho', vl.ok && vl.modulo === null && !vl.lead);
+
 /* 1c · La propuesta con borrador: el lead tiene que caber en Zoho */
 process.env.PROPUESTA_SECRET = 'clave-de-prueba-no-usar-0123456789abcdef';
 const LARGA = JSON.stringify({ ...JSON.parse(AVISO),

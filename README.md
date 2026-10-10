@@ -35,6 +35,9 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
 ├── js/lang-agencias.js Textos CA / EN de la página de agencias
 ├── js/lang-red.js      Textos CA / EN de «Entra en la red»
+├── valoracion.html     Valoración tras el evento (sin indexar; enlace o QR con ?e=<evento>)
+├── kit-agencias.html   Kit en marca blanca para agencias (sin indexar; se comparte por enlace)
+├── tools/build-kit.mjs Genera los textos del kit y js/lang-kit.js desde el catálogo
 └── assets/
     ├── favicon.svg
     ├── icon-256.png    Icono PNG (favicon alternativo y apple-touch-icon)
@@ -119,6 +122,15 @@ sale como «Llegó por». `?tipo=dj` en la portada preselecciona el tipo.
 La página de gracias tiene un bloque para reservar la llamada que solo aparece
 si `data-agenda` (en `gracias.html`) lleva la URL `https://` de una página de
 reservas, por ejemplo la de Google Calendar.
+
+La **valoración** (`valoracion.html`, formulario `valoracion`, con hasta tres
+fotos) no va a Zoho: quien la manda ya es cliente. Se queda en Netlify y llega
+por el aviso de correo. El enlace para el QR es
+`https://eventspenedes.com/valoracion.html?e=<nombre del evento>`.
+
+Los **programas de ejemplo** de `propuesta.html` rellenan el formulario con
+`?exp=castells,dj&duracion=…&movilidad=…`: un programa nuevo es una tarjeta
+con su enlace, sin tocar JavaScript.
 
 Antes se componía un `mailto:` en el navegador. Se cambió por una razón concreta:
 en un portátil de empresa con webmail, un `mailto:` sin cliente de correo

@@ -40,6 +40,7 @@ window.EP_I18N = {
     'pv.p5': 'Pots demanar-nos accedir a les teves dades, corregir-les, esborrar-les, limitar-ne l’ús, oposar-te al tractament o endur-te-les. Escriu-nos al telèfon o al correu de contacte i ho resolem. Si creus que no ho hem fet bé, pots reclamar davant l’Agència Espanyola de Protecció de Dades.',
     'pv.h6': 'Galetes',
     'pv.p6': 'Aquest web no fa servir galetes de seguiment ni analítica amb perfilat. Les tipografies es carreguen des de Google Fonts, que rep la petició del teu navegador.',
+    'pv.p2c': 'Si ens valores un esdeveniment, desem la teva opinió i les fotos que pugis. Només les publiquem si ens dones permís al mateix formulari, i mai fotos on es reconegui algú sense preguntar-te abans.',
     'pv.p6b': 'Per saber per quina pàgina vas arribar, desem aquesta pàgina, el web d’on venies i la campanya, si n’hi ha, a l’emmagatzematge de la pestanya, que s’esborra en tancar-la. Viatja amb el formulari només si l’envies.',
     'pv.fecha': 'Última actualització: 10 d’octubre de 2026.',
   },
@@ -81,6 +82,7 @@ window.EP_I18N = {
     'pv.p5': 'You can ask us to access your data, correct it, delete it, restrict its use, object to the processing or take it with you. Write to us at the contact phone or email and we’ll sort it out. If you think we haven’t handled it properly, you can complain to the Spanish Data Protection Agency.',
     'pv.h6': 'Cookies',
     'pv.p6': 'This website uses no tracking cookies and no analytics with profiling. Typefaces are loaded from Google Fonts, which receives the request from your browser.',
+    'pv.p2c': 'If you rate an event, we keep your opinion and any photos you upload. We only publish them if you give us permission in the same form, and never photos where someone can be recognised without asking you first.',
     'pv.p6b': 'To know which page brought you here, we keep that page, the site you came from and the campaign, if any, in the tab’s storage, which is cleared when you close it. It is sent with the form only if you submit it.',
     'pv.fecha': 'Last updated: 10 October 2026.',
   }

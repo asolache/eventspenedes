@@ -65,6 +65,56 @@
     }
   }
 
+  /* Un programa de ejemplo llega como ?exp=castells,dj&duracion=…: se marcan
+     las casillas y los desplegables que existan, y nada más. */
+  function rellenarPrograma() {
+    var form = document.getElementById('form-propuesta');
+    if (!form) { return; }
+    var q = new URLSearchParams(location.search);
+    (q.get('exp') || '').split(',').forEach(function (x) {
+      var c = /^[a-z_]+$/.test(x) ? form.querySelector('input[name="exp_' + x + '"]') : null;
+      if (c) { c.checked = true; }
+    });
+    ['duracion', 'movilidad'].forEach(function (k) {
+      var sel = form.querySelector('select[name="' + k + '"]'), v = q.get(k);
+      if (!sel || !v) { return; }
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === v) { sel.value = v; }
+      }
+    });
+  }
+
+  /* La valoración: el enlace del QR trae el evento (?e=…) y, al enviar,
+     vuelve a la misma página con ?enviada=1. */
+  function valoracion() {
+    var form = document.getElementById('form-valoracion');
+    if (!form) { return; }
+    var q = new URLSearchParams(location.search);
+    if (q.get('enviada')) {
+      form.closest('section').hidden = true;
+      document.getElementById('enviada').hidden = false;
+      return;
+    }
+    var e = (q.get('e') || '').slice(0, 120);
+    if (e) { form.querySelector('input[name="evento"]').value = e; }
+  }
+
+  /* Kit para agencias: cada botón copia el texto de su tarjeta */
+  function initCopiar() {
+    var botones = document.querySelectorAll('.js-copiar');
+    for (var i = 0; i < botones.length; i++) {
+      botones[i].addEventListener('click', function (ev) {
+        var b = ev.currentTarget;
+        var t = b.closest('article').querySelector('.kit__texto');
+        if (!t || !navigator.clipboard) { return; }
+        navigator.clipboard.writeText(t.textContent.trim()).then(function () {
+          b.setAttribute('data-copiado', 'true');
+          setTimeout(function () { b.removeAttribute('data-copiado'); }, 1500);
+        });
+      });
+    }
+  }
+
   /* La cita en la agenda solo aparece si hay una página de reservas puesta
      en data-agenda. Sin ella, la página de gracias queda como estaba. */
   function mostrarAgenda() {
@@ -101,6 +151,9 @@
     marcarIdioma();
     marcarOrigen();
     preseleccionar();
+    rellenarPrograma();
+    valoracion();
+    initCopiar();
     mostrarAgenda();
     initNav();
   }

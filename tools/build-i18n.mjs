@@ -21,6 +21,8 @@ const PAGINAS = [
   { fuente: 'gracias.html', dic: 'js/lang-gracias.js', ruta: 'gracias.html' },
   { fuente: 'privacidad.html', dic: 'js/lang-privacidad.js', ruta: 'privacidad.html' },
   { fuente: 'red.html', dic: 'js/lang-red.js', ruta: 'red.html' },
+  { fuente: 'valoracion.html', dic: 'js/lang-valoracion.js', ruta: 'valoracion.html' },
+  { fuente: 'kit-agencias.html', dic: 'js/lang-kit.js', ruta: 'kit-agencias.html' },
 ];
 
 /* Los ficheros de idioma son scripts de navegador: se evalúan con un window
@@ -126,7 +128,7 @@ function construir(pagina, idioma) {
   /* El `action` de un formulario también es un enlace interno: si no se
      traduce, quien envía desde /ca/ acaba en la página de gracias en
      castellano. */
-  html = html.replace(/action="\/(gracias\.html)"/g, `action="/${idioma}/$1"`);
+  html = html.replace(/action="\/([a-z-]+\.html[^"]*)"/g, `action="/${idioma}/$1"`);
 
   /* El conmutador marca el idioma en el que estamos */
   html = html.replace(/ aria-current="true"/, '');
