@@ -25,6 +25,11 @@ jobs:
       - name: El borrador se monta solo y no se abre con otro enlace
         run: node tools/test-borrador.mjs
 
+      # El tablero interno lee el CRM a través del sitio: que sin su clave no
+      # responda y que con ella solo pueda leer.
+      - name: La lectura del tablero solo responde con su clave y solo lee
+        run: node tools/test-tablero.mjs
+
       # El tablero interno lee la facturación de B2Brouter a través del sitio:
       # que sin su clave no responda y que con ella solo lea facturas.
       - name: La lectura de B2Brouter solo responde con su clave y solo lee facturas
