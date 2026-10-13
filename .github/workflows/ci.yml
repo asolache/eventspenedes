@@ -30,6 +30,11 @@ jobs:
       - name: La lectura del tablero solo responde con su clave y solo lee
         run: node tools/test-tablero.mjs
 
+      # El tablero interno lee la facturación de B2Brouter a través del sitio:
+      # que sin su clave no responda y que con ella solo lea facturas.
+      - name: La lectura de B2Brouter solo responde con su clave y solo lee facturas
+        run: node tools/test-tablero-b2b.mjs
+
       # La importación de catálogos lee webs ajenas desde nuestro servidor y
       # escribe en una ficha que acaba en un presupuesto: que no salga a la red
       # interna y que no ponga nada que la fuente no diga.
