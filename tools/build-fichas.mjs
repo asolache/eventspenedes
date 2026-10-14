@@ -1,24 +1,30 @@
 /* =============================================================================
-   Events Penedès · genera los campos del formulario de localizaciones
+   Events Penedès · genera los campos de los formularios de fichas
 
-   Los campos de `alta-localizacion.html` salen de `netlify/localizacion/
-   esquema.mjs`, que es también lo que lee la función para armar la ficha de
-   Zoho. Si el formulario y la ficha se escribieran por separado, el primer
-   campo nuevo saldría en uno y no en el otro.
+   Los campos de `alta-localizacion.html` y `alta-proveedor.html` salen de su
+   esquema (`netlify/localizacion/esquema.mjs`, `netlify/proveedor/esquema.mjs`),
+   que es también lo que lee la función para armar la ficha de Zoho. Si el
+   formulario y la ficha se escribieran por separado, el primer campo nuevo
+   saldría en uno y no en el otro.
 
    Solo se reescribe lo que hay entre los dos comentarios marcadores; el resto
-   de la página se edita a mano.
+   de cada página se edita a mano.
 
-   Uso:  node tools/build-localizacion.mjs
+   Uso:  node tools/build-fichas.mjs
    ========================================================================== */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SECCIONES, SALAS, ABRE, camposSala, salaCampo } from '../netlify/localizacion/esquema.mjs';
+import { FICHAS } from '../netlify/ficha/fichas.mjs';
+import { repetido } from '../netlify/ficha/nucleo.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PAGINA = join(RAIZ, 'alta-localizacion.html');
-const INICIO = '<!-- campos: generado por tools/build-localizacion.mjs, no editar -->';
+const PAGINAS = [
+  { pagina: 'alta-localizacion.html', esquema: FICHAS.localizacion, id: 'l' },
+  { pagina: 'alta-proveedor.html', esquema: FICHAS.proveedor, id: 'p' },
+];
+let PREFIJO = 'l';
+const INICIO = '<!-- campos: generado por tools/build-fichas.mjs, no editar -->';
 const FIN = '<!-- /campos -->';
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -26,7 +32,7 @@ const CORTOS = new Set(['text', 'tel', 'email', 'url', 'number', 'eur', 'date', 
 const TIPO_INPUT = { eur: 'number', text: 'text', tel: 'tel', email: 'email', url: 'url', number: 'number', date: 'date' };
 
 function campo(c, nombre, sangria) {
-  const id = `l-${nombre.replace(/_/g, '-')}`;
+  const id = `${PREFIJO}-${nombre.replace(/_/g, '-')}`;
   const req = c.req ? ' required' : '';
   const s = sangria;
   if (c.t === 'checks') {
@@ -86,6 +92,9 @@ function campos(lista, sangria) {
 }
 
 const S = '        ';
+function generar({ pagina, esquema, id }) {
+const { SECCIONES, ABRE = {} } = esquema;
+PREFIJO = id;
 const bloques = [];
 for (const sec of SECCIONES) {
   const b = [`${S}<h2 class="form__h" id="sec-${sec.id}">${esc(sec.titulo)}</h2>`];
@@ -96,14 +105,16 @@ for (const sec of SECCIONES) {
     b.push(`${S}<div class="form__cond" data-si="${sec.si}">`);
     b.push(campos(sec.campos.map(c => [c, c.n]), S + '  '));
     b.push(`${S}</div>`);
-  } else if (sec.salas) {
-    for (let i = 1; i <= SALAS; i++) {
-      b.push(`${S}<fieldset class="sala" data-sala="${i}">`);
-      b.push(`${S}  <legend>Sala o espacio ${i}</legend>`);
-      b.push(campos(camposSala.map(c => [c, salaCampo(i, c.n)]), S + '  '));
+  } else if (sec.repite) {
+    /* El mismo bloque n veces; la página los enseña de uno en uno */
+    const r = sec.repite;
+    for (let i = 1; i <= r.n; i++) {
+      b.push(`${S}<fieldset class="sala" data-repite="${r.prefijo}">`);
+      b.push(`${S}  <legend>${esc(r.leyenda)} ${i}</legend>`);
+      b.push(campos(r.campos.map(c => [c, repetido(r, i, c.n)]), S + '  '));
       b.push(`${S}</fieldset>`);
     }
-    b.push(`${S}<p class="sala__mas" hidden><button class="btn btn--ghost" type="button" data-sala-mas>Añadir otra sala</button></p>`);
+    b.push(`${S}<p class="sala__mas" data-repite-mas="${r.prefijo}" hidden><button class="btn btn--ghost" type="button">${esc(r.mas)}</button></p>`);
   } else if (sec.grupos) {
     /* Agrupar solo cambia cómo se ve: los nombres de campo siguen planos */
     const sueltos = sec.campos.filter(c => !sec.grupos.some(([, re]) => re.test(c.n)));
@@ -123,12 +134,16 @@ for (const sec of SECCIONES) {
   bloques.push(b.join('\n'));
 }
 
-const html = readFileSync(PAGINA, 'utf8');
+const ruta = join(RAIZ, pagina);
+const html = readFileSync(ruta, 'utf8');
 const a = html.indexOf(INICIO), z = html.indexOf(FIN);
 if (a === -1 || z === -1 || z < a) {
-  console.error('No encuentro los marcadores de los campos en alta-localizacion.html');
+  console.error(`No encuentro los marcadores de los campos en ${pagina}`);
   process.exit(1);
 }
 const nuevo = html.slice(0, a + INICIO.length) + '\n' + bloques.join('\n\n') + '\n' + S + html.slice(z);
-if (nuevo !== html) { writeFileSync(PAGINA, nuevo, 'utf8'); }
-console.log(`  alta-localizacion.html: ${SECCIONES.length} secciones`);
+if (nuevo !== html) { writeFileSync(ruta, nuevo, 'utf8'); }
+console.log(`  ${pagina}: ${SECCIONES.length} secciones`);
+}
+
+for (const p of PAGINAS) { generar(p); }

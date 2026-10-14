@@ -69,11 +69,19 @@
   to = "/.netlify/functions/borrador"
   status = 200
 
-# La ficha de localización es una herramienta de trabajo, no una página: no se
-# indexa, y su enlace puede llevar datos de contacto prerrellenados en la URL,
-# así que no viaja en el Referer ni se queda en ninguna caché.
+# Las fichas de localización y de proveedor son herramientas de trabajo, no
+# páginas: no se indexan, y su enlace puede llevar datos de contacto
+# prerrellenados en la URL, así que no viajan en el Referer ni se quedan en
+# ninguna caché.
 [[headers]]
   for = "/alta-localizacion*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/alta-proveedor*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Referrer-Policy = "no-referrer"
@@ -82,6 +90,11 @@
 [[redirects]]
   from = "/alta-localizacion"
   to = "/alta-localizacion.html"
+  status = 200
+
+[[redirects]]
+  from = "/alta-proveedor"
+  to = "/alta-proveedor.html"
   status = 200
 
 # Dominio canónico: todo el tráfico de www va al dominio raíz

@@ -3,7 +3,7 @@
 
    De aquí salen las dos cosas que tienen que decir lo mismo:
      · los campos del formulario `alta-localizacion.html`
-       (los genera `tools/build-localizacion.mjs`; no se editan a mano)
+       (los genera `tools/build-fichas.mjs`; no se editan a mano)
      · la ficha que `netlify/functions/lead.mjs` deja en Zoho
 
    Y de aquí saldrá la tercera: lo que se publica de un espacio aprobado. Por
@@ -12,18 +12,14 @@
      zoho     datos de una persona: a Zoho y a ningún repositorio
      interno  precios y condiciones: al repositorio privado, nunca a la web
 
-   Tipos de campo:
-     text · tel · email · url · number · textarea
-     select    `op` es { valor: texto }. La primera opción vacía es «sin dato»
-     sino      sí / no / sin dato. Lo que no se sabe se queda sin dato: no se
-               adivina, porque un dato inventado acaba en una propuesta
-     checks    casillas; cada una es su propio campo `<n>_<clave>`
-     eur       importe en euros, sin IVA salvo que `iva_incluido` diga otra
-               cosa. Número y no texto: es lo que permitirá calcular franjas
+   Los tipos de campo y cómo se lee, se compara y se escribe una ficha están
+   en `netlify/ficha/nucleo.mjs`, que comparte con la ficha de proveedor.
 
    `interno: true` en un campo o una sección: solo se ve con `?interno=1`.
    Es lo que rellenamos nosotros en la visita y no le toca al espacio.
    ========================================================================== */
+
+import { UNIDAD, COMISION_TIPO, COMISION_GENERAL, CONTACTO, ficha, repetido } from '../ficha/nucleo.mjs';
 
 export const FORM = 'localizacion';
 
@@ -70,13 +66,8 @@ const SALA = [
 
 /* Un paquete es siempre lo mismo para que se pueda comparar entre espacios:
    precio, cuándo, para cuántos, cuánto dura y qué incluye. */
-const UNIDAD = { evento: 'por evento', persona: 'por persona', hora: 'por hora', unidad: 'por unidad' };
-/* La comisión de un paquete o extra: un porcentaje del precio, o unos euros
-   con la misma unidad que el precio (4 € por persona, 50 € por evento). La
-   general, un porcentaje de todo, o euros por persona o por evento. La de un
-   paquete o extra gana a la general; para un evento concreto se pacta otra. */
-const COMISION_TIPO = { porcentaje: '% del precio', importe: '€ en la unidad del precio' };
-const COMISION_GENERAL = { porcentaje: '% de lo que se contrata', persona: '€ por persona', evento: '€ por evento' };
+/* La comisión de un paquete o extra gana a la general; para un evento
+   concreto se pacta otra. Tipos y unidades: `netlify/ficha/nucleo.mjs`. */
 function paquete(p, nombre, hint) {
   return [
     { n: `${p}_precio`, l: `${nombre} · precio laborable (€)`, t: 'eur', hint },
@@ -124,16 +115,7 @@ export const SECCIONES = [
         hint: 'Lo que no tiene ningún otro: la historia, el paisaje, quién lo lleva. Es el párrafo de la ficha pública.' },
     ],
   },
-  {
-    id: 'contacto', titulo: 'Persona de contacto', destino: 'zoho',
-    nota: 'Va a Zoho y a ningún otro sitio: no se publica.',
-    campos: [
-      { n: 'contacto_persona', l: 'Nombre', t: 'text', ac: 'off' },
-      { n: 'contacto_cargo', l: 'Cargo', t: 'text', ac: 'off' },
-      { n: 'contacto_movil', l: 'Móvil', t: 'tel', ac: 'off' },
-      { n: 'contacto_correo', l: 'Correo', t: 'email', ac: 'off' },
-    ],
-  },
+  CONTACTO,
   {
     id: 'capacidad', titulo: 'Capacidad', destino: 'web',
     campos: [
@@ -148,6 +130,7 @@ export const SECCIONES = [
   },
   {
     id: 'salas', titulo: 'Salas y espacios', destino: 'web', salas: true,
+    repite: { prefijo: 'sala', n: SALAS, campos: SALA, etiqueta: 'Sala', leyenda: 'Sala o espacio', mas: 'Añadir otra sala' },
     nota: 'Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie. Si la sala se alquila por separado, su precio; si no, en blanco.',
   },
   {
@@ -310,128 +293,25 @@ export const SECCIONES = [
   },
 ];
 
-/* --- Utilidades compartidas --------------------------------------------- */
+/* --- Utilidades ---------------------------------------------------------- */
 
-export const salaCampo = (i, c) => `sala${i}_${c}`;
+export const salaCampo = (i, c) => repetido({ prefijo: 'sala' }, i, c);
 export const camposSala = SALA;
 
-/* Todos los nombres de campo, en orden. La función lo usa como lista blanca:
-   lo que no está aquí no entra en la ficha. */
-export function nombres() {
-  const out = [];
-  for (const s of SECCIONES) {
-    if (s.si) { out.push(s.si); }
-    if (s.salas) {
-      for (let i = 1; i <= SALAS; i++) { for (const c of SALA) { out.push(salaCampo(i, c.n)); } }
-      continue;
-    }
-    for (const c of s.campos) {
-      if (c.t === 'checks') { for (const k of Object.keys(c.op)) { out.push(`${c.n}_${k}`); } }
-      else { out.push(c.n); }
-    }
-  }
-  return out;
-}
+export const { nombres, campos, cambios, cambiosTexto, legible, comisionLegible, fichaTexto } = ficha(SECCIONES);
 
-const SINO = { si: 'Sí', no: 'No' };
+/* --- Lo que se le dice a Claude al importar un catálogo ------------------- */
 
-/* Cada nombre de campo con su etiqueta legible y su definición. Las casillas
-   (`equipo_proyector`) se leen como «Qué tiene: Proyector». */
-export function campos() {
-  const m = new Map();
-  for (const s of SECCIONES) {
-    if (s.si) { m.set(s.si, { campo: { t: 'check' }, l: s.interruptor }); }
-    if (s.salas) {
-      for (let i = 1; i <= SALAS; i++) {
-        for (const c of SALA) { m.set(salaCampo(i, c.n), { campo: c, l: `Sala ${i} · ${c.l}` }); }
-      }
-      continue;
-    }
-    for (const c of s.campos) {
-      if (c.t === 'checks') {
-        for (const [k, t] of Object.entries(c.op)) { m.set(`${c.n}_${k}`, { campo: { t: 'check' }, l: `${c.l}: ${t}` }); }
-      } else { m.set(c.n, { campo: c, l: c.l }); }
-    }
-  }
-  return m;
-}
+export const IMPORTAR = `Eres quien prepara la ficha de un espacio para eventos de empresa (bodega, finca, hotel, restaurante…) en el Penedès para Events Penedès, una agencia local. Te damos el catálogo del espacio y/o su web. Devuelve los campos de la ficha que las fuentes dicen, cada uno con la frase literal de la que sale.
 
-/* El registro de cambios: qué campos difieren entre la versión de partida (el
-   borrador que les mandamos, o su último envío) y lo que envían ahora. Solo
-   campos del esquema; los vacíos cuentan como «sin dato». */
-export function cambios(antes, ahora) {
-  const out = [];
-  const leer = (c, v) => (c.campo.t === 'check' ? (v ? 'sí' : null) : legible(c.campo, v));
-  for (const [n, c] of campos()) {
-    const a = leer(c, antes[n]);
-    const b = leer(c, ahora[n]);
-    if (a !== b) { out.push({ campo: n, etiqueta: c.l, antes: a, ahora: b }); }
-  }
-  return out;
-}
+Reglas, por orden de importancia:
+1. Solo lo que las fuentes dicen. Si un dato no aparece, no lo pongas: un dato inventado acaba en un presupuesto a un cliente. No deduzcas aforos de los m², ni precios de otros precios, ni el tipo de espacio de una foto.
+2. "cita" es el fragmento literal (máximo 200 caracteres) del que sale el valor, con la página del PDF si la sabes ("p. 18: …").
+3. Las salas: una por sala, porche, terraza o jardín que el catálogo describa con nombre, en el orden del catálogo (sala1_*, sala2_*… hasta ${SALAS}). Aforo por formato solo si el catálogo lo da por formato. Si dice "imperial 25", eso es la disposición de la mesa: va en sala*_notas, no en banquete, salvo que diga cuántos comensales caben sentados.
+4. Precios: tal cual el catálogo, en euros, sin IVA salvo que diga que lo lleva (entonces iva_incluido = "si"). Los paquetes (taller_* sin exclusiva, excl_* con exclusiva del espacio entero) y extras (extra1..6) solo si el catálogo los ofrece así. El precio de alquiler de una sala va en sala*_precio_media o sala*_precio_dia.
+5. Comisiones para agencias: si el catálogo las da, ponlas donde tocan. "comision" es la general; taller_comision, excl_comision y extra*_comision, las de cada paquete y extra. El número va en el campo y si es un porcentaje o euros en su *_comision_tipo: "porcentaje" para un %; en un paquete o extra, "importe" para euros con la misma unidad que su precio; en la general, "persona" o "evento" para euros por persona o por evento. Si dice que algo no es comisionable ("sin comisión en espacios"), eso es 0 para ese paquete o extra, con su cita. Si no dice nada, no pongas nada.
+6. "descripcion" es el párrafo que hace único el espacio, en castellano, con las palabras del catálogo: historia, paisaje, quién lo lleva. Máximo 600 caracteres.
+7. Los textos (notas, qué incluye) en castellano y breves, aunque la fuente esté en catalán o inglés. Los nombres propios, tal cual.
+8. Las casillas ("si") solo cuando la fuente lo dice expresamente.
+9. En "avisos", en una frase cada uno, lo que una persona debería revisar: contradicciones entre fuentes, precios que dependen de temporada, datos que parecen antiguos.`;
 
-export function cambiosTexto(lista) {
-  return lista.map(x => `· ${x.etiqueta}: ${x.antes ?? 'sin dato'} → ${x.ahora ?? 'sin dato'}`).join('\n');
-}
-
-/* El valor tal como se lee en una ficha: «Bodega o cava», no «bodega». */
-export function legible(campo, v) {
-  if (v === undefined || v === null || String(v).trim() === '') { return null; }
-  if (campo.t === 'sino') { return SINO[v] || v; }
-  if (campo.t === 'select') { return campo.op[v] || v; }
-  if (campo.t === 'eur') { return `${String(v).trim()} €`; }
-  return String(v).trim();
-}
-
-/* Una comisión tal como se lee: «10 %», «4 € por persona», «0, no es
-   comisionable». Sin tipo, es un porcentaje: así se pedía antes. */
-export function comisionLegible(d, n) {
-  const v = d[n];
-  if (v === undefined || v === null || String(v).trim() === '') { return null; }
-  const cifra = String(v).trim();
-  if (Number(cifra) === 0) { return '0, no es comisionable'; }
-  const tipo = d[`${n}_tipo`] || 'porcentaje';
-  if (tipo === 'porcentaje') { return `${cifra} %`; }
-  if (tipo === 'persona' || tipo === 'evento') { return `${cifra} € por ${tipo}`; }
-  const unidad = UNIDAD[d[n.replace(/comision$/, 'unidad')]];
-  return `${cifra} €${unidad ? ' ' + unidad : ''}`;
-}
-const ES_COMISION = /(^|_)comision$/;
-const ES_TIPO_COMISION = /(^|_)comision_tipo$/;
-
-/* La ficha en texto plano, por secciones. Lo que no se rellenó no sale: una
-   ficha llena de «—» esconde lo que sí se sabe. */
-export function fichaTexto(d) {
-  const l = [];
-  for (const s of SECCIONES) {
-    if (s.si && !d[s.si]) { continue; }
-    const filas = [];
-    if (s.salas) {
-      for (let i = 1; i <= SALAS; i++) {
-        const partes = SALA.map(c => {
-          const v = legible(c, d[salaCampo(i, c.n)]);
-          return v && c.n !== 'nombre' ? `${c.l}: ${v}` : null;
-        }).filter(Boolean);
-        const nombre = legible(SALA[0], d[salaCampo(i, 'nombre')]);
-        if (nombre || partes.length) { filas.push(`· ${nombre || `Sala ${i}`}${partes.length ? ' — ' + partes.join(' · ') : ''}`); }
-      }
-    } else {
-      for (const c of s.campos) {
-        if (c.t === 'checks') {
-          const marcadas = Object.entries(c.op).filter(([k]) => d[`${c.n}_${k}`]).map(([, t]) => t);
-          if (marcadas.length) { filas.push(`${c.l}: ${marcadas.join(', ')}`); }
-          continue;
-        }
-        /* La comisión y su tipo, en una sola línea */
-        if (ES_TIPO_COMISION.test(c.n)) { continue; }
-        const v = ES_COMISION.test(c.n) ? comisionLegible(d, c.n) : legible(c, d[c.n]);
-        if (v) { filas.push(`${c.l}: ${v}`); }
-      }
-    }
-    if (filas.length) {
-      const marca = s.destino === 'interno' ? ' (interno)' : s.destino === 'zoho' ? ' (no se publica)' : '';
-      l.push(`## ${s.titulo}${marca}`, ...filas, '');
-    }
-  }
-  return l.join('\n').trim();
-}

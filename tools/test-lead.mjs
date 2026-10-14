@@ -300,6 +300,48 @@ globalThis.fetch = (f => async (url, op) => (/add_tags/.test(String(url))
 const lz2 = await (await handler(peticion(LOCAL, firmar(LOCAL)))).json();
 comprueba('si fallan las etiquetas, la cuenta y la nota siguen', lz2.ok && lz2.avisos.length === 1 && !!de(/Accounts\/acc1\/Notes/));
 
+/* 1i · La ficha de un proveedor: cuenta Proveedor, etiquetas por categoría */
+const PROVEEDOR = JSON.stringify({ form_name: 'proveedor', created_at: '2026-10-14T10:00:00.000Z',
+  data: { nombre: 'Música Exemple', categoria: 'musica', tambien_restauracion: 'si', telefono: '+34 930 000 001',
+          web: 'https://musica.example', poblacion: 'Sant Sadurní d\'Anoia', contacto_persona: 'Pau Exemple',
+          contacto_correo: 'pau@musica.example', ofrece_musica: 'si', musica_formatos_banda: 'si', musica_sonido: 'aparte',
+          servicio1_nombre: 'Cuarteto de cuerda', servicio1_precio: '900', servicio1_unidad: 'actuacion', servicio1_iva: 'no',
+          servicio1_duracion: '1 h', servicio1_comision: '10',
+          servicio2_nombre: 'Equipo de sonido', servicio2_precio: '600', servicio2_unidad: 'evento',
+          autoriza: 'no', consentimiento: 'si', inventado: 'no entra' } });
+zohoSimulado();
+const pv = await (await handler(peticion(PROVEEDOR, firmar(PROVEEDOR)))).json();
+const cuentaP = de(/Accounts\/upsert/)?.cuerpo.data[0] || {};
+comprueba('el proveedor entra como cuenta de tipo Proveedor', pv.ok && pv.modulo === 'Accounts' && cuentaP.Account_Name === 'Música Exemple'
+  && cuentaP.Account_Type === 'Proveedor' && !('Description' in cuentaP) && !de(/Leads/));
+const tagsP = decodeURIComponent(de(/add_tags/)?.url || '');
+comprueba('lleva Proveedor, la etiqueta de cada cosa que ofrece, la autorización y «Pendiente de validar»',
+  /tag_names=Proveedor,Música,Catering,Web no autorizada,Pendiente de validar&/.test(tagsP));
+const notaP = de(/Accounts\/acc1\/Notes/)?.cuerpo.data[0] || {};
+comprueba('la nota lleva cada servicio en una línea, con su precio, su unidad y su comisión',
+  /· Cuarteto de cuerda — Precio \(€\): 900 € · El precio es: por actuación · Lleva IVA: No · Duración: 1 h · Comisión para Events Penedès: 10 %/.test(notaP.Note_Content)
+  && /· Equipo de sonido — Precio \(€\): 600 € · El precio es: por evento/.test(notaP.Note_Content)
+  && /Servicios con precio: 2/.test(notaP.Note_Content) && notaP.Note_Title === 'Ficha de proveedor');
+comprueba('el bloque de su categoría sale; los demás no, y lo inventado tampoco',
+  /## Música y espectáculos/.test(notaP.Note_Content) && /Equipo de sonido: Lo llevamos, va aparte/.test(notaP.Note_Content)
+  && !/## Transporte/.test(notaP.Note_Content) && !/no entra/.test(notaP.Note_Content));
+const tareaP = de(/\/Tasks$/)?.cuerpo?.data?.[0] || {};
+comprueba('un proveedor nuevo crea la tarea de revisarlo', /^Revisar Música Exemple/.test(tareaP.Subject || '') && tareaP.What_Id?.id === 'acc1');
+const VALIDADO = JSON.stringify({ form_name: 'proveedor', created_at: '2026-10-15T10:00:00.000Z',
+  data: { nombre: 'Música Exemple', categoria: 'musica', revision_fecha: '2026-10-15' } });
+zohoSimulado();
+await handler(peticion(VALIDADO, firmar(VALIDADO)));
+comprueba('validado, se quita «Pendiente de validar» y no hay tarea',
+  /remove_tags\?tag_names=Pendiente%20de%20validar/.test(de(/remove_tags/)?.url || '') && !de(/\/Tasks$/));
+
+/* 1j · Una sola lista de categorías: «Entra en la red» ofrece las mismas */
+const { PERFILES_RED } = await import('../netlify/proveedor/esquema.mjs');
+const { readFileSync } = await import('node:fs');
+const red = readFileSync(new URL('../red.html', import.meta.url), 'utf8');
+const perfiles = [...red.slice(red.indexOf('name="perfil"'), red.indexOf('</select>', red.indexOf('name="perfil"'))).matchAll(/value="([^"]+)"/g)].map(m => m[1]);
+comprueba('red.html ofrece exactamente las categorías del esquema de proveedor',
+  perfiles.join() === Object.keys(PERFILES_RED).join());
+
 globalThis.fetch = fetchReal;
 process.env.ZOHO_DRY_RUN = '1';
 delete process.env.PROPUESTA_SECRET;

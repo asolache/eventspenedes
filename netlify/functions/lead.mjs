@@ -13,6 +13,11 @@
    vez que la lleva se crea una TAREA para visitarla: es el aviso de que ha
    llegado un espacio. Ver `localizacion()`.
 
+   La ficha de un proveedor entra igual: CUENTA de tipo Proveedor con la
+   etiqueta «Proveedor» y la de cada cosa que ofrece, CONTACTO y nota. Hasta
+   que la validamos lleva «Pendiente de validar» y una tarea para revisarla.
+   Ver `proveedor()`.
+
    Y cuando el formulario es el de propuesta, hace una segunda cosa: **monta el
    borrador de la propuesta** y deja en una nota del lead un enlace privado
    para leerlo.
@@ -45,13 +50,19 @@
      ZOHO_ETIQUETA_PENDIENTE      opcional · etiqueta de los espacios sin visitar
                                   («Pendiente de visita»)
      ZOHO_AVISO_TAREA             opcional · '0' para no crear la tarea de aviso
-                                  cuando llega un espacio nuevo
+                                  cuando llega un espacio o un proveedor nuevo
+     ZOHO_ETIQUETA_PROVEEDOR      opcional · etiqueta de los proveedores («Proveedor»)
+     ZOHO_TIPO_PROVEEDOR          opcional · valor del tipo de cuenta («Proveedor»;
+                                  '' para no tocarlo)
+     ZOHO_ETIQUETA_POR_VALIDAR    opcional · etiqueta de los proveedores sin
+                                  validar («Pendiente de validar»)
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
 import { briefingAEvento } from '../propuesta/briefing-a-evento.mjs';
 import { opciones, espacios } from '../propuesta/catalogo.mjs';
 import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto, cambios, cambiosTexto } from '../localizacion/esquema.mjs';
+import * as PROV from '../proveedor/esquema.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -186,13 +197,7 @@ const POR_FORM = {
             organizador: 'Organizador profesional de congresos', otro: 'Otro' },
   },
   /* «Entra en la red»: un espacio o un proveedor que se presenta. */
-  red: {
-    perfil: { localizacion: 'Espacio (localización)', restauracion: 'Restauración y catering',
-              catas: 'Catas de vino, cava o aceite', guias: 'Guías y actividades',
-              transporte: 'Transporte', alojamiento: 'Alojamiento', musica: 'Música',
-              ocio: 'Ocio y experiencias', rrpp: 'RRPP, protocolo y fotografía',
-              eventos: 'Producción y técnica de eventos', otro: 'Otro' },
-  },
+  red: { perfil: PROV.PERFILES_RED },
 };
 
 const legible = (form, campo, v) =>
@@ -409,6 +414,28 @@ const recortar = t => (t.length <= MAX_DESCRIPCION ? t
 
 const AUTORIZA = { si: 'Web autorizada', revisar: 'Web por revisar', no: 'Web no autorizada' };
 
+/* Lo que comparten las dos fichas: la persona de contacto y el registro de
+   cambios. `borrador` es la versión de la que partió el formulario: la ficha
+   prellenada que les mandamos o su envío anterior. Las notas se archivan en la
+   cuenta y la persona se reconoce por su correo, así que cada envío deja su
+   versión y lo que cambió respecto a la anterior. */
+function comun(d, comparar = PROV.cambios) {
+  const v = k => (d[k] || '').toString().trim() || undefined;
+  const persona = v('contacto_persona');
+  const correo = v('contacto_correo');
+  const movil = v('contacto_movil');
+  const contacto = (persona || correo || movil)
+    ? { Last_Name: persona || correo || movil, Email: correo, Mobile: movil, Title: v('contacto_cargo') }
+    : null;
+  let partida = null;
+  try { partida = d.borrador ? JSON.parse(String(d.borrador).slice(0, 50000)) : null; } catch { partida = null; }
+  const lista = partida && typeof partida === 'object' ? comparar(partida, d) : null;
+  const registro = lista === null
+    ? ['## Cambios', 'Primera versión: no partía de ningún borrador.']
+    : ['## Cambios respecto a la versión anterior', lista.length ? cambiosTexto(lista) : 'Ninguno: la confirman tal cual.'];
+  return { contacto, correo, persona, movil, partida, lista, registro, importado: v('importado') };
+}
+
 function localizacion(d, cuando) {
   const v = k => (d[k] || '').toString().trim() || undefined;
   const nombre = v('nombre') || 'Localización sin nombre';
@@ -421,12 +448,7 @@ function localizacion(d, cuando) {
     Billing_Code: v('cp'),
   };
   if (process.env.ZOHO_CAMPO_MARCA) { cuenta[process.env.ZOHO_CAMPO_MARCA] = 'Events Penedès'; }
-  const persona = v('contacto_persona');
-  const correo = v('contacto_correo');
-  const movil = v('contacto_movil');
-  const contacto = (persona || correo || movil)
-    ? { Last_Name: persona || correo || movil, Email: correo, Mobile: movil, Title: v('contacto_cargo') }
-    : null;
+  const { contacto, correo, persona, movil, lista, registro, importado } = comun(d, cambios);
   const etiquetas = [process.env.ZOHO_ETIQUETA_LOCALIZACION || 'Localización'];
   if (ETIQUETA_TIPO[d.tipo]) { etiquetas.push(ETIQUETA_TIPO[d.tipo]); }
   /* La autorización de publicar, también como etiqueta: es el filtro con el
@@ -439,17 +461,6 @@ function localizacion(d, cuando) {
   const pendiente = process.env.ZOHO_ETIQUETA_PENDIENTE || 'Pendiente de visita';
   const visitado = Boolean(v('visita_fecha'));
   if (!visitado) { etiquetas.push(pendiente); }
-  const importado = v('importado');
-  /* El registro de cambios. `borrador` es la versión de la que partió el
-     formulario: la ficha prellenada que les mandamos o su envío anterior. Las
-     notas se archivan en la cuenta y la persona se reconoce por su correo, así
-     que cada envío deja su versión y lo que cambió respecto a la anterior. */
-  let partida = null;
-  try { partida = d.borrador ? JSON.parse(String(d.borrador).slice(0, 50000)) : null; } catch { partida = null; }
-  const lista = partida && typeof partida === 'object' ? cambios(partida, d) : null;
-  const registro = lista === null
-    ? ['## Cambios', 'Primera versión: no partía de ningún borrador.']
-    : ['## Cambios respecto a la versión anterior', lista.length ? cambiosTexto(lista) : 'Ninguno: la confirman tal cual.'];
   const nota = [`Ficha de localización · recibida ${cuando}`,
                 `Enviada por: ${correo || persona || 'sin correo'}`,
                 `Tipo: ${TIPOS[d.tipo] || d.tipo || '—'}`,
@@ -470,7 +481,52 @@ function localizacion(d, cuando) {
   return { cuenta, contacto, etiquetas, quitar: visitado ? [pendiente] : [], pendiente, tarea, titulo, nota: nota.join('\n') };
 }
 
-async function crearLocalizacion({ cuenta, contacto, etiquetas, quitar, pendiente, tarea, titulo, nota: texto }) {
+/* --- El proveedor como cuenta --------------------------------------------
+   Lo mismo que un espacio, con su tipo de cuenta y sus etiquetas: «Proveedor»
+   y la de cada cosa que ofrece (Catering, Música…), que es como se filtran en
+   el CRM. «Pendiente de validar» hasta que una ficha llega con la fecha en
+   que lo validamos; la primera vez, una tarea para revisarla. */
+
+function proveedor(d, cuando) {
+  const v = k => (d[k] || '').toString().trim() || undefined;
+  const nombre = v('nombre') || 'Proveedor sin nombre';
+  const cuenta = { Account_Name: nombre, Phone: v('telefono'), Website: v('web'), Billing_City: v('poblacion') };
+  const tipoCuenta = process.env.ZOHO_TIPO_PROVEEDOR ?? 'Proveedor';
+  if (tipoCuenta) { cuenta.Account_Type = tipoCuenta; }
+  if (process.env.ZOHO_CAMPO_MARCA) { cuenta[process.env.ZOHO_CAMPO_MARCA] = 'Events Penedès'; }
+  const { contacto, correo, persona, movil, lista, registro, importado } = comun(d);
+  const ofrece = [d.categoria, ...Object.keys(PROV.CATEGORIAS).filter(k => d[`tambien_${k}`])]
+    .filter((k, i, a) => Object.hasOwn(PROV.CATEGORIAS, k) && a.indexOf(k) === i);
+  const etiquetas = [process.env.ZOHO_ETIQUETA_PROVEEDOR || 'Proveedor',
+    ...ofrece.map(k => PROV.CATEGORIAS[k].zoho).filter(Boolean)];
+  if (AUTORIZA[d.autoriza]) { etiquetas.push(AUTORIZA[d.autoriza]); }
+  const pendiente = process.env.ZOHO_ETIQUETA_POR_VALIDAR || 'Pendiente de validar';
+  const validado = Boolean(v('revision_fecha'));
+  if (!validado) { etiquetas.push(pendiente); }
+  const categoria = PROV.CATEGORIAS[d.categoria]?.l || d.categoria || '—';
+  const servicios = PROV.nombres().filter(n => /^servicio\d+_nombre$/.test(n) && v(n)).length;
+  const nota = [`Ficha de proveedor · recibida ${cuando}`,
+                `Enviada por: ${correo || persona || 'sin correo'}`,
+                `Ofrece: ${ofrece.map(k => PROV.CATEGORIAS[k].l).join(', ') || categoria}`,
+                `Servicios con precio: ${servicios}`,
+                `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}`,
+                `Validado: ${validado ? `el ${v('revision_fecha')}` : 'pendiente'}`,
+                ...(importado ? [`Importada de: ${importado.slice(0, 500)} · el proveedor la ha revisado antes de enviarla`] : []),
+                '', ...registro, '', PROV.fichaTexto(d)];
+  if (d.consentimiento) { nota.push('', `Aviso de privacidad aceptado el ${cuando}.`); }
+  const titulo = lista === null ? 'Ficha de proveedor' : `Ficha de proveedor · ${lista.length} cambios`;
+  const tarea = !validado && process.env.ZOHO_AVISO_TAREA !== '0' ? {
+    Subject: `Revisar ${nombre}: ficha de proveedor nueva`,
+    Due_Date: new Date(Date.parse(cuando) + 7 * 864e5 || Date.now() + 7 * 864e5).toISOString().slice(0, 10),
+    Description: [`Ha llegado la ficha de «${nombre}» (${categoria}) con ${servicios} servicios con precio.`,
+      importado ? `La han importado de su web o sus tarifas: ${importado.slice(0, 300)}.` : 'La han rellenado a mano.',
+      `Publicar en la web: ${AUTORIZA[d.autoriza] || 'sin respuesta'}. No se publica nada hasta validarlo.`,
+      `Contacto: ${[persona, movil, correo].filter(Boolean).join(' · ') || 'sin contacto'}.`].join('\n'),
+  } : null;
+  return { cuenta, contacto, etiquetas, quitar: validado ? [pendiente] : [], pendiente, tarea, titulo, nota: nota.join('\n') };
+}
+
+async function crearCuenta({ cuenta, contacto, etiquetas, quitar, pendiente, tarea, titulo, nota: texto }) {
   const ids = {};
   ids.cuenta = idDe(await zoho('Accounts/upsert', { data: [cuenta], duplicate_check_fields: ['Account_Name'] }));
   if (!ids.cuenta) { throw new Error('Zoho no devolvió el id de la cuenta'); }
@@ -549,24 +605,25 @@ export default async (req) => {
   const d = aviso.data || {};
   const cuando = aviso.created_at || new Date().toISOString();
 
-  if (form === FORM_LOCALIZACION) {
-    const loc = localizacion(d, cuando);
+  if (form === FORM_LOCALIZACION || form === PROV.FORM) {
+    const esProv = form === PROV.FORM;
+    const loc = esProv ? proveedor(d, cuando) : localizacion(d, cuando);
     if (process.env.ZOHO_DRY_RUN === '1') {
-      console.log('DRY RUN · localización:', JSON.stringify(loc, null, 2));
-      return Response.json({ ok: true, dry_run: true, localizacion: loc });
+      console.log(`DRY RUN · ${form}:`, JSON.stringify(loc, null, 2));
+      return Response.json({ ok: true, dry_run: true, [esProv ? 'proveedor' : 'localizacion']: loc });
     }
     try {
-      const { ids, avisos } = await crearLocalizacion(loc);
-      console.log('Localización en Zoho:', JSON.stringify(ids));
+      const { ids, avisos } = await crearCuenta(loc);
+      console.log(`${esProv ? 'Proveedor' : 'Localización'} en Zoho:`, JSON.stringify(ids));
       if (avisos.length) { console.error('La cuenta está, pero:', avisos.join(' · ')); }
       return Response.json({ ok: true, modulo: 'Accounts', avisos });
     } catch (e) {
       /* Si la cuenta no entra, entra como lead con la ficha: perder una visita
          entera por organizarla mejor sería cambiar lo importante por lo cómodo. */
-      console.error('No se pudo crear la cuenta del espacio; entra como lead:', e.message);
+      console.error(`No se pudo crear la cuenta (${form}); entra como lead:`, e.message);
       try {
-        const r = { Last_Name: (d.contacto_persona || d.nombre || 'Localización').trim(),
-                    Company: (d.nombre || 'Localización').trim(),
+        const r = { Last_Name: (d.contacto_persona || d.nombre || (esProv ? 'Proveedor' : 'Localización')).trim(),
+                    Company: (d.nombre || (esProv ? 'Proveedor' : 'Localización')).trim(),
                     Email: (d.contacto_correo || '').trim() || undefined,
                     Phone: (d.telefono || '').trim() || undefined,
                     Description: recortar(loc.nota) };

@@ -1,13 +1,14 @@
 /* =============================================================================
-   Events Penedès · importar el catálogo de un espacio a su ficha
+   Events Penedès · importar el catálogo de un espacio o un proveedor a su ficha
 
-   El botón «Importar» de /alta-localizacion llama aquí con la web del espacio
-   o su catálogo en PDF, y esto devuelve los campos de la ficha que salen de
-   ahí (ver `netlify/localizacion/importar.mjs`). Solo devuelve: no guarda
+   El botón «Importar» de /alta-localizacion y /alta-proveedor llama aquí con
+   la web o el catálogo en PDF, y esto devuelve los campos de la ficha que
+   salen de ahí (ver `netlify/ficha/importar.mjs`). Solo devuelve: no guarda
    nada, no escribe en Zoho y no publica. La ficha vuelve al navegador, el
    espacio la revisa y es su envío el que nos llega, como siempre.
 
-   POST /api/importar-catalogo   JSON { url } o { pdf: base64, nombre }
+   POST /api/importar-catalogo   JSON { url } o { pdf: base64, nombre }, y
+                                 `ficha`: 'localizacion' (por defecto) o 'proveedor'
      → { ok, datos, origen, fuentes, metodo, avisos }
 
    Variables de entorno (en Netlify, nunca en el repositorio):
@@ -20,7 +21,8 @@
    riesgos, y los dos se acotan aquí: solo direcciones públicas (urlSegura),
    un límite por IP (config.rateLimit) y solo desde la propia página.
    ========================================================================== */
-import { importar } from '../localizacion/importar.mjs';
+import { importar } from '../ficha/importar.mjs';
+import { FICHAS } from '../ficha/fichas.mjs';
 
 const CABECERAS = { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
 const responder = (cuerpo, status = 200) => Response.json(cuerpo, { status, headers: CABECERAS });
@@ -47,6 +49,8 @@ export default async (req) => {
     if (pdf.length > MAX_PDF) { return responder({ ok: false, error: 'El PDF pesa más de 4 MB: subidlo a Drive o Dropbox y pegad aquí el enlace.' }, 413); }
   }
   if (!url && !pdf) { return responder({ ok: false, error: 'Falta la web o el PDF' }, 400); }
+  const ficha = p.ficha === undefined ? 'localizacion' : p.ficha;
+  if (!Object.hasOwn(FICHAS, ficha)) { return responder({ ok: false, error: 'Ficha desconocida' }, 400); }
 
   try {
     const r = await importar({
@@ -54,10 +58,11 @@ export default async (req) => {
       nombrePdf: typeof p.nombre === 'string' ? p.nombre.slice(0, 120) : undefined,
       apiKey: process.env.ANTHROPIC_API_KEY,
       model: process.env.ANTHROPIC_MODEL,
+      esquema: FICHAS[ficha],
     });
     /* Al registro, cuántos campos y de dónde; los datos no: pueden llevar
        el móvil de una persona. */
-    console.log(`importar · ${r.metodo} · ${Object.keys(r.datos).length} campos · ${r.fuentes.length} fuentes`);
+    console.log(`importar · ${ficha} · ${r.metodo} · ${Object.keys(r.datos).length} campos · ${r.fuentes.length} fuentes`);
     return responder({ ok: true, ...r });
   } catch (e) {
     console.error('importar:', e.message);
