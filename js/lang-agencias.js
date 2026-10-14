@@ -6,7 +6,7 @@ window.EP_I18N = {
   ca: {
     'skip': 'Vés al contingut principal',
     'nav.services': 'Serveis', 'nav.venues': 'Localitzacions', 'nav.activities': 'Activitats',
-    'nav.process': 'Com treballem', 'nav.dj': 'DJ', 'nav.contact': 'Contacte',
+    'nav.process': 'Com treballem', 'nav.dj': 'DJ i música', 'nav.contact': 'Contacte',
     'nav.agencies': 'Agències i DMC',
     'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat', 'foot.res': 'Recursos',
 
@@ -74,7 +74,7 @@ window.EP_I18N = {
   en: {
     'skip': 'Skip to main content',
     'nav.services': 'Services', 'nav.venues': 'Venues', 'nav.activities': 'Activities',
-    'nav.process': 'How we work', 'nav.dj': 'DJ', 'nav.contact': 'Contact',
+    'nav.process': 'How we work', 'nav.dj': 'DJ & music', 'nav.contact': 'Contact',
     'nav.agencies': 'Agencies & DMCs',
     'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice', 'foot.res': 'Resources',
 
