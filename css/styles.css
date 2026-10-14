@@ -109,6 +109,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .section--panel { background: var(--bg-panel); border-block: 1px solid var(--glass-border); }
 
 .section__head { max-width: 64ch; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+.section__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: clamp(2rem, 4vw, 3rem); }
 
 .skip-link {
     position: absolute;
