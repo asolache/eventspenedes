@@ -1434,7 +1434,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .form__estado[data-tipo="error"] { border-color: var(--accent-wine); background: rgba(140, 47, 57, 0.18); }
 .form__cond { display: grid; gap: 1rem; padding-left: 0.9rem; border-left: 2px solid var(--accent-gold); }
 .form__cond[hidden], .sala[hidden] { display: none; }
-#form-localizacion:not([data-interno]) .solo-interno { display: none; }
+form[data-ficha]:not([data-interno]) .solo-interno { display: none; }
 .sala, .grupo {
     display: grid;
     gap: 1rem;
@@ -1448,7 +1448,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 619px) {
     /* 16 px como mínimo: con menos, Safari en iPhone amplía la página al
        tocar un campo y hay que volver a encuadrarla. */
-    #form-localizacion .field input, #form-localizacion .field select, #form-localizacion .field textarea { font-size: 16px; }
+    form[data-ficha] .field input, form[data-ficha] .field select, form[data-ficha] .field textarea { font-size: 16px; }
 }
 
 /* Importar desde la web o el catálogo: lo importado se marca hasta que el
@@ -1465,9 +1465,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .importar legend { padding: 0 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.06em; }
 .importar__estado { margin: 0; font-size: 0.93rem; }
 .importar__estado ul { margin: 0.4rem 0 0; padding-left: 1.2rem; color: var(--text-low); }
-#form-localizacion [data-importado] { border-color: var(--accent-gold); box-shadow: 0 0 0 1px var(--accent-gold); }
-#form-localizacion .field--check [data-importado] { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
+form[data-ficha] [data-importado] { border-color: var(--accent-gold); box-shadow: 0 0 0 1px var(--accent-gold); }
+form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
 .field__origen { display: block; font-size: 0.78rem; color: var(--accent-gold); }
 
 /* Kit para agencias: el botón dice que ya está copiado sin cambiar de texto */
 .js-copiar[data-copiado]::after { content: " ✓"; }
+
+/* Cómo os presentaríamos: la ficha de proveedor leída como un cliente */
+.ficha-vista { display: grid; gap: 0.6rem; padding: 1.2rem; border: 1px solid var(--accent-gold); border-radius: 12px; }
+.ficha-vista[hidden] { display: none; }
+.ficha-vista h2 { margin: 0; }
+.ficha-vista ul { margin: 0; padding-left: 1.2rem; }

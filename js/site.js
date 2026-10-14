@@ -127,6 +127,43 @@
     bloque.hidden = false;
   }
 
+  /* «Entra en la red»: lo que nos contó al presentarse viaja a la página de
+     gracias, que le ofrece seguir con su ficha ya empezada (la del espacio o
+     la del proveedor). Solo en esta pestaña: sessionStorage. */
+  var CLAVE_RED = 'ep-red';
+  function recordarRed() {
+    var form = document.getElementById('form-red');
+    if (!form) { return; }
+    form.addEventListener('submit', function () {
+      var e = form.elements, d = {};
+      ['perfil', 'empresa', 'web', 'poblacion', 'persona', 'correo'].forEach(function (k) {
+        if (e[k] && e[k].value) { d[k] = String(e[k].value).trim().slice(0, 300); }
+      });
+      try { sessionStorage.setItem(CLAVE_RED, JSON.stringify(d)); } catch (err) { /* sin almacenamiento */ }
+    });
+  }
+
+  function seguirConLaFicha() {
+    var bloque = document.querySelector('[data-ficha-siguiente]');
+    if (!bloque) { return; }
+    var d = null;
+    try { d = JSON.parse(sessionStorage.getItem(CLAVE_RED) || 'null'); } catch (e) { d = null; }
+    if (!d || !d.perfil) { return; }
+    var espacio = d.perfil === 'localizacion';
+    var q = new URLSearchParams();
+    q.set('desde', 'red');
+    if (d.empresa) { q.set('nombre', d.empresa); }
+    if (!espacio) { q.set('categoria', d.perfil); }
+    if (d.web) { q.set('web', /^https?:\/\//i.test(d.web) ? d.web : 'https://' + d.web); }
+    if (d.poblacion) { q.set('poblacion', d.poblacion); }
+    if (d.persona) { q.set('contacto_persona', d.persona); }
+    if (d.correo) { q.set('contacto_correo', d.correo); }
+    var enlace = bloque.querySelector('a.js-ficha');
+    if (!enlace) { return; }
+    enlace.setAttribute('href', '/alta-' + (espacio ? 'localizacion' : 'proveedor') + '?' + q.toString());
+    bloque.hidden = false;
+  }
+
   function initNav() {
     var toggle = document.querySelector('.nav-toggle');
     var nav = document.getElementById('nav');
@@ -155,6 +192,8 @@
     valoracion();
     initCopiar();
     mostrarAgenda();
+    recordarRed();
+    seguirConLaFicha();
     initNav();
   }
 

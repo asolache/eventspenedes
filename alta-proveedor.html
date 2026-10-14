@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Ficha del proveedor · Events Penedès</title>
+<meta name="description" content="Ficha de un proveedor de la red de Events Penedès: servicios con su precio, condiciones y lo propio de cada categoría.">
+<!-- No se indexa: es una herramienta de trabajo, y el enlace puede llevar
+     datos de contacto prerrellenados. netlify.toml lo repite en cabecera. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="assets/icon-256.png" sizes="256x256">
+<meta name="theme-color" content="#050507">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Ir al contenido principal</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 4 6 14v20l18 10 18-10V14L24 4Z" stroke="currentColor" stroke-width="2" opacity=".35"/>
+        <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
+      </svg>
+      <span class="brand__name">Events <span>Penedès</span></span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero hero--dj" id="top">
+    <div class="wrap">
+      <p class="eyebrow">Red de proveedores de Events Penedès</p>
+      <h1>Ficha del proveedor</h1>
+      <p class="lead">Con esta ficha os proponemos a empresas y agencias cuando encajáis, con vuestros servicios y precios claros desde el principio, sin idas y venidas. Solo son obligatorios el nombre y qué ofrecéis; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
+      <ol class="pasos">
+        <li><strong>Empezad desde vuestra web o vuestras tarifas</strong> <span>Pegad la dirección o subid el PDF y rellenamos lo que encontremos, marcado para que lo reviséis.</span></li>
+        <li><strong>Cada servicio con su precio</strong> <span>Qué es, cuánto cuesta, para cuántos y qué incluye. Es lo que nos permite proponeros sin tener que preguntaros cada vez.</span></li>
+        <li><strong>La actualizáis cuando queráis</strong> <span>Al enviarla os damos un enlace para volver a abrirla. Nada se publica sin vuestra autorización, y los precios y los contactos no se publican nunca.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--panel" id="ficha">
+    <div class="wrap">
+
+      <form class="form" id="form-proveedor" name="proveedor" data-ficha="categoria" method="POST"
+            action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="proveedor">
+        <input type="hidden" name="idioma" value="es">
+        <input type="hidden" name="borrador" value="">
+        <input type="hidden" name="importado" value="">
+        <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
+
+        <p class="form__estado" data-estado hidden></p>
+
+        <!-- Importar: no son campos de la ficha (sin name), no se envían -->
+        <fieldset class="importar" data-importar hidden>
+          <legend>Empezar desde vuestra web o vuestras tarifas</legend>
+          <p class="field__hint">Pegad la dirección de vuestra web o de vuestro catálogo de tarifas (también Drive o Dropbox), o subid el PDF. Rellenamos lo que encontremos, solo en los campos vacíos y marcado para que lo reviséis. No se guarda ni se nos envía nada hasta que pulséis «Enviar la ficha».</p>
+          <div class="form__row">
+            <p class="field">
+              <label for="i-url">Web o enlace a las tarifas</label>
+              <input id="i-url" type="url" inputmode="url" placeholder="https://" maxlength="500">
+            </p>
+            <p class="field">
+              <label for="i-pdf">O las tarifas en PDF</label>
+              <input id="i-pdf" type="file" accept="application/pdf,.pdf">
+              <span class="field__hint">Hasta 4 MB. Si pesa más, el enlace de Drive o Dropbox.</span>
+            </p>
+          </div>
+          <p class="form__acciones"><button class="btn btn--ghost" type="button" data-importar-boton>Importar a la ficha</button></p>
+          <p class="importar__estado" data-importar-estado hidden></p>
+        </fieldset>
+
+        <!-- campos: generado por tools/build-fichas.mjs, no editar -->
+        <h2 class="form__h" id="sec-proveedor">Quiénes sois</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-nombre">Nombre del negocio</label>
+            <input id="p-nombre" name="nombre" type="text" autocomplete="organization" maxlength="300" required>
+          </p>
+          <p class="field">
+            <label for="p-categoria">Qué ofrecéis sobre todo</label>
+            <select id="p-categoria" name="categoria" required>
+              <option value="">Elige una opción</option>
+              <option value="restauracion">Restauración y catering</option>
+              <option value="catas">Catas de vino, cava o aceite</option>
+              <option value="guias">Guías y actividades</option>
+              <option value="transporte">Transporte</option>
+              <option value="alojamiento">Alojamiento</option>
+              <option value="musica">Música y espectáculos</option>
+              <option value="ocio">Ocio y experiencias</option>
+              <option value="rrpp">Protocolo, RRPP y fotografía</option>
+              <option value="eventos">Producción y técnica de eventos</option>
+              <option value="otro">Otro</option>
+            </select>
+          </p>
+        </div>
+        <fieldset class="opts">
+          <legend>También ofrecéis</legend>
+          <p class="field--check"><label><input type="checkbox" name="tambien_restauracion" value="si"> <span>Restauración y catering</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_catas" value="si"> <span>Catas de vino, cava o aceite</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_guias" value="si"> <span>Guías y actividades</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_transporte" value="si"> <span>Transporte</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_alojamiento" value="si"> <span>Alojamiento</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_musica" value="si"> <span>Música y espectáculos</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_ocio" value="si"> <span>Ocio y experiencias</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_rrpp" value="si"> <span>Protocolo, RRPP y fotografía</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="tambien_eventos" value="si"> <span>Producción y técnica de eventos</span></label></p>
+        </fieldset>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-poblacion">Población</label>
+            <input id="p-poblacion" name="poblacion" type="text" autocomplete="address-level2" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="p-zona">Dónde trabajáis</label>
+            <select id="p-zona" name="zona">
+              <option value="">Sin dato</option>
+              <option value="penedes">En el Penedès</option>
+              <option value="catalunya">En toda Cataluña</option>
+              <option value="fuera">También fuera de Cataluña</option>
+            </select>
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-web">Web</label>
+            <input id="p-web" name="web" type="url" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="p-telefono">Teléfono del negocio</label>
+            <input id="p-telefono" name="telefono" type="tel" maxlength="300">
+            <span class="field__hint">El general. El de la persona va abajo.</span>
+          </p>
+        </div>
+        <fieldset class="opts">
+          <legend>Idiomas en que trabajáis</legend>
+          <p class="field--check"><label><input type="checkbox" name="idiomas_ca" value="si"> <span>Catalán</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="idiomas_es" value="si"> <span>Castellano</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="idiomas_en" value="si"> <span>Inglés</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="idiomas_fr" value="si"> <span>Francés</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="idiomas_de" value="si"> <span>Alemán</span></label></p>
+        </fieldset>
+        <p class="field">
+          <label for="p-descripcion">Qué os hace diferentes</label>
+          <textarea id="p-descripcion" name="descripcion" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">El párrafo con el que os presentaríamos a un cliente: quiénes sois, qué hacéis como nadie, de dónde sale lo que ofrecéis.</span>
+        </p>
+
+        <h2 class="form__h" id="sec-contacto">Persona de contacto</h2>
+        <p class="field__hint">Va a Zoho y a ningún otro sitio: no se publica.</p>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-contacto-persona">Nombre</label>
+            <input id="p-contacto-persona" name="contacto_persona" type="text" autocomplete="off" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="p-contacto-cargo">Cargo</label>
+            <input id="p-contacto-cargo" name="contacto_cargo" type="text" autocomplete="off" maxlength="300">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-contacto-movil">Móvil</label>
+            <input id="p-contacto-movil" name="contacto_movil" type="tel" autocomplete="off" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="p-contacto-correo">Correo</label>
+            <input id="p-contacto-correo" name="contacto_correo" type="email" autocomplete="off" maxlength="300">
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-catering">Restauración y catering</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_catering" value="si" data-tipos="restauracion"> <span>Ofrecéis restauración o catering</span></label></p>
+        <div class="form__cond" data-si="ofrece_catering">
+          <fieldset class="opts">
+            <legend>Formatos</legend>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_desayuno" value="si"> <span>Desayuno</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_coffee" value="si"> <span>Coffee break</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_coctel" value="si"> <span>Cóctel o aperitivo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_menu" value="si"> <span>Menú sentado</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_buffet" value="si"> <span>Buffet</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_brasa" value="si"> <span>Brasa o barbacoa</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_picnic" value="si"> <span>Picnic o cesta</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_formatos_foodtruck" value="si"> <span>Food truck</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-catering-pax-min">Mínimo de comensales</label>
+              <input id="p-catering-pax-min" name="catering_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-catering-pax-max">Máximo de comensales</label>
+              <input id="p-catering-pax-max" name="catering_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-catering-cocina">Qué necesitáis del espacio</label>
+              <select id="p-catering-cocina" name="catering_cocina">
+                <option value="">Sin dato</option>
+                <option value="nada">Nada: lo traemos todo</option>
+                <option value="office">Un office para emplatar</option>
+                <option value="cocina">Una cocina equipada</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-catering-personal">Incluye personal de sala</label>
+              <select id="p-catering-personal" name="catering_personal">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-catering-menaje">Incluye vajilla y mantelería</label>
+            <select id="p-catering-menaje" name="catering_menaje">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+          <fieldset class="opts">
+            <legend>Dietas que cubrís</legend>
+            <p class="field--check"><label><input type="checkbox" name="catering_dietas_vegetariana" value="si"> <span>Vegetariana</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_dietas_vegana" value="si"> <span>Vegana</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_dietas_gluten" value="si"> <span>Sin gluten</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_dietas_alergias" value="si"> <span>Alergias, bajo pedido</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="catering_dietas_halal" value="si"> <span>Halal</span></label></p>
+          </fieldset>
+          <p class="field">
+            <label for="p-catering-notas">Notas</label>
+            <textarea id="p-catering-notas" name="catering_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Producto, de dónde sale, hasta qué hora servís, qué pasa si sube el número de comensales.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-cata">Catas</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_cata" value="si" data-tipos="catas"> <span>Ofrecéis catas</span></label></p>
+        <div class="form__cond" data-si="ofrece_cata">
+          <fieldset class="opts">
+            <legend>Qué se cata</legend>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_vino" value="si"> <span>Vino</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_cava" value="si"> <span>Cava</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_aceite" value="si"> <span>Aceite</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_vermut" value="si"> <span>Vermut</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_cerveza" value="si"> <span>Cerveza</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="cata_productos_otros" value="si"> <span>Otros productos</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-cata-lugar">Dónde</label>
+              <select id="p-cata-lugar" name="cata_lugar">
+                <option value="">Sin dato</option>
+                <option value="propio">En nuestra casa</option>
+                <option value="desplazada">Vamos donde sea el evento</option>
+                <option value="ambos">Las dos cosas</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-cata-duracion">Duración</label>
+              <input id="p-cata-duracion" name="cata_duracion" type="text" maxlength="300">
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-cata-pax-max">Máximo de personas por grupo</label>
+            <input id="p-cata-pax-max" name="cata_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+          </p>
+          <p class="field">
+            <label for="p-cata-notas">Notas</label>
+            <textarea id="p-cata-notas" name="cata_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Quién la guía, qué se cata, si se adapta a empresa.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-actividad">Guías y actividades</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_actividad" value="si" data-tipos="guias ocio"> <span>Ofrecéis actividades o visitas guiadas</span></label></p>
+        <div class="form__cond" data-si="ofrece_actividad">
+          <fieldset class="opts">
+            <legend>Qué hacéis</legend>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_ruta" value="si"> <span>Ruta o visita guiada</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_taller" value="si"> <span>Taller</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_aventura" value="si"> <span>Deporte o aventura</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_cultura" value="si"> <span>Cultura y tradición</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_naturaleza" value="si"> <span>Naturaleza y paisaje</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_gastronomia" value="si"> <span>Gastronomía</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="actividad_tipos_equipo" value="si"> <span>Dinámica de equipo</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-actividad-duracion">Duración</label>
+              <input id="p-actividad-duracion" name="actividad_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-actividad-lugar">Se hace</label>
+              <select id="p-actividad-lugar" name="actividad_lugar">
+                <option value="">Sin dato</option>
+                <option value="interior">En interior</option>
+                <option value="exterior">Al aire libre</option>
+                <option value="ambos">En interior o al aire libre</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-actividad-pax-min">Mínimo de personas</label>
+              <input id="p-actividad-pax-min" name="actividad_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-actividad-pax-max">Máximo de personas</label>
+              <input id="p-actividad-pax-max" name="actividad_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-actividad-material">Material incluido</label>
+              <select id="p-actividad-material" name="actividad_material">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-actividad-seguro">Seguro de responsabilidad civil</label>
+              <select id="p-actividad-seguro" name="actividad_seguro">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-actividad-pmr">Apta para movilidad reducida</label>
+              <select id="p-actividad-pmr" name="actividad_pmr">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-actividad-lluvia">Si llueve</label>
+              <input id="p-actividad-lluvia" name="actividad_lluvia" type="text" maxlength="300">
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-actividad-notas">Notas</label>
+            <textarea id="p-actividad-notas" name="actividad_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Quién la guía, qué se lleva cada uno, a partir de cuántos se divide en grupos.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-transporte">Transporte</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_transporte" value="si" data-tipos="transporte"> <span>Ofrecéis transporte</span></label></p>
+        <div class="form__cond" data-si="ofrece_transporte">
+          <fieldset class="opts">
+            <legend>Vehículos</legend>
+            <p class="field--check"><label><input type="checkbox" name="transporte_vehiculos_coche" value="si"> <span>Coche</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="transporte_vehiculos_van" value="si"> <span>Furgoneta (hasta 8)</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="transporte_vehiculos_minibus" value="si"> <span>Minibús</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="transporte_vehiculos_autocar" value="si"> <span>Autocar</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="transporte_vehiculos_otro" value="si"> <span>Otro (tren turístico, bicis…)</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-transporte-plazas">Plazas del vehículo más grande</label>
+              <input id="p-transporte-plazas" name="transporte_plazas" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-transporte-flota">Vehículos a la vez</label>
+              <input id="p-transporte-flota" name="transporte_flota" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-transporte-conductor">Conductor incluido</label>
+              <select id="p-transporte-conductor" name="transporte_conductor">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-transporte-pmr">Vehículo adaptado</label>
+              <select id="p-transporte-pmr" name="transporte_pmr">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-transporte-notas">Notas</label>
+            <textarea id="p-transporte-notas" name="transporte_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Desde dónde salís, esperas, horas nocturnas.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-alojamiento">Alojamiento</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_alojamiento" value="si" data-tipos="alojamiento"> <span>Ofrecéis alojamiento</span></label></p>
+        <div class="form__cond" data-si="ofrece_alojamiento">
+          <div class="form__row">
+            <p class="field">
+              <label for="p-habitaciones">Habitaciones</label>
+              <input id="p-habitaciones" name="habitaciones" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-plazas">Plazas para dormir</label>
+              <input id="p-plazas" name="plazas" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-habitaciones-tipos">Tipos de habitación</label>
+              <input id="p-habitaciones-tipos" name="habitaciones_tipos" type="text" maxlength="300">
+              <span class="field__hint">Dobles, suites, familiares, literas…</span>
+            </p>
+            <p class="field">
+              <label for="p-desayuno">Desayuno incluido</label>
+              <select id="p-desayuno" name="desayuno">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-alojamiento-notas">Notas</label>
+            <textarea id="p-alojamiento-notas" name="alojamiento_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Entrada y salida, estancia mínima, temporada.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-musica">Música y espectáculos</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_musica" value="si" data-tipos="musica"> <span>Ofrecéis música o espectáculos</span></label></p>
+        <div class="form__cond" data-si="ofrece_musica">
+          <fieldset class="opts">
+            <legend>Formatos</legend>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_dj" value="si"> <span>DJ</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_banda" value="si"> <span>Grupo en directo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_solista" value="si"> <span>Solista o dúo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_clasica" value="si"> <span>Clásica o cuarteto</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_espectaculo" value="si"> <span>Animación o espectáculo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="musica_formatos_popular" value="si"> <span>Cultura popular</span></label></p>
+          </fieldset>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-musica-sonido">Equipo de sonido</label>
+              <select id="p-musica-sonido" name="musica_sonido">
+                <option value="">Sin dato</option>
+                <option value="incluido">Lo llevamos, incluido</option>
+                <option value="aparte">Lo llevamos, va aparte</option>
+                <option value="espacio">Usamos el del espacio</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-musica-duracion">Duración de una actuación</label>
+              <input id="p-musica-duracion" name="musica_duracion" type="text" maxlength="300">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-musica-montaje">Montaje y prueba de sonido</label>
+              <input id="p-musica-montaje" name="musica_montaje" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-musica-rider">Rider técnico (enlace)</label>
+              <input id="p-musica-rider" name="musica_rider" type="url" maxlength="300">
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-musica-notas">Notas</label>
+            <textarea id="p-musica-notas" name="musica_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Repertorio, si se adapta al momento del evento, potencia eléctrica que necesitáis.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-imagen">Fotografía y protocolo</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_imagen" value="si" data-tipos="rrpp"> <span>Ofrecéis fotografía, vídeo o protocolo</span></label></p>
+        <div class="form__cond" data-si="ofrece_imagen">
+          <fieldset class="opts">
+            <legend>Qué hacéis</legend>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_foto" value="si"> <span>Fotografía</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_video" value="si"> <span>Vídeo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_dron" value="si"> <span>Dron</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_fotomaton" value="si"> <span>Fotomatón</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_protocolo" value="si"> <span>Protocolo</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="imagen_servicios_azafatas" value="si"> <span>Azafatas y acreditaciones</span></label></p>
+          </fieldset>
+          <p class="field">
+            <label for="p-imagen-entrega">Plazo de entrega</label>
+            <input id="p-imagen-entrega" name="imagen_entrega" type="text" maxlength="300">
+          </p>
+          <p class="field">
+            <label for="p-imagen-notas">Notas</label>
+            <textarea id="p-imagen-notas" name="imagen_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Derechos de uso de las imágenes, formato de entrega.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-tecnica">Producción y técnica</h2>
+        <p class="field--check"><label><input type="checkbox" name="ofrece_tecnica" value="si" data-tipos="eventos"> <span>Ofrecéis técnica o producción</span></label></p>
+        <div class="form__cond" data-si="ofrece_tecnica">
+          <fieldset class="opts">
+            <legend>Qué tenéis</legend>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_sonido" value="si"> <span>Sonido</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_luces" value="si"> <span>Iluminación</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_pantallas" value="si"> <span>Pantallas y proyección</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_escenario" value="si"> <span>Escenario o tarima</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_carpa" value="si"> <span>Carpas</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_mobiliario" value="si"> <span>Mobiliario</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_generador" value="si"> <span>Generador</span></label></p>
+            <p class="field--check"><label><input type="checkbox" name="tecnica_equipos_streaming" value="si"> <span>Streaming</span></label></p>
+          </fieldset>
+          <p class="field">
+            <label for="p-tecnica-personal">Técnico incluido</label>
+            <select id="p-tecnica-personal" name="tecnica_personal">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="p-tecnica-notas">Notas</label>
+            <textarea id="p-tecnica-notas" name="tecnica_notas" rows="3" maxlength="2000"></textarea>
+            <span class="field__hint">Potencia, montaje y desmontaje, lo que necesitáis del espacio.</span>
+          </p>
+        </div>
+
+        <h2 class="form__h" id="sec-servicios">Servicios y precios</h2>
+        <p class="field__hint">Cada servicio con su precio cerrado: qué es, cuánto cuesta y por qué unidad, para cuántos y qué incluye. Así lo podemos proponer sin idas y venidas. Precio neto para Events Penedès, sin IVA salvo que se diga. No se publica.</p>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 1</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio1-nombre">Qué es</label>
+              <input id="p-servicio1-nombre" name="servicio1_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio1-precio">Precio (€)</label>
+              <input id="p-servicio1-precio" name="servicio1_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio1-unidad">El precio es</label>
+              <select id="p-servicio1-unidad" name="servicio1_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio1-iva">Lleva IVA</label>
+              <select id="p-servicio1-iva" name="servicio1_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio1-pax-min">Mínimo de personas</label>
+              <input id="p-servicio1-pax-min" name="servicio1_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio1-pax-max">Máximo de personas</label>
+              <input id="p-servicio1-pax-max" name="servicio1_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio1-duracion">Duración</label>
+              <input id="p-servicio1-duracion" name="servicio1_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio1-no-incluye">Qué va aparte</label>
+              <input id="p-servicio1-no-incluye" name="servicio1_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio1-incluye">Qué incluye</label>
+            <textarea id="p-servicio1-incluye" name="servicio1_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio1-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio1-comision" name="servicio1_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio1-comision-tipo">La comisión es</label>
+              <select id="p-servicio1-comision-tipo" name="servicio1_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 2</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio2-nombre">Qué es</label>
+              <input id="p-servicio2-nombre" name="servicio2_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio2-precio">Precio (€)</label>
+              <input id="p-servicio2-precio" name="servicio2_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio2-unidad">El precio es</label>
+              <select id="p-servicio2-unidad" name="servicio2_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio2-iva">Lleva IVA</label>
+              <select id="p-servicio2-iva" name="servicio2_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio2-pax-min">Mínimo de personas</label>
+              <input id="p-servicio2-pax-min" name="servicio2_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio2-pax-max">Máximo de personas</label>
+              <input id="p-servicio2-pax-max" name="servicio2_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio2-duracion">Duración</label>
+              <input id="p-servicio2-duracion" name="servicio2_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio2-no-incluye">Qué va aparte</label>
+              <input id="p-servicio2-no-incluye" name="servicio2_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio2-incluye">Qué incluye</label>
+            <textarea id="p-servicio2-incluye" name="servicio2_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio2-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio2-comision" name="servicio2_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio2-comision-tipo">La comisión es</label>
+              <select id="p-servicio2-comision-tipo" name="servicio2_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 3</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio3-nombre">Qué es</label>
+              <input id="p-servicio3-nombre" name="servicio3_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio3-precio">Precio (€)</label>
+              <input id="p-servicio3-precio" name="servicio3_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio3-unidad">El precio es</label>
+              <select id="p-servicio3-unidad" name="servicio3_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio3-iva">Lleva IVA</label>
+              <select id="p-servicio3-iva" name="servicio3_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio3-pax-min">Mínimo de personas</label>
+              <input id="p-servicio3-pax-min" name="servicio3_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio3-pax-max">Máximo de personas</label>
+              <input id="p-servicio3-pax-max" name="servicio3_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio3-duracion">Duración</label>
+              <input id="p-servicio3-duracion" name="servicio3_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio3-no-incluye">Qué va aparte</label>
+              <input id="p-servicio3-no-incluye" name="servicio3_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio3-incluye">Qué incluye</label>
+            <textarea id="p-servicio3-incluye" name="servicio3_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio3-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio3-comision" name="servicio3_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio3-comision-tipo">La comisión es</label>
+              <select id="p-servicio3-comision-tipo" name="servicio3_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 4</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio4-nombre">Qué es</label>
+              <input id="p-servicio4-nombre" name="servicio4_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio4-precio">Precio (€)</label>
+              <input id="p-servicio4-precio" name="servicio4_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio4-unidad">El precio es</label>
+              <select id="p-servicio4-unidad" name="servicio4_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio4-iva">Lleva IVA</label>
+              <select id="p-servicio4-iva" name="servicio4_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio4-pax-min">Mínimo de personas</label>
+              <input id="p-servicio4-pax-min" name="servicio4_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio4-pax-max">Máximo de personas</label>
+              <input id="p-servicio4-pax-max" name="servicio4_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio4-duracion">Duración</label>
+              <input id="p-servicio4-duracion" name="servicio4_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio4-no-incluye">Qué va aparte</label>
+              <input id="p-servicio4-no-incluye" name="servicio4_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio4-incluye">Qué incluye</label>
+            <textarea id="p-servicio4-incluye" name="servicio4_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio4-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio4-comision" name="servicio4_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio4-comision-tipo">La comisión es</label>
+              <select id="p-servicio4-comision-tipo" name="servicio4_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 5</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio5-nombre">Qué es</label>
+              <input id="p-servicio5-nombre" name="servicio5_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio5-precio">Precio (€)</label>
+              <input id="p-servicio5-precio" name="servicio5_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio5-unidad">El precio es</label>
+              <select id="p-servicio5-unidad" name="servicio5_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio5-iva">Lleva IVA</label>
+              <select id="p-servicio5-iva" name="servicio5_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio5-pax-min">Mínimo de personas</label>
+              <input id="p-servicio5-pax-min" name="servicio5_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio5-pax-max">Máximo de personas</label>
+              <input id="p-servicio5-pax-max" name="servicio5_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio5-duracion">Duración</label>
+              <input id="p-servicio5-duracion" name="servicio5_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio5-no-incluye">Qué va aparte</label>
+              <input id="p-servicio5-no-incluye" name="servicio5_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio5-incluye">Qué incluye</label>
+            <textarea id="p-servicio5-incluye" name="servicio5_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio5-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio5-comision" name="servicio5_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio5-comision-tipo">La comisión es</label>
+              <select id="p-servicio5-comision-tipo" name="servicio5_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 6</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio6-nombre">Qué es</label>
+              <input id="p-servicio6-nombre" name="servicio6_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio6-precio">Precio (€)</label>
+              <input id="p-servicio6-precio" name="servicio6_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio6-unidad">El precio es</label>
+              <select id="p-servicio6-unidad" name="servicio6_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio6-iva">Lleva IVA</label>
+              <select id="p-servicio6-iva" name="servicio6_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio6-pax-min">Mínimo de personas</label>
+              <input id="p-servicio6-pax-min" name="servicio6_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio6-pax-max">Máximo de personas</label>
+              <input id="p-servicio6-pax-max" name="servicio6_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio6-duracion">Duración</label>
+              <input id="p-servicio6-duracion" name="servicio6_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio6-no-incluye">Qué va aparte</label>
+              <input id="p-servicio6-no-incluye" name="servicio6_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio6-incluye">Qué incluye</label>
+            <textarea id="p-servicio6-incluye" name="servicio6_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio6-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio6-comision" name="servicio6_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio6-comision-tipo">La comisión es</label>
+              <select id="p-servicio6-comision-tipo" name="servicio6_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 7</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio7-nombre">Qué es</label>
+              <input id="p-servicio7-nombre" name="servicio7_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio7-precio">Precio (€)</label>
+              <input id="p-servicio7-precio" name="servicio7_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio7-unidad">El precio es</label>
+              <select id="p-servicio7-unidad" name="servicio7_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio7-iva">Lleva IVA</label>
+              <select id="p-servicio7-iva" name="servicio7_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio7-pax-min">Mínimo de personas</label>
+              <input id="p-servicio7-pax-min" name="servicio7_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio7-pax-max">Máximo de personas</label>
+              <input id="p-servicio7-pax-max" name="servicio7_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio7-duracion">Duración</label>
+              <input id="p-servicio7-duracion" name="servicio7_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio7-no-incluye">Qué va aparte</label>
+              <input id="p-servicio7-no-incluye" name="servicio7_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio7-incluye">Qué incluye</label>
+            <textarea id="p-servicio7-incluye" name="servicio7_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio7-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio7-comision" name="servicio7_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio7-comision-tipo">La comisión es</label>
+              <select id="p-servicio7-comision-tipo" name="servicio7_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 8</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio8-nombre">Qué es</label>
+              <input id="p-servicio8-nombre" name="servicio8_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio8-precio">Precio (€)</label>
+              <input id="p-servicio8-precio" name="servicio8_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio8-unidad">El precio es</label>
+              <select id="p-servicio8-unidad" name="servicio8_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio8-iva">Lleva IVA</label>
+              <select id="p-servicio8-iva" name="servicio8_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio8-pax-min">Mínimo de personas</label>
+              <input id="p-servicio8-pax-min" name="servicio8_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio8-pax-max">Máximo de personas</label>
+              <input id="p-servicio8-pax-max" name="servicio8_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio8-duracion">Duración</label>
+              <input id="p-servicio8-duracion" name="servicio8_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio8-no-incluye">Qué va aparte</label>
+              <input id="p-servicio8-no-incluye" name="servicio8_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio8-incluye">Qué incluye</label>
+            <textarea id="p-servicio8-incluye" name="servicio8_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio8-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio8-comision" name="servicio8_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio8-comision-tipo">La comisión es</label>
+              <select id="p-servicio8-comision-tipo" name="servicio8_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 9</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio9-nombre">Qué es</label>
+              <input id="p-servicio9-nombre" name="servicio9_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio9-precio">Precio (€)</label>
+              <input id="p-servicio9-precio" name="servicio9_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio9-unidad">El precio es</label>
+              <select id="p-servicio9-unidad" name="servicio9_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio9-iva">Lleva IVA</label>
+              <select id="p-servicio9-iva" name="servicio9_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio9-pax-min">Mínimo de personas</label>
+              <input id="p-servicio9-pax-min" name="servicio9_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio9-pax-max">Máximo de personas</label>
+              <input id="p-servicio9-pax-max" name="servicio9_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio9-duracion">Duración</label>
+              <input id="p-servicio9-duracion" name="servicio9_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio9-no-incluye">Qué va aparte</label>
+              <input id="p-servicio9-no-incluye" name="servicio9_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio9-incluye">Qué incluye</label>
+            <textarea id="p-servicio9-incluye" name="servicio9_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio9-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio9-comision" name="servicio9_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio9-comision-tipo">La comisión es</label>
+              <select id="p-servicio9-comision-tipo" name="servicio9_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 10</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio10-nombre">Qué es</label>
+              <input id="p-servicio10-nombre" name="servicio10_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio10-precio">Precio (€)</label>
+              <input id="p-servicio10-precio" name="servicio10_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio10-unidad">El precio es</label>
+              <select id="p-servicio10-unidad" name="servicio10_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio10-iva">Lleva IVA</label>
+              <select id="p-servicio10-iva" name="servicio10_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio10-pax-min">Mínimo de personas</label>
+              <input id="p-servicio10-pax-min" name="servicio10_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio10-pax-max">Máximo de personas</label>
+              <input id="p-servicio10-pax-max" name="servicio10_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio10-duracion">Duración</label>
+              <input id="p-servicio10-duracion" name="servicio10_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio10-no-incluye">Qué va aparte</label>
+              <input id="p-servicio10-no-incluye" name="servicio10_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio10-incluye">Qué incluye</label>
+            <textarea id="p-servicio10-incluye" name="servicio10_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio10-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio10-comision" name="servicio10_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio10-comision-tipo">La comisión es</label>
+              <select id="p-servicio10-comision-tipo" name="servicio10_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 11</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio11-nombre">Qué es</label>
+              <input id="p-servicio11-nombre" name="servicio11_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio11-precio">Precio (€)</label>
+              <input id="p-servicio11-precio" name="servicio11_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio11-unidad">El precio es</label>
+              <select id="p-servicio11-unidad" name="servicio11_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio11-iva">Lleva IVA</label>
+              <select id="p-servicio11-iva" name="servicio11_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio11-pax-min">Mínimo de personas</label>
+              <input id="p-servicio11-pax-min" name="servicio11_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio11-pax-max">Máximo de personas</label>
+              <input id="p-servicio11-pax-max" name="servicio11_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio11-duracion">Duración</label>
+              <input id="p-servicio11-duracion" name="servicio11_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio11-no-incluye">Qué va aparte</label>
+              <input id="p-servicio11-no-incluye" name="servicio11_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio11-incluye">Qué incluye</label>
+            <textarea id="p-servicio11-incluye" name="servicio11_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio11-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio11-comision" name="servicio11_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio11-comision-tipo">La comisión es</label>
+              <select id="p-servicio11-comision-tipo" name="servicio11_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 12</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio12-nombre">Qué es</label>
+              <input id="p-servicio12-nombre" name="servicio12_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio12-precio">Precio (€)</label>
+              <input id="p-servicio12-precio" name="servicio12_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio12-unidad">El precio es</label>
+              <select id="p-servicio12-unidad" name="servicio12_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio12-iva">Lleva IVA</label>
+              <select id="p-servicio12-iva" name="servicio12_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio12-pax-min">Mínimo de personas</label>
+              <input id="p-servicio12-pax-min" name="servicio12_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio12-pax-max">Máximo de personas</label>
+              <input id="p-servicio12-pax-max" name="servicio12_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio12-duracion">Duración</label>
+              <input id="p-servicio12-duracion" name="servicio12_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio12-no-incluye">Qué va aparte</label>
+              <input id="p-servicio12-no-incluye" name="servicio12_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio12-incluye">Qué incluye</label>
+            <textarea id="p-servicio12-incluye" name="servicio12_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio12-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio12-comision" name="servicio12_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio12-comision-tipo">La comisión es</label>
+              <select id="p-servicio12-comision-tipo" name="servicio12_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 13</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio13-nombre">Qué es</label>
+              <input id="p-servicio13-nombre" name="servicio13_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio13-precio">Precio (€)</label>
+              <input id="p-servicio13-precio" name="servicio13_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio13-unidad">El precio es</label>
+              <select id="p-servicio13-unidad" name="servicio13_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio13-iva">Lleva IVA</label>
+              <select id="p-servicio13-iva" name="servicio13_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio13-pax-min">Mínimo de personas</label>
+              <input id="p-servicio13-pax-min" name="servicio13_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio13-pax-max">Máximo de personas</label>
+              <input id="p-servicio13-pax-max" name="servicio13_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio13-duracion">Duración</label>
+              <input id="p-servicio13-duracion" name="servicio13_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio13-no-incluye">Qué va aparte</label>
+              <input id="p-servicio13-no-incluye" name="servicio13_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio13-incluye">Qué incluye</label>
+            <textarea id="p-servicio13-incluye" name="servicio13_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio13-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio13-comision" name="servicio13_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio13-comision-tipo">La comisión es</label>
+              <select id="p-servicio13-comision-tipo" name="servicio13_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 14</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio14-nombre">Qué es</label>
+              <input id="p-servicio14-nombre" name="servicio14_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio14-precio">Precio (€)</label>
+              <input id="p-servicio14-precio" name="servicio14_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio14-unidad">El precio es</label>
+              <select id="p-servicio14-unidad" name="servicio14_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio14-iva">Lleva IVA</label>
+              <select id="p-servicio14-iva" name="servicio14_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio14-pax-min">Mínimo de personas</label>
+              <input id="p-servicio14-pax-min" name="servicio14_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio14-pax-max">Máximo de personas</label>
+              <input id="p-servicio14-pax-max" name="servicio14_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio14-duracion">Duración</label>
+              <input id="p-servicio14-duracion" name="servicio14_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio14-no-incluye">Qué va aparte</label>
+              <input id="p-servicio14-no-incluye" name="servicio14_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio14-incluye">Qué incluye</label>
+            <textarea id="p-servicio14-incluye" name="servicio14_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio14-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio14-comision" name="servicio14_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio14-comision-tipo">La comisión es</label>
+              <select id="p-servicio14-comision-tipo" name="servicio14_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 15</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio15-nombre">Qué es</label>
+              <input id="p-servicio15-nombre" name="servicio15_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio15-precio">Precio (€)</label>
+              <input id="p-servicio15-precio" name="servicio15_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio15-unidad">El precio es</label>
+              <select id="p-servicio15-unidad" name="servicio15_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio15-iva">Lleva IVA</label>
+              <select id="p-servicio15-iva" name="servicio15_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio15-pax-min">Mínimo de personas</label>
+              <input id="p-servicio15-pax-min" name="servicio15_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio15-pax-max">Máximo de personas</label>
+              <input id="p-servicio15-pax-max" name="servicio15_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio15-duracion">Duración</label>
+              <input id="p-servicio15-duracion" name="servicio15_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio15-no-incluye">Qué va aparte</label>
+              <input id="p-servicio15-no-incluye" name="servicio15_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio15-incluye">Qué incluye</label>
+            <textarea id="p-servicio15-incluye" name="servicio15_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio15-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio15-comision" name="servicio15_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio15-comision-tipo">La comisión es</label>
+              <select id="p-servicio15-comision-tipo" name="servicio15_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 16</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio16-nombre">Qué es</label>
+              <input id="p-servicio16-nombre" name="servicio16_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio16-precio">Precio (€)</label>
+              <input id="p-servicio16-precio" name="servicio16_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio16-unidad">El precio es</label>
+              <select id="p-servicio16-unidad" name="servicio16_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio16-iva">Lleva IVA</label>
+              <select id="p-servicio16-iva" name="servicio16_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio16-pax-min">Mínimo de personas</label>
+              <input id="p-servicio16-pax-min" name="servicio16_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio16-pax-max">Máximo de personas</label>
+              <input id="p-servicio16-pax-max" name="servicio16_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio16-duracion">Duración</label>
+              <input id="p-servicio16-duracion" name="servicio16_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio16-no-incluye">Qué va aparte</label>
+              <input id="p-servicio16-no-incluye" name="servicio16_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio16-incluye">Qué incluye</label>
+            <textarea id="p-servicio16-incluye" name="servicio16_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio16-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio16-comision" name="servicio16_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio16-comision-tipo">La comisión es</label>
+              <select id="p-servicio16-comision-tipo" name="servicio16_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 17</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio17-nombre">Qué es</label>
+              <input id="p-servicio17-nombre" name="servicio17_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio17-precio">Precio (€)</label>
+              <input id="p-servicio17-precio" name="servicio17_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio17-unidad">El precio es</label>
+              <select id="p-servicio17-unidad" name="servicio17_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio17-iva">Lleva IVA</label>
+              <select id="p-servicio17-iva" name="servicio17_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio17-pax-min">Mínimo de personas</label>
+              <input id="p-servicio17-pax-min" name="servicio17_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio17-pax-max">Máximo de personas</label>
+              <input id="p-servicio17-pax-max" name="servicio17_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio17-duracion">Duración</label>
+              <input id="p-servicio17-duracion" name="servicio17_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio17-no-incluye">Qué va aparte</label>
+              <input id="p-servicio17-no-incluye" name="servicio17_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio17-incluye">Qué incluye</label>
+            <textarea id="p-servicio17-incluye" name="servicio17_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio17-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio17-comision" name="servicio17_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio17-comision-tipo">La comisión es</label>
+              <select id="p-servicio17-comision-tipo" name="servicio17_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 18</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio18-nombre">Qué es</label>
+              <input id="p-servicio18-nombre" name="servicio18_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio18-precio">Precio (€)</label>
+              <input id="p-servicio18-precio" name="servicio18_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio18-unidad">El precio es</label>
+              <select id="p-servicio18-unidad" name="servicio18_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio18-iva">Lleva IVA</label>
+              <select id="p-servicio18-iva" name="servicio18_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio18-pax-min">Mínimo de personas</label>
+              <input id="p-servicio18-pax-min" name="servicio18_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio18-pax-max">Máximo de personas</label>
+              <input id="p-servicio18-pax-max" name="servicio18_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio18-duracion">Duración</label>
+              <input id="p-servicio18-duracion" name="servicio18_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio18-no-incluye">Qué va aparte</label>
+              <input id="p-servicio18-no-incluye" name="servicio18_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio18-incluye">Qué incluye</label>
+            <textarea id="p-servicio18-incluye" name="servicio18_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio18-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio18-comision" name="servicio18_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio18-comision-tipo">La comisión es</label>
+              <select id="p-servicio18-comision-tipo" name="servicio18_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 19</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio19-nombre">Qué es</label>
+              <input id="p-servicio19-nombre" name="servicio19_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio19-precio">Precio (€)</label>
+              <input id="p-servicio19-precio" name="servicio19_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio19-unidad">El precio es</label>
+              <select id="p-servicio19-unidad" name="servicio19_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio19-iva">Lleva IVA</label>
+              <select id="p-servicio19-iva" name="servicio19_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio19-pax-min">Mínimo de personas</label>
+              <input id="p-servicio19-pax-min" name="servicio19_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio19-pax-max">Máximo de personas</label>
+              <input id="p-servicio19-pax-max" name="servicio19_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio19-duracion">Duración</label>
+              <input id="p-servicio19-duracion" name="servicio19_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio19-no-incluye">Qué va aparte</label>
+              <input id="p-servicio19-no-incluye" name="servicio19_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio19-incluye">Qué incluye</label>
+            <textarea id="p-servicio19-incluye" name="servicio19_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio19-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio19-comision" name="servicio19_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio19-comision-tipo">La comisión es</label>
+              <select id="p-servicio19-comision-tipo" name="servicio19_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="sala" data-repite="servicio">
+          <legend>Servicio 20</legend>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio20-nombre">Qué es</label>
+              <input id="p-servicio20-nombre" name="servicio20_nombre" type="text" maxlength="300">
+              <span class="field__hint">Menú de mediodía, ruta de 2 h por la viña, actuación del cuarteto, trayecto Barcelona–finca…</span>
+            </p>
+            <p class="field">
+              <label for="p-servicio20-precio">Precio (€)</label>
+              <input id="p-servicio20-precio" name="servicio20_precio" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio20-unidad">El precio es</label>
+              <select id="p-servicio20-unidad" name="servicio20_unidad">
+                <option value="">Sin dato</option>
+                <option value="evento">por evento</option>
+                <option value="persona">por persona</option>
+                <option value="hora">por hora</option>
+                <option value="unidad">por unidad</option>
+                <option value="actuacion">por actuación</option>
+                <option value="trayecto">por trayecto</option>
+                <option value="dia">por día</option>
+                <option value="km">por km</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="p-servicio20-iva">Lleva IVA</label>
+              <select id="p-servicio20-iva" name="servicio20_iva">
+                <option value="">Sin dato</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio20-pax-min">Mínimo de personas</label>
+              <input id="p-servicio20-pax-min" name="servicio20_pax_min" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+            <p class="field">
+              <label for="p-servicio20-pax-max">Máximo de personas</label>
+              <input id="p-servicio20-pax-max" name="servicio20_pax_max" type="number" min="0" max="100000" inputmode="numeric">
+            </p>
+          </div>
+          <div class="form__row">
+            <p class="field">
+              <label for="p-servicio20-duracion">Duración</label>
+              <input id="p-servicio20-duracion" name="servicio20_duracion" type="text" maxlength="300">
+            </p>
+            <p class="field">
+              <label for="p-servicio20-no-incluye">Qué va aparte</label>
+              <input id="p-servicio20-no-incluye" name="servicio20_no_incluye" type="text" maxlength="300">
+              <span class="field__hint">Desplazamiento, equipo de sonido, material…</span>
+            </p>
+          </div>
+          <p class="field">
+            <label for="p-servicio20-incluye">Qué incluye</label>
+            <textarea id="p-servicio20-incluye" name="servicio20_incluye" rows="3" maxlength="2000"></textarea>
+          </p>
+          <div class="form__row">
+            <p class="field solo-interno">
+              <label for="p-servicio20-comision">Comisión para Events Penedès</label>
+              <input id="p-servicio20-comision" name="servicio20_comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+              <span class="field__hint">En blanco, vale la general. 0 si no es comisionable.</span>
+            </p>
+            <p class="field solo-interno">
+              <label for="p-servicio20-comision-tipo">La comisión es</label>
+              <select id="p-servicio20-comision-tipo" name="servicio20_comision_tipo">
+                <option value="">Sin dato</option>
+                <option value="porcentaje">% del precio</option>
+                <option value="importe">€ en la unidad del precio</option>
+              </select>
+            </p>
+          </div>
+        </fieldset>
+        <p class="sala__mas" data-repite-mas="servicio" hidden><button class="btn btn--ghost" type="button">Añadir otro servicio</button></p>
+
+        <h2 class="form__h" id="sec-condiciones">Condiciones</h2>
+        <p class="field__hint">No se publican: sirven para preparar presupuestos. Lo que no tengáis claro, en blanco.</p>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-iva-incluido">Los precios llevan IVA</label>
+            <select id="p-iva-incluido" name="iva_incluido">
+              <option value="">Sin dato</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+            <span class="field__hint">Si no se dice, se entienden sin IVA.</span>
+          </p>
+          <p class="field">
+            <label for="p-minimo-facturacion">Facturación mínima (€)</label>
+            <input id="p-minimo-facturacion" name="minimo_facturacion" type="number" min="0" max="1000000" step="0.01" inputmode="decimal">
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-desplazamiento">Desplazamiento</label>
+            <input id="p-desplazamiento" name="desplazamiento" type="text" maxlength="300">
+            <span class="field__hint">Incluido hasta cierta distancia, precio por km, dietas…</span>
+          </p>
+          <p class="field">
+            <label for="p-antelacion">Antelación para reservar</label>
+            <input id="p-antelacion" name="antelacion" type="text" maxlength="300">
+          </p>
+        </div>
+        <p class="field">
+          <label for="p-temporada">Temporada alta y fechas sin disponibilidad</label>
+          <input id="p-temporada" name="temporada" type="text" maxlength="300">
+        </p>
+        <p class="field">
+          <label for="p-reserva">Reserva y cancelación</label>
+          <textarea id="p-reserva" name="reserva" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Señal, plazos, qué pasa si se cancela.</span>
+        </p>
+        <div class="form__row">
+          <p class="field solo-interno">
+            <label for="p-comision">Comisión general para Events Penedès</label>
+            <input id="p-comision" name="comision" type="number" min="0" max="100000" step="0.01" inputmode="decimal">
+          </p>
+          <p class="field solo-interno">
+            <label for="p-comision-tipo">La comisión general es</label>
+            <select id="p-comision-tipo" name="comision_tipo">
+              <option value="">Sin dato</option>
+              <option value="porcentaje">% de lo que se contrata</option>
+              <option value="persona">€ por persona</option>
+              <option value="evento">€ por evento</option>
+            </select>
+          </p>
+        </div>
+        <p class="field">
+          <label for="p-condiciones-notas">Notas de tarifas</label>
+          <textarea id="p-condiciones-notas" name="condiciones_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Lo que no cabe arriba, tal cual.</span>
+        </p>
+
+        <h2 class="form__h" id="sec-publicacion">Fotos y publicación</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-fotos-enlace">Fotos, vídeos o dossier</label>
+            <input id="p-fotos-enlace" name="fotos_enlace" type="url" maxlength="300">
+            <span class="field__hint">Drive, Dropbox o vuestra web. Las fotos no se suben aquí.</span>
+          </p>
+          <p class="field">
+            <label for="p-tarifas-enlace">Catálogo o tarifas</label>
+            <input id="p-tarifas-enlace" name="tarifas_enlace" type="url" maxlength="300">
+            <span class="field__hint">El PDF de tarifas, si lo tenéis en línea.</span>
+          </p>
+        </div>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-fotos-permiso">Permiso para publicar las fotos</label>
+            <select id="p-fotos-permiso" name="fotos_permiso">
+              <option value="">Sin dato</option>
+              <option value="escrito">Sí, por escrito</option>
+              <option value="verbal">De palabra: falta por escrito</option>
+              <option value="no">No</option>
+              <option value="pedir">Hay que pedirlo</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="p-autoriza">Aparecer con vuestro nombre en eventspenedes.com</label>
+            <select id="p-autoriza" name="autoriza">
+              <option value="">Sin dato</option>
+              <option value="si">Sí, sin precios ni datos de contacto</option>
+              <option value="revisar">Queremos revisarlo antes</option>
+              <option value="no">No por ahora: solo en propuestas</option>
+            </select>
+            <span class="field__hint">Sin esta autorización vuestro nombre no sale en la web. Los precios y las personas de contacto no se publican nunca.</span>
+          </p>
+        </div>
+
+        <div class="solo-interno form">
+        <h2 class="form__h" id="sec-revision">Nuestra valoración</h2>
+        <div class="form__row">
+          <p class="field">
+            <label for="p-relacion">Relación con nosotros</label>
+            <select id="p-relacion" name="relacion">
+              <option value="">Sin dato</option>
+              <option value="evaluando">En evaluación</option>
+              <option value="aliado">Proveedor de confianza</option>
+              <option value="propio">Servicio propio</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="p-revision-fecha">Validado el</label>
+            <input id="p-revision-fecha" name="revision_fecha" type="date">
+            <span class="field__hint">Una prueba, una reunión o un evento juntos. Sin fecha, queda «Pendiente de validar».</span>
+          </p>
+        </div>
+        <p class="field">
+          <label for="p-revision-notas">Lo que sabemos</label>
+          <textarea id="p-revision-notas" name="revision_notas" rows="3" maxlength="2000"></textarea>
+          <span class="field__hint">Lo bueno, lo que no encaja, para qué cliente lo propondríamos.</span>
+        </p>
+        <fieldset class="opts">
+          <legend>Cómo ganamos con este proveedor</legend>
+          <p class="field--check"><label><input type="checkbox" name="modelo_servicio" value="si"> <span>Nuestras horas (servicio facturado al cliente)</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_comision" value="si"> <span>Comisión del proveedor, que cobramos</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_descuento" value="si"> <span>Comisión del proveedor, pasada al cliente como descuento</span></label></p>
+          <p class="field--check"><label><input type="checkbox" name="modelo_neto" value="si"> <span>Precio neto de agencia, con nuestro margen encima</span></label></p>
+        </fieldset>
+        <p class="field">
+          <label for="p-modelo-notas">El modelo, en detalle</label>
+          <textarea id="p-modelo-notas" name="modelo_notas" rows="3" maxlength="2000"></textarea>
+        </p>
+        <p class="field">
+          <label for="p-pendiente">Lo que queda por saber</label>
+          <textarea id="p-pendiente" name="pendiente" rows="3" maxlength="2000"></textarea>
+        </p>
+        <p class="field">
+          <label for="p-publicar">Publicación</label>
+          <select id="p-publicar" name="publicar">
+            <option value="">Sin dato</option>
+            <option value="no">No publicar todavía</option>
+            <option value="revisar">Propuesta para la web: revisar y aprobar</option>
+          </select>
+        </p>
+        </div>
+        <!-- /campos -->
+
+        <p class="field--check field--consent">
+          <label><input type="checkbox" name="consentimiento" value="si" required>
+          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
+        </p>
+
+        <p class="form__acciones">
+          <button class="btn btn--primary" type="submit">Enviar la ficha</button>
+          <button class="btn btn--ghost" type="button" data-borrar hidden>Vaciar y empezar otra</button>
+        </p>
+        <div class="ficha-vista" data-vista hidden aria-live="polite"></div>
+        <p class="form__note">Al enviarla, la ficha nos llega a nosotros. Lo que se publique saldrá de la ficha revisada y solo si habéis autorizado su publicación; podéis cambiar de opinión en cualquier momento escribiéndonos.</p>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__bottom">
+      <p>© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
+      <p><a href="privacidad.html">Aviso de privacidad</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/ficha.js" defer></script>
+</body>
+</html>

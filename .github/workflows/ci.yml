@@ -54,13 +54,14 @@ jobs:
             exit 1
           }
 
-      # Los campos de la ficha de localización salen del mismo esquema que la
-      # ficha que llega a Zoho. Si alguien los toca a mano, se separan.
-      - name: El formulario de localizaciones es el que sale del esquema
+      # Los campos de las fichas de localización y de proveedor salen del mismo
+      # esquema que la ficha que llega a Zoho. Si alguien los toca a mano, se
+      # separan.
+      - name: Los formularios de fichas son los que salen de su esquema
         run: |
-          node tools/build-localizacion.mjs
-          git diff --exit-code -- alta-localizacion.html || {
-            echo "::error::alta-localizacion.html no corresponde a netlify/localizacion/esquema.mjs. Regenera con: node tools/build-localizacion.mjs"
+          node tools/build-fichas.mjs
+          git diff --exit-code -- alta-localizacion.html alta-proveedor.html || {
+            echo "::error::alta-localizacion.html o alta-proveedor.html no corresponden a su esquema. Regenera con: node tools/build-fichas.mjs"
             exit 1
           }
 

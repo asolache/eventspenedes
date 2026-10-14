@@ -14,8 +14,8 @@
 import { deflateSync } from 'node:zlib';
 
 const { validar, urlSegura, directa, leerHtml, candidatos, reglas, importar, conClaude, definiciones } =
-  await import('../netlify/localizacion/importar.mjs');
-const { textoDePdf } = await import('../netlify/localizacion/pdf-texto.mjs');
+  await import('../netlify/ficha/importar.mjs');
+const { textoDePdf } = await import('../netlify/ficha/pdf-texto.mjs');
 const { default: handler } = await import('../netlify/functions/importar-catalogo.mjs');
 
 let fallos = 0;
@@ -244,5 +244,32 @@ comprueba('con un PDF subido devuelve la ficha, sin guardar nada',
   resp.status === 200 && j.ok && j.datos.aforo_banquete === '120' && j.fuentes[0] === 'dossier.pdf' && resp.headers.get('cache-control') === 'no-store');
 comprueba('una dirección interna se rechaza en la función', (await llamar({ url: 'http://127.0.0.1/' })).status === 422);
 
+
+/* --- 8 · La ficha de proveedor: la misma importación, con su esquema ---------------- */
+const { FICHAS } = await import('../netlify/ficha/fichas.mjs');
+const prov = validar([
+  { campo: 'nombre', valor: 'Catering Exemple', cita: 'x' },
+  { campo: 'categoria', valor: 'Restauración y catering', cita: 'x' },
+  { campo: 'servicio1_nombre', valor: 'Menú de mediodía', cita: 'p. 2: Menú de mediodía 32 €' },
+  { campo: 'servicio1_precio', valor: '32', cita: 'p. 2' },
+  { campo: 'servicio1_unidad', valor: 'persona', cita: 'p. 2' },
+  { campo: 'servicio1_comision', valor: '10', cita: 'p. 2' },
+  { campo: 'catering_formatos_menu', valor: 'si', cita: 'p. 1' },
+  { campo: 'revision_fecha', valor: '2026-10-14', cita: 'x' },
+  { campo: 'autoriza', valor: 'si', cita: 'x' },
+  { campo: 'aforo_banquete', valor: '120', cita: 'x' },
+], FICHAS.proveedor);
+comprueba('en la ficha de proveedor entran sus servicios y su categoría, por valor o por texto',
+  prov.datos.servicio1_precio === '32' && prov.datos.servicio1_unidad === 'persona' && prov.datos.categoria === 'restauracion');
+comprueba('la comisión, nuestra valoración y la autorización no se importan; un campo de espacio tampoco',
+  !('servicio1_comision' in prov.datos) && !('revision_fecha' in prov.datos) && !('autoriza' in prov.datos) && !('aforo_banquete' in prov.datos));
+comprueba('con datos de catering, su bloque se abre solo', prov.datos.ofrece_catering === 'si');
+comprueba('la lista de campos para Claude es la de proveedor',
+  definiciones(FICHAS.proveedor).has('servicio20_incluye') && !definiciones(FICHAS.proveedor).has('sala1_nombre'));
+comprueba('una ficha que no existe se rechaza en la función', (await llamar({ url: 'https://x.example', ficha: 'constructor' })).status === 400);
+const respP = await llamar({ pdf: PDF.toString('base64'), nombre: 'tarifas.pdf', ficha: 'proveedor' }, { origin: 'https://eventspenedes.com' });
+const jP = await respP.json();
+comprueba('la función importa también a la ficha de proveedor, solo con sus campos',
+  respP.status === 200 && jP.ok && !('aforo_banquete' in jP.datos));
 console.log(fallos ? `\n❌ ${fallos} comprobaciones fallan.\n` : '\n✅ La importación solo pone lo que la fuente dice.\n');
 process.exit(fallos ? 1 : 0);

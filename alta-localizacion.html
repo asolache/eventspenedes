@@ -56,7 +56,7 @@
   <section class="section section--panel" id="ficha">
     <div class="wrap">
 
-      <form class="form" id="form-localizacion" name="localizacion" method="POST"
+      <form class="form" id="form-localizacion" name="localizacion" data-ficha="tipo" method="POST"
             action="/gracias.html" data-netlify="true" data-netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="localizacion">
         <input type="hidden" name="idioma" value="es">
@@ -85,7 +85,7 @@
           <p class="importar__estado" data-importar-estado hidden></p>
         </fieldset>
 
-        <!-- campos: generado por tools/build-localizacion.mjs, no editar -->
+        <!-- campos: generado por tools/build-fichas.mjs, no editar -->
         <h2 class="form__h" id="sec-espacio">El espacio</h2>
         <div class="form__row">
           <p class="field">
@@ -215,7 +215,7 @@
 
         <h2 class="form__h" id="sec-salas">Salas y espacios</h2>
         <p class="field__hint">Una por sala, porche o jardín. Los aforos, por formato: no es lo mismo sentados que de pie. Si la sala se alquila por separado, su precio; si no, en blanco.</p>
-        <fieldset class="sala" data-sala="1">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 1</legend>
           <div class="form__row">
             <p class="field">
@@ -291,7 +291,7 @@
             </p>
           </div>
         </fieldset>
-        <fieldset class="sala" data-sala="2">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 2</legend>
           <div class="form__row">
             <p class="field">
@@ -367,7 +367,7 @@
             </p>
           </div>
         </fieldset>
-        <fieldset class="sala" data-sala="3">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 3</legend>
           <div class="form__row">
             <p class="field">
@@ -443,7 +443,7 @@
             </p>
           </div>
         </fieldset>
-        <fieldset class="sala" data-sala="4">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 4</legend>
           <div class="form__row">
             <p class="field">
@@ -519,7 +519,7 @@
             </p>
           </div>
         </fieldset>
-        <fieldset class="sala" data-sala="5">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 5</legend>
           <div class="form__row">
             <p class="field">
@@ -595,7 +595,7 @@
             </p>
           </div>
         </fieldset>
-        <fieldset class="sala" data-sala="6">
+        <fieldset class="sala" data-repite="sala">
           <legend>Sala o espacio 6</legend>
           <div class="form__row">
             <p class="field">
@@ -671,7 +671,7 @@
             </p>
           </div>
         </fieldset>
-        <p class="sala__mas" hidden><button class="btn btn--ghost" type="button" data-sala-mas>Añadir otra sala</button></p>
+        <p class="sala__mas" data-repite-mas="sala" hidden><button class="btn btn--ghost" type="button">Añadir otra sala</button></p>
 
         <h2 class="form__h" id="sec-cocina">Cocina y catering</h2>
         <div class="form__row">
@@ -1567,6 +1567,6 @@
   </div>
 </footer>
 
-<script src="js/localizacion.js" defer></script>
+<script src="js/ficha.js" defer></script>
 </body>
 </html>

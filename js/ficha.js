@@ -1,5 +1,10 @@
 /* =============================================================================
-   Events Penedès — la ficha de localización, pensada para rellenarse de visita
+   Events Penedès — las fichas de espacio y de proveedor, pensadas para
+   rellenarse de visita
+
+   Sirve a /alta-localizacion y /alta-proveedor: la página la marca con
+   `data-ficha="<campo>"`, el campo que abre los bloques (el tipo de espacio o
+   la categoría del proveedor).
 
    · Se guarda sola en este dispositivo a cada cambio. En una bodega sin
      cobertura, cerrar la pestaña no pierde nada.
@@ -23,19 +28,24 @@
    · Con ?interno=1 enseña lo que rellenamos nosotros (relación, notas de la
      visita); sin él, la ficha es la que puede rellenar el propio espacio.
      Este dispositivo lo recuerda.
-   · Abre los bloques de cata y alojamiento según el tipo, y enseña las salas
-     de una en una.
+   · Abre los bloques según el tipo o la categoría (y las casillas
+     «También ofrecéis»), y enseña las salas o los servicios de uno en uno.
+   · Al enviar, si la página lo pide (`data-vista`), enseña cómo se
+     presentaría el proveedor si autoriza la publicación.
    Sin JavaScript el formulario funciona igual: todo visible y envío normal.
    ========================================================================== */
 (function () {
   'use strict';
 
-  var CLAVE = 'ep-ficha-localizacion';
-  var CLAVE_INTERNO = 'ep-ficha-interno';
-  var CLAVE_PARTIDA = 'ep-ficha-partida';
-  var CLAVE_IMPORTADO = 'ep-ficha-importado';
-  var form = document.getElementById('form-localizacion');
+  var form = document.querySelector('form[data-ficha]');
   if (!form) { return; }
+  /* La de localización conserva sus claves de siempre: una ficha a medias
+     en un móvil no se pierde por esto. */
+  var loc = form.name === 'localizacion';
+  var CLAVE = 'ep-ficha-' + form.name;
+  var CLAVE_INTERNO = 'ep-ficha-interno';
+  var CLAVE_PARTIDA = loc ? 'ep-ficha-partida' : CLAVE + '-partida';
+  var CLAVE_IMPORTADO = loc ? 'ep-ficha-importado' : CLAVE + '-importado';
   var partida = form.elements.borrador;
   var estado = form.querySelector('[data-estado]');
   var borrar = form.querySelector('[data-borrar]');
@@ -120,7 +130,9 @@
       guardar();
       /* El enlace prellenado se lo mandamos al espacio con lo que dice su
          catálogo: tiene que saber que es un borrador nuestro, no su ficha. */
-      decir(form.hasAttribute('data-interno')
+      decir(q.get('desde') === 'red'
+        ? 'Hemos puesto lo que nos contasteis al presentaros. Completad el resto (o empezad desde vuestra web o vuestras tarifas) y enviadla: hasta entonces no nos llega nada.'
+        : form.hasAttribute('data-interno')
         ? 'Ficha prellenada desde el catálogo. Revísala y completa lo que veas en la visita.'
         : 'Os hemos adelantado la ficha con lo que dice vuestro catálogo. Revisadla, corregid lo que no esté bien, decidnos si autorizáis publicarla y enviadla: hasta entonces no nos llega nada.');
     }
@@ -128,8 +140,16 @@
 
   /* --- Bloques que se abren solos ----------------------------------------- */
 
-  var tipo = form.elements.tipo;
+  var tipo = form.elements[form.getAttribute('data-ficha')];
   var interruptores = form.querySelectorAll('input[data-tipos]');
+
+  /* Lo elegido: el tipo o la categoría, y lo marcado en «También ofrecéis» */
+  function elegidos() {
+    var out = tipo && tipo.value ? [tipo.value] : [];
+    var tambien = form.querySelectorAll('input[name^="tambien_"]');
+    for (var i = 0; i < tambien.length; i++) { if (tambien[i].checked) { out.push(tambien[i].name.slice(8)); } }
+    return out;
+  }
 
   function condicionales() {
     var bloques = form.querySelectorAll('.form__cond[data-si]');
@@ -140,44 +160,52 @@
   }
 
   function porTipo() {
+    var sel = elegidos();
     for (var i = 0; i < interruptores.length; i++) {
       var tipos = interruptores[i].getAttribute('data-tipos').split(' ');
       /* Solo abre, nunca cierra: una masía con habitaciones lo marca a mano
          y no se le desmarca al cambiar de tipo. */
-      if (tipo.value && tipos.indexOf(tipo.value) !== -1) { interruptores[i].checked = true; }
+      if (sel.some(function (t) { return tipos.indexOf(t) !== -1; })) { interruptores[i].checked = true; }
     }
     condicionales();
   }
 
-  /* --- Salas de una en una ------------------------------------------------- */
+  /* --- Salas o servicios de uno en uno ------------------------------------ */
 
-  var salas = form.querySelectorAll('fieldset.sala');
-  var mas = form.querySelector('.sala__mas');
+  var grupos = [];
+  var botones = form.querySelectorAll('[data-repite-mas]');
+  for (var g = 0; g < botones.length; g++) {
+    (function (mas) {
+      var bloques = form.querySelectorAll('fieldset[data-repite="' + mas.getAttribute('data-repite-mas') + '"]');
+      grupos.push({ bloques: bloques, mas: mas });
+      mas.querySelector('button').addEventListener('click', function () {
+        for (var i = 0; i < bloques.length; i++) {
+          if (bloques[i].hidden) {
+            bloques[i].hidden = false;
+            var primero = bloques[i].querySelector('input');
+            if (primero) { primero.focus(); }
+            break;
+          }
+        }
+        mas.hidden = !bloques[bloques.length - 1].hidden;
+      });
+    })(botones[g]);
+  }
 
   function conDatos(fs) {
     var els = fs.querySelectorAll('input, select, textarea');
-    for (var i = 0; i < els.length; i++) { if (els[i].value) { return true; } }
+    for (var i = 0; i < els.length; i++) { if (els[i].type === 'checkbox' ? els[i].checked : els[i].value) { return true; } }
     return false;
   }
 
   function mostrarSalas() {
-    var ultima = 0;
-    for (var i = 0; i < salas.length; i++) { if (conDatos(salas[i])) { ultima = i; } }
-    for (var j = 0; j < salas.length; j++) { salas[j].hidden = j > ultima; }
-    mas.hidden = ultima >= salas.length - 1;
+    grupos.forEach(function (gr) {
+      var ultima = 0;
+      for (var i = 0; i < gr.bloques.length; i++) { if (conDatos(gr.bloques[i])) { ultima = i; } }
+      for (var j = 0; j < gr.bloques.length; j++) { gr.bloques[j].hidden = j > ultima; }
+      gr.mas.hidden = ultima >= gr.bloques.length - 1;
+    });
   }
-
-  mas.addEventListener('click', function () {
-    for (var i = 0; i < salas.length; i++) {
-      if (salas[i].hidden) {
-        salas[i].hidden = false;
-        var primero = salas[i].querySelector('input');
-        if (primero) { primero.focus(); }
-        break;
-      }
-    }
-    mas.hidden = !form.querySelector('fieldset.sala[hidden]');
-  });
 
   /* --- Importar desde la web o el catálogo -------------------------------- */
 
@@ -279,7 +307,7 @@
       iBoton.disabled = true;
       iDecir('Leyendo… Un catálogo largo puede tardar hasta un minuto.');
       (fichero ? enBase64(fichero) : Promise.resolve(null)).then(function (b64) {
-        var cuerpo = {};
+        var cuerpo = { ficha: form.name };
         if (url) { cuerpo.url = url; }
         if (b64) { cuerpo.pdf = b64; cuerpo.nombre = fichero.name; }
         return fetch('/api/importar-catalogo', {
@@ -324,12 +352,54 @@
       enlace.textContent = 'Enlace para volver a abrir la ficha tal como la habéis enviado';
       estado.appendChild(document.createElement('br'));
       estado.appendChild(enlace);
+      vista(enviada);
       window.scrollTo(0, 0);
     }).catch(function () {
       decir('No se ha podido enviar (¿sin cobertura?). La ficha sigue guardada en este dispositivo: vuelve a pulsar «Enviar la ficha» cuando haya red.', 'error');
       estado.scrollIntoView({ block: 'center' });
     }).then(function () { boton.disabled = false; });
   });
+
+  /* --- Cómo os presentaríamos ---------------------------------------------- */
+
+  /* Lo que se vería en la web si lo autorizan: lo público de la ficha y los
+     servicios por su nombre, sin precios ni contactos. Es su ficha leída
+     como la leería un cliente, para que vean qué falta. */
+  var vistaEl = document.querySelector('[data-vista]');
+  function texto(nombre, valor) {
+    var el = form.elements[nombre];
+    if (el && el.tagName === 'SELECT') {
+      for (var i = 0; i < el.options.length; i++) { if (el.options[i].value === valor) { return el.options[i].text; } }
+    }
+    return valor;
+  }
+  function vista(d) {
+    if (!vistaEl) { return; }
+    vistaEl.textContent = '';
+    var h = document.createElement('h2');
+    h.textContent = d.nombre || 'Sin nombre';
+    vistaEl.appendChild(h);
+    var linea = [texto('categoria', d.categoria), d.poblacion].filter(Boolean).join(' · ');
+    if (linea) { var p = document.createElement('p'); p.className = 'eyebrow'; p.textContent = linea; vistaEl.appendChild(p); }
+    var desc = document.createElement('p');
+    desc.textContent = d.descripcion || 'Falta el párrafo «Qué os hace diferentes»: es lo primero que leería un cliente.';
+    vistaEl.appendChild(desc);
+    var servicios = Object.keys(d).filter(function (k) { return /^servicio\d+_nombre$/.test(k); })
+      .sort(function (a, b) { return parseInt(a.slice(8), 10) - parseInt(b.slice(8), 10); })
+      .map(function (k) { return d[k]; });
+    if (servicios.length) {
+      var ul = document.createElement('ul');
+      servicios.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      vistaEl.appendChild(ul);
+    }
+    var nota = document.createElement('p');
+    nota.className = 'field__hint';
+    nota.textContent = { si: 'Así os presentaríamos en eventspenedes.com. Lo revisamos con vosotros antes de publicarlo.',
+      revisar: 'Así os presentaríamos si lo autorizáis: os lo enseñaremos antes de publicar nada.' }[d.autoriza]
+      || 'Así os presentaríamos en una propuesta. No sale en la web sin vuestra autorización.';
+    vistaEl.appendChild(nota);
+    vistaEl.hidden = false;
+  }
 
   borrar.addEventListener('click', function () {
     if (!window.confirm('¿Vaciar la ficha? Lo que no se haya enviado se pierde.')) { return; }
@@ -342,6 +412,7 @@
     mostrarSalas();
     borrar.hidden = true;
     estado.hidden = true;
+    if (vistaEl) { vistaEl.hidden = true; }
   });
 
   /* --- Arranque ------------------------------------------------------------ */
@@ -354,7 +425,7 @@
   form.addEventListener('input', function (ev) { desmarcar(ev.target); clearTimeout(espera); espera = setTimeout(guardar, 300); });
   form.addEventListener('change', function (ev) {
     if (ev.target !== iPdfCampo) { desmarcar(ev.target); }
-    if (ev.target === tipo) { porTipo(); }
+    if (ev.target === tipo || /^tambien_/.test(ev.target.name || '')) { porTipo(); }
     if (ev.target.hasAttribute && ev.target.hasAttribute('data-tipos')) { condicionales(); }
     guardar();
   });

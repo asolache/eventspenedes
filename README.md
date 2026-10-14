@@ -16,6 +16,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── dj.html             Perfil de DJ en castellano (fuente de verdad)
 ├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
 ├── alta-localizacion.html  Ficha de un espacio, de uso interno (no se indexa)
+├── alta-proveedor.html Ficha de un proveedor, de uso interno (no se indexa)
 ├── recursos.html       Recursos públicos por temas. La lista se genera de data/recursos.json
 ├── data/recursos.json  GENERADO · copia de la capa pública del índice del repositorio privado
 ├── tools/build-recursos.mjs  Generador de la lista de recursos
@@ -189,7 +190,7 @@ solos para bodegas, hoteles y casas rurales. Está pensada para rellenarse
 sin salir de la página y, si no hay cobertura, lo dice y no borra nada.
 
 Los campos **no se editan en el HTML**: salen de
-`netlify/localizacion/esquema.mjs` con `node tools/build-localizacion.mjs`, y
+`netlify/localizacion/esquema.mjs` con `node tools/build-fichas.mjs`, y
 la función arma la ficha de Zoho con el mismo esquema. CI falla si el HTML no es
 el que sale del esquema.
 
@@ -229,7 +230,7 @@ guarda ni se envía nada: es su envío, revisado, el que nos llega.
   las páginas, con la lista de campos del esquema y la regla de no poner nada
   que la fuente no diga. Un PDF de más de 20 MB va por la API de ficheros y se
   borra al acabar.
-- **Sin clave, o si falla**, reglas fijas en `netlify/localizacion/importar.mjs`:
+- **Sin clave, o si falla**, reglas fijas en `netlify/ficha/importar.mjs`:
   schema.org de la web, teléfono, código postal y población, aforos solo cuando
   la frase dice el formato («hasta 120 personas sentadas»), comisión y
   servicios con nombre (wifi, proyector, cata, bodas…). El texto de los PDF lo
@@ -256,6 +257,41 @@ enviamos nosotros tras la visita, con su fecha, quita la etiqueta. Nada de
 esto publica nada: la web sale solo de `data/espacios.json`, en el repositorio
 privado.
 
+### La ficha de un proveedor
+
+`alta-proveedor.html` (`/alta-proveedor`) es la ficha de cualquier proveedor
+que no sea un espacio: catering, catas, guías y actividades, transporte,
+alojamiento, música, fotografía y protocolo, técnica. **Un solo formulario**
+para todos, con el mismo motor que la de localización (`netlify/ficha/`): lo
+común (quiénes son, contacto, servicios, condiciones, publicación) y un bloque
+por categoría que se abre según lo que elijan en «Qué ofrecéis sobre todo» o
+marquen en «También ofrecéis».
+
+Lo central son los **servicios**: hasta 20, cada uno con su precio, su unidad
+(persona, evento, hora, actuación, trayecto, día, km), IVA, mínimo y máximo de
+personas, duración, qué incluye y qué va aparte. Es el coste paquetizado de
+cada proveedor. Las comisiones (por servicio y general) y nuestra valoración
+solo se ven con `?interno=1`.
+
+Las **categorías** viven en una sola lista, `CATEGORIAS` de
+`netlify/proveedor/esquema.mjs`: la clave es la del perfil de «Entra en la red»,
+`zoho` su etiqueta en el CRM y `tarifas` su `categoria` en
+`data/proveedores.json` del repositorio privado. `test-lead.mjs` comprueba que
+`red.html` ofrece las mismas.
+
+Funciona igual que la de localización: se guarda en el dispositivo, importa de
+la web o del PDF de tarifas (`/api/importar-catalogo` con `ficha: 'proveedor'`),
+admite enlaces prellenados y lleva el registro de cambios. Al enviarla enseña
+cómo se presentaría el proveedor (nombre, categoría, párrafo y servicios, sin
+precios) y el enlace para volver a abrirla. En Zoho entra como **cuenta** de
+tipo Proveedor con las etiquetas «Proveedor» y la de cada cosa que ofrece
+(«Catering», «Música»…), la autorización de publicar, el **contacto** y la
+ficha como **nota**. Hasta que una ficha llega con la fecha en que lo
+validamos lleva «Pendiente de validar» y, la primera vez, una tarea «Revisar …».
+
+Quien se presenta en «Entra en la red» encuentra en la página de gracias el
+enlace a su ficha (de espacio o de proveedor) con lo que ya nos ha dicho.
+
 ### Variables de entorno
 
 En *Site configuration → Environment variables*, marcadas como **secretas** y con
@@ -272,7 +308,10 @@ chat.
 | `BORRADOR_DIAS` | opcional · días que vale el enlace. Por defecto 30 |
 | `ZOHO_ETIQUETA_LOCALIZACION` | opcional · etiqueta de las cuentas de espacios. Por defecto `Localización` |
 | `ZOHO_ETIQUETA_PENDIENTE` | opcional · etiqueta de los espacios sin visitar. Por defecto `Pendiente de visita` |
-| `ZOHO_AVISO_TAREA` | opcional · `0` para no crear la tarea de visita de un espacio nuevo. El token necesita permiso sobre tareas |
+| `ZOHO_AVISO_TAREA` | opcional · `0` para no crear la tarea de visita de un espacio nuevo o de revisión de un proveedor nuevo. El token necesita permiso sobre tareas |
+| `ZOHO_ETIQUETA_PROVEEDOR` | opcional · etiqueta de las cuentas de proveedores («Proveedor») |
+| `ZOHO_TIPO_PROVEEDOR` | opcional · tipo de cuenta de un proveedor («Proveedor»; vacío para no tocarlo) |
+| `ZOHO_ETIQUETA_POR_VALIDAR` | opcional · etiqueta de los proveedores sin validar («Pendiente de validar») |
 | `ANTHROPIC_API_KEY` | opcional · para que «Importar» lea los catálogos con Claude. Sin ella, reglas fijas |
 | `ANTHROPIC_MODEL` | opcional · por defecto `claude-opus-5-5` |
 | `ZOHO_ETAPA_PROPUESTA` | opcional · nombre EXACTO de la etapa de una oportunidad nueva. Con ella, una petición de propuesta entra como cuenta + contacto + oportunidad, y el borrador cuelga de la oportunidad. Necesita un token con permiso sobre cuentas, contactos, oportunidades y notas. Si Zoho rechaza la oportunidad, entra como lead |
