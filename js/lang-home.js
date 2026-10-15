@@ -168,7 +168,6 @@ window.EP_I18N = {
       'ven.v3.s2': 'Interior + exterior',
       'ven.v3.s3': 'Entre vinyes',
       'ven.v3.s4': 'Aforament a consultar',
-      'ven.note': 'Gestiones un espai al Penedès i vols formar part de la xarxa? <a href=\"red.html\">Escriu-nos</a>.',
 
       'ven.v1.alt': 'Porxo cobert de Cal Segue amb taules i barbacoa, al costat de l\u2019era enrajolada',
       'ven.v1.alt2': 'Jard\u00ed i era de Cal Segue, amb la tanca vegetal i les vinyes al fons',
@@ -308,6 +307,16 @@ window.EP_I18N = {
       'sel.title': 'La teva selecció',
       'sel.cta': 'Demanar proposta amb això',
       'sel.clear': 'Buidar',
+      'cta.hablar': 'Parlar amb nosaltres',
+      'cta.ven.txt': 'T’hi encaixa algun? Marca’l amb «M’interessa» i demana la proposta, o explica’ns què busques i et proposem l’espai.',
+      'cta.ven.btn': 'Demanar proposta',
+      'cta.ven.red': 'Gestiones un espai al Penedès? <a href="red.html?perfil=localizacion">Entra a la xarxa</a>.',
+      'cta.svc.txt': 'Contracta l’esdeveniment sencer o només la peça que et falti. Et responem en menys de 24 h laborables.',
+      'cta.svc.btn': 'Demanar proposta',
+      'cta.svc.red': 'Ofereixes càtering, transport, música o un altre servei per a esdeveniments? <a href="red.html?perfil=otro">Entra a la xarxa</a>.',
+      'cta.act.txt': 'Vols combinar-ne diverses en una jornada? Marca-les i et muntem el programa.',
+      'cta.act.btn': 'Demanar proposta amb aquestes activitats',
+      'cta.act.red': 'Organitzes tastos, visites o activitats al Penedès? <a href="red.html?perfil=guias">Entra a la xarxa</a>.',
     },
 
     en: {
@@ -474,7 +483,6 @@ window.EP_I18N = {
       'ven.v3.s2': 'Indoor + outdoor',
       'ven.v3.s3': 'Among vineyards',
       'ven.v3.s4': 'Capacity on request',
-      'ven.note': 'Do you run a space in the Penedès and want to join the network? <a href=\"red.html\">Get in touch</a>.',
 
       'ven.v1.alt': 'The covered porch at Cal Segue with tables and a barbecue, next to the tiled terrace',
       'ven.v1.alt2': 'The garden and terrace at Cal Segue, with the hedge and the vineyards behind',
@@ -614,6 +622,16 @@ window.EP_I18N = {
       'sel.title': 'Your selection',
       'sel.cta': 'Request a proposal with this',
       'sel.clear': 'Clear',
+      'cta.hablar': 'Talk to us',
+      'cta.ven.txt': 'Does one fit? Mark it with «I’m interested» and request a proposal, or tell us what you need and we’ll suggest the venue.',
+      'cta.ven.btn': 'Request a proposal',
+      'cta.ven.red': 'Do you run a venue in the Penedès? <a href="red.html?perfil=localizacion">Join the network</a>.',
+      'cta.svc.txt': 'Book the whole event or just the piece you’re missing. We reply within 24 working hours.',
+      'cta.svc.btn': 'Request a proposal',
+      'cta.svc.red': 'Do you offer catering, transport, music or another event service? <a href="red.html?perfil=otro">Join the network</a>.',
+      'cta.act.txt': 'Want to combine several in one day? Mark them and we’ll build the programme.',
+      'cta.act.btn': 'Request a proposal with these activities',
+      'cta.act.red': 'Do you run tastings, visits or activities in the Penedès? <a href="red.html?perfil=guias">Join the network</a>.',
     }
 };
 

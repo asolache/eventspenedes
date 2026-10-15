@@ -1640,3 +1640,17 @@ form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accen
 .seleccion-form__quitar:hover { color: var(--accent-gold); }
 /* Que la barra no tape el final de la página */
 body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
+
+/* --- Llamada al final de cada bloque: pedir propuesta o entrar en la red - */
+
+.cta-seccion {
+    margin-top: 2.5rem;
+    padding: 1.6rem 1.5rem;
+    border-radius: 18px;
+    border: 1px solid var(--glass-border-hi);
+    background: var(--bg-elevated);
+    text-align: center;
+}
+.cta-seccion__txt { margin: 0 auto 1.1rem; max-width: 44rem; color: var(--text-hi); font-size: 1.05rem; }
+.cta-seccion__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin: 0 0 1rem; }
+.cta-seccion__red { margin: 0; font-size: 0.92rem; color: var(--text-mid); }

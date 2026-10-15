@@ -89,12 +89,17 @@
   /* Un enlace puede llegar con el tipo ya elegido (?tipo=dj desde la página
      de DJ): se marca solo si el formulario tiene esa opción. */
   function preseleccionar() {
-    var tipo = new URLSearchParams(location.search).get('tipo');
-    var sel = document.querySelector('#form-contacto select[name="tipo"]');
-    if (!tipo || !sel) { return; }
-    for (var i = 0; i < sel.options.length; i++) {
-      if (sel.options[i].value === tipo) { sel.value = tipo; return; }
-    }
+    var q = new URLSearchParams(location.search);
+    /* ?tipo= en contacto; ?perfil= en «Entra en la red», que es a donde
+       llevan las llamadas de la portada a espacios y proveedores. */
+    [['#form-contacto select[name="tipo"]', q.get('tipo')],
+     ['#form-red select[name="perfil"]', q.get('perfil')]].forEach(function (par) {
+      var sel = document.querySelector(par[0]), v = par[1];
+      if (!v || !sel) { return; }
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === v) { sel.value = v; return; }
+      }
+    });
   }
 
   /* Un programa de ejemplo llega como ?exp=castells,dj&duracion=…: se marcan
