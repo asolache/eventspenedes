@@ -64,6 +64,8 @@
                                   Leads, Contacts y Deals donde va el código
      ZOHO_LEAD_SOURCE_PARTNER     opcional · valor EXISTENTE de «Fuente» para lo
                                   que llega por el enlace de un partner
+     SUPABASE_SECRET_KEY          opcional · con ella, el lead de un partner se
+                                  anota en su panel del portal, sin datos personales
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
@@ -71,6 +73,7 @@ import { briefingAEvento } from '../propuesta/briefing-a-evento.mjs';
 import { opciones, espacios } from '../propuesta/catalogo.mjs';
 import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto, cambios, cambiosTexto } from '../localizacion/esquema.mjs';
 import * as PROV from '../proveedor/esquema.mjs';
+import * as PORTAL from '../portal/supabase.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -242,6 +245,29 @@ export function partnerDe(d) {
   if (!CODIGO_PARTNER.test(codigo)) { return null; }
   const lista = (process.env.PARTNERS || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
   return { codigo, reconocido: lista.length ? lista.includes(codigo) : null };
+}
+
+/* El lead, en el panel del partner que lo trajo: tipo, personas, fecha y en
+   qué registro de Zoho está. Ni nombre, ni correo, ni teléfono: el partner ve
+   que le hemos traído trabajo, no a quién. Si el portal no está configurado o
+   el código no es de un partner activo, no se anota nada. */
+async function anotarEnPortal(form, d, modulo, id) {
+  const p = partnerDe(d);
+  if (!p || p.reconocido === false || !PORTAL.configurado()) { return; }
+  try {
+    const partner = await PORTAL.partnerPorCodigo(p.codigo);
+    if (!partner || partner.estado !== 'activo') { return; }
+    const personas = Number.parseInt(d.pax || d.personas, 10);
+    await PORTAL.anotar('leads', {
+      partner_id: partner.id,
+      zoho_modulo: modulo, zoho_id: id ? String(id) : null,
+      tipo_evento: legible(form, 'tipo', d.tipo) || form,
+      personas: personas > 0 ? personas : null,
+      fecha_evento: FECHA.test(d.fecha || '') ? d.fecha : null,
+    });
+  } catch (e) {
+    console.error('El lead está en Zoho, pero no en el panel del partner:', e.message);
+  }
 }
 
 /* Lo que el partner pone en un registro de Zoho: el código en su campo y la
@@ -735,6 +761,8 @@ export default async (req) => {
       return Response.json({ ok: false, error: e.message });
     }
   }
+
+  await anotarEnPortal(form, d, modulo, id);
 
   /* El borrador, en una nota de la oportunidad o del lead. Si falla, la ficha
      ya está dentro y el enlace en el registro de la función: se avisa y se sigue. */

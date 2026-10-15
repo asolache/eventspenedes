@@ -43,3 +43,4 @@ User-agent: Bingbot
 Allow: /
 
 Sitemap: https://eventspenedes.com/sitemap.xml
+Sitemap: https://eventspenedes.com/partners/sitemap.xml

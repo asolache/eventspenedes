@@ -568,6 +568,35 @@ a.card--ruta .card__more { color: var(--accent-gold); font-weight: 500; }
 a.card--ruta .card__more::after { content: " →"; }
 a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 3px; }
 
+/* La ficha pública de un partner (/partners/<código>) */
+.partner-ficha { display: grid; gap: 2rem; }
+.partner-ficha__fotos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.partner-ficha__fotos img { width: 100%; height: 220px; object-fit: cover; border-radius: var(--radius); display: block; }
+.partner-ficha__seccion h2 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+.partner-ficha__datos { display: grid; gap: 0.6rem 2rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 0; }
+.partner-ficha__datos dt { font-family: var(--font-mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; }
+.partner-ficha__datos dd { margin: 0.15rem 0 0; }
+.partner-ficha__lista { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.6rem; }
+
+/* El portal de partners (/acceso) */
+.portal { display: grid; gap: 1.5rem; }
+.portal__estado { padding: 0.8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); }
+.portal__estado[data-tipo="error"] { border-color: #c0504d; }
+.portal__estado[data-tipo="ok"] { border-color: var(--accent-gold); }
+.portal__entrar { max-width: 32rem; }
+.portal__botones { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.portal__partner, .portal__cambio { display: grid; gap: 0.6rem; }
+.portal__partner h3, [data-admin] h3 { margin-top: 1.2rem; }
+.portal__cifras { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 0; }
+.portal__cifras dd { margin: 0; font-size: 1.8rem; font-weight: 600; }
+.portal__enlace code { word-break: break-all; }
+.portal__fotos { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.portal__fotos img { width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-sm); display: block; }
+.portal__tabla { width: 100%; border-collapse: collapse; font-size: 0.9rem; display: block; overflow-x: auto; }
+.portal__tabla th, .portal__tabla td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--glass-border); vertical-align: top; }
+.portal__condiciones { white-space: pre-wrap; font-family: inherit; margin: 0.4rem 0; }
+.portal__acuerdos { padding-left: 1.1rem; display: grid; gap: 1rem; }
+
 /* --- Página de perfil ---------------------------------------------------- */
 
 .crumbs {

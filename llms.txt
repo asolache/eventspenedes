@@ -123,6 +123,13 @@ económico y valoración de los participantes.
   servicios de terceros. En catalán:
   https://eventspenedes.com/ca/propuesta.html · En inglés:
   https://eventspenedes.com/en/propuesta.html
+- [Contacto](https://eventspenedes.com/contacto.html): un camino por caso
+  (evento de empresa, briefing, agencia, espacio o proveedor, DJ) y el
+  formulario corto.
+- [Espacios y proveedores de la red](https://eventspenedes.com/partners): el
+  directorio de masías, bodegas, catering, actividades y música con los que
+  trabaja Events Penedès, cada uno con su ficha revisada. Sin precios: se
+  piden con la propuesta.
 - [Aviso de privacidad](https://eventspenedes.com/privacidad.html): quién es el
   responsable, qué datos se recogen, cuánto se guardan y cómo ejercer los
   derechos.
