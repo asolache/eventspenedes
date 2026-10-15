@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Al enviar un formulario desde /ca/ o /en/, Netlify responde al POST con la
+   versión en castellano de esta página aunque la dirección sea la del idioma.
+   Se pide otra vez por GET, que sí sirve la del idioma. La marca `v=idioma`
+   evita dar vueltas si algún día no fuera así. */
+(function () {
+  var l = location;
+  if (document.documentElement.lang === 'es' && /^\/(ca|en)\//.test(l.pathname) && !/[?&]v=idioma/.test(l.search)) {
+    l.replace(l.pathname + (l.search ? l.search + '&' : '?') + 'v=idioma' + l.hash);
+  }
+})();
+</script>
 
 <title>Gràcies · Events Penedès</title>
 <meta name="description" content="Hem rebut el teu missatge. Et responem en menys de 24 h laborables.">
