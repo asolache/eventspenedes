@@ -35,7 +35,7 @@ import { isIP } from 'node:net';
 import { textoDePdf } from './pdf-texto.mjs';
 import { repetido } from './nucleo.mjs';
 import { FICHAS } from './fichas.mjs';
-import { mensaje, textoDe, base, directo, cabeceras, MODELO } from '../ia/claude.mjs';
+import { mensaje, textoDe, directo, pedir, MODELO } from '../ia/claude.mjs';
 
 export const LIMITES = {
   html: 3 * 1024 * 1024,         // una página web
@@ -427,12 +427,7 @@ function guiaDeCampos(esquema) {
 async function subirFichero(buf, nombre, { apiKey, fetch }) {
   const fd = new FormData();
   fd.append('file', new Blob([buf], { type: 'application/pdf' }), nombre || 'catalogo.pdf');
-  const r = await fetch(`${base()}/v1/files`, {
-    method: 'POST',
-    headers: cabeceras(apiKey),
-    body: fd,
-    signal: AbortSignal.timeout(LIMITES.espera * 2),
-  });
+  const r = await pedir('/v1/files', { apiKey, fetch, espera: LIMITES.espera * 2, method: 'POST', body: fd });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || !j.id) { throw new Error(`no se pudo subir el PDF (${r.status} ${j.error?.message || ''})`); }
   return j.id;
@@ -499,7 +494,7 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
     return { lista: Array.isArray(salida.campos) ? salida.campos : [], avisos: Array.isArray(salida.avisos) ? salida.avisos.map(String) : [], uso };
   } finally {
     for (const id of subidos) {
-      fetch(`${base()}/v1/files/${id}`, { method: 'DELETE', headers: cabeceras(apiKey) }).catch(() => {});
+      pedir(`/v1/files/${id}`, { apiKey, fetch, method: 'DELETE' }).catch(() => {});
     }
   }
 }

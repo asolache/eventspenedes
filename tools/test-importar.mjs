@@ -241,6 +241,26 @@ comprueba('por la pasarela de Netlify: el PDF va en la petición y sin nada beta
   && pasarela[0].cuerpo.messages[0].content[0].source.type === 'base64'
   && !('fallbacks' in pasarela[0].cuerpo) && !('anthropic-beta' in pasarela[0].op.headers));
 
+/* Una clave que no es de un solo workspace: se busca el de por defecto y con
+   él van la subida del PDF, la lectura y el borrado */
+const vistas = [];
+await conClaude({ pdfs: [{ nombre: 'grande.pdf', cuerpo: grande }], apiKey: 'sk-persona', fetch: async (url, op) => {
+  const u = new URL(String(url));
+  vistas.push({ ruta: u.pathname, metodo: op.method || 'GET', ws: op.headers['anthropic-workspace-id'] ?? null });
+  if (u.pathname === '/v1/organizations/workspaces') {
+    return Response.json({ data: [...(u.searchParams.get('include_default') === 'true' ? [{ id: 'wrkspc_defecto' }] : []), { id: 'wrkspc_otro' }] });
+  }
+  if (!op.headers['anthropic-workspace-id']) {
+    return Response.json({ error: { message: 'anthropic-workspace-id is required when authenticating with an identity-linked API key' } }, { status: 400 });
+  }
+  return u.pathname === '/v1/files' ? Response.json({ id: 'file_123' }) : Response.json(RESPUESTA);
+} });
+await new Promise(res => setTimeout(res, 10));
+const conWs = vistas.filter(v => v.ruta !== '/v1/organizations/workspaces');
+comprueba('una clave sin workspace: el PDF, la lectura y el borrado van al de por defecto',
+  vistas.filter(v => v.ruta === '/v1/organizations/workspaces').length === 2 && conWs[0].ruta === '/v1/files' && conWs[0].ws === null
+  && conWs.slice(1).every(v => v.ws === 'wrkspc_defecto') && conWs.some(v => v.ruta === '/v1/files/file_123' && v.metodo === 'DELETE'));
+
 /* --- 7 · La función ------------------------------------------------------------- */
 const llamar = (cuerpo, cab = {}) => handler(new Request('https://eventspenedes.com/api/importar-catalogo', {
   method: 'POST', headers: { 'content-type': 'application/json', ...cab }, body: typeof cuerpo === 'string' ? cuerpo : JSON.stringify(cuerpo),

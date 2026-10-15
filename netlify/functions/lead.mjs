@@ -78,6 +78,9 @@
                                   AI Gateway de Netlify la pone sola, con
                                   ANTHROPIC_BASE_URL (ver `netlify/ia/claude.mjs`)
      ANTHROPIC_MODEL              opcional · por defecto claude-opus-5-5
+     ANTHROPIC_WORKSPACE_ID       opcional · el workspace (wrkspc_…) de una
+                                  clave que no es de un solo workspace. Sin
+                                  ella, se usa el de por defecto
      CATALOGO_AGENCIAS_URL        opcional · enlace al PDF del catálogo para
                                   agencias, para tenerlo a mano en la nota
    ========================================================================== */

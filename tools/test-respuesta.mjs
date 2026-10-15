@@ -4,8 +4,9 @@
    Lo que importa: que salga siempre (con Claude o con la plantilla), en el
    idioma de quien escribe, con el siguiente paso; que Claude no vea su correo,
    su teléfono ni sus restricciones; que un importe o un enlace ajeno queden
-   avisados, y que por la pasarela de Netlify no se pida nada que vaya detrás
-   de una cabecera beta.
+   avisados, que por la pasarela de Netlify no se pida nada que vaya detrás
+   de una cabecera beta, y que una clave que no es de un solo workspace
+   funcione.
 
    Uso:  node tools/test-respuesta.mjs
    ========================================================================== */
@@ -118,7 +119,53 @@ const vacia = await preparar({ form: 'propuesta', d: MARTA, cuando: CUANDO, apiK
   fetch: claude({ ...ESCRITA, content: [{ type: 'text', text: JSON.stringify({ asunto: '', cuerpo: '', pendiente: [] }) }] }) });
 comprueba('una respuesta vacía no se da por buena', vacia.modo === 'plantilla');
 
-/* 6 · Las instrucciones son públicas: no traen nada que no pueda leer cualquiera */
+/* 6 · Una clave que no es de un solo workspace pide decir en cuál actúa: se
+   busca el de por defecto de la organización, una vez, y se repite */
+const SIN_WORKSPACE = { type: 'error', error: { type: 'invalid_request_error',
+  message: 'This API key is not scoped to a workspace, so this request must include the anthropic-workspace-id header.' } };
+const organizacion = lista => {
+  const vistas = [];
+  return { vistas, fetch: async (url, op) => {
+    const u = new URL(String(url));
+    vistas.push({ ruta: u.pathname, ws: op.headers['anthropic-workspace-id'] ?? null });
+    if (u.pathname === '/v1/organizations/workspaces') { return lista(u.searchParams.get('include_default') === 'true'); }
+    return op.headers['anthropic-workspace-id'] ? Response.json(ESCRITA) : Response.json(SIN_WORKSPACE, { status: 400 });
+  } };
+};
+const LISTA = conDefecto => Response.json({ data: [...(conDefecto ? [{ id: 'wrkspc_defecto' }] : []), { id: 'wrkspc_otro' }], has_more: false });
+const listados = vs => vs.filter(v => v.ruta === '/v1/organizations/workspaces').length;
+
+const llamadas400 = [];
+const malPedida = await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'sk', fetch: async url => {
+  llamadas400.push(String(url));
+  return Response.json({ type: 'error', error: { type: 'invalid_request_error', message: 'max_tokens: too large' } }, { status: 400 });
+} });
+comprueba('otro 400 no busca workspace ni repite: sale la plantilla', malPedida.modo === 'plantilla' && llamadas400.length === 1);
+const sinPermiso = organizacion(() => Response.json({ error: { message: 'forbidden' } }, { status: 403 }));
+const sp = await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'sk-persona', fetch: sinPermiso.fetch });
+comprueba('si no se puede buscar el workspace, sale la plantilla y la nota dice qué poner',
+  sp.modo === 'plantilla' && sp.avisos.some(a => /ANTHROPIC_WORKSPACE_ID/.test(a) && /403/.test(a)));
+const org = organizacion(LISTA);
+const ws = await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'sk-persona', fetch: org.fetch });
+const enviadas = org.vistas.filter(v => v.ruta === '/v1/messages');
+comprueba('se busca el workspace por defecto y la petición se repite con él',
+  ws.modo === 'claude' && listados(org.vistas) === 2 && enviadas.length === 2 && enviadas[0].ws === null && enviadas[1].ws === 'wrkspc_defecto');
+org.vistas.length = 0;
+await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'sk-persona', fetch: org.fetch });
+comprueba('y no se vuelve a buscar: la siguiente lo lleva a la primera', org.vistas.length === 1 && org.vistas[0].ws === 'wrkspc_defecto');
+process.env.ANTHROPIC_WORKSPACE_ID = 'wrkspc_elegido';
+org.vistas.length = 0;
+await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'sk-persona', fetch: org.fetch });
+comprueba('ANTHROPIC_WORKSPACE_ID manda', org.vistas.length === 1 && org.vistas[0].ws === 'wrkspc_elegido');
+process.env.ANTHROPIC_BASE_URL = 'https://pasarela.example/anthropic/';
+const pasarela = organizacion(LISTA);
+await preparar({ form: 'contacto', d: MARTA, cuando: CUANDO, peticion: PETICION, apiKey: 'nfy-prueba', fetch: pasarela.fetch });
+comprueba('por la pasarela de Netlify ni va workspace ni se busca: la clave es suya',
+  pasarela.vistas.length === 1 && pasarela.vistas[0].ws === null);
+delete process.env.ANTHROPIC_BASE_URL;
+delete process.env.ANTHROPIC_WORKSPACE_ID;
+
+/* 7 · Las instrucciones son públicas: no traen nada que no pueda leer cualquiera */
 const guia = GUIA({ idioma: 'castellano', siguiente: 'x' });
 comprueba('las instrucciones no llevan importes ni enlaces', !revisar({ asunto: '', cuerpo: guia }).length);
 
