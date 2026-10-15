@@ -24,6 +24,12 @@
    El borrador sale solo; enviarlo, no. Lo que vende es el párrafo que responde
    a lo que el cliente escribió, y eso lo escribe una persona.
 
+   Y a todo el que escribe pidiendo algo (propuesta, contacto, alta de agencia
+   o «Entra en la red») le deja **la respuesta preparada**: el correo escrito en
+   su idioma, en una nota de su registro con los enlaces para abrirlo en Gmail
+   y agendar la llamada en Google Calendar, y una tarea para responder hoy.
+   Tampoco se envía sola. Ver `netlify/respuesta/respuesta.mjs`.
+
    Lo que NO hace, a propósito: escribir nada en ningún repositorio. Un briefing
    lleva nombre, correo y teléfono de un cliente, y el historial de git es para
    siempre. Tampoco guarda el borrador en ningún sitio: viaja dentro de su
@@ -65,7 +71,15 @@
      ZOHO_LEAD_SOURCE_PARTNER     opcional · valor EXISTENTE de «Fuente» para lo
                                   que llega por el enlace de un partner
      SUPABASE_SECRET_KEY          opcional · con ella, el lead de un partner se
-                                  anota en su panel del portal, sin datos personales
+                                  anota en su panel del portal, sin datos personales,
+                                  y lo que cuesta cada respuesta escrita por Claude
+     ANTHROPIC_API_KEY            opcional · con ella, la respuesta la escribe
+                                  Claude; sin ella, sale de una plantilla fija. La
+                                  AI Gateway de Netlify la pone sola, con
+                                  ANTHROPIC_BASE_URL (ver `netlify/ia/claude.mjs`)
+     ANTHROPIC_MODEL              opcional · por defecto claude-opus-5-5
+     CATALOGO_AGENCIAS_URL        opcional · enlace al PDF del catálogo para
+                                  agencias, para tenerlo a mano en la nota
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
@@ -75,6 +89,7 @@ import { FORM as FORM_LOCALIZACION, TIPOS, ETIQUETA_TIPO, fichaTexto, cambios, c
 import * as PROV from '../proveedor/esquema.mjs';
 import * as PORTAL from '../portal/supabase.mjs';
 import { zoho, zohoGet } from '../portal/zoho.mjs';
+import * as RESP from '../respuesta/respuesta.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -339,6 +354,64 @@ const upsert = registro =>
 const nota = (modulo, id, titulo, texto) =>
   zoho(`${modulo}/${id}/Notes`, { data: [{ Note_Title: titulo, Note_Content: texto }] });
 
+/* --- La respuesta preparada ------------------------------------------------
+   Lo que lee Claude para escribirla es lo que se pidió: ni correo, ni
+   teléfono, ni presupuesto, ni lo que solo nos sirve a nosotros (quién decide,
+   de dónde llegó). Tampoco las restricciones: pueden ser de salud. */
+
+const PARA_RESPUESTA = ['tipo', 'pax', 'personas', 'fecha', 'fecha_firme', 'duracion', 'objetivo', 'espacio',
+  'catering', 'movilidad', 'idioma_evento', 'mercado', 'cargo', 'a_traves_de', 'perfil', 'poblacion', 'mensaje'];
+
+function peticion(form, d) {
+  const { nombre } = RESP.quienEs(d);
+  const empresa = String(d.empresa || '').trim();
+  const l = [...(nombre ? [`Nombre: ${nombre}`] : []), ...(empresa ? [`Empresa: ${empresa}`] : [])];
+  for (const campo of PARA_RESPUESTA) {
+    const v = String(d[campo] || '').trim();
+    if (v) { l.push(`${ETIQUETAS[campo]}: ${legible(form, campo, v).slice(0, 3000)}`); }
+  }
+  const exp = Object.entries(EXPERIENCIAS).filter(([k]) => d[k]).map(([, v]) => v);
+  if (exp.length) { l.push(`Experiencias que le interesan: ${exp.join(', ')}`); }
+  return l.join('\n');
+}
+
+/* La respuesta, en una nota del registro, con su tarea para hoy y su coste en
+   el portal. Nada de esto puede tumbar el lead, que ya está dentro: lo que
+   falle queda en el registro de la función. Sin `destino` (prueba en seco)
+   solo la prepara. */
+async function responder(form, d, cuando, destino) {
+  try {
+    const r = await RESP.preparar({ form, d, cuando, peticion: peticion(form, d),
+      apiKey: process.env.ANTHROPIC_API_KEY, model: process.env.ANTHROPIC_MODEL });
+    if (!destino) { return r; }
+    const fallos = [];
+    try {
+      await nota(destino.modulo, destino.id, RESP.TITULO_NOTA, RESP.notaTexto(r));
+    } catch (e) { fallos.push('nota: ' + e.message); }
+    if (process.env.ZOHO_AVISO_TAREA !== '0') {
+      try {
+        const t = { ...RESP.tarea(r, cuando), What_Id: { id: destino.id }, $se_module: destino.modulo };
+        if (destino.contacto) { t.Who_Id = { id: destino.contacto }; }
+        await zoho('Tasks', { data: [t] });
+      } catch (e) { fallos.push('tarea: ' + e.message); }
+    }
+    if (r.uso && PORTAL.configurado()) {
+      await PORTAL.anotar('uso_ia', {
+        operacion: `respuesta-${form}`, modelo: r.uso.modelo,
+        tokens_entrada: r.uso.tokens.entrada, tokens_salida: r.uso.tokens.salida, tokens_cache: r.uso.tokens.cache,
+        coste_usd: r.uso.usd || 0, zoho_modulo: destino.modulo, zoho_id: String(destino.id),
+      }).catch(e => fallos.push('coste: ' + e.message));
+    }
+    console.log(`Respuesta preparada (${r.modo}) en ${destino.modulo}`
+      + (r.uso ? ` · ${r.uso.modelo} · ${r.uso.tokens.entrada}+${r.uso.tokens.salida} tokens · ${r.uso.usd ?? '?'} USD` : ''));
+    if (fallos.length) { console.error('La respuesta está preparada, pero:', fallos.join(' · ')); }
+    return { ...r, fallos };
+  } catch (e) {
+    console.error('No se pudo preparar la respuesta:', e.message);
+    return null;
+  }
+}
+
 /* --- La propuesta como oportunidad -----------------------------------------
    Quien pide una propuesta ya no es un lead por cualificar: quiere un evento.
    Así que, si está configurada la etapa, el briefing entra como CUENTA (la
@@ -587,7 +660,7 @@ async function crearCuenta({ cuenta, contacto, etiquetas, quitar, pendiente, tar
 
 /* --- La función ---------------------------------------------------------- */
 
-export default async (req) => {
+export default async (req, context) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
@@ -673,17 +746,18 @@ export default async (req) => {
 
   if (process.env.ZOHO_DRY_RUN === '1') {
     console.log('DRY RUN · lo que se habría creado:', JSON.stringify(op || registro, null, 2));
-    return Response.json({ ok: true, dry_run: true, lead: op ? null : registro, oportunidad: op, nota: b?.nota || null });
+    const respuesta = RESP.FORMULARIOS.includes(form) ? await responder(form, d, cuando, null) : null;
+    return Response.json({ ok: true, dry_run: true, lead: op ? null : registro, oportunidad: op, nota: b?.nota || null, respuesta });
   }
 
   /* Primero la oportunidad, si toca. Si Zoho la rechaza —una etapa que no
      existe, un token sin permiso—, el briefing entra como lead: perder la
      petición por organizarla mejor sería cambiar lo importante por lo cómodo. */
-  let modulo = 'Leads', id;
+  let modulo = 'Leads', id, contacto;
   if (op) {
     try {
       const ids = await crearOportunidad(op);
-      modulo = 'Deals'; id = ids.trato;
+      modulo = 'Deals'; id = ids.trato; contacto = ids.contacto;
       console.log('Propuesta en Zoho como oportunidad:', JSON.stringify(ids));
     } catch (e) {
       console.error('No se pudo crear la oportunidad; entra como lead:', e.message);
@@ -708,13 +782,21 @@ export default async (req) => {
 
   /* El borrador, en una nota de la oportunidad o del lead. Si falla, la ficha
      ya está dentro y el enlace en el registro de la función: se avisa y se sigue. */
+  let fallo = null;
   if (b && id) {
     try {
       await nota(modulo, id, 'Borrador de propuesta', b.nota.trim());
     } catch (e) {
       console.error(`La ficha está en Zoho (${modulo}), pero no la nota del borrador:`, e.message);
-      return Response.json({ ok: true, modulo, nota: false, error: e.message });
+      fallo = e.message;
     }
   }
-  return Response.json({ ok: true, modulo });
+
+  /* La respuesta preparada, después de contestar a Netlify: escribirla con
+     Claude lleva unos segundos y el aviso del formulario no tiene por qué
+     esperarlos. Sin `waitUntil` (en las pruebas) se espera aquí. */
+  const trabajo = id && RESP.FORMULARIOS.includes(form) ? responder(form, d, cuando, { modulo, id, contacto }) : null;
+  if (trabajo && context?.waitUntil) { context.waitUntil(trabajo); }
+  const r = trabajo && !context?.waitUntil ? await trabajo : null;
+  return Response.json({ ok: true, modulo, ...(fallo ? { nota: false, error: fallo } : {}), ...(r ? { respuesta: r.modo } : {}) });
 };

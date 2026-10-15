@@ -22,6 +22,12 @@ jobs:
       - name: La función de leads acepta lo legítimo y rechaza lo demás
         run: node tools/test-lead.mjs
 
+      # Cada petición sale con su respuesta escrita en una nota de Zoho: que
+      # salga siempre, que Claude no vea correo ni teléfono, que no lleve
+      # precios ni enlaces ajenos sin avisar y que nunca se envíe sola.
+      - name: La respuesta preparada sale siempre y sin lo que no toca
+        run: node tools/test-respuesta.mjs
+
       - name: El borrador se monta solo y no se abre con otro enlace
         run: node tools/test-borrador.mjs
 
