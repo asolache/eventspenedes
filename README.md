@@ -338,6 +338,7 @@ chat.
 | `ZOHO_ETIQUETA_POR_VALIDAR` | opcional · etiqueta de los proveedores sin validar («Pendiente de validar») |
 | `ANTHROPIC_API_KEY` | opcional · para que «Importar» lea los catálogos con Claude. Sin ella, reglas fijas |
 | `ANTHROPIC_MODEL` | opcional · por defecto `claude-opus-5-5` |
+| `ANTHROPIC_WORKSPACE_ID` | opcional · el workspace (`wrkspc_…`, columna ID en Console → Workspaces) de una clave que no es de un solo workspace. Sin ella, se usa el workspace por defecto de la organización |
 | `ZOHO_ETAPA_PROPUESTA` | opcional · nombre EXACTO de la etapa de una oportunidad nueva. Con ella, una petición de propuesta entra como cuenta + contacto + oportunidad, y el borrador cuelga de la oportunidad. Necesita un token con permiso sobre cuentas, contactos, oportunidades y notas. Si Zoho rechaza la oportunidad, entra como lead |
 
 Cambiar una variable **no** aplica hasta el siguiente despliegue.
