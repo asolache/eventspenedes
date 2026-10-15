@@ -35,6 +35,7 @@ import { isIP } from 'node:net';
 import { textoDePdf } from './pdf-texto.mjs';
 import { repetido } from './nucleo.mjs';
 import { FICHAS } from './fichas.mjs';
+import { coste } from './coste.mjs';
 
 export const LIMITES = {
   html: 3 * 1024 * 1024,         // una página web
@@ -503,7 +504,10 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
     if (j.stop_reason === 'max_tokens') { throw new Error('el catálogo da para más de lo que cabe en una respuesta'); }
     const texto = (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
     const salida = JSON.parse(texto);
-    return { lista: Array.isArray(salida.campos) ? salida.campos : [], avisos: Array.isArray(salida.avisos) ? salida.avisos.map(String) : [] };
+    /* El modelo que de verdad ha respondido (puede ser el de reserva) y lo
+       que ha gastado: es lo que dice cuánto ha costado la lectura. */
+    const uso = coste(j.model || cuerpo.model, j.usage);
+    return { lista: Array.isArray(salida.campos) ? salida.campos : [], avisos: Array.isArray(salida.avisos) ? salida.avisos.map(String) : [], uso };
   } finally {
     for (const id of subidos) {
       fetch(`https://api.anthropic.com/v1/files/${id}`, {
@@ -516,7 +520,8 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
 /* --- Todo junto ---------------------------------------------------------------------- */
 
 /* Entradas: `url` (web, PDF, Drive o Dropbox) y/o `pdf` (Buffer subido).
-   Salida: { datos, origen, fuentes, metodo, avisos }. */
+   Salida: { datos, origen, fuentes, metodo, avisos, uso }. `uso` es lo que
+   ha gastado Claude (ver `coste.mjs`), o null si no se le ha llamado. */
 export async function importar({ url, pdf, nombrePdf, apiKey, model, fetch = globalThis.fetch, lookup, esquema = POR_DEFECTO } = {}) {
   if (!url && !pdf) { throw new Error('Falta la web o el PDF'); }
   const avisos = [], fuentes = [];
@@ -562,12 +567,13 @@ export async function importar({ url, pdf, nombrePdf, apiKey, model, fetch = glo
     }
   }
 
-  let metodo = 'reglas', lista = null;
+  let metodo = 'reglas', lista = null, uso = null;
   if (apiKey) {
     try {
       /* A Claude, los PDF enteros (ve tablas y maquetación) y el texto de las páginas */
       const r = await conClaude({ pdfs, textos: textos.filter(t => !t.pdf), apiKey, model, fetch, esquema });
       lista = r.lista;
+      uso = r.uso;
       avisos.push(...r.avisos);
       metodo = 'claude';
     } catch (e) {
@@ -578,5 +584,5 @@ export async function importar({ url, pdf, nombrePdf, apiKey, model, fetch = glo
   else if (base && paginas.length) { lista.push({ campo: 'web', valor: new URL(base).origin + '/', cita: 'la web que nos han dado' }); }
   const { datos, origen, descartes } = validar(lista, esquema);
   if (descartes.length) { console.log(`importar: ${descartes.length} valores descartados`); }
-  return { datos, origen, fuentes, metodo, avisos };
+  return { datos, origen, fuentes, metodo, avisos, uso };
 }

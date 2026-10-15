@@ -16,6 +16,8 @@
                          sacan menos (dirección, teléfono, aforos con frase
                          clara, servicios con nombre)
      ANTHROPIC_MODEL     opcional · por defecto claude-opus-5-5
+     SUPABASE_SECRET_KEY opcional · con ella, cada importación queda anotada
+                         en el portal con sus tokens y su coste en dólares
 
    Leer webs ajenas y gastar tokens desde un formulario público tiene dos
    riesgos, y los dos se acotan aquí: solo direcciones públicas (urlSegura),
@@ -23,6 +25,7 @@
    ========================================================================== */
 import { importar } from '../ficha/importar.mjs';
 import { FICHAS } from '../ficha/fichas.mjs';
+import { configurado, anotar } from '../portal/supabase.mjs';
 
 const CABECERAS = { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
 const responder = (cuerpo, status = 200) => Response.json(cuerpo, { status, headers: CABECERAS });
@@ -62,8 +65,22 @@ export default async (req) => {
     });
     /* Al registro, cuántos campos y de dónde; los datos no: pueden llevar
        el móvil de una persona. */
-    console.log(`importar · ${ficha} · ${r.metodo} · ${Object.keys(r.datos).length} campos · ${r.fuentes.length} fuentes`);
-    return responder({ ok: true, ...r });
+    const { uso, ...resto } = r;
+    const usd = uso?.usd ?? null;
+    console.log(`importar · ${ficha} · ${r.metodo} · ${Object.keys(r.datos).length} campos · ${r.fuentes.length} fuentes`
+      + (uso ? ` · ${uso.modelo} · ${uso.tokens.entrada}+${uso.tokens.salida} tokens · ${usd ?? '?'} USD` : ''));
+    /* Lo que ha costado, al portal, para sumarlo. Solo la web de origen, sin
+       ruta: una URL de Drive lleva su clave. Si falla, la importación sigue. */
+    if (configurado()) {
+      let fuente = null;
+      try { fuente = url ? new URL(url).host : 'pdf subido'; } catch { fuente = null; }
+      await anotar('importaciones', {
+        ficha, metodo: r.metodo, modelo: uso?.modelo || null,
+        tokens_entrada: uso?.tokens.entrada || 0, tokens_salida: uso?.tokens.salida || 0,
+        tokens_cache: uso?.tokens.cache || 0, coste_usd: usd || 0, fuente,
+      }).catch(e => console.error('importar · no se pudo anotar el coste:', e.message));
+    }
+    return responder({ ok: true, ...resto });
   } catch (e) {
     console.error('importar:', e.message);
     return responder({ ok: false, error: `No se ha podido leer: ${e.message}` }, 422);

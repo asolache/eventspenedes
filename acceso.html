@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Acceso de partners · Events Penedès</title>
+<meta name="description" content="Acceso para los espacios y proveedores de la red de Events Penedès.">
+<link rel="canonical" href="https://eventspenedes.com/acceso">
+<meta name="author" content="Events Penedès">
+<meta name="robots" content="noindex, nofollow">
+
+
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="assets/icon-256.png" sizes="256x256">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#050507">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="skip">Ir al contenido principal</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 4 6 14v20l18 10 18-10V14L24 4Z" stroke="currentColor" stroke-width="2" opacity=".35"/>
+        <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
+      </svg>
+      <span class="brand__name">Events <span>Penedès</span></span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menú">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul class="nav__list">
+        <li><a href="index.html#servicios" data-i18n="nav.services">Servicios</a></li>
+        <li><a href="index.html#localizaciones" data-i18n="nav.venues">Localizaciones</a></li>
+        <li><a href="index.html#actividades" data-i18n="nav.activities">Actividades</a></li>
+        <li><a href="index.html#proceso" data-i18n="nav.process">Cómo trabajamos</a></li>
+        <li><a href="dj.html" data-i18n="nav.dj">DJ y música</a></li>
+        <li><a href="propuesta.html" data-i18n="nav.brief">Pedir propuesta</a></li>
+        <li><a href="contacto.html" data-i18n="nav.contact">Contacto</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero hero--dj">
+    <div class="wrap">
+      <p class="eyebrow">Red de Events Penedès</p>
+      <h1>Acceso de partners</h1>
+      <p class="lead">Para los espacios y proveedores de la red: vuestra ficha, vuestras fotos, vuestro acuerdo y lo que os traemos. Lo que cambiéis lo revisamos antes de publicarlo.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap portal" id="portal">
+      <p class="portal__estado" data-estado role="status" aria-live="polite" hidden></p>
+
+      <div data-vista="fuera" hidden>
+        <div class="portal__entrar">
+          <button class="btn btn--primary" type="button" data-accion="github">Entrar con GitHub</button>
+          <p class="form__note">O con tu correo:</p>
+          <form class="form" data-form="entrar">
+            <p class="field">
+              <label for="p-correo">Correo</label>
+              <input id="p-correo" name="correo" type="email" autocomplete="email" required>
+            </p>
+            <p class="field">
+              <label for="p-clave">Contraseña</label>
+              <input id="p-clave" name="clave" type="password" autocomplete="current-password" minlength="8" required>
+            </p>
+            <p class="portal__botones">
+              <button class="btn btn--primary" type="submit" data-modo="entrar">Entrar</button>
+              <button class="btn btn--ghost" type="submit" data-modo="alta">Crear la cuenta</button>
+              <button class="btn btn--ghost" type="button" data-accion="olvido">He olvidado la contraseña</button>
+            </p>
+            <p class="form__note">Entra con el correo con el que te hemos invitado. Si aún no formas parte de la red, <a href="/red.html#alta">preséntate aquí</a>.</p>
+          </form>
+        </div>
+      </div>
+
+      <form class="form" data-form="nueva-clave" hidden>
+        <p class="field">
+          <label for="p-nueva">Contraseña nueva</label>
+          <input id="p-nueva" name="clave" type="password" autocomplete="new-password" minlength="8" required>
+        </p>
+        <p><button class="btn btn--primary" type="submit">Guardar la contraseña</button></p>
+      </form>
+
+      <div data-vista="dentro" hidden>
+        <p class="portal__quien"><span data-quien></span> · <button class="btn btn--ghost" type="button" data-accion="salir">Salir</button></p>
+        <div data-partners></div>
+        <div data-admin hidden></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__grid">
+      <div>
+        <a class="brand" href="index.html">
+          <svg class="brand__mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 4 6 14v20l18 10 18-10V14L24 4Z" stroke="currentColor" stroke-width="2" opacity=".35"/>
+            <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
+          </svg>
+          <span class="brand__name">Events <span>Penedès</span></span>
+        </a>
+        <p data-i18n="foot.tagline">Producción de eventos, localizaciones y actividades en el Alt Penedès.</p>
+      </div>
+      <div>
+        <h4 data-i18n="foot.h1">Secciones</h4>
+        <ul>
+          <li><a href="index.html#servicios" data-i18n="nav.services">Servicios</a></li>
+          <li><a href="index.html#localizaciones" data-i18n="nav.venues">Localizaciones</a></li>
+          <li><a href="index.html#actividades" data-i18n="nav.activities">Actividades</a></li>
+          <li><a href="index.html#proceso" data-i18n="nav.process">Cómo trabajamos</a></li>
+          <li><a href="dj.html" data-i18n="nav.dj">DJ y música</a></li>
+          <li><a href="agencias.html" data-i18n="nav.agencies">Agencias y DMC</a></li>
+          <li><a href="propuesta.html" data-i18n="nav.brief">Pedir propuesta</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.h2">Contacto</h4>
+        <ul>
+          <li><a class="js-mail" href="index.html#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">Correo</a></li>
+          <li><a href="tel:+34629867715">+34 629 86 77 15</a></li>
+          <li data-i18n="foot.city">Torrelles de Foix, Barcelona</li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.h3">Ecosistema</h4>
+        <ul>
+          <li><a href="https://www.teamtowers.eu" target="_blank" rel="noopener">teamtowers.eu</a></li>
+          <li><a href="https://teamtowershuma.com" target="_blank" rel="noopener">teamtowershuma.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p data-i18n="foot.rights">© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
+      <p><a href="privacidad.html" data-i18n="foot.priv">Aviso de privacidad</a> <span aria-hidden="true">·</span> <a href="/recursos.html" data-i18n="foot.res">Recursos</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/site.js" defer></script>
+<script type="module" src="js/portal.js"></script>
+</body>
+</html>

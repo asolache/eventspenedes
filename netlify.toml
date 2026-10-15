@@ -120,6 +120,18 @@
   to = "/en/contacto.html"
   status = 200
 
+# El portal de partners: una herramienta, no una página que se indexe
+[[redirects]]
+  from = "/acceso"
+  to = "/acceso.html"
+  status = 200
+
+[[headers]]
+  for = "/acceso*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
 # Dominio canónico: todo el tráfico de www va al dominio raíz
 [[redirects]]
   from = "https://www.eventspenedes.com/*"

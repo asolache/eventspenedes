@@ -32,6 +32,8 @@
      «También ofrecéis»), y enseña las salas o los servicios de uno en uno.
    · Al enviar, si la página lo pide (`data-vista`), enseña cómo se
      presentaría el proveedor si autoriza la publicación.
+   · Abierta desde el portal de partners (/acceso), el envío queda además
+     como cambio pendiente de validar en el portal (js/portal-ficha.js).
    Sin JavaScript el formulario funciona igual: todo visible y envío normal.
    ========================================================================== */
 (function () {
@@ -353,12 +355,35 @@
       estado.appendChild(document.createElement('br'));
       estado.appendChild(enlace);
       vista(enviada);
+      desdePortal(enviada);
       window.scrollTo(0, 0);
     }).catch(function () {
       decir('No se ha podido enviar (¿sin cobertura?). La ficha sigue guardada en este dispositivo: vuelve a pulsar «Enviar la ficha» cuando haya red.', 'error');
       estado.scrollIntoView({ block: 'center' });
     }).then(function () { boton.disabled = false; });
   });
+
+  /* --- Desde el portal de partners ----------------------------------------- */
+
+  /* Si la ficha se abrió desde /acceso, el envío queda además en el portal como
+     cambio pendiente de validar. Es un añadido: si falla, la ficha ya nos ha
+     llegado por el camino de siempre. */
+  function desdePortal(enviada) {
+    var portal = null;
+    try { portal = JSON.parse(sessionStorage.getItem('ep-portal') || 'null'); } catch (e) { portal = null; }
+    if (!portal || portal.tipo !== form.name || !portal.partner) { return; }
+    import('/js/portal-ficha.js').then(function (m) { return m.enviadaDesdePortal(portal.partner, enviada); })
+      .then(function () {
+        estado.appendChild(document.createElement('br'));
+        estado.appendChild(document.createTextNode('En el portal queda pendiente de validar. '));
+        var a = document.createElement('a'); a.href = '/acceso'; a.textContent = 'Volver al portal';
+        estado.appendChild(a);
+      })
+      .catch(function (e) {
+        estado.appendChild(document.createElement('br'));
+        estado.appendChild(document.createTextNode('No se ha podido guardar en el portal: ' + e.message));
+      });
+  }
 
   /* --- Cómo os presentaríamos ---------------------------------------------- */
 
