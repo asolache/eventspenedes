@@ -166,7 +166,14 @@
         <input type="hidden" name="idioma" value="es">
         <input type="hidden" name="origen" value="">
         <input type="hidden" name="partner" value="">
+        <input type="hidden" name="seleccion" value="">
         <p class="honeypot" hidden><label>No rellenar: <input name="bot-field"></label></p>
+
+        <div class="seleccion-form" id="seleccion-form" hidden>
+          <h2 class="form__h" data-i18n="pr.sel.title">What you marked on the website</h2>
+          <ul class="seleccion-form__lista"></ul>
+          <p class="form__note" data-i18n="pr.sel.note">It goes with the briefing. You can remove anything you don’t want or <a href="/en/#actividades">go back and look</a>.</p>
+        </div>
 
         <h2 class="form__h" data-i18n="pr.b1">Who you are</h2>
         <div class="form__row">
@@ -255,6 +262,7 @@
               <option value="masia-torreblanca" data-i18n="pr.f.esp2">Masia Torreblanca · up to 500</option>
               <option value="torre-del-gall" data-i18n="pr.f.esp3">La Torre del Gall · 350 standing, 280 seated</option>
               <option value="bellesguart" data-i18n="pr.f.esp4">Bellesguart · modernista estate</option>
+              <option value="albet-i-noya" data-i18n="pr.f.esp5">Albet i Noya · organic winery, up to 80</option>
             </select>
           </p>
 

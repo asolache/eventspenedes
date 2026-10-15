@@ -303,6 +303,11 @@ window.EP_I18N = {
       'act.b5.title': 'Maridatge de paisatge i rutes',
       'act.b5.text': 'Un passeig de tres quilòmetres entre vinyes amb vins pel camí, o una ruta en bicicleta elèctrica o en 4x4 per les Muntanyes d’Ordal.',
       'act.b5.alt': 'Camí entre vinyes d’Albet i Noya (foto provisional del celler)',
+      'sel.add': 'M’interessa',
+      'sel.added': 'A la teva selecció',
+      'sel.title': 'La teva selecció',
+      'sel.cta': 'Demanar proposta amb això',
+      'sel.clear': 'Buidar',
     },
 
     en: {
@@ -604,6 +609,11 @@ window.EP_I18N = {
       'act.b5.title': 'Landscape pairing and routes',
       'act.b5.text': 'A three-kilometre walk through the vineyards with wines along the way, or an e-bike or 4x4 route through the Ordal hills.',
       'act.b5.alt': 'A path between the vineyards at Albet i Noya (provisional photo from the winery)',
+      'sel.add': 'I’m interested',
+      'sel.added': 'In your selection',
+      'sel.title': 'Your selection',
+      'sel.cta': 'Request a proposal with this',
+      'sel.clear': 'Clear',
     }
 };
 

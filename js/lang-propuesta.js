@@ -124,6 +124,9 @@ window.EP_I18N = {
     'pr.d.p3': 'Quan el programa encaixa. La producció es factura per hores i els serveis van al seu preu, sense comissió per sobre.',
     'pr.d.p4t': 'Reserva',
     'pr.d.p4': 'La data de l’espai no queda bloquejada fins a la paga i senyal. La proposta és vàlida 30 dies.',
+    'pr.sel.title': 'El que has marcat a la web',
+    'pr.sel.note': 'Va amb el briefing. Pots treure el que no vulguis o <a href="/ca/#actividades">tornar a mirar</a>.',
+    'pr.f.esp5': 'Albet i Noya · celler ecològic, fins a 80',
   },
 
   en: {
@@ -247,6 +250,9 @@ window.EP_I18N = {
     'pr.d.p3': 'Once the programme fits. Production is billed by the hour and services go at their price, with no commission on top.',
     'pr.d.p4t': 'Booking',
     'pr.d.p4': 'The venue date is not held until the deposit. The proposal is valid for 30 days.',
+    'pr.sel.title': 'What you marked on the website',
+    'pr.sel.note': 'It goes with the briefing. You can remove anything you don’t want or <a href="/en/#actividades">go back and look</a>.',
+    'pr.f.esp5': 'Albet i Noya · organic winery, up to 80',
   }
 
 };
