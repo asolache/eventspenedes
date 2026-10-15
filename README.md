@@ -13,7 +13,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ```
 /
 ├── index.html          Landing en castellano (fuente de verdad)
-├── dj.html             Perfil de DJ en castellano (fuente de verdad)
+├── dj.html             Música y espectáculos (DJ, directo, espectáculos, sonido) en castellano (fuente de verdad)
 ├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
 ├── contacto.html       Página de contacto: un camino por caso y el formulario corto
 ├── alta-localizacion.html  Ficha de un espacio, de uso interno (no se indexa)
@@ -34,7 +34,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── css/styles.css      Hoja de estilos única (tokens Antigravity)
 ├── js/site.js          Correo protegido, navegación móvil e idioma del formulario
 ├── js/lang-home.js     Textos CA / EN de la portada (fuente del generador)
-├── js/lang-dj.js       Textos CA / EN de la página de DJ (fuente del generador)
+├── js/lang-dj.js       Textos CA / EN de la página de música y espectáculos (fuente del generador)
 ├── js/lang-agencias.js Textos CA / EN de la página de agencias
 ├── js/lang-red.js      Textos CA / EN de «Entra en la red»
 ├── valoracion.html     Valoración tras el evento (sin indexar; enlace o QR con ?e=<evento>)
