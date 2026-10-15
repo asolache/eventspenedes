@@ -66,7 +66,7 @@
     <div class="wrap">
       <p class="eyebrow">Red de Events Penedès</p>
       <h1>Acceso de partners</h1>
-      <p class="lead">Para los espacios y proveedores de la red: vuestra ficha, vuestras fotos, vuestro acuerdo y lo que os traemos. Lo que cambiéis lo revisamos antes de publicarlo.</p>
+      <p class="lead">Para los espacios y proveedores de la red. En un solo sitio tienes tus reservas, tu ficha y tus fotos, tu acuerdo y los clientes que te traemos.</p>
     </div>
   </section>
 
@@ -74,14 +74,15 @@
     <div class="wrap portal" id="portal">
       <p class="portal__estado" data-estado role="status" aria-live="polite" hidden></p>
 
-      <div data-vista="fuera" hidden>
-        <div class="portal__entrar">
+      <div class="portal__fuera" data-vista="fuera" hidden>
+        <aside class="portal__entrar card" aria-labelledby="entrar-titulo">
+          <h2 id="entrar-titulo">Entrar</h2>
           <button class="btn btn--primary" type="button" data-accion="github">Entrar con GitHub</button>
           <p class="form__note">O con tu correo:</p>
           <form class="form" data-form="entrar">
             <p class="field">
               <label for="p-correo">Correo</label>
-              <input id="p-correo" name="correo" type="email" autocomplete="email" required>
+              <input id="p-correo" name="correo" type="email" autocomplete="email" inputmode="email" required>
             </p>
             <p class="field">
               <label for="p-clave">Contraseña</label>
@@ -92,8 +93,64 @@
               <button class="btn btn--ghost" type="submit" data-modo="alta">Crear la cuenta</button>
               <button class="btn btn--ghost" type="button" data-accion="olvido">He olvidado la contraseña</button>
             </p>
-            <p class="form__note">Entra con el correo con el que te hemos invitado. Si aún no formas parte de la red, <a href="/red.html#alta">preséntate aquí</a>.</p>
+            <p class="form__note"><strong>¿Primera vez?</strong> Escribe el correo con el que te hemos invitado, elige una contraseña y pulsa «Crear la cuenta». Te llega un correo para confirmarla.</p>
+            <p class="form__note">¿Aún no formas parte de la red? <a href="/red.html#alta">Preséntate aquí</a>.</p>
           </form>
+        </aside>
+
+        <div class="portal__info">
+          <section aria-labelledby="ofrece-titulo">
+            <p class="eyebrow">Lo que te ofrecemos</p>
+            <h2 id="ofrece-titulo">Tu espacio o tu servicio, en los eventos que organizamos</h2>
+            <ul class="portal__ofrece">
+              <li><h3>Clientes con el evento ya pensado</h3><p>Empresas y agencias nos piden propuesta. Cuando encajas, te llega la petición con fecha, horario y personas.</p></li>
+              <li><h3>Reservas sin llamadas</h3><p>Confirmas, propones otra fecha u otro horario, o nos dices que no podéis. Con un toque, también desde el móvil.</p></li>
+              <li><h3>Tu página en eventspenedes.com</h3><p>Con tus fotos y tus servicios, preparada para que te encuentren en Google y en los asistentes de IA.</p></li>
+              <li><h3>Tu enlace para traer clientes</h3><p>Quien nos escriba después de entrar por tu enlace queda apuntado como tuyo, y lo ves aquí.</p></li>
+              <li><h3>Un acuerdo claro y por escrito</h3><p>Cada versión dice qué cambia respecto a la anterior. Vale cuando la firmamos las dos partes y la anterior queda guardada.</p></li>
+              <li><h3>Tus datos al día, sin esperar a nadie</h3><p>Editas tu ficha y tus fotos, o importas tu web o tu catálogo en PDF. Lo revisamos antes de publicarlo.</p></li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="como-titulo">
+            <p class="eyebrow">Cómo funciona</p>
+            <h2 id="como-titulo">Cinco pasos, de la presentación al evento</h2>
+            <ol class="portal__pasos">
+              <li><strong>Te presentas o te invitamos.</strong> Nos cuentas qué ofreces y te damos acceso con tu correo.</li>
+              <li><strong>Completas tu ficha y tus fotos.</strong> Las revisamos y, si lo autorizas, publicamos tu página.</li>
+              <li><strong>Acordamos las condiciones.</strong> Las dejamos por escrito aquí, con su historial.</li>
+              <li><strong>Te pedimos reservas.</strong> Te avisamos y respondes desde el portal. Todo queda en la conversación.</li>
+              <li><strong>Evento y resultados.</strong> Coordinamos el día con el cliente y tú ves visitas, clientes y reservas.</li>
+            </ol>
+          </section>
+
+          <section aria-labelledby="flujo-titulo">
+            <p class="eyebrow">El flujo de valor</p>
+            <h2 id="flujo-titulo">Qué das y qué recibes</h2>
+            <div class="portal__flujo" role="list">
+              <div class="portal__flujo-rol" role="listitem"><h3>Tú</h3><p>Espacio o servicio</p></div>
+              <div class="portal__flujo-ida" role="listitem" aria-label="Lo que aportas">
+                <p class="eyebrow">Lo que aportas</p>
+                <ul><li>Disponibilidad y respuesta rápida</li><li>Ficha, fotos y servicios al día</li><li>La experiencia del día del evento</li></ul>
+              </div>
+              <div class="portal__flujo-rol portal__flujo-rol--ep" role="listitem"><h3>Events Penedès</h3><p>Producción del evento</p></div>
+              <div class="portal__flujo-vuelta" role="listitem" aria-label="Lo que recibes">
+                <p class="eyebrow">Lo que recibes</p>
+                <ul><li>Clientes y reservas</li><li>Visibilidad en la web</li><li>Un único interlocutor con el cliente</li><li>Datos de visitas, clientes y reservas</li></ul>
+              </div>
+              <div class="portal__flujo-rol" role="listitem"><h3>El cliente</h3><p>Empresa o agencia</p></div>
+            </div>
+          </section>
+
+          <section aria-labelledby="preguntas-titulo">
+            <p class="eyebrow">Preguntas</p>
+            <h2 id="preguntas-titulo">Lo que suele preguntarse</h2>
+            <details><summary>¿Qué se publica de mí?</summary><p>Solo lo que marques como publicable en tu ficha y cuando lo hayamos revisado. Tus precios y tus contactos no salen en la web.</p></details>
+            <details><summary>¿Qué pasa cuando cambio algo?</summary><p>El cambio queda pendiente. Lo revisamos y, al aprobarlo, se publica. Ves siempre lo publicado y lo pendiente.</p></details>
+            <details><summary>¿Cómo me entero de una reserva?</summary><p>Te avisamos y la ves la primera en tu panel. Puedes confirmarla, proponer otra cosa o decir que no podéis.</p></details>
+            <details><summary>¿Puede entrar más gente de mi equipo?</summary><p>Sí. Pídenoslo en la conversación y les enviamos la invitación a su correo.</p></details>
+            <details><summary>¿Funciona en el móvil?</summary><p>Sí. El portal está pensado para móvil, tablet y ordenador.</p></details>
+          </section>
         </div>
       </div>
 
