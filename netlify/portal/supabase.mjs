@@ -65,3 +65,29 @@ export const sumarImpresion = (codigo, clic, { fetch } = {}) =>
 
 export const anotar = (tabla, fila, { fetch } = {}) =>
   rest(tabla, { method: 'POST', body: fila, prefer: 'return=minimal', fetch });
+
+/* Quién llama, por su sesión del portal: Supabase dice de quién es el token.
+   Sin token válido, nadie. */
+export async function usuario(token, { fetch = globalThis.fetch } = {}) {
+  if (!token || !/^[\w-]+\.[\w-]+\.[\w-]+$/.test(token)) { return null; }
+  const r = await fetch(`${base()}/auth/v1/user`, {
+    headers: { apikey: process.env.SUPABASE_SECRET_KEY, Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!r.ok) { return null; }
+  const u = await r.json().catch(() => null);
+  return u?.id ? { id: u.id, correo: u.email || null } : null;
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const esUuid = x => UUID.test(String(x || ''));
+
+export async function esAdmin(userId, { fetch } = {}) {
+  if (!esUuid(userId)) { return false; }
+  return Boolean((await rest(`admins?select=user_id&user_id=eq.${userId}`, { fetch }))?.length);
+}
+
+export async function esMiembro(userId, partnerId, { fetch } = {}) {
+  if (!esUuid(userId) || !esUuid(partnerId)) { return false; }
+  return Boolean((await rest(`miembros?select=user_id&user_id=eq.${userId}&partner_id=eq.${partnerId}`, { fetch }))?.length);
+}

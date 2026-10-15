@@ -46,6 +46,11 @@ jobs:
       - name: Las páginas de partners solo publican lo autorizado
         run: node tools/test-partners.mjs
 
+      # El portal habla con Zoho por el servidor: que un partner no lea nada
+      # de Zoho ni pase mensajes ajenos, y que cada respuesta llegue al trato.
+      - name: El portal solo habla con Zoho por quien debe
+        run: node tools/test-portal.mjs
+
       - name: La cabecera de las páginas de partners es la del sitio
         run: |
           node tools/build-marco.mjs
