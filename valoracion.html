@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Al enviar un formulario desde /ca/ o /en/, Netlify responde al POST con la
+   versión en castellano de esta página aunque la dirección sea la del idioma.
+   Se pide otra vez por GET, que sí sirve la del idioma. La marca `v=idioma`
+   evita dar vueltas si algún día no fuera así. */
+(function () {
+  var l = location;
+  if (document.documentElement.lang === 'es' && /^\/(ca|en)\//.test(l.pathname) && !/[?&]v=idioma/.test(l.search)) {
+    l.replace(l.pathname + (l.search ? l.search + '&' : '?') + 'v=idioma' + l.hash);
+  }
+})();
+</script>
 
 <title>Valora tu evento · Events Penedès</title>
 <meta name="description" content="Cuéntanos cómo fue tu evento con Events Penedès.">
@@ -34,16 +46,16 @@
 <meta name="twitter:image" content="https://eventspenedes.com/assets/og-image.png">
 <meta name="twitter:image:alt" content="Valora tu evento · Events Penedès">
 
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/icon-256.png" type="image/png" sizes="256x256">
-<link rel="apple-touch-icon" href="assets/icon-256.png" sizes="256x256">
-<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icon-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="/assets/icon-256.png" sizes="256x256">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#050507">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="/css/styles.css">
 
 <script type="application/ld+json">
 {
@@ -233,7 +245,7 @@
   </div>
 </footer>
 
-<script src="js/lang-valoracion.js" defer></script>
-<script src="js/site.js" defer></script>
+<script src="/js/lang-valoracion.js" defer></script>
+<script src="/js/site.js" defer></script>
 </body>
 </html>
