@@ -133,6 +133,31 @@
     <lastmod>2026-10-10</lastmod>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://eventspenedes.com/contacto.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eventspenedes.com/contacto.html"/>
+    <lastmod>2026-10-10</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://eventspenedes.com/ca/contacto.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/contacto.html"/>
+    <lastmod>2026-10-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://eventspenedes.com/en/contacto.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://eventspenedes.com/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="ca" href="https://eventspenedes.com/ca/contacto.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eventspenedes.com/en/contacto.html"/>
+    <lastmod>2026-10-10</lastmod>
+    <priority>0.5</priority>
+  </url>
 
   <url>
     <loc>https://eventspenedes.com/propuesta.html</loc>

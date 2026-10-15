@@ -15,6 +15,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── index.html          Landing en castellano (fuente de verdad)
 ├── dj.html             Perfil de DJ en castellano (fuente de verdad)
 ├── agencias.html       Programa de agencias y DMC en castellano (fuente de verdad)
+├── contacto.html       Página de contacto: un camino por caso y el formulario corto
 ├── alta-localizacion.html  Ficha de un espacio, de uso interno (no se indexa)
 ├── alta-proveedor.html Ficha de un proveedor, de uso interno (no se indexa)
 ├── recursos.html       Recursos públicos por temas. La lista se genera de data/recursos.json
@@ -119,6 +120,29 @@ Todos llevan un campo oculto `origen` que rellena `js/site.js`: la primera
 página vista en la visita, la web de la que llegó y la campaña (`utm_*`). Sin
 cookies: se guarda en `sessionStorage` y se borra al cerrar la pestaña. En Zoho
 sale como «Llegó por». `?tipo=dj` en la portada preselecciona el tipo.
+
+La **página de contacto** (`/contacto`) es el embudo: seis caminos, cada uno al
+formulario que le toca (briefing, alta de agencia, «Entra en la red» o el
+formulario corto de la misma página, con el tipo ya marcado). El menú
+«Contacto» de todas las páginas lleva aquí.
+
+### El partner que trae el lead
+
+Cada espacio o proveedor de la red tiene su enlace, `eventspenedes.com/r/<código>`
+(un 302 a `/?ref=<código>`). `js/site.js` guarda el código en `sessionStorage` y
+lo pone en el campo oculto `partner` de cualquier formulario de leads que se
+envíe en esa visita. La función lo lleva a la ficha («Partner que lo trae») y,
+con estas variables en Netlify, también al CRM:
+
+| Variable                   | Qué hace |
+|----------------------------|----------|
+| `PARTNERS`                 | Códigos válidos separados por comas. Uno que no esté se anota como «no reconocido» y no se atribuye. |
+| `ZOHO_CAMPO_PARTNER`       | Nombre de API de un campo de texto en Leads, Contacts y Deals donde va el código. |
+| `ZOHO_LEAD_SOURCE_PARTNER` | Valor existente de «Fuente» para lo que llega por un partner. |
+
+En una propuesta el código va a la oportunidad, así que cada evento sabe quién
+lo trajo. El formulario de contacto también pregunta «¿Te ha recomendado
+alguien?» en texto libre, para cuando llegan sin enlace.
 
 La página de gracias tiene un bloque para reservar la llamada que solo aparece
 si `data-agenda` (en `gracias.html`) lleva la URL `https://` de una página de

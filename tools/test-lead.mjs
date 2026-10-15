@@ -346,6 +346,41 @@ globalThis.fetch = fetchReal;
 process.env.ZOHO_DRY_RUN = '1';
 delete process.env.PROPUESTA_SECRET;
 
+/* 1h · El partner que trae el lead llega a la ficha y, si es bueno, al CRM */
+const conPartner = (partner, extra = {}) => JSON.stringify({ form_name: 'contacto',
+  created_at: '2026-10-15T10:00:00.000Z',
+  data: { nombre: 'Laia', correo: 'laia@example.com', partner, ...extra } });
+process.env.ZOHO_CAMPO_PARTNER = 'Partner';
+process.env.ZOHO_LEAD_SOURCE_PARTNER = 'Partner';
+let lp = (await (await handler(peticion(conPartner('albet-i-noya', { recomienda: 'Sara' }), firmar(conPartner('albet-i-noya', { recomienda: 'Sara' }))))).json()).lead;
+comprueba('el código del partner va a la ficha', /Partner que lo trae: albet-i-noya$/m.test(lp?.Description || ''));
+comprueba('y a su campo en Zoho, con la fuente «partner»', lp?.Partner === 'albet-i-noya' && lp?.Lead_Source === 'Partner');
+comprueba('quien le recomendó, en sus palabras, también', /Dice que le recomendó: Sara/.test(lp?.Description || ''));
+lp = (await (await handler(peticion(conPartner('"><script>'), firmar(conPartner('"><script>'))))).json()).lead;
+comprueba('un código con forma rara no entra en ninguna parte', !/Partner que lo trae/.test(lp?.Description || '') && !('Partner' in lp));
+process.env.PARTNERS = 'albet-i-noya, cal-soler';
+lp = (await (await handler(peticion(conPartner('inventado'), firmar(conPartner('inventado'))))).json()).lead;
+comprueba('con lista, un código que no está se anota como no reconocido', /inventado \(código no reconocido\)/.test(lp?.Description || ''));
+comprueba('y no se atribuye en el CRM', !('Partner' in lp) && lp?.Lead_Source !== 'Partner');
+lp = (await (await handler(peticion(conPartner('Cal-Soler'), firmar(conPartner('Cal-Soler'))))).json()).lead;
+comprueba('con lista, uno que está se atribuye', lp?.Partner === 'cal-soler');
+process.env.ZOHO_ETAPA_PROPUESTA = 'Clasificación';
+const PROP_P = JSON.stringify({ form_name: 'propuesta', created_at: '2026-10-15T10:00:00.000Z',
+  data: { empresa: 'Acme', persona: 'Laia', correo: 'laia@example.com', partner: 'cal-soler' } });
+const op = (await (await handler(peticion(PROP_P, firmar(PROP_P)))).json()).oportunidad;
+comprueba('en una propuesta, el partner va a la oportunidad', op?.trato?.Partner === 'cal-soler');
+delete process.env.ZOHO_ETAPA_PROPUESTA;
+delete process.env.PARTNERS;
+delete process.env.ZOHO_CAMPO_PARTNER;
+delete process.env.ZOHO_LEAD_SOURCE_PARTNER;
+
+/* Todos los formularios de leads llevan el campo del partner: si uno no lo
+   lleva, Netlify no lo guarda y el lead llega sin quién lo trajo. */
+for (const pagina of ['index.html', 'contacto.html', 'propuesta.html', 'agencias.html', 'red.html']) {
+  const html = readFileSync(new URL(`../${pagina}`, import.meta.url), 'utf8');
+  comprueba(`${pagina} envía el partner con el formulario`, /<input type="hidden" name="partner" value="">/.test(html));
+}
+
 /* 2 · Los caminos malos, que son los que de verdad hay que probar */
 comprueba('sin firma se rechaza', (await handler(peticion(AVISO, null))).status === 401);
 comprueba('con otro secreto se rechaza',
