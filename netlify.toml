@@ -97,6 +97,29 @@
   to = "/alta-proveedor.html"
   status = 200
 
+# El enlace de cada partner: eventspenedes.com/r/<código> lleva a la portada
+# con el código, y la web lo pone en el campo `partner` del formulario que se
+# envíe. Es un 302: el código puede cambiar de destino y no se cachea.
+[[redirects]]
+  from = "/r/:codigo"
+  to = "/?ref=:codigo"
+  status = 302
+
+[[redirects]]
+  from = "/contacto"
+  to = "/contacto.html"
+  status = 200
+
+[[redirects]]
+  from = "/ca/contacto"
+  to = "/ca/contacto.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/contacto"
+  to = "/en/contacto.html"
+  status = 200
+
 # Dominio canónico: todo el tráfico de www va al dominio raíz
 [[redirects]]
   from = "https://www.eventspenedes.com/*"

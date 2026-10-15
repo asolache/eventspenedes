@@ -562,6 +562,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 .card__more a { font-weight: 500; }
 .card__more a::after { content: " →"; }
 
+/* Los caminos de la página de contacto: la tarjeta entera es el enlace */
+a.card--ruta { display: block; color: inherit; text-decoration: none; }
+a.card--ruta .card__more { color: var(--accent-gold); font-weight: 500; }
+a.card--ruta .card__more::after { content: " →"; }
+a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 3px; }
+
 /* --- Página de perfil ---------------------------------------------------- */
 
 .crumbs {

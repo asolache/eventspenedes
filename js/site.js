@@ -54,6 +54,38 @@
     for (var i = 0; i < campos.length; i++) { campos[i].value = origen; }
   }
 
+  /* El partner que nos trae a quien escribe. Cada espacio o proveedor de la
+     red tiene su enlace (eventspenedes.com/r/<código>, que lleva a ?ref=) y el
+     código viaja en el campo `partner` de cualquier formulario que se envíe en
+     esta visita. Solo se acepta un código con forma de código: minúsculas,
+     cifras y guiones. Igual que el origen, sin cookies. */
+  var CODIGO_PARTNER = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
+  function marcarPartner() {
+    var clave = 'ep-partner', codigo = null;
+    var q = new URLSearchParams(location.search);
+    var nuevo = (q.get('ref') || q.get('partner') || '').trim().toLowerCase();
+    if (CODIGO_PARTNER.test(nuevo)) {
+      codigo = nuevo;
+      try { sessionStorage.setItem(clave, codigo); } catch (e) { /* sin almacenamiento */ }
+    } else {
+      try { codigo = sessionStorage.getItem(clave); } catch (e) { codigo = null; }
+    }
+    if (!codigo) { return; }
+    var campos = document.querySelectorAll('input[name="partner"]');
+    for (var i = 0; i < campos.length; i++) { campos[i].value = codigo; }
+  }
+
+  /* La página de contacto: cada camino que acaba en el formulario de aquí
+     mismo deja marcado su tipo. */
+  function rutasContacto() {
+    var sel = document.querySelector('#form-contacto select[name="tipo"]');
+    var rutas = document.querySelectorAll('a[data-tipo]');
+    if (!sel) { return; }
+    for (var i = 0; i < rutas.length; i++) {
+      rutas[i].addEventListener('click', function () { sel.value = this.getAttribute('data-tipo'); });
+    }
+  }
+
   /* Un enlace puede llegar con el tipo ya elegido (?tipo=dj desde la página
      de DJ): se marca solo si el formulario tiene esa opción. */
   function preseleccionar() {
@@ -187,6 +219,8 @@
     revealMail();
     marcarIdioma();
     marcarOrigen();
+    marcarPartner();
+    rutasContacto();
     preseleccionar();
     rellenarPrograma();
     valoracion();

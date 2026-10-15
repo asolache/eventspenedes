@@ -56,6 +56,14 @@
                                   '' para no tocarlo)
      ZOHO_ETIQUETA_POR_VALIDAR    opcional · etiqueta de los proveedores sin
                                   validar («Pendiente de validar»)
+     PARTNERS                     opcional · códigos de partner válidos, separados
+                                  por comas. Con la lista, un código que no está
+                                  se anota como «no reconocido» y no se escribe
+                                  en el campo del partner
+     ZOHO_CAMPO_PARTNER           opcional · nombre de API de un campo de texto en
+                                  Leads, Contacts y Deals donde va el código
+     ZOHO_LEAD_SOURCE_PARTNER     opcional · valor EXISTENTE de «Fuente» para lo
+                                  que llega por el enlace de un partner
    ========================================================================== */
 import { createHmac, timingSafeEqual, createHash } from 'node:crypto';
 import { cerrar } from '../propuesta/sobre.mjs';
@@ -155,6 +163,7 @@ const ETIQUETAS = {
   perfil: 'Perfil de partner',
   poblacion: 'Población',
   origen: 'Llegó por',
+  recomienda: 'Dice que le recomendó',
 };
 
 /* Los `value` de los desplegables son identificadores, no castellano. En la
@@ -215,6 +224,37 @@ const EXPERIENCIAS = {
   exp_rrpp: 'Protocolo y RRPP',
 };
 
+/* --- El partner que trae el lead -----------------------------------------
+   Cada espacio o proveedor de la red tiene su enlace (eventspenedes.com/r/
+   <código>) y la web pone el código en el campo oculto `partner` de lo que se
+   envíe. Es lo que permite saber, meses después, qué lead trajo quién.
+
+   Un campo oculto lo puede escribir cualquiera, así que el código se trata como
+   lo que es: un dato que llega del navegador. Solo se acepta con forma de
+   código, y si está configurada la lista PARTNERS, uno que no esté se anota en
+   la ficha como no reconocido y no llega al campo del CRM, para que nadie se
+   atribuya un lead escribiendo una URL. */
+
+const CODIGO_PARTNER = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
+
+export function partnerDe(d) {
+  const codigo = String(d.partner || '').trim().toLowerCase();
+  if (!CODIGO_PARTNER.test(codigo)) { return null; }
+  const lista = (process.env.PARTNERS || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+  return { codigo, reconocido: lista.length ? lista.includes(codigo) : null };
+}
+
+/* Lo que el partner pone en un registro de Zoho: el código en su campo y la
+   fuente «partner», solo si el código es bueno. */
+function camposPartner(d) {
+  const p = partnerDe(d);
+  if (!p || p.reconocido === false) { return {}; }
+  const r = {};
+  if (process.env.ZOHO_CAMPO_PARTNER) { r[process.env.ZOHO_CAMPO_PARTNER] = p.codigo; }
+  if (process.env.ZOHO_LEAD_SOURCE_PARTNER) { r.Lead_Source = process.env.ZOHO_LEAD_SOURCE_PARTNER; }
+  return r;
+}
+
 function ficha(form, d, cuando) {
   const l = [`Formulario: ${form}`, `Idioma de la web: ${legible(form, 'idioma', d.idioma) || '—'}`,
              `Recibido: ${cuando}`, ''];
@@ -224,6 +264,8 @@ function ficha(form, d, cuando) {
   }
   const exp = Object.entries(EXPERIENCIAS).filter(([k]) => d[k]).map(([, v]) => v);
   if (exp.length) { l.push(`Experiencias marcadas: ${exp.join(', ')}`); }
+  const p = partnerDe(d);
+  if (p) { l.push(`Partner que lo trae: ${p.codigo}${p.reconocido === false ? ' (código no reconocido)' : ''}`); }
   if (d.consentimiento) {
     l.push('', `Consentimiento del aviso de privacidad aceptado el ${cuando}.`);
   }
@@ -250,7 +292,7 @@ function lead(form, d, cuando) {
   };
   if (process.env.ZOHO_LEAD_SOURCE) { r.Lead_Source = process.env.ZOHO_LEAD_SOURCE; }
   if (process.env.ZOHO_CAMPO_MARCA) { r[process.env.ZOHO_CAMPO_MARCA] = 'Events Penedès'; }
-  return r;
+  return { ...r, ...camposPartner(d) };
 }
 
 /* --- El borrador ---------------------------------------------------------
@@ -347,7 +389,8 @@ function oportunidad(d, cuando, descripcion) {
   const empresa = (d.empresa || '').trim();
   const correo = (d.correo || '').trim();
   const telefono = (d.telefono || '').trim() || undefined;
-  const origen = process.env.ZOHO_LEAD_SOURCE ? { Lead_Source: process.env.ZOHO_LEAD_SOURCE } : {};
+  const origen = { ...(process.env.ZOHO_LEAD_SOURCE ? { Lead_Source: process.env.ZOHO_LEAD_SOURCE } : {}),
+                   ...camposPartner(d) };
 
   /* Sin empresa no se inventa una cuenta: un particular es un contacto y su
      oportunidad, sin cuenta. Una cuenta llamada como una persona parece un
