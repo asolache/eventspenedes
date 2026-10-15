@@ -24,6 +24,7 @@ const $ = s => raiz.querySelector(s);
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Proveedor' };
 const FICHA = { localizacion: '/alta-localizacion', proveedor: '/alta-proveedor' };
 const ESTADOS_LEAD = { nuevo: 'Nuevo' };
+const ESTADOS_PARTNER = { invitado: 'Invitado', activo: 'Activo', pausado: 'Pausado' };
 const MAX_FOTO = 8 * 1024 * 1024;
 
 /* --- Entrar ---------------------------------------------------------------- */
@@ -120,45 +121,94 @@ async function panelPartner(p) {
   const enlace = `https://eventspenedes.com/r/${p.codigo}`;
   const vistas = impresiones.reduce((s, x) => s + x.vistas, 0);
   const clics = impresiones.reduce((s, x) => s + x.clics, 0);
+  const hoy = new Date().toISOString().slice(0, 10);
   const porContestar = reservas.filter(r => r.estado === 'solicitada');
-  const proximas = reservas.filter(r => r.estado !== 'cancelada' && r.fecha >= new Date().toISOString().slice(0, 10));
-  poner(caja, 
-    h('h2', {}, p.nombre),
-    h('p', { class: 'eyebrow' }, `${TIPOS[p.tipo]} · ${p.estado}`),
-    h('dl', { class: 'portal__cifras' },
-      h('div', {}, h('dt', {}, 'Reservas por contestar'), h('dd', {}, String(porContestar.length))),
-      h('div', {}, h('dt', {}, 'Visitas a tu página (30 días)'), h('dd', {}, String(vistas))),
-      h('div', {}, h('dt', {}, 'Clics en «Organizar un evento aquí»'), h('dd', {}, String(clics))),
-      h('div', {}, h('dt', {}, 'Leads que nos has traído'), h('dd', {}, String(leads.length)))),
+  const proximas = reservas.filter(r => r.estado !== 'cancelada' && r.fecha >= hoy);
+  const confirmadas = reservas.filter(r => r.estado === 'confirmada');
+  const hechos = confirmadas.filter(r => r.fecha < hoy);
+  const porFirmar = acuerdos.filter(a => a.estado === 'propuesto' && !a.aceptado_por);
+  const vigente = acuerdos.find(a => a.estado === 'vigente');
+  const datos = actual.pendiente || actual.publicada || {};
+  const fotos = Array.isArray(datos.imagenes) ? datos.imagenes : [];
+  const id = s => `${p.codigo}-${s}`;
+  const ir = s => h('a', { href: `#${id(s)}` }, 'Ir');
+
+  poner(caja,
+    h('header', { class: 'portal__cab' },
+      h('h2', {}, p.nombre),
+      h('p', { class: 'portal__chips' }, h('span', { class: 'portal__chip' }, TIPOS[p.tipo]),
+        h('span', { class: 'portal__chip', 'data-estado': p.estado }, ESTADOS_PARTNER[p.estado] || p.estado))),
+    h('nav', { class: 'portal__nav', 'aria-label': `Secciones de ${p.nombre}` },
+      [['pendiente', 'Pendiente'], ['reservas', 'Reservas'], ['flujo', 'Flujo de valor'], ['ficha', 'Ficha y fotos'],
+        ['acuerdo', 'Acuerdo'], ['clientes', 'Clientes'], ['conversacion', 'Conversación']]
+        .map(([s, t]) => h('a', { href: `#${id(s)}` }, t))),
   );
 
+  /* Lo que le toca hacer ahora, en una lista corta */
+  const tareas = [
+    porContestar.length ? [`Contestar ${porContestar.length} reserva${porContestar.length > 1 ? 's' : ''}`, 'reservas'] : null,
+    porFirmar.length ? ['Revisar la propuesta de acuerdo', 'acuerdo'] : null,
+    !actual.version && !actual.pendiente ? ['Completar tu ficha', 'ficha'] : null,
+    !fotos.length ? ['Subir fotos que podamos publicar', 'ficha'] : null,
+    datos.autoriza !== 'si' && (actual.version || actual.pendiente) ? ['Autorizar en tu ficha que publiquemos tu página', 'ficha'] : null,
+    !vigente && !porFirmar.length ? ['Proponer las condiciones del acuerdo', 'acuerdo'] : null,
+  ].filter(Boolean);
+  poner(caja, h('section', { class: 'portal__bloque', id: id('pendiente') },
+    h('h3', {}, 'Ahora te toca'),
+    tareas.length
+      ? h('ul', { class: 'portal__tareas' }, tareas.map(([t, s]) => h('li', {}, h('span', {}, t), ir(s))))
+      : h('p', {}, 'Nada pendiente. Te avisamos cuando haya una reserva o un cambio que revisar.'),
+    actual.pendiente ? h('p', { class: 'form__note' }, 'Tienes cambios de ficha esperando nuestra revisión.') : null));
+
   /* Las reservas, lo primero: es lo que tiene prisa */
-  poner(caja, h('h3', { id: 'reservas' }, 'Reservas'));
-  poner(caja, proximas.length
+  const secReservas = h('section', { class: 'portal__bloque', id: id('reservas') }, h('h3', {}, 'Reservas'));
+  poner(secReservas, proximas.length
     ? h('div', { class: 'portal__reservas' }, proximas.map(r => tarjetaReserva(r, ctx)))
     : h('p', {}, 'Cuando te pidamos una reserva para un evento, sale aquí para que la confirmes, propongas otra cosa o nos digas que no podéis.'));
   const pasadas = reservas.filter(r => !proximas.includes(r));
   if (pasadas.length) {
-    poner(caja, h('details', {}, h('summary', {}, `Reservas pasadas o canceladas (${pasadas.length})`),
+    poner(secReservas, h('details', {}, h('summary', {}, `Reservas pasadas o canceladas (${pasadas.length})`),
       h('div', { class: 'portal__reservas' }, pasadas.map(r => tarjetaReserva(r, ctx)))));
   }
+  poner(caja, secReservas);
 
-  poner(caja, h('h3', {}, 'Lo que tienes con Events Penedès'),
-    herramientas({ partner: p, ficha, acuerdos, reservas: reservas.length, leads: leads.length, vistas }));
-
-  poner(caja, 
-    h('h3', {}, 'Tu enlace'),
+  /* El flujo de valor: de quien ve su página al evento hecho, y qué se intercambia */
+  const embudo = [
+    ['Visitas a tu página', vistas, 'últimos 30 días'],
+    ['Clics en «Organizar un evento aquí»', clics, 'últimos 30 días'],
+    ['Clientes que nos has traído', leads.length, 'por tu enlace'],
+    ['Reservas pedidas', reservas.length, 'en total'],
+    ['Reservas confirmadas', confirmadas.length, 'en total'],
+    ['Eventos hechos', hechos.length, 'en total'],
+  ];
+  poner(caja, h('section', { class: 'portal__bloque', id: id('flujo') },
+    h('h3', {}, 'Tu flujo de valor'),
+    h('p', { class: 'form__note' }, 'De quien ve tu página al evento hecho. Cada cifra sale de lo que pasa en el portal.'),
+    h('ol', { class: 'portal__embudo' }, embudo.map(([t, n, nota]) =>
+      h('li', {}, h('span', { class: 'portal__embudo-n' }, String(n)), h('span', {}, t), h('span', { class: 'form__note' }, nota)))),
+    h('div', { class: 'portal__intercambio' },
+      h('div', {}, h('h4', {}, 'Lo que aportas'),
+        h('ul', { class: 'portal__herramientas' }, [
+          [Boolean(actual.version), 'Ficha aprobada', actual.version ? `versión ${actual.version}` : 'aún no'],
+          [fotos.length > 0, 'Fotos', `${fotos.length}`],
+          [datos.autoriza === 'si', 'Página autorizada para publicar', datos.autoriza === 'si' ? 'sí' : 'aún no'],
+          [porContestar.length === 0, 'Reservas contestadas', porContestar.length ? `${porContestar.length} por contestar` : 'al día'],
+        ].map(([hecho, que, como]) => h('li', { 'data-hecho': hecho ? 'si' : 'no' },
+          h('span', { 'aria-hidden': 'true' }, hecho ? '✓ ' : '○ '), h('strong', {}, que), ' · ', como)))),
+      h('div', {}, h('h4', {}, 'Lo que te damos'),
+        herramientas({ partner: p, ficha, acuerdos, reservas: reservas.length, leads: leads.length, vistas }))),
+    h('h4', {}, 'Tu enlace'),
     h('p', {}, 'Compártelo: quien escriba después de entrar por él queda apuntado como tuyo.'),
     h('p', { class: 'portal__enlace' }, h('code', {}, enlace), ' ',
       h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => navigator.clipboard.writeText(enlace).then(() => decir('Enlace copiado.', 'ok')) }, 'Copiar')),
     h('p', {}, h('a', { href: `/partners/${p.codigo}` }, 'Tu página pública'),
-      ' (solo se ve si la ficha está aprobada y has autorizado publicarla).'),
-  );
+      ' (solo se ve si la ficha está aprobada y has autorizado publicarla).')));
 
-  /* La ficha */
-  const datos = actual.pendiente || actual.publicada || {};
-  poner(caja, 
-    h('h3', {}, 'Tu ficha'),
+  /* La ficha y las fotos */
+  const secFicha = h('section', { class: 'portal__bloque', id: id('ficha') });
+  poner(caja, secFicha);
+  poner(secFicha,
+    h('h3', {}, 'Tu ficha y tus fotos'),
     h('p', {}, actual.version ? `Publicada: versión ${actual.version}, del ${fecha(actual.fecha)}.` : 'Aún no hay ninguna versión aprobada.',
       actual.pendiente ? ' Tienes cambios pendientes de validar.' : ''),
     h('p', {}, h('button', { class: 'btn btn--primary', type: 'button', onclick: () => abrirFicha(p, actual) }, 'Editar mi ficha'),
@@ -166,8 +216,7 @@ async function panelPartner(p) {
   );
 
   /* Las fotos */
-  poner(caja, h('h3', {}, 'Tus fotos'));
-  const fotos = Array.isArray(datos.imagenes) ? datos.imagenes : [];
+  poner(secFicha, h('h4', {}, 'Tus fotos'));
   const galeria = h('ul', { class: 'portal__fotos' });
   for (const ruta of fotos) {
     const { data } = await sb.storage.from('fotos').createSignedUrl(ruta, 3600);
@@ -179,7 +228,7 @@ async function panelPartner(p) {
       }) }, 'Quitar')));
   }
   const subir = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', multiple: true });
-  poner(caja, galeria,
+  poner(secFicha, galeria,
     h('p', {}, h('label', {}, 'Añadir fotos (JPG, PNG o WebP, hasta 8 MB): ', subir)),
     h('p', { class: 'form__note' }, 'Sube solo fotos que podáis publicar. Las revisamos antes de que salgan en la web.'));
   subir.addEventListener('change', intentar(async () => {
@@ -199,24 +248,24 @@ async function panelPartner(p) {
   }));
 
   /* El acuerdo, con su historial */
-  poner(caja, h('h3', {}, 'Tu acuerdo'),
+  poner(caja, h('section', { class: 'portal__bloque', id: id('acuerdo') }, h('h3', {}, 'Tu acuerdo'),
     h('p', { class: 'form__note' }, 'Cada versión dice de cuál viene y qué cambia. Vale cuando la firmamos las dos partes; la anterior queda guardada.'),
     historialAcuerdos(acuerdos, ctx),
-    h('details', {}, h('summary', {}, 'Proponer cambios en el acuerdo'), formAcuerdo({ partnerId: p.id, acuerdos, recargar, admin: false })));
+    h('details', {}, h('summary', {}, 'Proponer cambios en el acuerdo'), formAcuerdo({ partnerId: p.id, acuerdos, recargar, admin: false }))));
 
   /* Los leads */
-  poner(caja, h('h3', {}, 'Lo que te hemos traído'));
-  poner(caja, leads.length
-    ? h('table', { class: 'portal__tabla' },
+  poner(caja, h('section', { class: 'portal__bloque', id: id('clientes') }, h('h3', {}, 'Los clientes que nos has traído'), leads.length
+    ? h('table', { class: 'portal__tabla portal__tabla--tarjetas' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Llegó'), h('th', {}, 'Evento'), h('th', {}, 'Personas'), h('th', {}, 'Fecha'), h('th', {}, 'Estado'))),
-      h('tbody', {}, leads.map(l => h('tr', {}, h('td', {}, fecha(l.creado_en)), h('td', {}, l.tipo_evento || '—'),
-        h('td', {}, l.personas ?? '—'), h('td', {}, l.fecha_evento ? fecha(l.fecha_evento) : '—'), h('td', {}, ESTADOS_LEAD[l.estado] || l.estado)))))
-    : h('p', {}, 'Todavía ninguno. Cada cliente que nos escriba después de entrar por tu enlace saldrá aquí.'));
+      h('tbody', {}, leads.map(l => h('tr', {}, h('td', { 'data-c': 'Llegó' }, fecha(l.creado_en)), h('td', { 'data-c': 'Evento' }, l.tipo_evento || '—'),
+        h('td', { 'data-c': 'Personas' }, l.personas ?? '—'), h('td', { 'data-c': 'Fecha' }, l.fecha_evento ? fecha(l.fecha_evento) : '—'),
+        h('td', { 'data-c': 'Estado' }, ESTADOS_LEAD[l.estado] || l.estado)))))
+    : h('p', {}, 'Todavía ninguno. Cada cliente que nos escriba después de entrar por tu enlace saldrá aquí.')));
 
   /* La conversación entera */
-  poner(caja, h('h3', {}, 'Nuestra conversación'),
+  poner(caja, h('section', { class: 'portal__bloque', id: id('conversacion') }, h('h3', {}, 'Nuestra conversación'),
     h('details', {}, h('summary', {}, `Todo lo que ha pasado (${mensajes.length})`), lineaDeTiempo([...mensajes].reverse(), ctx)),
-    formComentario({ partnerId: p.id, admin: false, recargar, etiqueta: 'Escríbenos lo que necesites' }));
+    formComentario({ partnerId: p.id, admin: false, recargar, etiqueta: 'Escríbenos lo que necesites' })));
   return caja;
 }
 
