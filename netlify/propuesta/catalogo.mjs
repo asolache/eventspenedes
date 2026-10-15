@@ -385,9 +385,9 @@ export const opciones = [
       "en": "Local catering · Cal Soler"
     },
     "describe": {
-      "es": "Coffee break, lunch, banquete, cóctel, cena de gala, showcooking o calçotada, de la cocina de Cal Soler · La Torre del Gall.",
-      "ca": "Coffee break, lunch, banquet, còctel, sopar de gala, showcooking o calçotada, de la cuina de Cal Soler · La Torre del Gall.",
-      "en": "Coffee break, lunch, banquet, cocktail, gala dinner, showcooking or calçotada, from the kitchen of Cal Soler · La Torre del Gall."
+      "es": "Coffee break, lunch, banquete, cóctel, cena de gala, showcooking o calçotada, con producto de la comarca. De la cocina de Cal Soler, en La Torre del Gall.",
+      "ca": "Coffee break, lunch, banquet, còctel, sopar de gala, showcooking o calçotada, amb producte de la comarca. De la cuina de Cal Soler, a La Torre del Gall.",
+      "en": "Coffee break, lunch, banquet, cocktail, gala dinner, showcooking or calçotada, with local produce. From the Cal Soler kitchen at La Torre del Gall."
     },
     "duracion_min": null,
     "pax_min": null,
@@ -395,7 +395,7 @@ export const opciones = [
     "requiere": [],
     "incompatible_con": [],
     "exige_espacio": null,
-    "en_web": false
+    "en_web": true
   },
   {
     "id": "microbus",

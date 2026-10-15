@@ -58,6 +58,8 @@ window.EP_I18N = {
     'kit.o.dj-sesion.d': 'Sessió de DJ amb més de vint anys d’ofici al darrere. Repertori sense límits gràcies a les plataformes de streaming professionals: la música s’ajusta al públic que tens al davant, no al que cap en un disc dur.',
     'kit.o.musica-directo.n': 'Música en directe i espectacles',
     'kit.o.musica-directo.d': 'Música en directe lligada a la cultura catalana: havaneres, veus a cappella, grallers i folk. Grups del duet acústic al format festiu i espectacles de cultura popular, també per a famílies.',
+    'kit.o.catering-cal-soler.n': 'Càtering de proximitat',
+    'kit.o.catering-cal-soler.d': 'Coffee break, lunch, banquet, còctel, sopar de gala, showcooking o calçotada, amb producte de la comarca.',
     'kit.o.microbus.n': 'Que ningú condueixi de tornada',
     'kit.o.microbus.d': 'Una jornada al Penedès són tres o quatre parades: celler, dinar, activitat i sopar. Amb microbús privat, el grup arriba junt, ningú es perd entre vinyes i el tast es gaudeix sencer. Recollim a Barcelona o a l’aeroport i tornem a la porta de l’hotel.'
   },
@@ -115,6 +117,8 @@ window.EP_I18N = {
     'kit.o.dj-sesion.d': 'A DJ set backed by more than twenty years behind the decks. No repertoire limits, thanks to professional streaming platforms: the music follows the room in front of you, not what fits on a hard drive.',
     'kit.o.musica-directo.n': 'Live music and shows',
     'kit.o.musica-directo.d': 'Live music rooted in Catalan culture: habaneras, a cappella voices, gralla players and folk. Bands from acoustic duo to full party format, and folk and street shows, family-friendly too.',
+    'kit.o.catering-cal-soler.n': 'Local catering',
+    'kit.o.catering-cal-soler.d': 'Coffee break, lunch, banquet, cocktail, gala dinner, showcooking or calçotada, with local produce.',
     'kit.o.microbus.n': 'Nobody should drive back',
     'kit.o.microbus.d': 'A day in the Penedès means three or four stops: winery, lunch, activity and dinner. With a private minibus the group arrives together, nobody gets lost among the vines and the tasting is enjoyed in full. We pick up in Barcelona or at the airport and drop off at the hotel door.'
   }
