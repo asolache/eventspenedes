@@ -35,7 +35,7 @@ import { isIP } from 'node:net';
 import { textoDePdf } from './pdf-texto.mjs';
 import { repetido } from './nucleo.mjs';
 import { FICHAS } from './fichas.mjs';
-import { coste } from './coste.mjs';
+import { mensaje, textoDe, base, directo, cabeceras, MODELO } from '../ia/claude.mjs';
 
 export const LIMITES = {
   html: 3 * 1024 * 1024,         // una página web
@@ -427,9 +427,9 @@ function guiaDeCampos(esquema) {
 async function subirFichero(buf, nombre, { apiKey, fetch }) {
   const fd = new FormData();
   fd.append('file', new Blob([buf], { type: 'application/pdf' }), nombre || 'catalogo.pdf');
-  const r = await fetch('https://api.anthropic.com/v1/files', {
+  const r = await fetch(`${base()}/v1/files`, {
     method: 'POST',
-    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+    headers: cabeceras(apiKey),
     body: fd,
     signal: AbortSignal.timeout(LIMITES.espera * 2),
   });
@@ -445,7 +445,10 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
   try {
     const contenido = [];
     for (const p of pdfs) {
-      if (p.cuerpo.length > LIMITES.pdfEnLinea) {
+      /* La pasarela de Netlify no documenta la API de ficheros: por ella, el PDF
+         va siempre en la petición. Si pasa de lo que admite, la lectura falla y
+         quedan las reglas fijas, con su aviso. */
+      if (p.cuerpo.length > LIMITES.pdfEnLinea && directo()) {
         const id = await subirFichero(p.cuerpo, p.nombre, { apiKey, fetch });
         subidos.push(id);
         contenido.push({ type: 'document', source: { type: 'file', file_id: id }, title: p.nombre });
@@ -458,7 +461,7 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
     }
     contenido.push({ type: 'text', text: 'Rellena la ficha con lo que dicen estas fuentes.' });
     const cuerpo = {
-      model: model || 'claude-opus-5-5',
+      model: model || MODELO,
       max_tokens: 16000,
       system: esquema.IMPORTAR + '\n\nCampos de la ficha (nombre: qué es — formato):\n' + guiaDeCampos(esquema),
       output_config: {
@@ -484,35 +487,19 @@ export async function conClaude({ pdfs = [], textos = [], apiKey, model, fetch =
           },
         },
       },
-      fallbacks: 'default',
       messages: [{ role: 'user', content: contenido }],
     };
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-beta': 'server-side-fallback-2026-07-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(cuerpo),
-      signal: AbortSignal.timeout(LIMITES.esperaClaude),
+    const { respuesta, uso } = await mensaje(cuerpo, { apiKey, fetch, espera: LIMITES.esperaClaude }).catch(e => {
+      throw new Error({ refusal: 'Claude no ha querido leer estas fuentes',
+                        max_tokens: 'el catálogo da para más de lo que cabe en una respuesta' }[e.motivo] || e.message);
     });
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok) { throw new Error(`Claude ${r.status}: ${j.error?.message || 'sin detalle'}`); }
-    if (j.stop_reason === 'refusal') { throw new Error('Claude no ha querido leer estas fuentes'); }
-    if (j.stop_reason === 'max_tokens') { throw new Error('el catálogo da para más de lo que cabe en una respuesta'); }
-    const texto = (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    const salida = JSON.parse(texto);
-    /* El modelo que de verdad ha respondido (puede ser el de reserva) y lo
-       que ha gastado: es lo que dice cuánto ha costado la lectura. */
-    const uso = coste(j.model || cuerpo.model, j.usage);
+    const salida = JSON.parse(textoDe(respuesta));
+    /* `uso` es lo que ha gastado el modelo que de verdad ha respondido (puede
+       ser el de reserva): es lo que dice cuánto ha costado la lectura. */
     return { lista: Array.isArray(salida.campos) ? salida.campos : [], avisos: Array.isArray(salida.avisos) ? salida.avisos.map(String) : [], uso };
   } finally {
     for (const id of subidos) {
-      fetch(`https://api.anthropic.com/v1/files/${id}`, {
-        method: 'DELETE', headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      }).catch(() => {});
+      fetch(`${base()}/v1/files/${id}`, { method: 'DELETE', headers: cabeceras(apiKey) }).catch(() => {});
     }
   }
 }

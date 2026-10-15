@@ -16,6 +16,8 @@
                          sacan menos (dirección, teléfono, aforos con frase
                          clara, servicios con nombre)
      ANTHROPIC_MODEL     opcional · por defecto claude-opus-5-5
+     ANTHROPIC_BASE_URL  la pone la AI Gateway de Netlify junto con la clave;
+                         ver `netlify/ia/claude.mjs`
      SUPABASE_SECRET_KEY opcional · con ella, cada importación queda anotada
                          en el portal con sus tokens y su coste en dólares
 

@@ -111,6 +111,37 @@ const VAL = JSON.stringify({ form_name: 'valoracion', created_at: '2026-10-10T10
 const vl = await (await handler(peticion(VAL, firmar(VAL)))).json();
 comprueba('la valoración se acepta y no crea nada en Zoho', vl.ok && vl.modulo === null && !vl.lead);
 
+/* La respuesta preparada: cada petición sale con su correo escrito */
+comprueba('quien escribe por contacto tiene su respuesta preparada, en su idioma',
+  c.respuesta?.modo === 'plantilla' && c.respuesta.idioma === 'es' && /^Hola, Álvaro:/.test(c.respuesta.cuerpo)
+  && c.respuesta.pendiente.some(x => x.includes('tees')));
+comprueba('la propuesta, en catalán, con sus personas', cuerpoOk.respuesta?.idioma === 'ca' && /60 persones/.test(cuerpoOk.respuesta.cuerpo));
+comprueba('la agencia y la red, también', a.respuesta?.avisos.some(x => /catálogo para agencias/.test(x)) && /alta-proveedor/.test(rd.respuesta?.cuerpo || ''));
+comprueba('la valoración no tiene respuesta preparada', !vl.respuesta);
+
+/* Lo que lee Claude: lo que se pidió, sin correo, teléfono, presupuesto,
+   restricciones ni lo que solo nos sirve a nosotros */
+{
+  const fetchAntes = globalThis.fetch;
+  let leido = null;
+  globalThis.fetch = async (url, op) => {
+    leido = JSON.parse(op.body);
+    return Response.json({ model: 'claude-opus-5-5', stop_reason: 'end_turn', usage: { input_tokens: 900, output_tokens: 200 },
+      content: [{ type: 'text', text: JSON.stringify({ asunto: 'La vostra jornada', cuerpo: 'Hola, Marta,', pendiente: [] }) }] });
+  };
+  process.env.ANTHROPIC_API_KEY = 'sk-prueba';
+  const ia = await (await handler(peticion(AVISO, firmar(AVISO)))).json();
+  delete process.env.ANTHROPIC_API_KEY;
+  globalThis.fetch = fetchAntes;
+  const visto = leido?.messages[0].content || '';
+  comprueba('con clave, la respuesta la escribe Claude', ia.respuesta?.modo === 'claude' && ia.respuesta.uso.usd > 0);
+  comprueba('Claude lee qué se pide: nombre de pila, personas, fecha, objetivo y experiencias',
+    /Nombre: Marta$/m.test(visto) && /Personas: 60/.test(visto) && /Fecha: 2026-05-14/.test(visto)
+    && /Celebrar el cierre de año/.test(visto) && /Taller de castells, Cata de aceite/.test(visto));
+  comprueba('y no lee su correo, su teléfono, su apellido, su presupuesto ni sus restricciones',
+    !/marta@acme|600 000 000|Puig|15\.000|celíacos|Dirección|Navidad/.test(JSON.stringify(leido)));
+}
+
 /* 1c · La propuesta con borrador: el lead tiene que caber en Zoho */
 process.env.PROPUESTA_SECRET = 'clave-de-prueba-no-usar-0123456789abcdef';
 const LARGA = JSON.stringify({ ...JSON.parse(AVISO),
@@ -205,6 +236,56 @@ const CONTACTO2 = JSON.stringify({ form_name: 'contacto', created_at: '2026-10-0
 zohoSimulado();
 const cc = await (await handler(peticion(CONTACTO2, firmar(CONTACTO2)))).json();
 comprueba('el formulario de contacto sigue entrando como lead', cc.modulo === 'Leads' && !de(/Deals/));
+
+/* 1e' · La respuesta preparada, en Zoho: nota con los enlaces y tarea para hoy */
+zohoSimulado();
+await handler(peticion(LARGA, firmar(LARGA)));
+const notaR = llamadas.find(x => /Deals\/deal1\/Notes/.test(x.url) && x.cuerpo.data[0].Note_Title === 'Respuesta preparada · sin enviar');
+comprueba('la respuesta queda en una nota de la oportunidad, con Gmail y Calendar',
+  /mail\.google\.com\/mail\/\?view=cm/.test(notaR?.cuerpo.data[0].Note_Content || '')
+  && /calendar\.google\.com\/calendar\/render\?action=TEMPLATE/.test(notaR.cuerpo.data[0].Note_Content));
+const tareaR = de(/\/Tasks$/)?.cuerpo.data[0] || {};
+comprueba('y una tarea para responder hoy, en la oportunidad y su contacto',
+  /^Responder a Marta Puig \(Acme SL\)/.test(tareaR.Subject || '') && tareaR.What_Id?.id === 'deal1' && tareaR.$se_module === 'Deals'
+  && tareaR.Who_Id?.id === 'con1' && tareaR.Due_Date === '2026-10-03' && tareaR.Priority === 'High');
+zohoSimulado();
+await handler(peticion(CONTACTO2, firmar(CONTACTO2)));
+comprueba('en un lead, la tarea cuelga del lead', de(/\/Tasks$/)?.cuerpo.data[0].What_Id?.id === 'lead1'
+  && de(/\/Tasks$/).cuerpo.data[0].$se_module === 'Leads' && !!de(/Leads\/lead1\/Notes/));
+process.env.ZOHO_AVISO_TAREA = '0';
+zohoSimulado();
+await handler(peticion(CONTACTO2, firmar(CONTACTO2)));
+comprueba('con ZOHO_AVISO_TAREA=0, la nota sí y la tarea no', !!de(/Leads\/lead1\/Notes/) && !de(/\/Tasks$/));
+delete process.env.ZOHO_AVISO_TAREA;
+
+zohoSimulado();
+const pendientes = [];
+const w = await (await handler(peticion(CONTACTO2, firmar(CONTACTO2)), { waitUntil: p => pendientes.push(p) })).json();
+comprueba('con waitUntil, Netlify tiene su respuesta sin esperar al correo', w.ok && !w.respuesta && pendientes.length === 1);
+await Promise.all(pendientes);
+comprueba('y la nota y la tarea llegan después', !!de(/Leads\/lead1\/Notes/) && !!de(/\/Tasks$/));
+
+/* Lo que cuesta la respuesta escrita por Claude, al portal, sin datos personales */
+process.env.ANTHROPIC_API_KEY = 'sk-prueba';
+process.env.SUPABASE_SECRET_KEY = 'sb_secret_prueba';
+zohoSimulado();
+globalThis.fetch = (f => async (url, op) => {
+  const u = String(url);
+  if (u.startsWith('https://api.anthropic.com/')) {
+    return Response.json({ model: 'claude-opus-5-5', stop_reason: 'end_turn', usage: { input_tokens: 1000, output_tokens: 200 },
+      content: [{ type: 'text', text: JSON.stringify({ asunto: 'Tu mensaje', cuerpo: 'Hola, Ana:', pendiente: [] }) }] });
+  }
+  if (u.includes('.supabase.co/rest/v1/')) { llamadas.push({ url: u, cuerpo: JSON.parse(op.body) }); return new Response(null, { status: 201 }); }
+  return f(url, op);
+})(globalThis.fetch);
+await handler(peticion(CONTACTO2, firmar(CONTACTO2)));
+const uso = de(/rest\/v1\/uso_ia$/)?.cuerpo || {};
+comprueba('el coste de la respuesta se apunta en uso_ia, con su registro de Zoho',
+  uso.operacion === 'respuesta-contacto' && uso.modelo === 'claude-opus-5-5' && uso.coste_usd === 0.008
+  && uso.zoho_modulo === 'Leads' && uso.zoho_id === 'lead1');
+comprueba('y sin datos personales', !/ana@example|Ana/.test(JSON.stringify(uso)));
+delete process.env.ANTHROPIC_API_KEY;
+delete process.env.SUPABASE_SECRET_KEY;
 delete process.env.ZOHO_ETAPA_PROPUESTA;
 
 /* 1f · La ficha de una localización: cuenta con etiquetas, contacto y nota */
