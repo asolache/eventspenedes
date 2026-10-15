@@ -161,6 +161,7 @@ const ETIQUETAS = {
   poblacion: 'Población',
   origen: 'Llegó por',
   recomienda: 'Dice que le recomendó',
+  seleccion: 'Marcó en la web',
 };
 
 /* Los `value` de los desplegables son identificadores, no castellano. En la
@@ -175,7 +176,8 @@ const VALORES = {
   duracion: { media: 'Media jornada', jornada: 'Jornada completa',
               'jornada-noche': 'Jornada y cena', 'dos-dias': 'Dos días o más' },
   espacio: { 'cal-segue': 'Cal Segue', 'masia-torreblanca': 'Masia Torreblanca',
-             'torre-del-gall': 'La Torre del Gall', bellesguart: 'Bellesguart' },
+             'torre-del-gall': 'La Torre del Gall', bellesguart: 'Bellesguart',
+             'albet-i-noya': 'Albet i Noya' },
   catering: { 'no-se': 'Aún no lo sabe', sentado: 'Menú sentado', coctel: 'Cóctel con estaciones',
               showcooking: 'Showcooking', 'aire-libre': 'Al aire libre o barbacoa',
               ninguna: 'No hace falta' },
@@ -362,7 +364,7 @@ const nota = (modulo, id, titulo, texto) =>
    teléfono, ni presupuesto, ni lo que solo nos sirve a nosotros (quién decide,
    de dónde llegó). Tampoco las restricciones: pueden ser de salud. */
 
-const PARA_RESPUESTA = ['tipo', 'pax', 'personas', 'fecha', 'fecha_firme', 'duracion', 'objetivo', 'espacio',
+const PARA_RESPUESTA = ['tipo', 'pax', 'personas', 'fecha', 'fecha_firme', 'duracion', 'objetivo', 'espacio', 'seleccion',
   'catering', 'movilidad', 'idioma_evento', 'mercado', 'cargo', 'a_traves_de', 'perfil', 'poblacion', 'mensaje'];
 
 function peticion(form, d) {

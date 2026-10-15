@@ -89,12 +89,17 @@
   /* Un enlace puede llegar con el tipo ya elegido (?tipo=dj desde la página
      de DJ): se marca solo si el formulario tiene esa opción. */
   function preseleccionar() {
-    var tipo = new URLSearchParams(location.search).get('tipo');
-    var sel = document.querySelector('#form-contacto select[name="tipo"]');
-    if (!tipo || !sel) { return; }
-    for (var i = 0; i < sel.options.length; i++) {
-      if (sel.options[i].value === tipo) { sel.value = tipo; return; }
-    }
+    var q = new URLSearchParams(location.search);
+    /* ?tipo= en contacto; ?perfil= en «Entra en la red», que es a donde
+       llevan las llamadas de la portada a espacios y proveedores. */
+    [['#form-contacto select[name="tipo"]', q.get('tipo')],
+     ['#form-red select[name="perfil"]', q.get('perfil')]].forEach(function (par) {
+      var sel = document.querySelector(par[0]), v = par[1];
+      if (!v || !sel) { return; }
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === v) { sel.value = v; return; }
+      }
+    });
   }
 
   /* Un programa de ejemplo llega como ?exp=castells,dj&duracion=…: se marcan
@@ -114,6 +119,104 @@
         if (sel.options[i].value === v) { sel.value = v; }
       }
     });
+  }
+
+  /* La selección: «Me interesa» en espacios y actividades de la portada. Se
+     guarda en este navegador (localStorage, sin cookies ni servidor) y pasa al
+     formulario de propuesta: rellena el espacio y las experiencias que tienen
+     casilla, y el resto viaja en el campo `seleccion`. Se vacía al enviar. */
+  var CLAVE_SEL = 'ep-seleccion';
+  var EXP_SEL = { castells: 1, cata_aceite: 1, cata_vino: 1 };
+  function leerSel() {
+    try {
+      var v = JSON.parse(localStorage.getItem(CLAVE_SEL) || '[]');
+      return Array.isArray(v) ? v.filter(function (x) { return x && x.id && x.nombre; }) : [];
+    } catch (e) { return []; }
+  }
+  function guardarSel(sel) {
+    try { localStorage.setItem(CLAVE_SEL, JSON.stringify(sel)); } catch (e) { /* sin almacenamiento */ }
+  }
+
+  function seleccionPortada() {
+    var botones = document.querySelectorAll('.interes[data-interes]');
+    var barra = document.getElementById('seleccion');
+    if (!botones.length || !barra) { return; }
+    function pintar() {
+      var sel = leerSel(), ids = sel.map(function (x) { return x.id; });
+      for (var i = 0; i < botones.length; i++) {
+        botones[i].setAttribute('aria-pressed', String(ids.indexOf(botones[i].getAttribute('data-interes')) >= 0));
+      }
+      barra.querySelector('.seleccion__n').textContent = sel.length;
+      barra.hidden = sel.length === 0;
+    }
+    for (var i = 0; i < botones.length; i++) {
+      botones[i].addEventListener('click', function () {
+        var id = this.getAttribute('data-interes');
+        var caja = this.closest('article');
+        var h3 = caja && caja.querySelector('h3');
+        var nombre = h3 ? h3.textContent.trim() : id;
+        var sel = leerSel().filter(function (x) { return x.id !== id; });
+        if (this.getAttribute('aria-pressed') !== 'true') { sel.push({ id: id, nombre: nombre }); }
+        guardarSel(sel);
+        pintar();
+      });
+    }
+    barra.querySelector('.seleccion__vaciar').addEventListener('click', function () {
+      guardarSel([]);
+      pintar();
+    });
+    pintar();
+  }
+
+  function seleccionPropuesta() {
+    var form = document.getElementById('form-propuesta');
+    var caja = document.getElementById('seleccion-form');
+    if (!form || !caja) { return; }
+    var lista = caja.querySelector('ul');
+    var campo = form.querySelector('input[name="seleccion"]');
+    function pintar() {
+      var sel = leerSel();
+      lista.innerHTML = '';
+      sel.forEach(function (x) {
+        var li = document.createElement('li');
+        var t = document.createElement('span');
+        t.textContent = x.nombre;
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'seleccion-form__quitar';
+        b.textContent = '×';
+        b.setAttribute('aria-label', '− ' + x.nombre);
+        b.addEventListener('click', function () {
+          guardarSel(leerSel().filter(function (y) { return y.id !== x.id; }));
+          pintar();
+        });
+        li.appendChild(t);
+        li.appendChild(b);
+        lista.appendChild(li);
+      });
+      if (campo) { campo.value = sel.map(function (x) { return x.nombre; }).join(' · ').slice(0, 1000); }
+      caja.hidden = sel.length === 0;
+    }
+    var sel = leerSel();
+    if (sel.length) {
+      var espacio = form.querySelector('select[name="espacio"]');
+      sel.forEach(function (x) {
+        var p = x.id.split(':');
+        if (p[0] === 'espacio' && espacio && !espacio.value) {
+          for (var i = 0; i < espacio.options.length; i++) {
+            if (espacio.options[i].value === p[1]) { espacio.value = p[1]; }
+          }
+        }
+        if (p[0] === 'exp' && EXP_SEL[p[1]]) {
+          var c = form.querySelector('input[name="exp_' + p[1] + '"]');
+          if (c) { c.checked = true; }
+        }
+      });
+      var mas = form.querySelector('details.form__mas');
+      if (mas) { mas.open = true; }
+    }
+    form.addEventListener('submit', function () { guardarSel([]); });
+    pintar();
   }
 
   /* La valoración: el enlace del QR trae el evento (?e=…) y, al enviar,
@@ -223,6 +326,8 @@
     rutasContacto();
     preseleccionar();
     rellenarPrograma();
+    seleccionPortada();
+    seleccionPropuesta();
     valoracion();
     initCopiar();
     mostrarAgenda();
