@@ -227,6 +227,20 @@ comprueba('un PDF de más de 20 MB va por la API de ficheros y se borra después
   peticiones[0].url.endsWith('/v1/files') && msg.cuerpo.messages[0].content[0].source.file_id === 'file_123'
   && peticiones.some(x => x.url.endsWith('/v1/files/file_123') && x.op.method === 'DELETE'));
 
+/* Por la pasarela de Netlify (AI Gateway): a su dirección, sin el campo ni la
+   cabecera beta del modelo de reserva y sin la API de ficheros */
+process.env.ANTHROPIC_BASE_URL = 'https://pasarela.example/anthropic';
+const pasarela = [];
+await conClaude({ pdfs: [{ nombre: 'grande.pdf', cuerpo: grande }], apiKey: 'nfy', fetch: async (url, op) => {
+  pasarela.push({ url: String(url), op, cuerpo: JSON.parse(op.body) });
+  return Response.json(RESPUESTA);
+} });
+delete process.env.ANTHROPIC_BASE_URL;
+comprueba('por la pasarela de Netlify: el PDF va en la petición y sin nada beta',
+  pasarela.length === 1 && pasarela[0].url === 'https://pasarela.example/anthropic/v1/messages'
+  && pasarela[0].cuerpo.messages[0].content[0].source.type === 'base64'
+  && !('fallbacks' in pasarela[0].cuerpo) && !('anthropic-beta' in pasarela[0].op.headers));
+
 /* --- 7 · La función ------------------------------------------------------------- */
 const llamar = (cuerpo, cab = {}) => handler(new Request('https://eventspenedes.com/api/importar-catalogo', {
   method: 'POST', headers: { 'content-type': 'application/json', ...cab }, body: typeof cuerpo === 'string' ? cuerpo : JSON.stringify(cuerpo),
