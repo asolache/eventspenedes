@@ -13,6 +13,14 @@
 [functions]
   directory = "netlify/functions"
 
+# Fotos de fuera servidas desde nuestro dominio con el Image CDN de Netlify
+# (/.netlify/images?url=…). Albet i Noya no deja cargar sus fotos incrustadas
+# en otra web, así que el navegador las pide aquí y Netlify las trae, las
+# reduce y las guarda en caché. Solo las rutas de esta lista: el CDN no sirve
+# de proxy para cualquier imagen. Provisionales, ver assets/espais/README.md.
+[images]
+  remote_images = ["https://albetinoya\\.cat/imatges/.*"]
+
 # Cabeceras de seguridad y caché
 [[headers]]
   for = "/*"
