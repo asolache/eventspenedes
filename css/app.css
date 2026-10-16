@@ -194,8 +194,12 @@ body.en-app .site-header { position: relative; }
 .app-campo strong { color: var(--text-hi); font-weight: 500; }
 .app-campo small { color: var(--text-low); font-size: 0.72rem; }
 .app-campo code { font-size: 0.7rem; color: var(--text-low); }
-.app-antes { color: var(--text-low); text-decoration: line-through; text-decoration-color: rgba(255, 107, 107, 0.5); }
-.app-ahora { color: var(--text-hi); }
+/* Antes y ahora, como un diff de GitHub: rojo lo quitado, verde lo añadido */
+.app-antes { color: var(--text-mid); background: rgba(248, 81, 73, 0.08); }
+.app-ahora { color: var(--text-hi); background: rgba(63, 185, 80, 0.08); }
+.app-antes[data-vacio], .app-ahora[data-vacio] { background: none; }
+.app-del { background: rgba(248, 81, 73, 0.3); color: #ffb3ad; text-decoration: line-through; text-decoration-color: rgba(255, 179, 173, 0.7); border-radius: 3px; padding: 0 0.1em; }
+.app-ins { background: rgba(63, 185, 80, 0.3); color: #aff5b4; text-decoration: none; border-radius: 3px; padding: 0 0.1em; }
 
 /* --- Planes ------------------------------------------------------------------------ */
 
@@ -248,3 +252,13 @@ body.en-app .portal__estado {
     body.en-app .portal__estado { bottom: calc(var(--app-tab) + 0.75rem + env(safe-area-inset-bottom)); }
 }
 .portal__info [data-planes-lista] { margin-top: 1rem; }
+
+/* En el móvil, cada campo cambiado en bloque: nombre, antes y ahora uno bajo otro */
+@media (max-width: 640px) {
+    .portal__cambio .app-tabla thead { display: none; }
+    .portal__cambio .app-tabla, .portal__cambio .app-tabla tbody, .portal__cambio .app-tabla tr,
+    .portal__cambio .app-tabla th, .portal__cambio .app-tabla td { display: block; width: auto; }
+    .portal__cambio .app-tabla tr { padding: 0.6rem 0; border-bottom: 1px solid var(--glass-border); }
+    .portal__cambio .app-tabla th, .portal__cambio .app-tabla td { border: 0; padding: 0.3rem 0.5rem; }
+    .portal__cambio .app-antes[data-vacio] { display: none; }
+}
