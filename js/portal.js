@@ -20,6 +20,7 @@ import { lineaDeTiempo, formComentario, tarjetaReserva, historialAcuerdos, formA
 import { panelAdmin } from './portal-admin.js';
 import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
+import { vistaLiquidaciones } from './portal-liquidaciones.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
 
@@ -280,6 +281,7 @@ async function panelPartner(p, { sesion, acciones }) {
   ];
 
   const extra = await vistasExtra('partner', { partner: p, sb, recargar });
+  const RED = 'Tu presencia en la red';
   raiz = app({
     clave: p.codigo,
     titulo: p.nombre,
@@ -287,18 +289,20 @@ async function panelPartner(p, { sesion, acciones }) {
     marca: 'Events Penedès',
     acciones,
     vistas: [
-      { id: 'inicio', titulo: 'Inicio', icono: 'inicio', n: tareas.length, nodos: inicio },
-      { id: 'reservas', titulo: 'Reservas', icono: 'reservas', n: porContestar.length,
+      { grupo: 'Hoy', id: 'inicio', titulo: 'Inicio', icono: 'inicio', n: tareas.length, nodos: inicio },
+      { grupo: 'Hoy', id: 'reservas', titulo: 'Reservas', icono: 'reservas', n: porContestar.length,
         intro: 'Te las pedimos nosotros: confirma, propón otra cosa o dinos que no podéis.', nodos: vReservas },
-      { id: 'ficha', titulo: 'Ficha, fotos e IA', corto: 'Ficha', icono: 'ficha', nodos: vFicha },
-      { id: 'flujo', titulo: 'Tu flujo de valor', corto: 'Flujo', icono: 'flujo',
+      { grupo: 'Hoy', id: 'conversacion', titulo: 'Nuestra conversación', corto: 'Mensajes', icono: 'conversacion', nodos: vConversacion },
+      { grupo: RED, id: 'ficha', titulo: 'Ficha, fotos e IA', corto: 'Ficha', icono: 'ficha', nodos: vFicha },
+      ...extra.map(v => ({ grupo: RED, ...v })),
+      { grupo: RED, id: 'flujo', titulo: 'Tu flujo de valor', corto: 'Flujo', icono: 'flujo',
         intro: 'De quien ve tu página al evento hecho. Cada cifra sale de lo que pasa en el portal.', nodos: vFlujo },
-      ...extra,
-      { id: 'plan', titulo: 'Tu plan', corto: 'Plan', icono: 'plan', nodos: datosPlanes ? await vistaPlan(p, { recargar }) : [h('p', { class: 'app-vacio' }, 'Los planes no se han podido cargar.')] },
-      { id: 'acuerdo', titulo: 'Tu acuerdo', corto: 'Acuerdo', icono: 'acuerdo', n: porFirmar.length,
+      { grupo: RED, id: 'clientes', titulo: 'Los clientes que nos has traído', corto: 'Clientes', icono: 'clientes', nodos: vClientes },
+      { grupo: 'Tus condiciones', id: 'acuerdo', titulo: 'Tu acuerdo', corto: 'Acuerdo', icono: 'acuerdo', n: porFirmar.length,
         intro: 'Cada versión dice de cuál viene y qué cambia. Vale cuando la firmamos las dos partes.', nodos: vAcuerdo },
-      { id: 'clientes', titulo: 'Los clientes que nos has traído', corto: 'Clientes', icono: 'clientes', nodos: vClientes },
-      { id: 'conversacion', titulo: 'Nuestra conversación', corto: 'Mensajes', icono: 'conversacion', nodos: vConversacion },
+      { grupo: 'Tus condiciones', id: 'plan', titulo: 'Tu plan', corto: 'Plan', icono: 'plan', nodos: datosPlanes ? await vistaPlan(p, { recargar }) : [h('p', { class: 'app-vacio' }, 'Los planes no se han podido cargar.')] },
+      { grupo: 'Tus condiciones', id: 'liquidaciones', titulo: 'Liquidaciones', corto: 'Cobros', icono: 'uso',
+        intro: 'Lo que has facturado y cobrado en cada evento, según tu acuerdo.', nodos: await vistaLiquidaciones(p, { recargar }) },
     ],
   });
   return raiz;

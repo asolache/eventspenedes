@@ -12,6 +12,7 @@ import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, tarjetasPlanes, asistenteDescripcion } from './portal-planes.js';
 import { poner, h, fecha, fechaHora, euros, ok, intentar, decir, campo, boton, api, aZoho, vistaPrevia } from './portal-ui.js';
 import { diffPalabras, lados } from './portal-diff.js';
+import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
 
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio' };
@@ -194,11 +195,11 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
     acciones: [opciones.salir],
     vistas: [
       { id: 'inicio', titulo: 'Inicio', icono: 'inicio', nodos: inicio },
-      { id: 'reservas', titulo: 'Reservas', icono: 'reservas', n: mirar.length, nodos: vReservas },
+      { id: 'partners', titulo: `Partners (${todos.length})`, corto: 'Partners', icono: 'partners', nodos: vPartners },
       { id: 'cambios', titulo: 'Cambios de ficha', corto: 'Cambios', icono: 'cambios', n: cambios.length,
         intro: 'Cada campo con su nombre y su sección; debajo, su nombre en el sistema.', nodos: vCambios },
       { id: 'acuerdos', titulo: 'Acuerdos por firmar', corto: 'Acuerdos', icono: 'acuerdo', n: acuerdos.length, nodos: vAcuerdos },
-      { id: 'partners', titulo: `Partners (${todos.length})`, corto: 'Partners', icono: 'partners', nodos: vPartners },
+      { id: 'reservas', titulo: 'Reservas', icono: 'reservas', n: mirar.length, nodos: vReservas },
       ...extra,
       { id: 'planes', titulo: 'Planes del canal', corto: 'Planes', icono: 'plan', nodos: vPlanes },
       { id: 'ia', titulo: 'IA y su coste', corto: 'IA', icono: 'uso', intro: 'Lo que cuesta cada uso de Claude en los últimos 30 días.', nodos: vIa },
@@ -360,6 +361,8 @@ async function fichaCompleta(p, recargar, { sesion, salir, datosPlanes }) {
           formAcuerdo({ partnerId: p.id, acuerdos, recargar: yoMismo, admin: true }))] },
       { id: 'equipo', titulo: 'Quién entra', corto: 'Equipo', icono: 'clientes', nodos: vEquipo },
       { id: 'leads', titulo: `Leads (${leads.length})`, corto: 'Leads', icono: 'flujo', nodos: vLeads },
+      { id: 'liquidaciones', titulo: 'Liquidaciones', corto: 'Cobros', icono: 'uso',
+        intro: 'Lo que el partner factura y cobra en cada evento. Lo ve tal cual en su panel: sin comisiones.', nodos: await vistaLiquidaciones(p, { admin: true, recargar: yoMismo }) },
       ...extra,
       { id: 'conversacion', titulo: 'Conversación y notas', corto: 'Mensajes', icono: 'conversacion', nodos: [
         tarjeta(null, formComentario({ partnerId: p.id, admin: true, recargar: yoMismo, etiqueta: 'Escribir al partner o dejar una nota interna' })),

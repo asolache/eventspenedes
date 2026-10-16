@@ -35,7 +35,8 @@ export function icono(nombre) {
   return svg;
 }
 
-/* vistas: [{ id, titulo, icono, n?, intro?, nodos: [...] }] */
+/* vistas: [{ id, titulo, icono, grupo?, n?, intro?, nodos: [...] }]; el grupo se
+   rotula en la barra lateral cuando cambia (en el móvil no cabe y no sale) */
 export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', acciones = [], vistas }) {
   const botones = {};
   const secciones = {};
@@ -43,7 +44,10 @@ export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', accio
     h('div', { class: 'app__marca' }, icono('ia'), h('span', {}, marca, h('small', {}, titulo))));
   const main = h('div', { class: 'app__main' });
 
+  let grupo = null;
   for (const v of vistas) {
+    if (v.grupo && v.grupo !== grupo) { nav.append(h('p', { class: 'app__grupo' }, v.grupo)); }
+    grupo = v.grupo || grupo;
     const b = h('button', { class: 'app__ir', type: 'button', onclick: () => ir(v.id, true) },
       icono(v.icono), h('span', {}, v.corto || v.titulo), v.n ? h('span', { class: 'app__n', 'aria-label': `${v.n} pendientes` }, String(v.n)) : null);
     botones[v.id] = b;
@@ -96,10 +100,10 @@ export const chip = (texto, tono) => h('span', { class: 'app-chip', 'data-tono':
 
 /* Vistas que añaden otros módulos (el blog, la agenda…) sin tocar los paneles:
    cada una es una función async (ctx) => { id, titulo, icono, n?, intro?, nodos } */
-export const extras = { partner: [], admin: [] };
+export const extras = { partner: [], admin: [], 'admin-partner': [] };
 export async function vistasExtra(tipo, ctx) {
   const out = [];
-  for (const f of extras[tipo]) {
+  for (const f of extras[tipo] || []) {
     try { const v = await f(ctx); if (v) { out.push(v); } } catch (e) { console.error('vista extra:', e); }
   }
   return out;
