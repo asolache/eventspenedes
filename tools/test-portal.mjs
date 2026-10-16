@@ -155,6 +155,27 @@ comprueba('las palabras quitadas seguidas van en una sola franja', lados(diffPal
 comprueba('un campo nuevo sale solo añadido', lados(diffPalabras('', 'La Cava')).antes.length === 0);
 comprueba('y un texto enorme no cuelga la página', diffPalabras('a '.repeat(2000), 'b '.repeat(2000)).length === 2);
 
+// Liquidaciones: de la venta del evento, solo lo del partner
+const { lineasLiquidacion, sqlLiquidaciones } = await import('./liquidaciones.mjs');
+const venta = { evento: { fecha: '2026-10-23' }, venta: { lineas: [
+  { concepto: 'Espacio', proveedor: 'dolicios', flujo: 'proveedor', pendiente: 'nota interna' },
+  { concepto: 'Catering', proveedor: 'cal-soler', flujo: 'proveedor', importe: 1200, cobrado_en: '2026-10-30' },
+  { concepto: 'Comisión de Cal Soler', proveedor: 'cal-soler', flujo: 'comision' },
+  { concepto: 'Taller', proveedor: 'teamtowers', flujo: 'nuestro' },
+] } };
+const filasL = lineasLiquidacion(venta, '2026-10-10-prueba', { dolicios: 'bellesguart' });
+comprueba('la liquidación coge solo las líneas que factura el partner', filasL.length === 2 && filasL[0].partner === 'bellesguart');
+const sqlL = sqlLiquidaciones(filasL);
+comprueba('sin comisiones, sin lo nuestro y sin notas internas', !/Comisión|Taller|nota interna/.test(sqlL));
+comprueba('lo que no se sabe va a null y se puede repetir', /'Espacio', 'partner', null/.test(sqlL) && /on conflict/.test(sqlL));
+const { resumenLiquidaciones } = await import('../js/portal-liquidaciones-resumen.js');
+const rL = resumenLiquidaciones([
+  { evento: 'a', importe: 100, facturado_en: '2026-10-01', cobrado_en: '2026-10-05' },
+  { evento: 'a', importe: 50, facturado_en: '2026-10-01' },
+  { evento: 'b', importe: null },
+]);
+comprueba('el resumen suma facturado, cobrado y por cobrar', rL.eventos === 2 && rL.facturado === 150 && rL.cobrado === 100 && rL.por_cobrar === 50 && rL.sin_importe === 1);
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');

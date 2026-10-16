@@ -82,6 +82,9 @@ body.en-app .site-header { position: relative; }
 .app__marca svg { width: 1.4rem; height: 1.4rem; flex: none; fill: none; stroke: var(--accent-gold); stroke-width: 1.8; stroke-linejoin: round; }
 .app-card code { overflow-wrap: anywhere; word-break: break-all; }
 
+.app__grupo { margin: 0.9rem 0 0.2rem; padding: 0 0.7rem; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-low); }
+.app__marca + .app__grupo { margin-top: 0; }
+
 .app__ir {
     display: flex; align-items: center; gap: 0.7rem;
     width: 100%; padding: 0.6rem 0.7rem;
@@ -122,7 +125,7 @@ body.en-app .site-header { position: relative; }
         background: rgba(10, 10, 15, 0.96); backdrop-filter: blur(12px);
     }
     .app__nav::-webkit-scrollbar { display: none; }
-    .app__marca { display: none; }
+    .app__marca, .app__grupo { display: none; }
     .app__ir {
         flex: 1 0 4.6rem; flex-direction: column; justify-content: center; gap: 0.2rem;
         padding: 0.4rem 0.25rem; font-size: 0.68rem; text-align: center; position: relative;
@@ -158,6 +161,8 @@ body.en-app .site-header { position: relative; }
 .app-kpi dd { margin: 0.3rem 0 0; font-size: 1.6rem; font-weight: 600; color: var(--text-hi); font-variant-numeric: tabular-nums; }
 .app-kpi dd small { font-size: 0.8rem; font-weight: 400; color: var(--text-low); }
 .app-kpi[data-tono="oro"] dd { color: var(--accent-gold); }
+.app-kpi[data-tono="ok"] dd { color: var(--app-ok); }
+.app-kpi[data-tono="aviso"] dd { color: var(--app-aviso); }
 
 /* Etiquetas de estado */
 .app-chip {
