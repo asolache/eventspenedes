@@ -26,7 +26,7 @@ import { CUESTIONARIO, MAX_RESPUESTA, CATEGORIAS, borradorEntrevista, faltan, sl
 const ESTADO_ARTICULO = { cuestionario: 'Borrador', enviado: 'Enviada', propuesto: 'Artículo escrito', publicado: 'Publicado', retirado: 'Retirado' };
 const ESTADO_ACCION = { propuesta: 'Pendiente de aprobar', aprobada: 'En la agenda', rechazada: 'No aprobada', retirada: 'Retirada', sustituida: 'Sustituida' };
 const TONO = { propuesta: 'aviso', aprobada: 'ok', rechazada: 'error', propuesto: 'aviso', publicado: 'ok', enviado: 'aviso' };
-const chip = (texto, tono) => h('span', { class: 'app-chip portal__chip', 'data-tono': tono || 'neutro' }, texto);
+const chip = (texto, tono) => h('span', { class: 'app-chip', 'data-tono': tono || null }, texto);
 
 /* El artículo en pantalla, sin innerHTML: lo mismo que cuerpoHtml() en la web */
 function textoArticulo(a) {
