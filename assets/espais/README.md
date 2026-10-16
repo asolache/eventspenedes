@@ -32,8 +32,12 @@ correo de dos líneas, y se anota aquí quién la cedió y cuándo.
 ## Provisionales: Albet i Noya
 
 Albet i Noya sale en la portada (localizaciones y actividades) con **fotos
-provisionales enlazadas desde su propia web**, no copiadas aquí, a petición de
-Álvaro (15/10/2026) y **sin permiso escrito todavía**. Cada `<img>` lleva un
+provisionales de su propia web**, no copiadas aquí, a petición de Álvaro
+(15/10/2026) y **sin permiso escrito todavía**. Su web no deja cargarlas
+incrustadas en otra (el 16/10 no salían en la portada), así que cada `<img>`
+las pide a `/.netlify/images?url=…` y el Image CDN de Netlify las trae, las
+reduce a 1200 px y las sirve desde eventspenedes.com. La lista de rutas
+permitidas está en `netlify.toml`, en `[images]`. Cada `<img>` lleva un
 comentario `PROVISIONAL` con su origen:
 
 | Origen | Dónde sale |
@@ -47,5 +51,5 @@ comentario `PROVISIONAL` con su origen:
 | `albetinoya.cat/imatges/enotur2020/ruta_vinyes.jpg` | Actividad: maridaje de paisaje |
 
 Si su web cambia una ruta, la foto desaparece. Cuando Virginia ceda fotos (o
-hagamos las nuestras), se guardan aquí como `albet-i-noya-*.jpg` y se cambia
-cada `src`, quitando el comentario.
+hagamos las nuestras), se guardan aquí como `albet-i-noya-*.jpg`, se cambia
+cada `src`, se quita el comentario y se borra su línea de `[images]`.
