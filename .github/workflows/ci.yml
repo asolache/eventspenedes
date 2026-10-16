@@ -52,6 +52,11 @@ jobs:
       - name: Las páginas de partners solo publican lo autorizado
         run: node tools/test-partners.mjs
 
+      # El blog y la agenda: sin precios, sin el nombre de un partner que no
+      # lo ha autorizado y con «Me interesa» hacia nuestro formulario.
+      - name: El blog y la agenda solo publican lo aprobado y sin precios
+        run: node tools/test-blog.mjs
+
       # El portal habla con Zoho por el servidor: que un partner no lea nada
       # de Zoho ni pase mensajes ajenos, y que cada respuesta llegue al trato.
       - name: El portal solo habla con Zoho por quien debe

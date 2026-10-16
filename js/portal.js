@@ -20,6 +20,8 @@ import { lineaDeTiempo, formComentario, tarjetaReserva, historialAcuerdos, formA
 import { panelAdmin } from './portal-admin.js';
 import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
+/* Las vistas del blog y la agenda se registran en `extras` al cargarse */
+import './portal-blog.js';
 
 const raiz = document.getElementById('portal');
 const $ = s => raiz.querySelector(s);

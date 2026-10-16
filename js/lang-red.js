@@ -8,6 +8,8 @@ window.EP_I18N = {
     'nav.services': 'Serveis', 'nav.venues': 'Localitzacions', 'nav.activities': 'Activitats',
     'nav.process': 'Com treballem', 'nav.dj': 'DJ i música', 'nav.contact': 'Contacte',
     'nav.agencies': 'Agències i DMC',
+    'nav.blog': 'Blog',
+    'nav.agenda': 'Agenda',
     'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat', 'foot.res': 'Recursos',
 
     'red.crumb': 'Events Penedès', 'red.crumb2': 'Xarxa de partners',
@@ -68,6 +70,8 @@ window.EP_I18N = {
     'nav.services': 'Services', 'nav.venues': 'Venues', 'nav.activities': 'Activities',
     'nav.process': 'How we work', 'nav.dj': 'DJ & music', 'nav.contact': 'Contact',
     'nav.agencies': 'Agencies & DMCs',
+    'nav.blog': 'Blog',
+    'nav.agenda': 'What\'s on',
     'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice', 'foot.res': 'Resources',
 
     'red.crumb': 'Events Penedès', 'red.crumb2': 'Partner network',

@@ -32,17 +32,13 @@
    ========================================================================== */
 import { FICHAS } from '../ficha/fichas.mjs';
 import { fichaPublica } from '../ficha/publica.mjs';
-import { configurado, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
-import { CABECERA, PIE } from '../portal/marco.mjs';
+import { configurado, articulosPublicados, agendaAprobada, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
+import { pagina, migas, esc, recorta } from '../portal/pagina.mjs';
+import { accionPublica, cuando } from '../../js/blog-comun.js';
 
 const SITIO = 'https://eventspenedes.com';
 const CODIGO = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
 const MAX_FOTOS = 12;
-
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-/* Dentro de <script type="application/ld+json">, «</» cerraría la etiqueta */
-const ld = o => JSON.stringify(o).replace(/</g, '\\u003c');
-const recorta = (t, n) => (t.length <= n ? t : t.slice(0, t.lastIndexOf(' ', n - 1)) + '…');
 
 const TIPO_LEGIBLE = { localizacion: 'Espacio para eventos', proveedor: 'Proveedor de eventos' };
 
@@ -50,56 +46,11 @@ const TIPO_LEGIBLE = { localizacion: 'Espacio para eventos', proveedor: 'Proveed
 const fotosDe = p => (Array.isArray(p.datos.imagenes) ? p.datos.imagenes : [])
   .filter(r => typeof r === 'string' && r.startsWith(`${p.id}/`)).slice(0, MAX_FOTOS);
 
-function pagina({ titulo, descripcion, canonica, imagen, estructurados, cuerpo, indexar = true }) {
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(titulo)}</title>
-<meta name="description" content="${esc(descripcion)}">
-<link rel="canonical" href="${esc(canonica)}">
-<meta name="robots" content="${indexar ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex'}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${esc(canonica)}">
-<meta property="og:site_name" content="Events Penedès">
-<meta property="og:title" content="${esc(titulo)}">
-<meta property="og:description" content="${esc(descripcion)}">
-<meta property="og:image" content="${esc(imagen || `${SITIO}/assets/og-image.png`)}">
-<meta property="og:locale" content="es_ES">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/icon-256.png" sizes="256x256">
-<meta name="theme-color" content="#050507">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/css/styles.css">
-${estructurados.map(o => `<script type="application/ld+json">${ld(o)}</script>`).join('\n')}
-</head>
-<body>
-<a class="skip-link" href="#main">Ir al contenido principal</a>
-${CABECERA}
-<main id="main">
-${cuerpo}
-</main>
-${PIE}
-<script src="/js/site.js" defer></script>
-</body>
-</html>`;
-}
-
-function migas(items) {
-  return {
-    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-    itemListElement: items.map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
-  };
-}
-
 /* `previa`: { fotos: [url], pendiente, autoriza } para la vista previa del
    portal. Se publica igual que la página de verdad, como si estuviera
    autorizada, con un aviso arriba y sin contar nada. */
-function paginaPartner(p, previa = null) {
+/* `extra`: { entrevistas: [{ titulo, slug }], acciones: [accionPublica] } del blog y la agenda */
+function paginaPartner(p, previa = null, extra = {}) {
   const pub = fichaPublica(FICHAS[p.tipo], previa ? { ...p.datos, autoriza: 'si' } : p.datos);
   const nombre = pub.nombre || p.nombre;
   const url = `${SITIO}/partners/${p.codigo}`;
@@ -162,6 +113,7 @@ function paginaPartner(p, previa = null) {
   </section>
   <section class="section">
     <div class="wrap partner-ficha">${galeria}${secciones}
+${bloqueBlog(extra)}
       <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: escríbenos y te preparamos la propuesta.</p>
     </div>
   </section>${previa ? '' : `
@@ -175,6 +127,36 @@ function paginaPartner(p, previa = null) {
     estructurados: [negocio, migas([['Events Penedès', `${SITIO}/`], ['Espacios y proveedores', `${SITIO}/partners`], [nombre, url]])],
     cuerpo, indexar: !previa,
   });
+}
+
+/* Lo que el partner ha contado en el blog y lo que propone en la agenda */
+function bloqueBlog({ entrevistas = [], acciones = [] }) {
+  return `${acciones.length ? `
+      <section class="partner-ficha__seccion">
+        <h2>Próximas experiencias</h2>
+        <ul class="partner-ficha__lista">${acciones.map(x => `<li><strong>${esc(x.titulo)}</strong><br><span>${esc(cuando(x.inicio, x.fin))}${x.cada_ano ? ' · cada año' : ''}</span>${x.descripcion ? `<br><span>${esc(recorta(x.descripcion, 220))}</span>` : ''}</li>`).join('')}</ul>
+        <p><a href="/agenda">Toda la agenda del Penedès</a></p>
+      </section>` : ''}${entrevistas.length ? `
+      <section class="partner-ficha__seccion">
+        <h2>En el blog</h2>
+        <ul class="partner-ficha__lista">${entrevistas.map(a => `<li><a href="/blog/${a.slug}">${esc(a.titulo)}</a></li>`).join('')}</ul>
+      </section>` : ''}`;
+}
+
+/* El blog y la agenda de un partner. Si fallan, la página sale sin ellos. */
+async function delBlog(p) {
+  try {
+    const hoy = new Date().toISOString().slice(0, 10);
+    const [articulos, agenda] = await Promise.all([articulosPublicados(), agendaAprobada()]);
+    return {
+      entrevistas: articulos.filter(a => a.partner_id === p.id).map(a => ({ titulo: a.titulo, slug: a.slug })),
+      acciones: agenda.filter(a => a.partner_id === p.id).map(a => accionPublica(a, hoy)).filter(Boolean)
+        .sort((a, b) => a.inicio.localeCompare(b.inicio)).slice(0, 6),
+    };
+  } catch (e) {
+    console.error('partners · blog:', e.message);
+    return {};
+  }
 }
 
 /* La vista previa: solo para quien es del partner o administra, con su
@@ -292,7 +274,7 @@ export default async (req) => {
   const p = lista.find(x => x.codigo === codigo);
   if (!p) { return noEncontrado(); }
 
-  if (partes.length === 1) { return html(paginaPartner(p)); }
+  if (partes.length === 1) { return html(paginaPartner(p, null, await delBlog(p))); }
   if (partes.length === 2 && partes[1] === 'contacto') {
     await sumarImpresion(codigo, true).catch(e => console.error('partners · clic:', e.message));
     return new Response(null, { status: 302, headers: { location: `/contacto.html?ref=${codigo}#escribenos`, 'cache-control': 'no-store' } });
@@ -316,4 +298,4 @@ export const config = {
   rateLimit: { windowLimit: 120, windowSize: 60, aggregateBy: ['ip', 'domain'] },
 };
 
-export { paginaPartner, paginaDirectorio, sitemap };
+export { paginaPartner, paginaDirectorio, sitemap, fotosDe };

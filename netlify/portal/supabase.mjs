@@ -115,3 +115,26 @@ export async function esMiembro(userId, partnerId, { fetch } = {}) {
   if (!esUuid(userId) || !esUuid(partnerId)) { return false; }
   return Boolean((await rest(`miembros?select=user_id&user_id=eq.${userId}&partner_id=eq.${partnerId}`, { fetch }))?.length);
 }
+
+/* --- El blog y la agenda --------------------------------------------------------
+   Solo lo publicado: los artículos con estado `publicado` y las acciones de la
+   agenda aprobadas. El precio de una acción nunca se pide aquí. */
+const CAMPOS_ARTICULO = 'id,tipo,partner_id,titulo,slug,entradilla,cuerpo,temas,fotos,permiso_fotos,publicado_en,actualizado_en';
+const CAMPOS_ACCION = 'id,partner_id,titulo,descripcion,categoria,fecha_inicio,fecha_fin,cada_ano,hora_inicio,hora_fin,plazas_min,plazas_max,estado';
+
+export const articulosPublicados = ({ fetch } = {}) =>
+  rest(`articulos?select=${CAMPOS_ARTICULO}&estado=eq.publicado&order=publicado_en.desc&limit=500`, { fetch }).then(x => x || []);
+
+export const agendaAprobada = ({ fetch } = {}) =>
+  rest(`agenda?select=${CAMPOS_ACCION}&estado=eq.aprobada&order=fecha_inicio&limit=1000`, { fetch }).then(x => x || []);
+
+/* Los partners por id (activos), para firmar un artículo o una acción */
+export async function partnersPorId(ids, { fetch } = {}) {
+  const limpios = [...new Set(ids.filter(esUuid))];
+  if (!limpios.length) { return {}; }
+  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,fichas(datos)&estado=eq.activo&id=in.(${limpios.join(',')})`, { fetch });
+  return Object.fromEntries((filas || []).map(p => {
+    const f = Array.isArray(p.fichas) ? p.fichas[0] : p.fichas;
+    return [p.id, { id: p.id, codigo: p.codigo, nombre: p.nombre, tipo: p.tipo, datos: f?.datos || null }];
+  }));
+}

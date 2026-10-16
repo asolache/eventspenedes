@@ -102,6 +102,17 @@
     });
   }
 
+  /* Desde la agenda, «Me interesa» llega con ?asunto=…&fecha=…: se escriben
+     en el mensaje y la fecha del formulario de contacto si están vacíos. */
+  function rellenarAsunto() {
+    var form = document.getElementById('form-contacto');
+    if (!form) { return; }
+    var q = new URLSearchParams(location.search);
+    var asunto = (q.get('asunto') || '').slice(0, 200), fecha = q.get('fecha') || '';
+    if (asunto && form.elements.mensaje && !form.elements.mensaje.value) { form.elements.mensaje.value = asunto + '\n\n'; }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(fecha) && form.elements.fecha && !form.elements.fecha.value) { form.elements.fecha.value = fecha; }
+  }
+
   /* Un programa de ejemplo llega como ?exp=castells,dj&duracion=…: se marcan
      las casillas y los desplegables que existan, y nada más. */
   function rellenarPrograma() {
@@ -330,6 +341,7 @@
     rutasContacto();
     preseleccionar();
     rellenarPrograma();
+    rellenarAsunto();
     seleccionPortada();
     seleccionPropuesta();
     valoracion();
