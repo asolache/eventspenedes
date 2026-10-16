@@ -176,6 +176,14 @@ const rL = resumenLiquidaciones([
 ]);
 comprueba('el resumen suma facturado, cobrado y por cobrar', rL.eventos === 2 && rL.facturado === 150 && rL.cobrado === 100 && rL.por_cobrar === 50 && rL.sin_importe === 1);
 
+// Buscador de la app
+const { buscar, normal } = await import('../js/portal-buscar-datos.js');
+const idx = [{ vista: 'liquidaciones', titulo: 'Liquidaciones', texto: 'Liquidaciones Cobros Tus condiciones', peso: 3 },
+  { vista: 'reservas', titulo: 'Reservas', texto: 'Comida de empresa · 40 personas' }, { vista: 'liquidaciones', titulo: 'Liquidaciones', texto: 'Catering Por fijar' }];
+comprueba('el buscador no distingue acentos ni mayúsculas', normal('CÓBROS') === 'cobros' && buscar(idx, 'cobros')[0].vista === 'liquidaciones');
+comprueba('pide todas las palabras', buscar(idx, 'comida 40').length === 1 && buscar(idx, 'comida 41').length === 0);
+comprueba('y sin nada escrito no enseña nada', buscar(idx, '  ').length === 0);
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');
