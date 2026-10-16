@@ -1,0 +1,250 @@
+/* =============================================================================
+   Events Penedès · la app (portal de partners y administración)
+
+   La hoja de la app sobre la del sitio (styles.css): mismos colores, misma
+   letra y mismas medidas, más lo que necesita una herramienta de trabajo:
+   barra lateral (abajo en el móvil), vistas, cifras, tarjetas, tablas,
+   etiquetas de estado, planes y el asistente de IA. Todo se apoya en las
+   variables de :root; quien quiera otro tono cambia las variables, no las
+   reglas.
+   ========================================================================== */
+
+:root {
+    --app-nav:        15rem;
+    --app-barra:      3.75rem;
+    --app-tab:        4rem;
+    --app-gap:        clamp(0.9rem, 2vw, 1.25rem);
+    --app-superficie: #0d0d13;
+    --app-superficie-hi: #14141c;
+    --app-oro-suave:  rgba(217, 164, 65, 0.12);
+    --app-oro-borde:  rgba(217, 164, 65, 0.35);
+    --app-ok:         #3ddc84;
+    --app-aviso:      #f5b84a;
+    --app-error:      #ff6b6b;
+    --app-info:       #6ea8ff;
+    --app-sombra:     0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Con sesión, la página es la app ------------------------------------------ */
+
+body.en-app .hero,
+body.en-app .site-footer { display: none; }
+body.en-app #portal { max-width: none; padding: 0; }
+body.en-app #main > .section { padding: 0; }
+body.en-app .portal__fuera { display: none; }
+body.en-app .site-header { position: relative; }
+.app :where(input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea) {
+    background: var(--bg-elevated); border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+    color: var(--text-hi); font: inherit; font-size: 0.92rem; padding: 0.5rem 0.75rem; max-width: 100%;
+}
+.app :where(input, select, textarea):focus { outline: none; border-color: var(--accent-gold); }
+.app input[type=checkbox] { accent-color: var(--accent-gold); }
+
+/* --- Esqueleto --------------------------------------------------------------- */
+
+.app {
+    display: grid;
+    grid-template-columns: var(--app-nav) minmax(0, 1fr);
+    grid-template-rows: var(--app-barra) 1fr;
+    grid-template-areas: "nav barra" "nav main";
+    min-height: 100dvh;
+    background: var(--bg-dark);
+}
+.app + .app { border-top: 1px solid var(--glass-border); }
+
+.app__barra {
+    grid-area: barra;
+    position: sticky; top: 0; z-index: 5;
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0 var(--app-gap);
+    background: rgba(5, 5, 7, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+}
+.app__titulo { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
+.app__titulo strong { font-size: 1.05rem; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app__titulo span { font-size: 0.78rem; color: var(--text-low); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app__acciones { display: flex; align-items: center; gap: 0.5rem; }
+.app__acciones select { max-width: 12rem; }
+
+.app__nav {
+    grid-area: nav;
+    position: sticky; top: 0; align-self: start;
+    height: 100dvh;
+    display: flex; flex-direction: column; gap: 0.15rem;
+    padding: 1rem 0.75rem;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--glass-border);
+    overflow-y: auto;
+}
+.app__marca { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.6rem 1rem; color: var(--text-hi); font-weight: 600; }
+.app__marca small { display: block; font-weight: 400; color: var(--text-low); font-size: 0.75rem; }
+.app__marca svg { width: 1.4rem; height: 1.4rem; flex: none; fill: none; stroke: var(--accent-gold); stroke-width: 1.8; stroke-linejoin: round; }
+.app-card code { overflow-wrap: anywhere; word-break: break-all; }
+
+.app__ir {
+    display: flex; align-items: center; gap: 0.7rem;
+    width: 100%; padding: 0.6rem 0.7rem;
+    border: 0; border-radius: var(--radius-sm);
+    background: none; color: var(--text-mid);
+    font: inherit; font-size: 0.95rem; text-align: left; cursor: pointer;
+}
+.app__ir svg { width: 1.15rem; height: 1.15rem; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.app__ir:hover { background: var(--app-superficie-hi); color: var(--text-hi); }
+.app__ir[aria-current="page"] { background: var(--app-oro-suave); color: var(--accent-gold); }
+.app__ir:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 1px; }
+.app__ir .app__n {
+    margin-left: auto; min-width: 1.4rem; padding: 0 0.4rem;
+    border-radius: 999px; background: var(--accent-gold); color: #111;
+    font-size: 0.75rem; font-weight: 600; text-align: center; line-height: 1.4rem;
+}
+
+.app__main { grid-area: main; min-width: 0; padding: var(--app-gap) var(--app-gap) 3rem; }
+.app__vista { display: grid; gap: var(--app-gap); max-width: 72rem; animation: app-entra 0.18s ease-out; }
+.app__vista[hidden] { display: none; }
+.app__vista > h2 { margin: 0.25rem 0 0; font-size: clamp(1.35rem, 2.4vw, 1.7rem); }
+.app__vista > .app__intro { margin: -0.5rem 0 0; color: var(--text-low); }
+@keyframes app-entra { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* En el móvil la navegación va abajo, como en cualquier app */
+@media (max-width: 899px) {
+    .app {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: var(--app-barra) 1fr;
+        grid-template-areas: "barra" "main";
+    }
+    .app__nav {
+        position: fixed; inset: auto 0 0 0; z-index: 20;
+        height: calc(var(--app-tab) + env(safe-area-inset-bottom));
+        flex-direction: row; gap: 0; padding: 0 0.25rem env(safe-area-inset-bottom);
+        border-right: 0; border-top: 1px solid var(--glass-border);
+        overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+        background: rgba(10, 10, 15, 0.96); backdrop-filter: blur(12px);
+    }
+    .app__nav::-webkit-scrollbar { display: none; }
+    .app__marca { display: none; }
+    .app__ir {
+        flex: 1 0 4.6rem; flex-direction: column; justify-content: center; gap: 0.2rem;
+        padding: 0.4rem 0.25rem; font-size: 0.68rem; text-align: center; position: relative;
+    }
+    .app__ir svg { width: 1.35rem; height: 1.35rem; }
+    .app__ir .app__n { position: absolute; top: 0.3rem; left: calc(50% + 0.35rem); margin: 0; min-width: 1.1rem; line-height: 1.1rem; font-size: 0.65rem; }
+    .app__main { padding-bottom: calc(var(--app-tab) + 2rem + env(safe-area-inset-bottom)); }
+    .app__acciones .btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+}
+
+/* --- Piezas -------------------------------------------------------------------- */
+
+.app-card {
+    padding: var(--card-pad);
+    background: var(--app-superficie);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--app-sombra);
+}
+.app-card > h3 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+.app-card > :last-child { margin-bottom: 0; }
+.app-card--oro { border-color: var(--app-oro-borde); background: linear-gradient(180deg, var(--app-oro-suave), var(--app-superficie) 70%); }
+
+.app-rejilla { display: grid; gap: var(--app-gap); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+
+/* Cifras */
+.app-kpis { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); margin: 0; }
+.app-kpi {
+    margin: 0; padding: 1rem 1.1rem;
+    background: var(--app-superficie); border: 1px solid var(--glass-border); border-radius: var(--radius);
+}
+.app-kpi dt { font-size: 0.78rem; color: var(--text-low); }
+.app-kpi dd { margin: 0.3rem 0 0; font-size: 1.6rem; font-weight: 600; color: var(--text-hi); font-variant-numeric: tabular-nums; }
+.app-kpi dd small { font-size: 0.8rem; font-weight: 400; color: var(--text-low); }
+.app-kpi[data-tono="oro"] dd { color: var(--accent-gold); }
+
+/* Etiquetas de estado */
+.app-chip {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.15rem 0.6rem; border-radius: 999px;
+    border: 1px solid var(--glass-border-hi); color: var(--text-mid);
+    font-size: 0.75rem; white-space: nowrap;
+}
+.app-chip::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; opacity: 0.8; }
+.app-chip[data-tono="ok"] { color: var(--app-ok); border-color: rgba(61, 220, 132, 0.35); }
+.app-chip[data-tono="aviso"] { color: var(--app-aviso); border-color: rgba(245, 184, 74, 0.35); }
+.app-chip[data-tono="error"] { color: var(--app-error); border-color: rgba(255, 107, 107, 0.35); }
+.app-chip[data-tono="oro"] { color: var(--accent-gold); border-color: var(--app-oro-borde); }
+
+/* Lista de tareas */
+.app-tareas { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.app-tareas li {
+    display: flex; align-items: center; gap: 0.75rem; justify-content: space-between;
+    padding: 0.75rem 0.9rem; border-radius: var(--radius-sm);
+    background: var(--app-superficie-hi); border: 1px solid var(--glass-border);
+}
+.app-tareas li span { color: var(--text-hi); }
+
+/* Tablas */
+.app-tabla { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.app-tabla th, .app-tabla td { padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--glass-border); text-align: left; vertical-align: top; }
+.app-tabla thead th { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-low); }
+.app-tabla tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+.app-tabla code { font-size: 0.78rem; color: var(--text-low); }
+.app-desliza { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Un campo de ficha: su nombre legible y, debajo, su nombre en el sistema */
+.app-campo { display: flex; flex-direction: column; gap: 0.1rem; }
+.app-campo strong { color: var(--text-hi); font-weight: 500; }
+.app-campo small { color: var(--text-low); font-size: 0.72rem; }
+.app-campo code { font-size: 0.7rem; color: var(--text-low); }
+.app-antes { color: var(--text-low); text-decoration: line-through; text-decoration-color: rgba(255, 107, 107, 0.5); }
+.app-ahora { color: var(--text-hi); }
+
+/* --- Planes ------------------------------------------------------------------------ */
+
+.app-planes { display: grid; gap: var(--app-gap); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.app-plan {
+    position: relative; display: flex; flex-direction: column; gap: 0.75rem;
+    padding: var(--card-pad);
+    background: var(--app-superficie); border: 1px solid var(--glass-border); border-radius: var(--radius);
+}
+.app-plan[data-actual="si"] { border-color: var(--app-oro-borde); box-shadow: 0 0 0 1px var(--app-oro-borde) inset; }
+.app-plan h3 { margin: 0; font-size: 1.15rem; }
+.app-plan__precio { margin: 0; font-size: 2rem; font-weight: 600; color: var(--text-hi); line-height: 1.1; }
+.app-plan__precio small { font-size: 0.85rem; font-weight: 400; color: var(--text-low); }
+.app-plan ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+.app-plan li { padding-left: 1.4rem; position: relative; color: var(--text-mid); font-size: 0.92rem; }
+.app-plan li::before { content: "✓"; position: absolute; left: 0; color: var(--accent-gold); }
+.app-plan .btn { margin-top: auto; justify-content: center; }
+.app-plan__marca { position: absolute; top: -0.7rem; right: 1rem; }
+.app-oferta { display: flex; gap: 1rem; align-items: flex-start; }
+.app-oferta svg { flex: none; width: 1.6rem; height: 1.6rem; stroke: var(--accent-gold); fill: none; stroke-width: 1.8; }
+
+/* --- Asistente de IA -------------------------------------------------------------- */
+
+.app-ia { display: grid; gap: 0.75rem; }
+.app-ia__cab { display: flex; align-items: center; gap: 0.6rem; }
+.app-ia__cab svg { width: 1.3rem; height: 1.3rem; stroke: var(--accent-gold); fill: none; stroke-width: 1.8; }
+.app-ia__cab h3 { margin: 0; }
+.app-ia__salida {
+    margin: 0; padding: 1rem; border-radius: var(--radius-sm);
+    background: var(--bg-panel); border: 1px dashed var(--app-oro-borde);
+    color: var(--text-hi); white-space: pre-wrap;
+}
+.app-ia__coste { font-size: 0.75rem; color: var(--text-low); }
+.app-ia[aria-busy="true"] .app-ia__salida { opacity: 0.6; }
+
+/* --- Ayudas -------------------------------------------------------------------- */
+
+.app-fila { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.app-nota { font-size: 0.85rem; color: var(--text-low); margin: 0; }
+.app-vacio { padding: 1.5rem; text-align: center; color: var(--text-low); border: 1px dashed var(--glass-border-hi); border-radius: var(--radius); }
+
+/* Los avisos del portal, como en una app: flotan abajo y no mueven la vista */
+body.en-app .portal__estado {
+    position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    width: min(36rem, calc(100vw - 2rem)); margin: 0;
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.9);
+}
+@media (max-width: 899px) {
+    body.en-app .portal__estado { bottom: calc(var(--app-tab) + 0.75rem + env(safe-area-inset-bottom)); }
+}
+.portal__info [data-planes-lista] { margin-top: 1rem; }

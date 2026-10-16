@@ -11,6 +11,12 @@
                                           una reserva a partir de él
      GET  /api/portal/zoho?buscar=<texto> (administrador) cuentas por nombre,
                                           para unir un partner a la suya
+     POST /api/portal/ia                  (su partner o administración) la IA
+                                          del portal: { partner, accion:
+                                          'descripcion' } propone el párrafo de
+                                          presentación a partir de lo que su
+                                          ficha deja publicar. Se apunta lo que
+                                          cuesta en uso_ia
      POST /api/portal/sincronizar         cada paso de la conversación (una
                                           reserva confirmada, un comentario, un
                                           acuerdo firmado) pasa a Zoho como nota
@@ -28,6 +34,7 @@
    ========================================================================== */
 import * as PORTAL from '../portal/supabase.mjs';
 import * as ZOHO from '../portal/zoho.mjs';
+import { describir } from '../portal/ia.mjs';
 
 const json = (cuerpo, status = 200) => Response.json(cuerpo, { status, headers: { 'cache-control': 'no-store' } });
 const ID_ZOHO = /^\d{6,25}$/;
@@ -159,6 +166,30 @@ export default async (req) => {
       return json({ error: 'Falta qué buscar' }, 400);
     }
 
+    if (url.pathname === '/api/portal/ia' && req.method === 'POST') {
+      const cuerpo = await req.json().catch(() => ({}));
+      if (!PORTAL.esUuid(cuerpo.partner)) { return json({ error: 'Partner no válido' }, 400); }
+      if (cuerpo.accion !== 'descripcion') { return json({ error: 'Esa acción no existe' }, 400); }
+      if (!admin && !(await PORTAL.esMiembro(u.id, cuerpo.partner))) { return json({ error: 'No es tuyo' }, 403); }
+      const [partner] = await PORTAL.rest(`partners?select=id,tipo&id=eq.${cuerpo.partner}`) || [];
+      if (!partner) { return json({ error: 'No existe' }, 404); }
+      const ficha = await PORTAL.fichaEnCurso(partner.id);
+      if (!ficha) { return json({ error: 'Rellena antes tu ficha: la IA escribe a partir de ella' }, 400); }
+      let r;
+      try { r = await describir(partner.tipo, ficha.datos); } catch (e) {
+        console.error('Portal · IA:', e.message);
+        return json({ error: e.motivo === 'sin-clave' ? e.message : 'La IA no ha podido escribirlo ahora. Prueba en un rato.' }, 502);
+      }
+      if (r.uso) {
+        await PORTAL.anotar('uso_ia', {
+          operacion: 'portal-descripcion', modelo: r.uso.modelo, partner_id: partner.id,
+          tokens_entrada: r.uso.tokens.entrada, tokens_salida: r.uso.tokens.salida, tokens_cache: r.uso.tokens.cache,
+          coste_usd: r.uso.usd || 0,
+        }).catch(e => console.error('Portal · IA · coste:', e.message));
+      }
+      return json({ descripcion: r.descripcion, falta: r.falta, coste_usd: r.uso?.usd ?? null });
+    }
+
     if (url.pathname === '/api/portal/sincronizar' && req.method === 'POST') {
       if (!ZOHO.configurado()) { return json({ sincronizados: [], aviso: 'Zoho no está configurado' }); }
       const cuerpo = await req.json().catch(() => ({}));
@@ -192,6 +223,6 @@ export default async (req) => {
 };
 
 export const config = {
-  path: ['/api/portal/zoho', '/api/portal/sincronizar'],
+  path: ['/api/portal/zoho', '/api/portal/sincronizar', '/api/portal/ia'],
   rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ['ip', 'domain'] },
 };

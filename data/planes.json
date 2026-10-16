@@ -1,0 +1,57 @@
+{
+  "nota": "Los planes del canal que ve cada partner en /acceso. Cuotas provisionales y sin IVA (plan de negocio del repositorio privado, 16/10/2026). Lo que no se sabe va a null: el precio de la oferta para los primeros partners lo fija Álvaro.",
+  "iva_incluido": false,
+  "provisional": true,
+  "perfiles": {
+    "agencia": "Agencias y DMC",
+    "localizacion": "Espacios para eventos",
+    "proveedor": "Actuaciones y servicios"
+  },
+  "planes": [
+    {
+      "id": "ficha",
+      "nombre": "Ficha",
+      "precio_mes": 0,
+      "precio_ano": 0,
+      "resumen": "Para estar en la red y empezar a recibir peticiones.",
+      "incluye": [
+        "Tu panel: ficha, fotos, acuerdo y reservas que confirmar",
+        "Tu página en eventspenedes.com, sin precios ni contactos",
+        "Tu enlace propio: cada cliente que traes queda apuntado como tuyo",
+        "La conversación con nosotros, todo en un sitio"
+      ]
+    },
+    {
+      "id": "pagina",
+      "nombre": "Página",
+      "precio_mes": 29,
+      "precio_ano": 290,
+      "resumen": "Para ver qué funciona y contestar más rápido.",
+      "incluye": [
+        "Todo lo de la ficha",
+        "Tus estadísticas: visitas, peticiones por tu enlace y en qué acaban",
+        "Peticiones con la respuesta preparada",
+        "Reservas en tu Google Calendar y respuestas como borrador en tu Gmail"
+      ]
+    },
+    {
+      "id": "web",
+      "nombre": "Web propia",
+      "precio_mes": 79,
+      "precio_ano": 790,
+      "alta": "aparte, según las horas de montaje",
+      "resumen": "Tu web con tu dominio, que cambias desde el mismo panel.",
+      "incluye": [
+        "Todo lo de la página",
+        "Tu web y tu dominio, hechos con los datos de tu ficha",
+        "La cambias desde el mismo panel, sin depender de nadie",
+        "Soporte y mantenimiento incluidos"
+      ]
+    }
+  ],
+  "oferta_testers": {
+    "plazas": 3,
+    "precio_mes": null,
+    "texto": "Los tres primeros partners que prueben la página o la web propia tienen una cuota de lanzamiento a cambio de contarnos qué mejorar."
+  }
+}

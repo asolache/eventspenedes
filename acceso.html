@@ -22,6 +22,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/app.css">
 
 </head>
 <body>
@@ -142,6 +143,13 @@
             </div>
           </section>
 
+          <section aria-labelledby="planes-titulo" data-planes>
+            <p class="eyebrow">Planes</p>
+            <h2 id="planes-titulo">Para agencias, espacios y actuaciones o servicios</h2>
+            <p>Empiezas gratis con tu ficha. Cuando quieras más, tienes tu página con estadísticas y respuestas preparadas, o tu propia web.</p>
+            <div data-planes-lista><p class="form__note">Cargando los planes…</p></div>
+          </section>
+
           <section aria-labelledby="preguntas-titulo">
             <p class="eyebrow">Preguntas</p>
             <h2 id="preguntas-titulo">Lo que suele preguntarse</h2>
@@ -163,7 +171,6 @@
       </form>
 
       <div data-vista="dentro" hidden>
-        <p class="portal__quien"><span data-quien></span> · <button class="btn btn--ghost" type="button" data-accion="salir">Salir</button></p>
         <div data-partners></div>
         <div data-admin hidden></div>
       </div>

@@ -84,7 +84,7 @@ jobs:
       - name: Los formularios de fichas son los que salen de su esquema
         run: |
           node tools/build-fichas.mjs
-          git diff --exit-code -- alta-localizacion.html alta-proveedor.html || {
+          git diff --exit-code -- alta-localizacion.html alta-proveedor.html js/campos.js || {
             echo "::error::alta-localizacion.html o alta-proveedor.html no corresponden a su esquema. Regenera con: node tools/build-fichas.mjs"
             exit 1
           }
