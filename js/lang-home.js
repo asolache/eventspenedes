@@ -136,6 +136,8 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ i música',
       'nav.agencies': 'Agències i DMC',
+      'nav.blog': 'Blog',
+      'nav.agenda': 'Agenda',
       'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat', 'foot.res': 'Recursos',
       'svc.s4.title': 'DJ, música i espectacles',
       'svc.s4.text': 'Una sessió de DJ amb més de vint anys d’ofici al darrere, o música en directe lligada a la cultura catalana: havaneres, veus a cappella, grallers i folk. Triem el format amb el públic i el moment de l’esdeveniment, i ens ocupem del so.',
@@ -466,6 +468,8 @@ window.EP_I18N = {
 
       'nav.dj': 'DJ & music',
       'nav.agencies': 'Agencies & DMCs',
+      'nav.blog': 'Blog',
+      'nav.agenda': 'What\'s on',
       'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice', 'foot.res': 'Resources',
       'svc.s4.title': 'DJ, music and shows',
       'svc.s4.text': 'A DJ set backed by more than twenty years behind the decks, or live music rooted in Catalan culture: habaneras, a cappella voices, gralla players and folk. We choose the format to suit the audience and the moment, and we take care of the sound.',

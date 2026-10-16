@@ -130,6 +130,13 @@ económico y valoración de los participantes.
   directorio de masías, bodegas, catering, actividades y música con los que
   trabaja Events Penedès, cada uno con su ficha revisada. Sin precios: se
   piden con la propuesta.
+- [Blog](https://eventspenedes.com/blog): entrevistas a las bodegas, masías y
+  artesanos de la red, contadas por ellos mismos, y guías para vivir el
+  Penedès con un grupo o una empresa. Cada entrevista enlaza a la ficha del
+  partner. RSS: https://eventspenedes.com/blog/feed.xml
+- [Agenda](https://eventspenedes.com/agenda): las experiencias del año con
+  fecha (vendimia, catas, castells, cocina de temporada), mes a mes. Sin
+  precios: «Me interesa» lleva al formulario de Events Penedès.
 - [Aviso de privacidad](https://eventspenedes.com/privacidad.html): quién es el
   responsable, qué datos se recogen, cuánto se guardan y cómo ejercer los
   derechos.

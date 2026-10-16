@@ -11,6 +11,8 @@ window.EP_I18N = {
     'nav.activities': 'Activitats',
     'nav.dj': 'DJ i música',
     'nav.agencies': 'Agències i DMC',
+    'nav.blog': 'Blog',
+    'nav.agenda': 'Agenda',
     'nav.brief': 'Demanar proposta', 'foot.priv': 'Avís de privacitat', 'foot.res': 'Recursos',
     'nav.contact': 'Contacte',
 
@@ -206,6 +208,8 @@ window.EP_I18N = {
     'nav.activities': 'Activities',
     'nav.dj': 'DJ & music',
     'nav.agencies': 'Agencies & DMCs',
+    'nav.blog': 'Blog',
+    'nav.agenda': 'What\'s on',
     'nav.brief': 'Request a proposal', 'foot.priv': 'Privacy notice', 'foot.res': 'Resources',
     'nav.contact': 'Contact',
 
