@@ -201,8 +201,10 @@ async function panelPartner(p) {
     h('p', {}, 'Compártelo: quien escriba después de entrar por él queda apuntado como tuyo.'),
     h('p', { class: 'portal__enlace' }, h('code', {}, enlace), ' ',
       h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => navigator.clipboard.writeText(enlace).then(() => decir('Enlace copiado.', 'ok')) }, 'Copiar')),
-    h('p', {}, h('a', { href: `/partners/${p.codigo}` }, 'Tu página pública'),
-      ' (solo se ve si la ficha está aprobada y has autorizado publicarla).')));
+    actual.publicada?.autoriza === 'si'
+      ? h('p', {}, h('a', { href: `/partners/${p.codigo}` }, 'Tu página pública'))
+      : h('p', {}, 'Tu página pública aún no está en la web: sale cuando aprobamos tu ficha y autorizas publicarla. ',
+        h('button', { class: 'btn btn--ghost', type: 'button', onclick: intentar(() => vistaPrevia(p.codigo)) }, 'Ver cómo quedará'))));
 
   /* La ficha y las fotos */
   const secFicha = h('section', { class: 'portal__bloque', id: id('ficha') });

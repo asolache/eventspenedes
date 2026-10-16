@@ -30,15 +30,19 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
 
+# Estilos y scripts no llevan versión en el nombre: el navegador pregunta
+# siempre (con ETag, sin volver a bajarlos si no han cambiado), así cada
+# despliegue llega al momento. Con una semana de caché, el portal seguía
+# con el código viejo después de publicar uno nuevo.
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/assets/*"
