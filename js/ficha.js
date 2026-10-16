@@ -29,7 +29,7 @@
      visita); sin él, la ficha es la que puede rellenar el propio espacio.
      Este dispositivo lo recuerda.
    · Abre los bloques según el tipo o la categoría (y las casillas
-     «También ofrecéis»), y enseña las salas o los servicios de uno en uno.
+     «Además ofrecéis»), y enseña las salas o los servicios de uno en uno.
    · Al enviar, si la página lo pide (`data-vista`), enseña cómo se
      presentaría el proveedor si autoriza la publicación.
    · Abierta desde el portal de partners (/acceso), el envío queda además
@@ -145,7 +145,7 @@
   var tipo = form.elements[form.getAttribute('data-ficha')];
   var interruptores = form.querySelectorAll('input[data-tipos]');
 
-  /* Lo elegido: el tipo o la categoría, y lo marcado en «También ofrecéis» */
+  /* Lo elegido: el tipo o la categoría, y lo marcado en «Además ofrecéis» */
   function elegidos() {
     var out = tipo && tipo.value ? [tipo.value] : [];
     var tambien = form.querySelectorAll('input[name^="tambien_"]');
@@ -161,7 +161,19 @@
     }
   }
 
+  /* Lo principal no se repite en «Además ofrecéis»: su casilla se esconde */
+  function sinRepetir() {
+    var tambien = form.querySelectorAll('input[name^="tambien_"]');
+    for (var i = 0; i < tambien.length; i++) {
+      var es = Boolean(tipo && tipo.value && tambien[i].name === 'tambien_' + tipo.value);
+      if (es) { tambien[i].checked = false; }
+      var fila = tambien[i].closest('.field--check');
+      if (fila) { fila.hidden = es; }
+    }
+  }
+
   function porTipo() {
+    sinRepetir();
     var sel = elegidos();
     for (var i = 0; i < interruptores.length; i++) {
       var tipos = interruptores[i].getAttribute('data-tipos').split(' ');

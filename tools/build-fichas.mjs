@@ -40,6 +40,7 @@ function campo(c, nombre, sangria) {
     for (const [k, t] of Object.entries(c.op)) {
       l.push(`${s}  <p class="field--check"><label><input type="checkbox" name="${nombre}_${k}" value="si"> <span>${esc(t)}</span></label></p>`);
     }
+    if (c.hint) { l.push(`${s}  <p class="field__hint">${esc(c.hint)}</p>`); }
     l.push(`${s}</fieldset>`);
     return l.join('\n');
   }

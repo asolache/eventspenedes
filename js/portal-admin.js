@@ -8,7 +8,7 @@
    conversación, notas internas incluidas.
    ========================================================================== */
 import { sb } from './portal-cliente.js';
-import { poner, h, fecha, fechaHora, euros, ok, intentar, decir, campo, boton, api, aZoho } from './portal-ui.js';
+import { poner, h, fecha, fechaHora, euros, ok, intentar, decir, campo, boton, api, aZoho, vistaPrevia } from './portal-ui.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
 
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Proveedor' };
@@ -224,7 +224,7 @@ async function fichaCompleta(caja, p, recargar) {
   /* Ficha */
   poner(caja, h('h3', {}, 'Ficha'),
     h('p', {}, ficha ? `Publicada: versión ${ficha.version}, del ${fecha(ficha.actualizada_en)}. Web: ${ficha.datos?.autoriza === 'si' ? 'autorizada' : 'no autorizada'}.` : 'Sin ficha aprobada.',
-      ' ', h('a', { href: `/partners/${p.codigo}` }, 'Su página')),
+      ' ', h('a', { href: `/partners/${p.codigo}` }, 'Su página'), ' ', boton('Vista previa', () => vistaPrevia(p.codigo))),
     cambios.length ? h('table', { class: 'portal__tabla' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Propuesto'), h('th', {}, 'Estado'), h('th', {}, 'Revisado'), h('th', {}, 'Nota'))),
       h('tbody', {}, cambios.map(c => h('tr', {}, h('td', {}, fecha(c.creado_en)), h('td', {}, c.estado), h('td', {}, fecha(c.revisado_en)), h('td', {}, c.nota_revision || '—')))))
