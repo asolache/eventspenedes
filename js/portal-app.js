@@ -7,6 +7,7 @@
    estilos están en css/app.css.
    ========================================================================== */
 import { h, poner } from './portal-ui.js';
+import { buscador } from './portal-buscar.js';
 
 /* Iconos de trazo, 24×24, en el color del texto */
 const TRAZOS = {
@@ -59,9 +60,11 @@ export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', accio
     main.append(s);
   }
 
+  const busca = buscador({ clave, vistas, secciones, ir: id => ir(id, true) });
   const raiz = h('div', { class: 'app', 'data-app': clave },
     h('header', { class: 'app__barra' },
       h('div', { class: 'app__titulo' }, h('strong', {}, titulo), subtitulo ? h('span', {}, subtitulo) : null),
+      busca.caja,
       h('div', { class: 'app__acciones' }, acciones)),
     nav, main);
 
