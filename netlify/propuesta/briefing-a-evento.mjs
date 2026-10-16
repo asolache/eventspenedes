@@ -43,26 +43,33 @@
    ========================================================================== */
 import { comprobar, limpio, IDIOMAS } from './render-propuesta.mjs';
 
-/* Qué casilla del formulario es qué opción del catálogo. Si mañana se añade
-   una experiencia a la web, se añade aquí y deja de ser invisible para el
-   borrador. */
+/* Qué casilla del formulario es qué opción del catálogo. El formulario ofrece
+   lo que está en la portada y nada más: lo que no está en cartera no se pide
+   (Álvaro, 16/10/2026). Si mañana se añade una experiencia a la web, se añade
+   aquí y deja de ser invisible para el borrador. */
 export const DE_CASILLA = {
   exp_castells: 'fent-pinya',
-  exp_cata_vino: 'cata-vino-cava',
   exp_cata_aceite: 'cata-aceite',
-  exp_chef: 'chef-autor',
-  exp_gincana: 'gincana-vinyes',
-  exp_rrpp: 'rrpp-protocolo',
+  exp_cata_vino: 'visita-vinyes-cata',
+  exp_catas_ludicas: 'catas-ludicas',
+  exp_comer_bodega: 'comer-bodega',
+  exp_maridaje: 'maridaje-paisaje',
   exp_dj: 'dj-sesion',
 };
 
-/* El orden del día. No es el orden en que se marcan las casillas: una cata de
-   vino a las nueve de la mañana no la quiere nadie, y el taller de castells va
+/* Quién da de comer. En Albet i Noya cocina la bodega; en cualquier otro
+   espacio, el catering de la red. Un showcooking también es suyo. */
+const COMIDA_EN = { 'albet-i-noya': 'comer-bodega' };
+const CATERING = 'catering-cal-soler';
+const CON_COMIDA = ['sentado', 'coctel', 'showcooking', 'aire-libre'];
+const COMIDAS = new Set([CATERING, ...Object.values(COMIDA_EN)]);
+
+/* El orden del día. No es el orden en que se marcan las casillas: una cata a
+   las nueve de la mañana no la quiere nadie, y el taller de castells va
    después de comer a propósito —es la parte del día en la que no se puede
-   sostener a nadie que no conozcas—. */
-const ORDEN = ['microbus', 'rrpp-protocolo', 'cata-aceite', 'cata-vino-cava',
-               'chef-autor', 'fent-pinya', 'gincana-vinyes', 'outdoor',
-               'reto-gastronomico', 'dj-sesion'];
+   sostener a nadie que no conozcas—. Las catas lúdicas cierran la jornada. */
+const ORDEN = ['microbus', 'cata-aceite', 'visita-vinyes-cata', 'maridaje-paisaje',
+               'comer-bodega', CATERING, 'fent-pinya', 'catas-ludicas', 'dj-sesion'];
 
 const ARRANQUE = { media: 10 * 60, jornada: 10 * 60 + 30, 'jornada-noche': 10 * 60 + 30, 'dos-dias': 10 * 60 + 30 };
 const COMIDA = 13 * 60 + 30;   // la comida no se adelanta a las doce porque cuadre la suma
@@ -70,21 +77,25 @@ const CENA = 21 * 60;          // ni el DJ empieza cuando acaba el taller
 const MARGEN = 15;
 
 /* Lo que dura una pieza sale del catálogo. Lo que no tiene duración allí es
-   porque no es una actividad con horario —una comida no dura «lo que dure el
-   chef»—, así que se le pone aquí lo que dura de verdad en un evento. */
-const POR_DEFECTO = { 'chef-autor': 105, microbus: 60 };
+   porque no es una actividad con horario —una comida no dura «lo que dure la
+   cocina»—, así que se le pone aquí lo que dura de verdad en un evento. */
+const POR_DEFECTO = { 'comer-bodega': 105, [CATERING]: 105, microbus: 60 };
 
 const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const minutos = h => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5));
+const dura = (id, opciones) => opciones.find(x => x.id === id)?.duracion_min || POR_DEFECTO[id] || 60;
 
 /** Reparte horas por el programa con las duraciones del catálogo. */
 function horas(ids, opciones, duracion) {
   let t = ARRANQUE[duracion] ?? ARRANQUE.jornada;
   return ids.map(id => {
-    const o = opciones.find(x => x.id === id);
-    if (id === 'chef-autor' && t < COMIDA) { t = COMIDA; }
+    if (COMIDAS.has(id) && t < COMIDA) { t = COMIDA; }
     if (id === 'dj-sesion' && t < CENA) { t = CENA; }
+    /* La visita de Albet i Noya sale a las horas en punto (su ficha dice «a
+       las 10, 11, 12 o 13 h»), y el documento lo enseña al lado de la hora. */
+    if (id === 'visita-vinyes-cata') { t = Math.ceil(t / 60) * 60; }
     const hora = hhmm(t);
-    t += (o?.duracion_min || POR_DEFECTO[id] || 60) + MARGEN;
+    t += dura(id, opciones) + MARGEN;
     return { hora, opcion: id };
   });
 }
@@ -111,9 +122,25 @@ export function briefingAEvento(d = {}, { opciones, espacios, recibido = new Dat
                     correo: txt('correo') || null, telefono: txt('telefono') || null };
 
   const pedidas = Object.entries(DE_CASILLA).filter(([k]) => txt(k)).map(([, id]) => id);
+
+  /* Lo que solo se hace en un sitio dice dónde es el evento, si el cliente no
+     lo ha dicho: quien marca la visita entre viñas de Albet i Noya está
+     eligiendo Albet i Noya. Si lo marcado es de dos sitios, gana el que más
+     piezas tiene, y lo del otro se aparta como cualquier cosa que no encaja. */
+  let espacio = txt('espacio') || null;
+  let deducido = null;
+  if (!espacio) {
+    const cuenta = {};
+    pedidas.map(id => opciones.find(o => o.id === id)?.exige_espacio).filter(Boolean)
+      .forEach(s => { cuenta[s] = (cuenta[s] || 0) + 1; });
+    deducido = Object.keys(cuenta).sort((a, b) => cuenta[b] - cuenta[a])[0] || null;
+    espacio = deducido;
+  }
+
   if (txt('movilidad') === 'microbus') { pedidas.push('microbus'); }
-  /* Un showcooking es un chef, lo haya marcado o no en las experiencias. */
-  if (txt('catering') === 'showcooking' && !pedidas.includes('chef-autor')) { pedidas.push('chef-autor'); }
+  /* Si hay que comer, la comida entra en el programa con quien la hace. */
+  const comida = COMIDA_EN[espacio] || CATERING;
+  if (CON_COMIDA.includes(txt('catering')) && !pedidas.includes(comida)) { pedidas.push(comida); }
   if (duracion === 'jornada-noche' && !pedidas.includes('dj-sesion')) { pedidas.push('dj-sesion'); }
 
   const ordenadas = ORDEN.filter(id => pedidas.includes(id))
@@ -149,7 +176,7 @@ export function briefingAEvento(d = {}, { opciones, espacios, recibido = new Dat
                       txt('origen_transporte') ? `Salen desde ${txt('origen_transporte')}.` : '']
         .filter(Boolean).join(' ') || null,
     },
-    espacio: txt('espacio') || null,
+    espacio,
     programa: horas(ordenadas, opciones, duracion),
     a_medida: null,
     validez_dias: 30,
@@ -178,8 +205,24 @@ export function briefingAEvento(d = {}, { opciones, espacios, recibido = new Dat
 
   /* --- Lo que hay que mirar antes de enviar ---------------------------- */
   const avisos = [];
-  if (!evento.programa.length) { avisos.push('No ha marcado ninguna experiencia: el programa está vacío y hay que proponerlo entero.'); }
+  if (!evento.programa.length) {
+    avisos.push(ordenadas.length ? 'Nada de lo que pidió encaja: el programa está vacío y hay que proponerlo entero.'
+                                 : 'No ha marcado ninguna experiencia: el programa está vacío y hay que proponerlo entero.');
+  }
   if (!evento.espacio) { avisos.push('Sin espacio: el documento dice que lo proponemos nosotros. Decide cuál antes de enviarlo.'); }
+  const elEspacio = espacios.find(e => e.id === evento.espacio);
+  if (deducido && elEspacio) { avisos.push(`No eligió espacio: sale ${elEspacio.nombre} por lo que ha marcado. Confírmalo antes de enviar.`); }
+  /* Un espacio con horario no se ve en las horas del programa hasta que
+     alguien suma. Se suma aquí. */
+  const horario = (elEspacio?.restricciones || []).find(r => r.tipo === 'horario');
+  const [abre, cierra] = (String(horario?.valor ?? '').match(/^(\d{1,2})-(\d{1,2})$/) || []).slice(1).map(Number);
+  if (cierra && evento.programa.length) {
+    const empieza = Math.min(...evento.programa.map(p => minutos(p.hora)));
+    const acaba = Math.max(...evento.programa.map(p => minutos(p.hora) + dura(p.opcion, opciones)));
+    const fuera = [empieza < abre * 60 ? `empieza a las ${hhmm(empieza)}` : '',
+                   acaba > cierra * 60 ? `acaba a las ${hhmm(acaba)}` : ''].filter(Boolean);
+    if (fuera.length) { avisos.push(`${elEspacio.nombre} abre de ${abre} a ${cierra} h y el programa ${fuera.join(' y ')}: ajústalo con el espacio antes de enviar.`); }
+  }
   if (!fecha) { avisos.push('Sin fecha: la portada sale con un guion. Pregúntala antes de enviar.'); }
   if (evento.a_traves_de) { avisos.push(`Viene a través de «${evento.a_traves_de}»: decide la marca —propia, coproducida o blanca— antes de montar el PDF.`); }
   if (duracion === 'dos-dias') { avisos.push('Dos días o más: el programa que sale es de un día. El segundo se escribe a mano.'); }

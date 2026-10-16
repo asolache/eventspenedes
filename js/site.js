@@ -112,7 +112,7 @@
       var c = /^[a-z_]+$/.test(x) ? form.querySelector('input[name="exp_' + x + '"]') : null;
       if (c) { c.checked = true; }
     });
-    ['duracion', 'movilidad'].forEach(function (k) {
+    ['duracion', 'catering', 'movilidad', 'espacio'].forEach(function (k) {
       var sel = form.querySelector('select[name="' + k + '"]'), v = q.get(k);
       if (!sel || !v) { return; }
       for (var i = 0; i < sel.options.length; i++) {
@@ -126,7 +126,11 @@
      formulario de propuesta: rellena el espacio y las experiencias que tienen
      casilla, y el resto viaja en el campo `seleccion`. Se vacía al enviar. */
   var CLAVE_SEL = 'ep-seleccion';
-  var EXP_SEL = { castells: 1, cata_aceite: 1, cata_vino: 1 };
+  var CASILLA_SEL = {
+    'exp:castells': 'exp_castells', 'exp:cata_aceite': 'exp_cata_aceite', 'exp:cata_vino': 'exp_cata_vino',
+    'act:catas-ludicas': 'exp_catas_ludicas', 'act:comer-bodega': 'exp_comer_bodega',
+    'act:maridaje-paisaje': 'exp_maridaje'
+  };
   function leerSel() {
     try {
       var v = JSON.parse(localStorage.getItem(CLAVE_SEL) || '[]');
@@ -207,8 +211,8 @@
             if (espacio.options[i].value === p[1]) { espacio.value = p[1]; }
           }
         }
-        if (p[0] === 'exp' && EXP_SEL[p[1]]) {
-          var c = form.querySelector('input[name="exp_' + p[1] + '"]');
+        if (CASILLA_SEL.hasOwnProperty(x.id)) {
+          var c = form.querySelector('input[name="' + CASILLA_SEL[x.id] + '"]');
           if (c) { c.checked = true; }
         }
       });

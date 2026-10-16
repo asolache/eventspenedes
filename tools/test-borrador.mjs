@@ -41,7 +41,7 @@ const BRIEFING = {
   correo: 'marta@acme.example', telefono: '+34 600 000 000',
   tipo: 'convencion', pax: '60', fecha: '2027-05-14', fecha_firme: 'si',
   duracion: 'jornada', objetivo: 'Que los dos equipos se conozcan antes del lanzamiento.',
-  espacio: 'torre-del-gall', exp_castells: 'si', exp_cata_aceite: 'si', exp_chef: 'si',
+  espacio: 'torre-del-gall', exp_castells: 'si', exp_cata_aceite: 'si',
   catering: 'coctel', movilidad: 'microbus', origen_transporte: 'Barcelona',
   idioma_evento: 'es', presupuesto_orientativo: '15-40k',
   restricciones: 'Dos celíacos', quien_decide: 'Dirección', cuando_decide: 'Antes de Navidad',
@@ -64,6 +64,7 @@ comprueba('un enlace válido devuelve la página', r.status === 200);
 comprueba('dice que es un borrador y que no se ha enviado', /Borrador autom.tico/.test(html) && /no se ha enviado a nadie/.test(html));
 comprueba('lleva dentro lo que el cliente escribió', html.includes('Que los dos equipos se conozcan antes del lanzamiento.'));
 comprueba('monta el programa con las piezas que pidió', /Fent Pinya|castells/i.test(html));
+comprueba('la comida entra en el programa con quien la hace', /Cal Soler/.test(html.split('El programa')[1] || ''));
 comprueba('la fecha sale como pendiente de confirmar, aunque el cliente dijera que está cerrada',
   /pendiente de confirmar con el espacio/.test(html) && !/confirmada con el espacio/.test(html));
 
