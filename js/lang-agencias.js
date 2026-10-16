@@ -4,6 +4,14 @@
 window.EP_I18N = {
 
   ca: {
+    'nav.agents': "Agències",
+    'nav.partners': "Accés partners",
+    'nav.events': "Esdeveniments",
+    'nav.spaces': "Espais",
+    'nav.experiences': "Experiències",
+    'nav.network': "La xarxa",
+    'nav.access': "Accés partners",
+    'nav.join': "Entra a la xarxa",
     'skip': 'Vés al contingut principal',
     'nav.services': 'Serveis', 'nav.venues': 'Localitzacions', 'nav.activities': 'Activitats',
     'nav.process': 'Com treballem', 'nav.dj': 'DJ i música', 'nav.contact': 'Contacte',
@@ -74,6 +82,14 @@ window.EP_I18N = {
   },
 
   en: {
+    'nav.agents': "Agencies",
+    'nav.partners': "Partner login",
+    'nav.events': "Events",
+    'nav.spaces': "Venues",
+    'nav.experiences': "Experiences",
+    'nav.network': "The network",
+    'nav.access': "Partner login",
+    'nav.join': "Join the network",
     'skip': 'Skip to main content',
     'nav.services': 'Services', 'nav.venues': 'Venues', 'nav.activities': 'Activities',
     'nav.process': 'How we work', 'nav.dj': 'DJ & music', 'nav.contact': 'Contact',

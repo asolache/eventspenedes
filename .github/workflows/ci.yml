@@ -62,6 +62,9 @@ jobs:
       - name: El portal solo habla con Zoho por quien debe
         run: node tools/test-portal.mjs
 
+      - name: El menú y el pie salen de tools/build-nav.mjs
+        run: node tools/build-nav.mjs --check
+
       - name: La cabecera de las páginas de partners es la del sitio
         run: |
           node tools/build-marco.mjs
