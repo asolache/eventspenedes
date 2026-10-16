@@ -10,6 +10,12 @@
      GET  /partners/<código>/contacto  cuenta el clic y lleva a /contacto con
                                        el código: el lead queda trazado
      POST /partners/<código>/visto     cuenta una visita (la manda la página)
+     GET  /partners/<código>/previa    (su partner o un administrador, con su
+                                       sesión del portal) cómo quedaría su
+                                       página con la ficha en curso, aunque no
+                                       esté aprobada ni autorizada. No se
+                                       indexa, no cuenta visitas ni clics y
+                                       sale de la misma `fichaPublica()`
      GET  /partners/sitemap.xml        para los buscadores
 
    Las páginas salen del servidor, enteras, para que buscadores y asistentes
@@ -26,7 +32,7 @@
    ========================================================================== */
 import { FICHAS } from '../ficha/fichas.mjs';
 import { fichaPublica } from '../ficha/publica.mjs';
-import { configurado, partnersPublicos, sumarImpresion, foto } from '../portal/supabase.mjs';
+import { configurado, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
 import { CABECERA, PIE } from '../portal/marco.mjs';
 
 const SITIO = 'https://eventspenedes.com';
@@ -90,11 +96,14 @@ function migas(items) {
   };
 }
 
-function paginaPartner(p) {
-  const pub = fichaPublica(FICHAS[p.tipo], p.datos);
+/* `previa`: { fotos: [url], pendiente, autoriza } para la vista previa del
+   portal. Se publica igual que la página de verdad, como si estuviera
+   autorizada, con un aviso arriba y sin contar nada. */
+function paginaPartner(p, previa = null) {
+  const pub = fichaPublica(FICHAS[p.tipo], previa ? { ...p.datos, autoriza: 'si' } : p.datos);
   const nombre = pub.nombre || p.nombre;
   const url = `${SITIO}/partners/${p.codigo}`;
-  const fotos = fotosDe(p).map((_, i) => `${SITIO}/partners/${p.codigo}/foto/${i + 1}`);
+  const fotos = previa ? previa.fotos : fotosDe(p).map((_, i) => `${SITIO}/partners/${p.codigo}/foto/${i + 1}`);
   const tipo = TIPO_LEGIBLE[p.tipo];
   const lugar = pub.poblacion ? `${pub.poblacion}, Penedès` : 'Penedès';
   const descripcion = recorta(pub.descripcion || `${nombre}: ${tipo.toLowerCase()} en ${lugar}, en la red de Events Penedès.`, 155);
@@ -133,7 +142,10 @@ function paginaPartner(p) {
   const galeria = fotos.length ? `
       <ul class="partner-ficha__fotos">${fotos.map((f, i) => `<li><img src="${f}" alt="${esc(nombre)} · foto ${i + 1}" loading="${i ? 'lazy' : 'eager'}"></li>`).join('')}</ul>` : '';
 
-  const cuerpo = `
+  const aviso = !previa ? '' : `
+  <div class="wrap"><p class="partner-previa" role="status"><strong>Vista previa.</strong> Así se verá tu página${previa.pendiente ? ' con los cambios que tienes pendientes de validar' : ''}.
+    No salen precios, teléfonos, correos ni condiciones.${previa.autoriza === 'si' ? '' : ' No se publicará hasta que en tu ficha autorices publicarla.'}</p></div>`;
+  const cuerpo = `${aviso}
   <nav class="crumbs wrap" aria-label="Migas de pan">
     <a href="/">Events Penedès</a> <span aria-hidden="true">/</span> <a href="/partners">Espacios y proveedores</a> <span aria-hidden="true">/</span> <span>${esc(nombre)}</span>
   </nav>
@@ -143,7 +155,7 @@ function paginaPartner(p) {
       <h1>${esc(nombre)}</h1>
       ${pub.descripcion ? `<p class="lead">${esc(pub.descripcion)}</p>` : ''}
       <div class="hero__actions">
-        <a class="btn btn--primary" href="/partners/${p.codigo}/contacto" rel="nofollow">Organizar un evento aquí</a>
+        <a class="btn btn--primary" href="${previa ? '#' : `/partners/${p.codigo}/contacto`}" rel="nofollow">Organizar un evento aquí</a>
         <a class="btn btn--ghost" href="/partners">Ver toda la red</a>
       </div>
     </div>
@@ -152,17 +164,33 @@ function paginaPartner(p) {
     <div class="wrap partner-ficha">${galeria}${secciones}
       <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: escríbenos y te preparamos la propuesta.</p>
     </div>
-  </section>
+  </section>${previa ? '' : `
   <script>
     try { fetch('/partners/${p.codigo}/visto', { method: 'POST', keepalive: true }); } catch (e) {}
-  </script>`;
+  </script>`}`;
 
   return pagina({
     titulo: `${nombre} · ${tipo} en ${lugar} · Events Penedès`,
     descripcion, canonica: url, imagen: fotos[0],
     estructurados: [negocio, migas([['Events Penedès', `${SITIO}/`], ['Espacios y proveedores', `${SITIO}/partners`], [nombre, url]])],
-    cuerpo,
+    cuerpo, indexar: !previa,
   });
+}
+
+/* La vista previa: solo para quien es del partner o administra, con su
+   sesión del portal. Nunca se guarda en la CDN. */
+const PRIVADO = { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
+async function vistaPrevia(req, codigo) {
+  const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  const u = await usuario(token);
+  if (!u) { return new Response('Entra en el portal para ver la vista previa', { status: 401, headers: PRIVADO }); }
+  const p = await partnerPorCodigo(codigo);
+  if (!p || !(await esAdmin(u.id) || await esMiembro(u.id, p.id))) { return new Response('No encontrado', { status: 404, headers: PRIVADO }); }
+  const ficha = await fichaEnCurso(p.id);
+  if (!ficha) { return new Response('Aún no hay ficha', { status: 404, headers: PRIVADO }); }
+  const conDatos = { ...p, datos: ficha.datos };
+  const fotos = await Promise.all(fotosDe(conDatos).map(r => firmarFoto(r).catch(() => null)));
+  return html(paginaPartner(conDatos, { fotos: fotos.filter(Boolean), pendiente: ficha.pendiente, autoriza: ficha.datos.autoriza }), 200, PRIVADO);
 }
 
 function paginaDirectorio(lista) {
@@ -241,6 +269,13 @@ export default async (req) => {
     return new Response('Solo GET', { status: 405 });
   }
   if (req.method !== 'GET' && req.method !== 'HEAD') { return new Response('Solo GET', { status: 405 }); }
+
+  if (partes.length === 2 && partes[1] === 'previa' && CODIGO.test(partes[0])) {
+    try { return await vistaPrevia(req, partes[0]); } catch (e) {
+      console.error('partners · previa:', e.message);
+      return new Response('La vista previa no está disponible ahora mismo', { status: 503, headers: PRIVADO });
+    }
+  }
 
   let lista;
   try { lista = await partnersPublicos(); } catch (e) {

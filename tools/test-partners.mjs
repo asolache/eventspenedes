@@ -110,6 +110,38 @@ comprueba('una visita se cuenta por POST', visto.status === 204 && llamadas.some
 comprueba('la clave secreta va en la cabecera apikey', llamadas.every(l => l.op.headers?.apikey === 'sb_secret_de_prueba'));
 comprueba('por POST no se hace nada más', (await pedir('/partners/masia-prova', 'POST')).status === 405);
 
+/* 4 · La vista previa del portal: su partner la ve aunque no esté autorizada,
+   con la misma regla de lo que se publica, y nadie más */
+const SOCIO = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+const pendiente = { ...ESPACIO, autoriza: 'revisar', descripcion: 'Texto nuevo aún sin validar.', imagenes: [`${ID}/nueva.jpg`] };
+const fetchPortal = globalThis.fetch;
+globalThis.fetch = async (url, op = {}) => {
+  const u = String(url);
+  llamadas.push({ url: u, op });
+  if (u.includes('/auth/v1/user')) {
+    const t = op.headers?.Authorization;
+    return t === 'Bearer a.socio.x' ? Response.json({ id: SOCIO }) : t === 'Bearer a.otro.x' ? Response.json({ id: ID }) : new Response('{}', { status: 401 });
+  }
+  if (u.includes('/rest/v1/admins')) { return Response.json([]); }
+  if (u.includes('/rest/v1/miembros')) { return Response.json(u.includes(SOCIO) ? [{ user_id: SOCIO }] : []); }
+  if (u.includes('/rest/v1/cambios_ficha')) { return Response.json([{ datos: pendiente }]); }
+  if (u.includes('/rest/v1/fichas')) { return Response.json([{ datos: ESPACIO }]); }
+  if (u.includes('/storage/v1/object/sign/fotos/')) { return Response.json({ signedURL: '/object/sign/fotos/x?token=t' }); }
+  return fetchPortal(url, op);
+};
+const previa = (token) => handler(new Request('https://eventspenedes.com/partners/masia-prova/previa', { headers: token ? { authorization: `Bearer ${token}` } : {} }));
+comprueba('sin sesión no hay vista previa', (await previa()).status === 401);
+comprueba('con la sesión de otro, tampoco', (await previa('a.otro.x')).status === 404);
+llamadas.length = 0;
+const rp = await previa('a.socio.x');
+const hp = await rp.text();
+comprueba('su partner ve la ficha pendiente aunque no esté autorizada', rp.status === 200 && /Texto nuevo aún sin validar/.test(hp) && /No se publicará hasta que/.test(hp));
+comprueba('la vista previa tampoco lleva teléfono, contacto ni precios', !/600 111 222|Joana|3500|1800/.test(hp));
+comprueba('no se indexa, no se guarda en la CDN ni cuenta visitas', /content="noindex"/.test(hp) && rp.headers.get('cache-control') === 'no-store'
+  && !/\/visto/.test(hp) && !/\/contacto"/.test(hp) && !llamadas.some(l => l.url.includes('sumar_impresion')));
+comprueba('enseña las fotos aún sin aprobar con un enlace que caduca', /storage\/v1\/object\/sign\/fotos\/x\?token=t/.test(hp));
+globalThis.fetch = fetchPortal;
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ Solo se publica lo autorizado y cada ruta hace lo suyo.\n');

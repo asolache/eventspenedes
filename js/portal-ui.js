@@ -58,6 +58,29 @@ export async function api(ruta, { method = 'GET', body } = {}) {
   return j;
 }
 
+/* La página pública tal como quedaría con la ficha en curso (la pendiente o,
+   si no hay, la aprobada). La sirve el servidor con la misma regla que la de
+   verdad, así que lo que se ve aquí es lo que verá un cliente: sin precios,
+   teléfonos, correos ni condiciones. Se abre en una ventana del propio
+   portal, sin scripts ni enlaces que cuenten visitas. */
+export async function vistaPrevia(codigo) {
+  const { data } = await sb.auth.getSession();
+  const r = await fetch(`/partners/${encodeURIComponent(codigo)}/previa`, {
+    headers: { Authorization: `Bearer ${data.session?.access_token || ''}` }, cache: 'no-store',
+  });
+  if (!r.ok) { throw new Error((await r.text().catch(() => '')) || `Error ${r.status}`); }
+  const marco = h('iframe', { class: 'portal__previa-marco', title: 'Vista previa de la página pública', sandbox: 'allow-same-origin' });
+  marco.srcdoc = await r.text();
+  const ventana = h('dialog', { class: 'portal__previa', 'aria-label': 'Vista previa de la página pública' },
+    h('div', { class: 'portal__previa-barra' },
+      h('strong', {}, 'Vista previa de tu página pública'),
+      h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => ventana.close() }, 'Cerrar')),
+    marco);
+  ventana.addEventListener('close', () => ventana.remove());
+  document.body.append(ventana);
+  ventana.showModal();
+}
+
 /* Cada paso pasa a Zoho como nota. Si Zoho no responde, el paso ya está en el
    portal y administración lo pasa después: no se para a nadie por ello. */
 export async function aZoho({ mensaje, ref } = {}) {

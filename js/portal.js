@@ -15,7 +15,7 @@
    a cada uno le toca. Esta página solo lo enseña.
    ========================================================================== */
 import { sb, datosActuales, proponer } from './portal-cliente.js';
-import { poner, h, fecha, ok, intentar, decir } from './portal-ui.js';
+import { poner, h, fecha, ok, intentar, decir, vistaPrevia } from './portal-ui.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, historialAcuerdos, formAcuerdo, herramientas } from './portal-relacion.js';
 import { panelAdmin } from './portal-admin.js';
 
@@ -212,6 +212,9 @@ async function panelPartner(p) {
     h('p', {}, actual.version ? `Publicada: versión ${actual.version}, del ${fecha(actual.fecha)}.` : 'Aún no hay ninguna versión aprobada.',
       actual.pendiente ? ' Tienes cambios pendientes de validar.' : ''),
     h('p', {}, h('button', { class: 'btn btn--primary', type: 'button', onclick: () => abrirFicha(p, actual) }, 'Editar mi ficha'),
+      ' ', (actual.pendiente || actual.publicada)
+        ? h('button', { class: 'btn btn--ghost', type: 'button', onclick: intentar(() => vistaPrevia(p.codigo)) }, 'Ver cómo queda en la web')
+        : null,
       ' ', h('span', { class: 'form__note' }, 'Puedes empezar importando tu web o tu catálogo en PDF.')),
   );
 

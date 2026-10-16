@@ -41,7 +41,7 @@ const NOMBRES_CATEGORIA = Object.fromEntries(Object.entries(CATEGORIAS).map(([k,
 export const PERFILES_RED = { localizacion: 'Espacio para eventos', ...NOMBRES_CATEGORIA };
 
 /* Qué categorías abren solas cada bloque. Quien hace dos cosas marca la
-   segunda en «También ofrecéis», o abre el bloque a mano. */
+   segunda en «Además ofrecéis», o abre el bloque a mano. */
 export const ABRE = {
   ofrece_catering: ['restauracion'],
   ofrece_cata: ['catas'],
@@ -80,8 +80,8 @@ export const SECCIONES = [
     id: 'proveedor', titulo: 'Quiénes sois', destino: 'web',
     campos: [
       { n: 'nombre', l: 'Nombre del negocio', t: 'text', req: true, ac: 'organization' },
-      { n: 'categoria', l: 'Qué ofrecéis sobre todo', t: 'select', op: NOMBRES_CATEGORIA, req: true },
-      { n: 'tambien', l: 'También ofrecéis', t: 'checks', op: Object.fromEntries(Object.entries(NOMBRES_CATEGORIA).filter(([k]) => k !== 'otro')) },
+      { n: 'categoria', l: 'Lo principal que ofrecéis', t: 'select', op: NOMBRES_CATEGORIA, req: true },
+      { n: 'tambien', l: 'Además ofrecéis', t: 'checks', hint: 'Marca todas las que hagáis también. Cada una abre su bloque más abajo.', op: Object.fromEntries(Object.entries(NOMBRES_CATEGORIA).filter(([k]) => k !== 'otro')) },
       { n: 'poblacion', l: 'Población', t: 'text', ac: 'address-level2' },
       { n: 'zona', l: 'Dónde trabajáis', t: 'select', op: { penedes: 'En el Penedès', catalunya: 'En toda Cataluña', fuera: 'También fuera de Cataluña' } },
       { n: 'web', l: 'Web', t: 'url' },

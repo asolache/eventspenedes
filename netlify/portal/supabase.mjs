@@ -46,6 +46,30 @@ export async function foto(ruta, { fetch = globalThis.fetch } = {}) {
   return r;
 }
 
+/* Un enlace a una foto que caduca: para la vista previa, que enseña también
+   las fotos aún sin aprobar */
+export async function firmarFoto(ruta, segundos = 900, { fetch = globalThis.fetch } = {}) {
+  const limpia = ruta.split('/').map(encodeURIComponent).join('/');
+  const r = await fetch(`${base()}/storage/v1/object/sign/fotos/${limpia}`, {
+    method: 'POST', headers: cabeceras({ 'content-type': 'application/json' }),
+    body: JSON.stringify({ expiresIn: segundos }), signal: AbortSignal.timeout(8000),
+  });
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j?.signedURL) { throw new Error(`Supabase storage ${r.status}`); }
+  return `${base()}/storage/v1${j.signedURL}`;
+}
+
+/* La ficha que vería la web si se aprobara ahora: el último cambio pendiente
+   o, si no hay, la aprobada */
+export async function fichaEnCurso(partnerId, { fetch } = {}) {
+  if (!esUuid(partnerId)) { return null; }
+  const [pend, pub] = await Promise.all([
+    rest(`cambios_ficha?select=datos&partner_id=eq.${partnerId}&estado=eq.pendiente&order=creado_en.desc&limit=1`, { fetch }),
+    rest(`fichas?select=datos&partner_id=eq.${partnerId}&limit=1`, { fetch }),
+  ]);
+  return pend?.[0]?.datos ? { datos: pend[0].datos, pendiente: true } : pub?.[0]?.datos ? { datos: pub[0].datos, pendiente: false } : null;
+}
+
 /* Los partners activos con ficha aprobada y autorizada: lo que es público */
 export async function partnersPublicos({ fetch } = {}) {
   const filas = await rest('partners?select=id,codigo,nombre,tipo,estado,fichas(datos,version,actualizada_en)&estado=eq.activo&order=nombre', { fetch });
