@@ -105,6 +105,45 @@ const t = textoNota({ tipo: 'reserva_confirmada', texto: null, datos: { fecha: '
   { partner: { nombre: 'P' }, reserva: { titulo: 'T', fecha: '2026-11-21' }, dePartner: true });
 comprueba('la nota solo cuenta los datos que conoce', /Fecha: 2026-11-21/.test(t.texto) && !/otra/.test(t.texto));
 
+/* La IA del portal: escribe solo con lo publicable de la ficha, solo para
+   su partner o administración, y apunta lo que cuesta */
+const { entrada } = await import('../netlify/portal/ia.mjs');
+const FICHA_IA = { nombre: 'Masia de Prova', tipo: 'masia', poblacion: 'Subirats', telefono: '+34 600 111 222',
+  contacto_correo: 'joana@masia.example', alquiler_dia: '3500', comision: '10', aforo_banquete: '120', autoriza: 'revisar' };
+const ent = entrada('localizacion', FICHA_IA);
+comprueba('la IA lee el nombre y el aforo', /Masia de Prova/.test(ent) && /120/.test(ent));
+comprueba('pero nunca precios, comisión ni contactos, aunque no esté autorizada', !/600 111 222|joana|3500|"10"|Comisión/i.test(ent));
+
+const ia = body => pedir('/api/portal/ia', { token: body.token, method: 'POST', body: body.cuerpo });
+const fetchZoho = globalThis.fetch;
+let peticionClaude = null;
+globalThis.fetch = async (url, op = {}) => {
+  const u = String(url);
+  if (u.includes('/rest/v1/cambios_ficha')) { return Response.json([{ datos: FICHA_IA }]); }
+  if (u.includes('/rest/v1/fichas')) { return Response.json([]); }
+  if (u.includes('/rest/v1/partners')) { return Response.json([{ id: P1, tipo: 'localizacion' }]); }
+  if (u.includes('/rest/v1/uso_ia')) { llamadas.push({ url: u, op }); return new Response(null, { status: 201 }); }
+  if (u.includes('/v1/messages')) {
+    peticionClaude = JSON.parse(op.body);
+    return Response.json({ model: 'claude-opus-5-5', stop_reason: 'end_turn', usage: { input_tokens: 800, output_tokens: 200 },
+      content: [{ type: 'text', text: JSON.stringify({ descripcion: 'Masía entre viñas en Subirats para 120 invitados.', falta: ['las salas'] }) }] });
+  }
+  return fetchZoho(url, op);
+};
+process.env.ANTHROPIC_API_KEY = 'sk-prueba';
+process.env.ANTHROPIC_WORKSPACE_ID = 'wrkspc_prueba';
+comprueba('la IA no responde sin sesión', (await ia({ cuerpo: { partner: P1, accion: 'descripcion' } })).status === 401);
+comprueba('ni a alguien de otro partner', (await ia({ token: 'a.b.otro', cuerpo: { partner: P1, accion: 'descripcion' } })).status === 403);
+comprueba('ni con una acción que no existe', (await ia({ token: 'a.b.socio', cuerpo: { partner: P1, accion: 'otra' } })).status === 400);
+llamadas.length = 0;
+const ri = await ia({ token: 'a.b.socio', cuerpo: { partner: P1, accion: 'descripcion' } });
+const ji = await ri.json();
+comprueba('a su partner le propone la descripción', ri.status === 200 && /Subirats/.test(ji.descripcion) && ji.falta.length === 1);
+comprueba('Claude no ve sus precios ni sus contactos', peticionClaude && !/3500|600 111 222|joana/.test(JSON.stringify(peticionClaude.messages)));
+comprueba('y lo que cuesta se apunta en uso_ia con su partner', llamadas.some(l => l.url.includes('uso_ia') && JSON.parse(l.op.body).partner_id === P1
+  && JSON.parse(l.op.body).operacion === 'portal-descripcion'));
+globalThis.fetch = fetchZoho;
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');

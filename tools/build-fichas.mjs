@@ -148,3 +148,32 @@ console.log(`  ${pagina}: ${SECCIONES.length} secciones`);
 }
 
 for (const p of PAGINAS) { generar(p); }
+
+/* Las etiquetas de cada campo, para el portal: quien revisa un cambio de ficha
+   lee «Servicio 3 · Precio (€)» y no `servicio3_precio`. Sale del mismo
+   esquema que los formularios. */
+function etiquetas() {
+  const tipos = {};
+  const opciones = [];
+  const op = o => { const s = JSON.stringify(o); let i = opciones.indexOf(s); if (i === -1) { i = opciones.push(s) - 1; } return i; };
+  for (const [tipo, esquema] of Object.entries(FICHAS)) {
+    const t = {};
+    for (const [n, c] of esquema.campos()) {
+      const x = [c.l, c.s.titulo, c.campo.t || 'text'];
+      if (c.campo.op && (c.campo.t === 'select')) { x.push(op(c.campo.op)); }
+      t[n] = x;
+    }
+    tipos[tipo] = t;
+  }
+  const js = `/* Generado por tools/build-fichas.mjs a partir de los esquemas de las fichas. No editar.
+   Cada campo: [etiqueta, sección, tipo, índice de sus opciones]. */
+export const OPCIONES = [\n${opciones.map(s => `  ${s}`).join(',\n')},\n];
+export const CAMPOS = ${JSON.stringify(tipos)};
+`;
+  const ruta = join(RAIZ, 'js/campos.js');
+  let antes = '';
+  try { antes = readFileSync(ruta, 'utf8'); } catch (e) { /* primera vez */ }
+  if (antes !== js) { writeFileSync(ruta, js, 'utf8'); }
+  console.log(`  js/campos.js: ${Object.values(tipos).reduce((s, t) => s + Object.keys(t).length, 0)} campos`);
+}
+etiquetas();

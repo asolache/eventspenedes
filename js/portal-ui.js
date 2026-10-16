@@ -11,7 +11,10 @@ export function decir(texto, tipo) {
   e.textContent = texto;
   e.setAttribute('data-tipo', tipo || 'info');
   e.hidden = !texto;
-  if (texto && tipo === 'error') { e.scrollIntoView({ block: 'nearest' }); }
+  clearTimeout(decir.t);
+  /* Con sesión el aviso flota sobre la app: los buenos se van solos */
+  if (texto && tipo !== 'error' && document.body.classList.contains('en-app')) { decir.t = setTimeout(() => { e.hidden = true; }, 6000); }
+  if (texto && tipo === 'error' && !document.body.classList.contains('en-app')) { e.scrollIntoView({ block: 'nearest' }); }
 }
 
 /* Un nodo sin innerHTML: lo que escribe un partner nunca se interpreta */
