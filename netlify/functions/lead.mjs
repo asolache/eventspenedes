@@ -216,11 +216,11 @@ const legible = (form, campo, v) =>
 const EXPERIENCIAS = {
   exp_dj: 'Sesión de DJ',
   exp_castells: 'Taller de castells',
-  exp_cata_vino: 'Cata de vino o cava',
   exp_cata_aceite: 'Cata de aceite',
-  exp_chef: 'Chef o showcooking',
-  exp_gincana: 'Gincana',
-  exp_rrpp: 'Protocolo y RRPP',
+  exp_cata_vino: 'Visita entre viñas y cata en Albet i Noya',
+  exp_catas_ludicas: 'Catas lúdicas en Albet i Noya',
+  exp_comer_bodega: 'Comer en la bodega Albet i Noya',
+  exp_maridaje: 'Maridaje de paisaje y rutas en Albet i Noya',
 };
 
 /* --- El partner que trae el lead -----------------------------------------

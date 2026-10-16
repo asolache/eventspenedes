@@ -66,7 +66,7 @@ comprueba('la ficha lleva el objetivo', /Celebrar el cierre de año/.test(cuerpo
 comprueba('la ficha lleva las experiencias marcadas',
   /Taller de castells, Cata de aceite/.test(cuerpoOk.lead?.Description || ''));
 comprueba('la ficha NO inventa las no marcadas',
-  !/Gincana/.test(cuerpoOk.lead?.Description || ''));
+  !/Catas lúdicas/.test(cuerpoOk.lead?.Description || ''));
 comprueba('queda constancia del consentimiento con su fecha',
   /Consentimiento .* 2026-10-03/.test(cuerpoOk.lead?.Description || ''));
 comprueba('sin ZOHO_CAMPO_MARCA no se inventa el campo',
