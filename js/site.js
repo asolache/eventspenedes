@@ -358,3 +358,16 @@
     init();
   }
 })();
+
+/* Clics en los botones que llevan a pedir algo (data-clic): se cuentan en
+   /api/clic sin cookies ni datos de la persona, solo botón y página. */
+(function () {
+  if (!navigator.sendBeacon) return;
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-clic]');
+    if (!el) return;
+    try {
+      navigator.sendBeacon('/api/clic', JSON.stringify({ b: el.getAttribute('data-clic'), p: location.pathname }));
+    } catch (err) { /* contar nunca debe romper el clic */ }
+  });
+})();
