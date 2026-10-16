@@ -1723,3 +1723,24 @@ body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
   .portal__tabla--tarjetas td::before { content: attr(data-c); display: block; font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; opacity: 0.7; }
   .portal__botones .btn { flex: 1 1 auto; }
 }
+
+/* Barra fija en el móvil con las dos acciones de la portada. Se esconde
+   mientras está abierta la barra de «tu selección», que ocupa el mismo sitio. */
+.barra-cta { display: none; }
+@media (max-width: 720px) {
+    .barra-cta {
+        position: fixed;
+        z-index: 80;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        gap: 0.6rem;
+        padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+        background: var(--bg-dark);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .barra-cta .btn { flex: 1 1 0; justify-content: center; text-align: center; padding: 0.7rem 0.8rem; font-size: 0.95rem; }
+    .seleccion:not([hidden]) ~ .barra-cta { display: none; }
+    body:has(.barra-cta) { padding-bottom: 4.5rem; }
+}

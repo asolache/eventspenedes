@@ -662,10 +662,10 @@
     <div class="wrap">
       <p class="hero__segell" data-i18n="hero.segell">Alt Penedès · a 40 min de Barcelona</p>
       <h1 data-i18n="hero.title">Esdeveniments d’empresa on el <em>vi</em> encara es fa a mà.</h1>
-      <p class="lead" data-i18n="hero.lead">Events Penedès és una agència especialitzada en l’organització d’esdeveniments corporatius, team building i rutes enoturístiques al Penedès (Barcelona). Producció premium per a agències, DMC i direccions d’empresa. Masies privades, cellers, molins d’oli i paisatge de vinya, amb un sol interlocutor de cap a cap i el detall cuidat al nivell que espera el vostre client.</p>
+      <p class="lead" data-i18n="hero.lead">Esdeveniments d’empresa, team building i enoturisme al Penedès, a 40 minuts de Barcelona. Masies, cellers i vinya, amb un sol interlocutor de cap a cap.</p>
       <div class="hero__actions">
-        <a class="btn btn--primary" href="/ca/propuesta.html" data-i18n="hero.cta1">Demanar proposta</a>
-        <a class="btn btn--ghost" href="#intangibles" data-i18n="hero.cta2">Què fa únic el Penedès</a>
+        <a class="btn btn--primary" href="/ca/propuesta.html" data-i18n="hero.cta1" data-clic="hero-propuesta">Demanar proposta</a>
+        <a class="btn btn--ghost" href="https://calendar.app.google/124c4fJD7QDJTq2q9" target="_blank" rel="noopener" data-i18n="hero.call" data-clic="hero-llamada">Reservar una trucada</a>
       </div>
       <ul class="hero__meta">
         <li data-i18n="hero.meta1">Espais privats i exclusius</li>
@@ -673,6 +673,90 @@
         <li data-i18n="hero.meta3">Tastos de vi i d’oli</li>
         <li data-i18n="hero.meta4">CA · ES · EN</li>
       </ul>
+    </div>
+  </section>
+
+  <!-- ACTIVIDADES -->
+  <section class="section" id="actividades">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="act.eyebrow">Activitats</p>
+        <h2 data-i18n="act.title">Experiències que es fan aquí</h2>
+        <p data-i18n="act.lead">Les que tenim avui en cartera, amb l’espai on es fan. Es combinen entre elles en una mateixa jornada.</p>
+      </div>
+      <div class="grid">
+
+        <article class="card card--premium">
+          <div class="card__foto">
+            <img src="/assets/fotos/taller-castells-dalt.jpg" data-i18n-alt="act.a1.alt"
+                 alt="Participants coronant un castell humà al taller Fent Pinya"
+                 width="1200" height="800" loading="lazy">
+          </div>
+          <p class="card__segell" data-i18n="act.a1.tag">L’activitat de la casa</p>
+          <h3 data-i18n="act.a1.title">Taller de castells «Fent Pinya»</h3>
+          <p data-i18n="act.a1.text">Dues hores per construir un castell humà de debò, amb monitors castellers. La metàfora s’explica sola: base, confiança, comunicació i un objectiu que no s’aconsegueix sol. Activitat de TeamTowers: <a href="https://www.teamtowers.eu" target="_blank" rel="noopener">teamtowers.eu</a>.</p>
+          <button type="button" class="interes" data-interes="exp:castells" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+        <article class="card card--premium">
+          <div class="card__foto">
+            <img src="/assets/espais/dolicios-arbequina.jpg" data-i18n-alt="act.b1.alt"
+                 alt="Ampolla d’oli arbequina de D’Oliciós recolzada al tronc d’una olivera"
+                 width="1500" height="1125" loading="lazy">
+          </div>
+          <p class="card__segell" data-i18n="act.b1.tag">Bellesguart · l’Arboç</p>
+          <h3 data-i18n="act.b1.title">Tast d’oli i visita al molí</h3>
+          <p data-i18n="act.b1.text">Visita al molí d’oli ecològic D’Oliciós, a la mateixa casa modernista de Bellesguart, i tast guiat de l’oli que s’hi elabora. Funciona tot l’any, també fora de la verema, i es combina amb el taller «Fent Pinya» i el dinar al jardí o sota la plaça coberta. <a href="https://dolicios.com" target="_blank" rel="noopener">dolicios.com</a>.</p>
+          <button type="button" class="interes" data-interes="exp:cata_aceite" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+        <article class="card">
+          <div class="card__foto">
+            <!-- PROVISIONAL: foto de la web de Albet i Noya (https://albetinoya.cat/imatges/enotur2020/visita-estandar1.jpg), servida desde eventspenedes.com con el Image CDN de Netlify (netlify.toml, [images]) y sin permiso escrito todavía. Sustituir por foto propia o cedida (ver assets/espais/README.md). -->
+            <img src="/.netlify/images?url=https%3A%2F%2Falbetinoya.cat%2Fimatges%2Fenotur2020%2Fvisita-estandar1.jpg&amp;w=1200&amp;q=75" width="1200" height="800" loading="lazy" decoding="async" data-i18n-alt="act.b2.alt" alt="Grup de visita entre les vinyes d’Albet i Noya (foto provisional del celler)">
+          </div>
+          <p class="card__segell" data-i18n="act.b2.tag">Albet i Noya · Sant Pau d’Ordal</p>
+          <h3 data-i18n="act.b2.title">Visita entre vinyes i tast</h3>
+          <p data-i18n="act.b2.text">Noranta minuts per les vinyes ecològiques fins al camp experimental del celler, amb tast de quatre vins i aperitiu en tres parades: el jardí, la vinya i el celler. En català, castellà o anglès.</p>
+          <button type="button" class="interes" data-interes="exp:cata_vino" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+        <article class="card">
+          <p class="card__segell" data-i18n="act.b3.tag">Albet i Noya</p>
+          <h3 data-i18n="act.b3.title">Tastos lúdics</h3>
+          <p data-i18n="act.b3.text">Perquè el grup jugui amb el vi: tast a cegues, Xarel·lo Experience o Sumiller Quiz. Funcionen com a activitat d’equip per si soles o com a cloenda de la jornada.</p>
+          <button type="button" class="interes" data-interes="act:catas-ludicas" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+        <article class="card">
+          <p class="card__segell" data-i18n="act.b4.tag">Albet i Noya</p>
+          <h3 data-i18n="act.b4.title">Menjar al celler</h3>
+          <p data-i18n="act.b4.text">Esmorzar, brunch, el dinar de la xef o un festí de territori, cuinats al mateix celler i amb els seus vins.</p>
+          <button type="button" class="interes" data-interes="act:comer-bodega" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+        <article class="card">
+          <div class="card__foto">
+            <!-- PROVISIONAL: foto de la web de Albet i Noya (https://albetinoya.cat/imatges/enotur2020/ruta_vinyes.jpg), servida desde eventspenedes.com con el Image CDN de Netlify (netlify.toml, [images]) y sin permiso escrito todavía. Sustituir por foto propia o cedida (ver assets/espais/README.md). -->
+            <img src="/.netlify/images?url=https%3A%2F%2Falbetinoya.cat%2Fimatges%2Fenotur2020%2Fruta_vinyes.jpg&amp;w=1200&amp;q=75" width="1200" height="800" loading="lazy" decoding="async" data-i18n-alt="act.b5.alt" alt="Camí entre vinyes d’Albet i Noya (foto provisional del celler)">
+          </div>
+          <p class="card__segell" data-i18n="act.b5.tag">Albet i Noya</p>
+          <h3 data-i18n="act.b5.title">Maridatge de paisatge i rutes</h3>
+          <p data-i18n="act.b5.text">Un passeig de tres quilòmetres entre vinyes amb vins pel camí, o una ruta en bicicleta elèctrica o en 4x4 per les Muntanyes d’Ordal.</p>
+          <button type="button" class="interes" data-interes="act:maridaje-paisaje" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
+        </article>
+
+      </div>
+
+      <div class="cta-seccion">
+        <p class="cta-seccion__txt" data-i18n="cta.act.txt">Vols combinar-ne diverses en una jornada? Marca-les i et muntem el programa.</p>
+        <p class="cta-seccion__btns">
+          <a class="btn btn--primary" data-clic="seccion-propuesta" href="/ca/propuesta.html#briefing" data-i18n="cta.act.btn">Demanar proposta amb aquestes activitats</a>
+          <a class="btn btn--ghost" href="/ca/contacto.html" data-i18n="cta.hablar">Parlar amb nosaltres</a>
+        </p>
+        <p class="cta-seccion__red" data-i18n="cta.act.red">Organitzes tastos, visites o activitats al Penedès? <a href="/ca/red.html?perfil=guias">Entra a la xarxa</a>.</p>
+      </div>
+
     </div>
   </section>
 
@@ -847,7 +931,6 @@
           </ul>
         </article>
 
-
         <article class="card">
           <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
             <circle cx="12" cy="12" r="9"/>
@@ -888,7 +971,7 @@
       <div class="cta-seccion">
         <p class="cta-seccion__txt" data-i18n="cta.svc.txt">Contracta l’esdeveniment sencer o només la peça que et falti. Et responem en menys de 24 h laborables.</p>
         <p class="cta-seccion__btns">
-          <a class="btn btn--primary" href="/ca/propuesta.html#briefing" data-i18n="cta.svc.btn">Demanar proposta</a>
+          <a class="btn btn--primary" data-clic="seccion-propuesta" href="/ca/propuesta.html#briefing" data-i18n="cta.svc.btn">Demanar proposta</a>
           <a class="btn btn--ghost" href="/ca/contacto.html" data-i18n="cta.hablar">Parlar amb nosaltres</a>
         </p>
         <p class="cta-seccion__red" data-i18n="cta.svc.red">Ofereixes càtering, transport, música o un altre servei per a esdeveniments? <a href="/ca/red.html?perfil=otro">Entra a la xarxa</a>.</p>
@@ -984,7 +1067,6 @@
         <li><img src="/assets/espais/torreblanca-piscina.jpg" width="1024" height="683" loading="lazy" decoding="async"
                  data-i18n-alt="ven.v3.alt3" alt="Pèrgola al costat de la piscina de la Masia Torreblanca, amb vistes a les vinyes"></li>
       </ul>
-
 
       <article class="venue venue--flip">
         <div class="venue__media">
@@ -1111,7 +1193,7 @@
       <div class="cta-seccion">
         <p class="cta-seccion__txt" data-i18n="cta.ven.txt">T’hi encaixa algun? Marca’l amb «M’interessa» i demana la proposta, o explica’ns què busques i et proposem l’espai.</p>
         <p class="cta-seccion__btns">
-          <a class="btn btn--primary" href="/ca/propuesta.html#briefing" data-i18n="cta.ven.btn">Demanar proposta</a>
+          <a class="btn btn--primary" data-clic="seccion-propuesta" href="/ca/propuesta.html#briefing" data-i18n="cta.ven.btn">Demanar proposta</a>
           <a class="btn btn--ghost" href="/ca/contacto.html" data-i18n="cta.hablar">Parlar amb nosaltres</a>
         </p>
         <p class="cta-seccion__red" data-i18n="cta.ven.red">Gestiones un espai al Penedès? <a href="/ca/red.html?perfil=localizacion">Entra a la xarxa</a>.</p>
@@ -1153,7 +1235,7 @@
       <div class="cta-seccion">
         <p class="cta-seccion__txt" data-i18n="cta.cat.txt">Digues-nos quants sou i quin moment del dia és, i et proposem el menú juntament amb l’espai.</p>
         <p class="cta-seccion__btns">
-          <a class="btn btn--primary" href="/ca/propuesta.html#briefing" data-i18n="cta.cat.btn">Demanar proposta</a>
+          <a class="btn btn--primary" data-clic="seccion-propuesta" href="/ca/propuesta.html#briefing" data-i18n="cta.cat.btn">Demanar proposta</a>
           <a class="btn btn--ghost" href="/ca/contacto.html" data-i18n="cta.hablar">Parlar amb nosaltres</a>
         </p>
         <p class="cta-seccion__red" data-i18n="cta.cat.red">Tens un càtering o un restaurant al Penedès? <a href="/ca/red.html?perfil=restauracion">Entra a la xarxa</a>.</p>
@@ -1166,90 +1248,6 @@
     <img src="/assets/fotos/taller-castells-grup.jpg" alt="" width="1600" height="900" loading="lazy">
     <p class="band__cita" data-i18n="band.castells">Seixanta mil persones han fet <span>pinya</span> amb nosaltres des del 2005</p>
   </div>
-
-  <!-- ACTIVIDADES -->
-  <section class="section" id="actividades">
-    <div class="wrap">
-      <div class="section__head">
-        <p class="eyebrow" data-i18n="act.eyebrow">Activitats</p>
-        <h2 data-i18n="act.title">Experiències que es fan aquí</h2>
-        <p data-i18n="act.lead">Les que tenim avui en cartera, amb l’espai on es fan. Es combinen entre elles en una mateixa jornada.</p>
-      </div>
-      <div class="grid">
-
-        <article class="card card--premium">
-          <div class="card__foto">
-            <img src="/assets/fotos/taller-castells-dalt.jpg" data-i18n-alt="act.a1.alt"
-                 alt="Participants coronant un castell humà al taller Fent Pinya"
-                 width="1200" height="800" loading="lazy">
-          </div>
-          <p class="card__segell" data-i18n="act.a1.tag">L’activitat de la casa</p>
-          <h3 data-i18n="act.a1.title">Taller de castells «Fent Pinya»</h3>
-          <p data-i18n="act.a1.text">Dues hores per construir un castell humà de debò, amb monitors castellers. La metàfora s’explica sola: base, confiança, comunicació i un objectiu que no s’aconsegueix sol. Activitat de TeamTowers: <a href="https://www.teamtowers.eu" target="_blank" rel="noopener">teamtowers.eu</a>.</p>
-          <button type="button" class="interes" data-interes="exp:castells" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-        <article class="card card--premium">
-          <div class="card__foto">
-            <img src="/assets/espais/dolicios-arbequina.jpg" data-i18n-alt="act.b1.alt"
-                 alt="Ampolla d’oli arbequina de D’Oliciós recolzada al tronc d’una olivera"
-                 width="1500" height="1125" loading="lazy">
-          </div>
-          <p class="card__segell" data-i18n="act.b1.tag">Bellesguart · l’Arboç</p>
-          <h3 data-i18n="act.b1.title">Tast d’oli i visita al molí</h3>
-          <p data-i18n="act.b1.text">Visita al molí d’oli ecològic D’Oliciós, a la mateixa casa modernista de Bellesguart, i tast guiat de l’oli que s’hi elabora. Funciona tot l’any, també fora de la verema, i es combina amb el taller «Fent Pinya» i el dinar al jardí o sota la plaça coberta. <a href="https://dolicios.com" target="_blank" rel="noopener">dolicios.com</a>.</p>
-          <button type="button" class="interes" data-interes="exp:cata_aceite" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-        <article class="card">
-          <div class="card__foto">
-            <!-- PROVISIONAL: foto de la web de Albet i Noya (https://albetinoya.cat/imatges/enotur2020/visita-estandar1.jpg), servida desde eventspenedes.com con el Image CDN de Netlify (netlify.toml, [images]) y sin permiso escrito todavía. Sustituir por foto propia o cedida (ver assets/espais/README.md). -->
-            <img src="/.netlify/images?url=https%3A%2F%2Falbetinoya.cat%2Fimatges%2Fenotur2020%2Fvisita-estandar1.jpg&amp;w=1200&amp;q=75" width="1200" height="800" loading="lazy" decoding="async" data-i18n-alt="act.b2.alt" alt="Grup de visita entre les vinyes d’Albet i Noya (foto provisional del celler)">
-          </div>
-          <p class="card__segell" data-i18n="act.b2.tag">Albet i Noya · Sant Pau d’Ordal</p>
-          <h3 data-i18n="act.b2.title">Visita entre vinyes i tast</h3>
-          <p data-i18n="act.b2.text">Noranta minuts per les vinyes ecològiques fins al camp experimental del celler, amb tast de quatre vins i aperitiu en tres parades: el jardí, la vinya i el celler. En català, castellà o anglès.</p>
-          <button type="button" class="interes" data-interes="exp:cata_vino" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-        <article class="card">
-          <p class="card__segell" data-i18n="act.b3.tag">Albet i Noya</p>
-          <h3 data-i18n="act.b3.title">Tastos lúdics</h3>
-          <p data-i18n="act.b3.text">Perquè el grup jugui amb el vi: tast a cegues, Xarel·lo Experience o Sumiller Quiz. Funcionen com a activitat d’equip per si soles o com a cloenda de la jornada.</p>
-          <button type="button" class="interes" data-interes="act:catas-ludicas" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-        <article class="card">
-          <p class="card__segell" data-i18n="act.b4.tag">Albet i Noya</p>
-          <h3 data-i18n="act.b4.title">Menjar al celler</h3>
-          <p data-i18n="act.b4.text">Esmorzar, brunch, el dinar de la xef o un festí de territori, cuinats al mateix celler i amb els seus vins.</p>
-          <button type="button" class="interes" data-interes="act:comer-bodega" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-        <article class="card">
-          <div class="card__foto">
-            <!-- PROVISIONAL: foto de la web de Albet i Noya (https://albetinoya.cat/imatges/enotur2020/ruta_vinyes.jpg), servida desde eventspenedes.com con el Image CDN de Netlify (netlify.toml, [images]) y sin permiso escrito todavía. Sustituir por foto propia o cedida (ver assets/espais/README.md). -->
-            <img src="/.netlify/images?url=https%3A%2F%2Falbetinoya.cat%2Fimatges%2Fenotur2020%2Fruta_vinyes.jpg&amp;w=1200&amp;q=75" width="1200" height="800" loading="lazy" decoding="async" data-i18n-alt="act.b5.alt" alt="Camí entre vinyes d’Albet i Noya (foto provisional del celler)">
-          </div>
-          <p class="card__segell" data-i18n="act.b5.tag">Albet i Noya</p>
-          <h3 data-i18n="act.b5.title">Maridatge de paisatge i rutes</h3>
-          <p data-i18n="act.b5.text">Un passeig de tres quilòmetres entre vinyes amb vins pel camí, o una ruta en bicicleta elèctrica o en 4x4 per les Muntanyes d’Ordal.</p>
-          <button type="button" class="interes" data-interes="act:maridaje-paisaje" aria-pressed="false"><span class="interes__no" data-i18n="sel.add">M’interessa</span><span class="interes__si" data-i18n="sel.added">A la teva selecció</span></button>
-        </article>
-
-      </div>
-
-      <div class="cta-seccion">
-        <p class="cta-seccion__txt" data-i18n="cta.act.txt">Vols combinar-ne diverses en una jornada? Marca-les i et muntem el programa.</p>
-        <p class="cta-seccion__btns">
-          <a class="btn btn--primary" href="/ca/propuesta.html#briefing" data-i18n="cta.act.btn">Demanar proposta amb aquestes activitats</a>
-          <a class="btn btn--ghost" href="/ca/contacto.html" data-i18n="cta.hablar">Parlar amb nosaltres</a>
-        </p>
-        <p class="cta-seccion__red" data-i18n="cta.act.red">Organitzes tastos, visites o activitats al Penedès? <a href="/ca/red.html?perfil=guias">Entra a la xarxa</a>.</p>
-      </div>
-
-    </div>
-  </section>
 
   <!-- PROCESO -->
   <section class="section section--panel" id="proceso">
@@ -1314,7 +1312,6 @@
       <p class="source-note" data-i18n="exp.note">Les xifres corresponen a l’activitat de TeamTowers (teamtowers.eu) des del 2005. Events Penedès és la marca amb què oferim producció d’esdeveniments i localitzacions a la comarca.</p>
     </div>
   </section>
-
 
   <!-- PREGUNTAS FRECUENTES -->
   <section class="section" id="faq">
@@ -1418,7 +1415,6 @@
                    data-i18n-alt="par.g3" alt="Participants amb mocador vermell celebrant el castell completat"></li>
         </ul>
       </article>
-
 
       <p class="venue-note" data-i18n="par.note">Images from TeamTowers «Fent Pinya» workshops, in different spaces and with company groups. Do you run a venue, a winery or a service in the Penedès and want to join the network? <a href="/ca/red.html">Get in touch</a>.</p>
     </div>
@@ -1527,7 +1523,10 @@
   <a class="btn btn--primary" href="/ca/propuesta.html#briefing" data-i18n="sel.cta">Demanar proposta amb això</a>
   <button type="button" class="seleccion__vaciar" data-i18n="sel.clear">Buidar</button>
 </aside>
-
+<nav class="barra-cta" aria-label="Pedir o hablar">
+  <a class="btn btn--primary" href="/ca/propuesta.html" data-i18n="barra.propuesta" data-clic="barra-propuesta">Demanar proposta</a>
+  <a class="btn btn--ghost" href="https://calendar.app.google/124c4fJD7QDJTq2q9" target="_blank" rel="noopener" data-i18n="barra.llamada" data-clic="barra-llamada">Trucada</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">
