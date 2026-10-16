@@ -11,7 +11,7 @@
    privado lo dice antes, en CI—.
    ========================================================================== */
 /* ---- fin de la cabecera generada ---- */
-export const actualizado = "2026-10-04";
+export const actualizado = "2026-10-15";
 export const opciones = [
   {
     "id": "fent-pinya",
@@ -34,7 +34,8 @@ export const opciones = [
       "5 m de altura libre"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": true
   },
   {
     "id": "gincana-vinyes",
@@ -57,7 +58,8 @@ export const opciones = [
       "Grupo dividido en equipos"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "reto-gastronomico",
@@ -79,7 +81,8 @@ export const opciones = [
       "Cocina o espacio de showcooking"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "cata-vino-cava",
@@ -99,29 +102,31 @@ export const opciones = [
     "pax_max": 120,
     "requiere": [],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "cata-aceite",
     "familia": "experiencia",
     "nombre": {
-      "es": "Cata de aceite · D'Oliciós",
-      "ca": "Tast d’oli · D’Oliciós",
-      "en": "Olive oil tasting · D’Oliciós"
+      "es": "Cata de aceite y visita al molino",
+      "ca": "Tast d’oli i visita al molí",
+      "en": "Olive oil tasting and mill visit"
     },
     "describe": {
-      "es": "Cata de aceite de oliva virgen extra en una almazara ecológica de L'Arboç, con el molino al lado y el aceite premiado que se elabora allí mismo. Funciona todo el año, a diferencia de la vendimia, y sorprende incluso a quien ya ha hecho tres catas de vino.",
-      "ca": "Tast d’oli d’oliva verge extra en un molí ecològic de l’Arboç, amb la premsa al costat i l’oli premiat que s’hi elabora. Funciona tot l’any, a diferència de la verema, i sorprèn fins i tot qui ja ha fet tres tasts de vi.",
-      "en": "Extra virgin olive oil tasting at an organic mill in L’Arboç, with the press right there and the award-winning oil made on site. It works all year round, unlike the grape harvest, and surprises even those who have already done three wine tastings."
+      "es": "Visita a una almazara ecológica, en una casa modernista de L'Arboç, y cata guiada del aceite que se elabora allí. Funciona todo el año, también fuera de la vendimia, y se combina con el taller «Fent Pinya» y la comida en el jardín o bajo la plaza cubierta. Es el molino de D'Oliciós, en Bellesguart: <a href=\"https://dolicios.com\" target=\"_blank\" rel=\"noopener\">dolicios.com</a>.",
+      "ca": "Visita a un molí d’oli ecològic, en una casa modernista de l’Arboç, i tast guiat de l’oli que s’hi elabora. Funciona tot l’any, també fora de la verema, i es combina amb el taller «Fent Pinya» i el dinar al jardí o sota la plaça coberta. És el molí de D’Oliciós, a Bellesguart: <a href=\"https://dolicios.com\" target=\"_blank\" rel=\"noopener\">dolicios.com</a>.",
+      "en": "A visit to an organic olive mill, in a modernist house in L’Arboç, and a guided tasting of the oil made there. It works all year round, not just at harvest time, and combines with the «Fent Pinya» workshop and lunch in the garden or under the covered square. It is the D’Oliciós mill, at Bellesguart: <a href=\"https://dolicios.com\" target=\"_blank\" rel=\"noopener\">dolicios.com</a>."
     },
-    "duracion_min": 75,
-    "pax_min": 6,
-    "pax_max": 40,
+    "duracion_min": null,
+    "pax_min": null,
+    "pax_max": null,
     "requiere": [
       "Se hace en la almazara, no se desplaza"
     ],
     "incompatible_con": [],
-    "exige_espacio": "bellesguart"
+    "exige_espacio": "bellesguart",
+    "en_web": true
   },
   {
     "id": "outdoor",
@@ -143,7 +148,8 @@ export const opciones = [
       "Entorno natural accesible"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "a-medida",
@@ -163,7 +169,101 @@ export const opciones = [
     "pax_max": null,
     "requiere": [],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
+  },
+  {
+    "id": "visita-vinyes-cata",
+    "familia": "experiencia",
+    "nombre": {
+      "es": "Visita entre viñas y cata · Albet i Noya",
+      "ca": "Visita entre vinyes i tast · Albet i Noya",
+      "en": "Vineyard walk and tasting · Albet i Noya"
+    },
+    "describe": {
+      "es": "Noventa minutos por las viñas ecológicas hasta el campo experimental de la bodega, con cata de cuatro vinos y aperitivo en tres paradas: el jardín, la viña y la bodega. En catalán, castellano o inglés.",
+      "ca": "Noranta minuts per les vinyes ecològiques fins al camp experimental del celler, amb tast de quatre vins i aperitiu en tres parades: el jardí, la vinya i el celler. En català, castellà o anglès.",
+      "en": "Ninety minutes through the organic vineyards to the winery’s experimental plot, tasting four wines with an aperitif at three stops: the garden, the vineyard and the cellar. In Catalan, Spanish or English."
+    },
+    "duracion_min": 90,
+    "pax_min": 2,
+    "pax_max": 50,
+    "requiere": [
+      "Se hace en Albet i Noya (Sant Pau d'Ordal), no se desplaza",
+      "Empezar a las 10, 11, 12 o 13 h"
+    ],
+    "incompatible_con": [],
+    "exige_espacio": "albet-i-noya",
+    "en_web": true
+  },
+  {
+    "id": "catas-ludicas",
+    "familia": "experiencia",
+    "nombre": {
+      "es": "Catas lúdicas · Albet i Noya",
+      "ca": "Tastos lúdics · Albet i Noya",
+      "en": "Wine games · Albet i Noya"
+    },
+    "describe": {
+      "es": "Para que el grupo juegue con el vino: cata a ciegas, Xarel·lo Experience o Sumiller Quiz. Funcionan como actividad de equipo por sí solas o como cierre de la jornada.",
+      "ca": "Perquè el grup jugui amb el vi: tast a cegues, Xarel·lo Experience o Sumiller Quiz. Funcionen com a activitat d’equip per si soles o com a cloenda de la jornada.",
+      "en": "So the group plays with wine: blind tasting, Xarel·lo Experience or Sommelier Quiz. They work as a team activity on their own or to close the day."
+    },
+    "duracion_min": 150,
+    "pax_min": 2,
+    "pax_max": 50,
+    "requiere": [
+      "Se hace en Albet i Noya (Sant Pau d'Ordal), no se desplaza"
+    ],
+    "incompatible_con": [],
+    "exige_espacio": "albet-i-noya",
+    "en_web": true
+  },
+  {
+    "id": "comer-bodega",
+    "familia": "experiencia",
+    "nombre": {
+      "es": "Comer en la bodega · Albet i Noya",
+      "ca": "Menjar al celler · Albet i Noya",
+      "en": "Eating at the winery · Albet i Noya"
+    },
+    "describe": {
+      "es": "Desayuno, brunch, el almuerzo de la chef o un festín de territorio, cocinados en la propia bodega y con sus vinos.",
+      "ca": "Esmorzar, brunch, el dinar de la xef o un festí de territori, cuinats al mateix celler i amb els seus vins.",
+      "en": "Breakfast, brunch, the chef’s lunch or a feast of local produce, cooked at the winery itself and paired with its wines."
+    },
+    "duracion_min": null,
+    "pax_min": 2,
+    "pax_max": 50,
+    "requiere": [
+      "Se hace en Albet i Noya (Sant Pau d'Ordal), no se desplaza"
+    ],
+    "incompatible_con": [],
+    "exige_espacio": "albet-i-noya",
+    "en_web": true
+  },
+  {
+    "id": "maridaje-paisaje",
+    "familia": "experiencia",
+    "nombre": {
+      "es": "Maridaje de paisaje y rutas · Albet i Noya",
+      "ca": "Maridatge de paisatge i rutes · Albet i Noya",
+      "en": "Landscape pairing and routes · Albet i Noya"
+    },
+    "describe": {
+      "es": "Un paseo de tres kilómetros entre viñas con vinos en el camino, o una ruta en bicicleta eléctrica o en 4x4 por las Muntanyes d'Ordal.",
+      "ca": "Un passeig de tres quilòmetres entre vinyes amb vins pel camí, o una ruta en bicicleta elèctrica o en 4x4 per les Muntanyes d’Ordal.",
+      "en": "A three-kilometre walk through the vineyards with wines along the way, or an e-bike or 4x4 route through the Ordal hills."
+    },
+    "duracion_min": null,
+    "pax_min": 2,
+    "pax_max": null,
+    "requiere": [
+      "Se hace en Albet i Noya (Sant Pau d'Ordal), no se desplaza"
+    ],
+    "incompatible_con": [],
+    "exige_espacio": "albet-i-noya",
+    "en_web": true
   },
   {
     "id": "produccion-integral",
@@ -183,7 +283,8 @@ export const opciones = [
     "pax_max": null,
     "requiere": [],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": true
   },
   {
     "id": "chef-autor",
@@ -205,7 +306,8 @@ export const opciones = [
       "Cocina en el espacio, o acuerdo con el catering del espacio"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "rrpp-protocolo",
@@ -225,7 +327,8 @@ export const opciones = [
     "pax_max": null,
     "requiere": [],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": false
   },
   {
     "id": "dj-sesion",
@@ -247,7 +350,52 @@ export const opciones = [
       "Equipo de sonido en el espacio, o alquilarlo"
     ],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": true
+  },
+  {
+    "id": "musica-directo",
+    "familia": "servicio",
+    "nombre": {
+      "es": "Música en directo y espectáculos",
+      "ca": "Música en directe i espectacles",
+      "en": "Live music and shows"
+    },
+    "describe": {
+      "es": "Música en directo ligada a la cultura catalana: havaneras, voces a cappella, grallers y folk. Grupos del dúo acústico al formato festivo y espectáculos de cultura popular, también para familias.",
+      "ca": "Música en directe lligada a la cultura catalana: havaneres, veus a cappella, grallers i folk. Grups del duet acústic al format festiu i espectacles de cultura popular, també per a famílies.",
+      "en": "Live music rooted in Catalan culture: habaneras, a cappella voices, gralla players and folk. Bands from acoustic duo to full party format, and folk and street shows, family-friendly too."
+    },
+    "duracion_min": null,
+    "pax_min": null,
+    "pax_max": null,
+    "requiere": [
+      "Sonido según el formato: lo pedimos con su rider"
+    ],
+    "incompatible_con": [],
+    "exige_espacio": null,
+    "en_web": true
+  },
+  {
+    "id": "catering-cal-soler",
+    "familia": "servicio",
+    "nombre": {
+      "es": "Catering de proximidad · Cal Soler",
+      "ca": "Càtering de proximitat · Cal Soler",
+      "en": "Local catering · Cal Soler"
+    },
+    "describe": {
+      "es": "Coffee break, lunch, banquete, cóctel, cena de gala, showcooking o calçotada, con producto de la comarca. De la cocina de Cal Soler, en La Torre del Gall.",
+      "ca": "Coffee break, lunch, banquet, còctel, sopar de gala, showcooking o calçotada, amb producte de la comarca. De la cuina de Cal Soler, a La Torre del Gall.",
+      "en": "Coffee break, lunch, banquet, cocktail, gala dinner, showcooking or calçotada, with local produce. From the Cal Soler kitchen at La Torre del Gall."
+    },
+    "duracion_min": null,
+    "pax_min": null,
+    "pax_max": null,
+    "requiere": [],
+    "incompatible_con": [],
+    "exige_espacio": null,
+    "en_web": true
   },
   {
     "id": "microbus",
@@ -267,7 +415,8 @@ export const opciones = [
     "pax_max": null,
     "requiere": [],
     "incompatible_con": [],
-    "exige_espacio": null
+    "exige_espacio": null,
+    "en_web": true
   }
 ];
 export const espacios = [
@@ -468,5 +617,55 @@ export const espacios = [
     },
     "restricciones": [],
     "actualizado": "2026-10-03"
+  },
+  {
+    "id": "albet-i-noya",
+    "nombre": "Albet i Noya",
+    "relacion": "aliado",
+    "poblacion": "Sant Pau d'Ordal (Subirats)",
+    "web": "https://www.albetinoya.cat",
+    "ficha": {
+      "aforo": {
+        "max": 80,
+        "de_pie": 80,
+        "sentados": 50,
+        "texto": {
+          "es": "80 de cóctel · 50 sentados",
+          "ca": "80 de còctel · 50 asseguts",
+          "en": "80 standing · 50 seated"
+        }
+      },
+      "tipos_evento": {
+        "texto": {
+          "es": "Reuniones, comidas de empresa, team building e incentivos",
+          "ca": "Reunions, àpats d’empresa, team building i incentius",
+          "en": "Meetings, company lunches, team building and incentives"
+        }
+      },
+      "cocina": {
+        "propia": true,
+        "texto": {
+          "es": "Chef propia en la bodega",
+          "ca": "Xef pròpia al celler",
+          "en": "In-house chef at the winery"
+        }
+      },
+      "salas_reunion": {
+        "hay": true,
+        "texto": {
+          "es": "Sí, para 40 en mesas o 50 en auditorio, con proyector",
+          "ca": "Sí, per a 40 en taules o 50 en auditori, amb projector",
+          "en": "Yes, for 40 at tables or 50 theatre-style, with projector"
+        }
+      }
+    },
+    "restricciones": [
+      {
+        "tipo": "horario",
+        "valor": "10-15",
+        "motivo": "Abren de 10 a 15 h; fuera de ese horario, a consultar con la bodega"
+      }
+    ],
+    "actualizado": "2026-10-15"
   }
 ];

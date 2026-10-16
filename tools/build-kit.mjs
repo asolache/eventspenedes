@@ -15,20 +15,23 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { opciones } from '../netlify/propuesta/catalogo.mjs';
+import { opciones, espacios } from '../netlify/propuesta/catalogo.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGINA = join(RAIZ, 'kit-agencias.html');
 const DICCIONARIO = join(RAIZ, 'js/lang-kit.js');
 
-/* Qué va en el kit, en este orden. La producción integral y «a medida» no: son
-   el trabajo de la agencia, no algo que revende. */
-const KIT = ['fent-pinya', 'cata-vino-cava', 'cata-aceite', 'gincana-vinyes', 'reto-gastronomico',
-             'outdoor', 'chef-autor', 'rrpp-protocolo', 'dj-sesion', 'microbus'];
+/* Qué va en el kit: lo que sale en la web (`en_web`, que viene de la cartera
+   del repositorio privado), en el orden del catálogo. Así el kit no ofrece lo
+   que ya no hacemos. La producción integral y «a medida» no: son el trabajo
+   de la agencia, no algo que revende. */
+const NO_SE_REVENDE = new Set(['produccion-integral', 'a-medida']);
 
-/* Lo que delata la marca o el proveedor. Una frase que lo lleve se quita
-   entera: recortar a medias deja textos cojos. */
-const MARCA = /<a\s|https?:|www\.|\.(eu|com|cat|es)\b|TeamTowers|Events Penedès|D['’]Olici/i;
+/* Lo que delata la marca o el proveedor, y el nombre de cada espacio. Una
+   frase que lo lleve se quita entera: recortar a medias deja textos cojos. */
+const aRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const MARCA = new RegExp(['<a\\s', 'https?:', 'www\\.', '\\.(eu|com|cat|es)\\b', 'TeamTowers', 'Events Penedès',
+  'D[\'’]Olici', ...espacios.map(e => aRegex(e.nombre))].join('|'), 'i');
 
 const blanca = texto => texto
   .split(/(?<=[.!?])\s+/)
@@ -38,11 +41,8 @@ const blanca = texto => texto
 const nombre = n => n.split(' · ')[0].trim();
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const elegidas = KIT.map(id => {
-  const o = opciones.find(x => x.id === id);
-  if (!o) { console.log(`✗ «${id}» no está en el catálogo`); process.exit(1); }
-  return o;
-});
+const elegidas = opciones.filter(o => o.en_web === true && !NO_SE_REVENDE.has(o.id));
+if (!elegidas.length) { console.log('✗ Ninguna opción sale en la web: ¿el catálogo trae en_web?'); process.exit(1); }
 
 /* Los textos fijos de la página en catalán e inglés. El castellano está en el
    HTML, como en el resto de páginas. */
