@@ -144,6 +144,17 @@ comprueba('y lo que cuesta se apunta en uso_ia con su partner', llamadas.some(l 
   && JSON.parse(l.op.body).operacion === 'portal-descripcion'));
 globalThis.fetch = fetchZoho;
 
+// Cambios de ficha marcados como en GitHub
+const { diffPalabras, lados } = await import('../js/portal-diff.js');
+const d = diffPalabras('Masía entre viñas con cava', 'Masía del XVIII entre viñas y olivos con cava');
+comprueba('el diff deja igual lo que no cambia', d.filter(p => p.t === '=').map(p => p.s).join('').includes('entre viñas'));
+comprueba('y marca lo añadido', d.some(p => p.t === '+' && p.s.includes('XVIII')) && !d.some(p => p.t === '-'));
+const l = lados(diffPalabras('120', '150'));
+comprueba('un número cambiado sale entero, quitado y añadido', l.antes[0].t === '-' && l.antes[0].s === '120' && l.ahora[0].t === '+' && l.ahora[0].s === '150');
+comprueba('las palabras quitadas seguidas van en una sola franja', lados(diffPalabras('Quiero revisarla antes', 'Sí')).antes.length === 1);
+comprueba('un campo nuevo sale solo añadido', lados(diffPalabras('', 'La Cava')).antes.length === 0);
+comprueba('y un texto enorme no cuelga la página', diffPalabras('a '.repeat(2000), 'b '.repeat(2000)).length === 2);
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');

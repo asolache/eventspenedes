@@ -11,6 +11,7 @@ import { sb, datosActuales } from './portal-cliente.js';
 import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, tarjetasPlanes, asistenteDescripcion } from './portal-planes.js';
 import { poner, h, fecha, fechaHora, euros, ok, intentar, decir, campo, boton, api, aZoho, vistaPrevia } from './portal-ui.js';
+import { diffPalabras, lados } from './portal-diff.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
 
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio' };
@@ -37,6 +38,21 @@ function valorLegible(tipo, k, v) {
   if (t === 'select' && op !== undefined) { return etiquetas.OPCIONES[op]?.[v] || String(v); }
   if (t === 'eur') { return `${v} €`; }
   return String(v);
+}
+
+/* Antes y ahora de un campo, con lo quitado y lo añadido marcados como en GitHub */
+function celdasCambio(tipo, k, antes, ahora) {
+  const vacio = v => v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length);
+  const a = vacio(antes) ? '' : valorLegible(tipo, k, antes);
+  const b = vacio(ahora) ? '' : valorLegible(tipo, k, ahora);
+  const { antes: izq, ahora: der } = lados(diffPalabras(a, b));
+  const pintar = trozos => trozos.length
+    ? trozos.map(p => p.t === '=' ? p.s : h(p.t === '-' ? 'del' : 'ins', { class: p.t === '-' ? 'app-del' : 'app-ins' }, p.s))
+    : [h('span', { class: 'app-nota' }, '—')];
+  return [
+    h('td', { class: 'app-antes', 'data-vacio': a ? null : 'si' }, pintar(izq)),
+    h('td', { class: 'app-ahora', 'data-vacio': b ? null : 'si' }, pintar(der)),
+  ];
 }
 
 export async function panelAdmin(caja, detalle = null, opciones = {}) {
@@ -216,8 +232,7 @@ async function tarjetaCambio(c, nombres, tipo, recargar) {
       h('thead', {}, h('tr', {}, h('th', {}, 'Campo'), h('th', {}, 'Antes'), h('th', {}, 'Ahora'))),
       h('tbody', {}, claves.slice(0, 80).map(k => h('tr', {},
         h('th', { scope: 'row' }, campoLegible(tipo, k)),
-        h('td', { class: 'app-antes' }, valorLegible(tipo, k, antes[k])),
-        h('td', { class: 'app-ahora' }, valorLegible(tipo, k, c.datos[k]))))))),
+        ...celdasCambio(tipo, k, antes[k], c.datos[k])))))),
     fotosNuevas.length ? h('p', {}, 'Fotos nuevas:') : null, fotosNuevas.length ? miniaturas : null,
     h('p', {}, nota),
     h('p', { class: 'portal__botones' }, boton('Aprobar y publicar', revisar(true), 'primary'), boton('Rechazar', revisar(false))));
