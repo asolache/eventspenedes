@@ -157,7 +157,7 @@ async function panelPartner(p, { sesion, acciones }) {
     !actual.version && !actual.pendiente ? ['Completar tu ficha', 'ficha'] : null,
     !datos.descripcion ? ['Escribir tu presentación (la IA te ayuda)', 'ficha'] : null,
     !fotos.length ? ['Subir fotos que podamos publicar', 'ficha'] : null,
-    datos.autoriza !== 'si' && (actual.version || actual.pendiente) ? ['Autorizar en tu ficha que publiquemos tu página', 'ficha'] : null,
+    datos.autoriza !== 'si' && (actual.version || actual.pendiente) ? ['Autorizar que publiquemos tu página', 'ficha'] : null,
     !vigente && !porFirmar.length ? ['Proponer las condiciones del acuerdo', 'acuerdo'] : null,
   ].filter(Boolean);
   const inicio = [
@@ -247,7 +247,20 @@ async function panelPartner(p, { sesion, acciones }) {
     decir(`${nuevas.length} foto${nuevas.length > 1 ? 's' : ''} subida${nuevas.length > 1 ? 's' : ''}. Queda pendiente de validar.`, 'ok');
     await recargar();
   }));
+  /* Autorizar la página en un clic, sin buscar el campo dentro del formulario */
+  const autorizar = datos.autoriza !== 'si' && (actual.version || actual.pendiente)
+    ? h('div', { class: 'app-card app-card--oro' }, h('h3', {}, 'Publicar tu página'),
+      h('p', {}, 'Tu página en eventspenedes.com no sale hasta que lo autorizas. Nunca publicamos precios ni personas de contacto.'),
+      h('p', { class: 'app-fila' },
+        h('button', { class: 'btn btn--primary', type: 'button', onclick: intentar(async () => {
+          await proponer(p.id, { ...datos, autoriza: 'si' });
+          decir('Autorizado. Tu página sale en cuanto revisemos la ficha.', 'ok');
+          await recargar();
+        }) }, 'Autorizo que publiquéis mi página'),
+        h('button', { class: 'btn btn--ghost', type: 'button', onclick: intentar(() => vistaPrevia(p.codigo)) }, 'Ver antes cómo queda')))
+    : null;
   const vFicha = [
+    autorizar,
     tarjeta(null,
       h('p', { class: 'app-fila' },
         actual.version ? chip(`Publicada · versión ${actual.version}`, 'ok') : chip('Sin versión aprobada', 'aviso'),
