@@ -1893,3 +1893,5 @@ body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
 .charla__alt { margin: 0.9rem 0 0; font-size: 0.9rem; color: var(--text-mid); }
 .charla__alt a { color: var(--accent-gold); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Agenda: lo que pasa en el territorio, debajo de lo de la red */
+.agenda__fuera { margin: 2rem 0 1rem; color: var(--accent-gold); font-size: 1rem; letter-spacing: .04em; text-transform: uppercase; }
