@@ -1,8 +1,8 @@
 /* =============================================================================
    Events Penedès · el Club
 
-   Una cita con fecha fija cada mes, en un espacio de la red, con música entre
-   viñas. La constancia es la fecha: los socios saben cuándo es sin mirar.
+   Una cita con fecha fija cada mes: un evento temático que organiza Events
+   Penedès con un partner de la red. La constancia es la fecha: los socios saben cuándo es sin mirar.
    Como mucho 222 socios. El espacio de cada cita se anuncia con la fecha.
 
    Para cambiar la regla, cambia REGLA: 'primer-sabado', 'ultimo-viernes'.
