@@ -311,7 +311,9 @@ async function fichaCompleta(p, recargar, { sesion, salir, datosPlanes }) {
     tarjeta(null,
       h('p', { class: 'app-fila' },
         ficha ? chip(`Publicada · versión ${ficha.version} · ${fecha(ficha.actualizada_en)}`, 'ok') : chip('Sin ficha aprobada', 'aviso'),
-        chip(ficha?.datos?.autoriza === 'si' ? 'Web autorizada' : 'Web sin autorizar', ficha?.datos?.autoriza === 'si' ? 'ok' : null)),
+        chip(ficha?.datos?.autoriza === 'si' ? 'Web autorizada' : 'Web sin autorizar', ficha?.datos?.autoriza === 'si' ? 'ok' : null),
+        ficha?.datos?.autoriza !== 'si' && pendientes.some(c => c.datos?.autoriza === 'si')
+          ? chip('Autoriza publicar: aprueba su cambio abajo', 'aviso') : null),
       h('p', { class: 'app-fila' }, h('a', { class: 'btn btn--ghost', href: `/partners/${p.codigo}` }, 'Su página'),
         boton('Vista previa', () => vistaPrevia(p.codigo)))),
     ...(await Promise.all(pendientes.map(c => tarjetaCambio(c, { [p.id]: p.nombre }, p.tipo, yoMismo)))),
