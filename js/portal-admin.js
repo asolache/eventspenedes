@@ -13,6 +13,7 @@ import { planes, nombrePlan, tarjetasPlanes, asistenteDescripcion } from './port
 import { poner, h, fecha, fechaHora, euros, ok, intentar, decir, campo, boton, api, aZoho, vistaPrevia } from './portal-ui.js';
 import { diffPalabras, lados } from './portal-diff.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
+import { asistenteRed } from './portal-red.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
 
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio' };
@@ -59,7 +60,7 @@ function celdasCambio(tipo, k, antes, ahora) {
 export async function panelAdmin(caja, detalle = null, opciones = {}) {
   const recargar = (p = detalle) => panelAdmin(caja, p, opciones).catch(e => decir(e.message, 'error'));
   const [todos, , datosPlanes] = await Promise.all([
-    sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,plan_desde,tester,zoho_account_id,creado_en').order('nombre').then(ok),
+    sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,plan_desde,tester,zoho_account_id,creado_en,red').order('nombre').then(ok),
     cargarEtiquetas().catch(() => null),
     planes().catch(() => null),
   ]);
@@ -302,7 +303,8 @@ async function fichaCompleta(p, recargar, { sesion, salir, datosPlanes }) {
         await yoMismo();
       }) }, campo('Estado', estado, 'Pausado: su página deja de verse.'), campo('Cuenta en Zoho', zohoId),
       h('p', {}, h('button', { class: 'btn btn--ghost', type: 'submit' }, 'Guardar')))),
-      tarjeta('Lo que tiene con nosotros', herramientas({ partner: p, ficha, acuerdos, reservas: reservas.length, leads: leads.length, vistas: suma(30, 'vistas') }))),
+      tarjeta('Lo que tiene con nosotros', herramientas({ partner: p, ficha, acuerdos, reservas: reservas.length, leads: leads.length, vistas: suma(30, 'vistas') })),
+      asistenteRed(p, { admin: true, recargar: yoMismo })),
   ];
 
   /* Ficha: lo publicado, lo pendiente con el nombre de cada campo, y la IA */

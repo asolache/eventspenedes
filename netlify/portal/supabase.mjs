@@ -72,15 +72,15 @@ export async function fichaEnCurso(partnerId, { fetch } = {}) {
 
 /* Los partners activos con ficha aprobada y autorizada: lo que es público */
 export async function partnersPublicos({ fetch } = {}) {
-  const filas = await rest('partners?select=id,codigo,nombre,tipo,estado,fichas(datos,version,actualizada_en)&estado=eq.activo&order=nombre', { fetch });
+  const filas = await rest('partners?select=id,codigo,nombre,tipo,estado,red,fichas(datos,version,actualizada_en)&estado=eq.activo&order=nombre', { fetch });
   return (filas || []).map(p => {
     const f = Array.isArray(p.fichas) ? p.fichas[0] : p.fichas;
-    return { id: p.id, codigo: p.codigo, nombre: p.nombre, tipo: p.tipo, datos: f?.datos || null, actualizada: f?.actualizada_en || null };
+    return { id: p.id, codigo: p.codigo, nombre: p.nombre, tipo: p.tipo, red: p.red || null, datos: f?.datos || null, actualizada: f?.actualizada_en || null };
   }).filter(p => p.datos && p.datos.autoriza === 'si');
 }
 
 export async function partnerPorCodigo(codigo, { fetch } = {}) {
-  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado&codigo=eq.${encodeURIComponent(codigo)}&limit=1`, { fetch });
+  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,red&codigo=eq.${encodeURIComponent(codigo)}&limit=1`, { fetch });
   return filas?.[0] || null;
 }
 

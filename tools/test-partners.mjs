@@ -8,7 +8,7 @@
    Uso:  node tools/test-partners.mjs
    ========================================================================== */
 import { FICHAS } from '../netlify/ficha/fichas.mjs';
-import { fichaPublica } from '../netlify/ficha/publica.mjs';
+import { fichaPublica, redPublica } from '../netlify/ficha/publica.mjs';
 import { coste } from '../netlify/ficha/coste.mjs';
 
 let fallos = 0;
@@ -141,6 +141,16 @@ comprueba('no se indexa, no se guarda en la CDN ni cuenta visitas', /content="no
   && !/\/visto/.test(hp) && !/\/contacto"/.test(hp) && !llamadas.some(l => l.url.includes('sumar_impresion')));
 comprueba('enseña las fotos aún sin aprobar con un enlace que caduca', /storage\/v1\/object\/sign\/fotos\/x\?token=t/.test(hp));
 globalThis.fetch = fetchPortal;
+
+/* Su lugar en la red: solo aprobado; la vista previa enseña también la propuesta */
+const { paginaPartner } = await import('../netlify/functions/partners.mjs');
+const RED = { estado: 'aprobada', rol: 'Quien dinamiza la actividad', aporta: ['El taller'], recibe: ['El encargo'], para: ['Equipos de empresa'] };
+comprueba('el rol en la red solo sale aprobado', redPublica({ ...RED, estado: 'propuesta' }) === null && redPublica(RED).rol === RED.rol);
+comprueba('la vista previa enseña la propuesta marcada como tal', redPublica({ ...RED, estado: 'propuesta' }, { previa: true }).propuesta === true);
+comprueba('sin rol ni listas no hay bloque', redPublica({ estado: 'aprobada', aporta: ['  '] }) === null);
+const conRed = paginaPartner({ id: ID, codigo: 'masia-prova', nombre: 'Masia de Prova', tipo: 'localizacion', datos: ESPACIO, red: RED });
+comprueba('la página enseña aporta, recibe y para quién', /Su lugar en la red/.test(conRed) && /Quien dinamiza la actividad/.test(conRed) && /Equipos de empresa/.test(conRed));
+comprueba('y sin aprobar, la página pública no lo enseña', !/Su lugar en la red/.test(paginaPartner({ id: ID, codigo: 'masia-prova', nombre: 'Masia de Prova', tipo: 'localizacion', datos: ESPACIO, red: { ...RED, estado: 'propuesta' } })));
 
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }

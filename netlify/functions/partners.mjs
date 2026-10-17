@@ -31,7 +31,7 @@
    sigue como estaba.
    ========================================================================== */
 import { FICHAS } from '../ficha/fichas.mjs';
-import { fichaPublica } from '../ficha/publica.mjs';
+import { fichaPublica, redPublica } from '../ficha/publica.mjs';
 import { configurado, articulosPublicados, agendaAprobada, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
 import { pagina, migas, esc, recorta } from '../portal/pagina.mjs';
 import { accionPublica, cuando } from '../../js/blog-comun.js';
@@ -90,6 +90,7 @@ function paginaPartner(p, previa = null, extra = {}) {
         ${s.lista ? `<ul class="partner-ficha__lista">${s.lista.map(partes => `<li><strong>${esc(partes[0].v)}</strong>${partes.slice(1).map(x => `<br><span>${esc(x.l)}: ${esc(x.v)}</span>`).join('')}</li>`).join('')}</ul>` : ''}
       </section>`).join('');
 
+  const red = bloqueRed(redPublica(p.red, { previa: Boolean(previa) }), nombre);
   const galeria = fotos.length ? `
       <ul class="partner-ficha__fotos">${fotos.map((f, i) => `<li><img src="${f}" alt="${esc(nombre)} · foto ${i + 1}" loading="${i ? 'lazy' : 'eager'}"></li>`).join('')}</ul>` : '';
 
@@ -112,7 +113,7 @@ function paginaPartner(p, previa = null, extra = {}) {
     </div>
   </section>
   <section class="section">
-    <div class="wrap partner-ficha">${galeria}${secciones}
+    <div class="wrap partner-ficha">${red}${galeria}${secciones}
 ${bloqueBlog(extra)}
       <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: escríbenos y te preparamos la propuesta.</p>
     </div>
@@ -127,6 +128,21 @@ ${bloqueBlog(extra)}
     estructurados: [negocio, migas([['Events Penedès', `${SITIO}/`], ['Espacios y proveedores', `${SITIO}/partners`], [nombre, url]])],
     cuerpo, indexar: !previa,
   });
+}
+
+/* Su lugar en la red: qué rol cumple en el flujo de valor de un evento, qué
+   aporta, qué recibe y a quién sirve */
+function bloqueRed(r, nombre) {
+  if (!r) { return ''; }
+  const col = (titulo, xs) => (xs.length ? `
+          <div class="partner-red__col"><h3>${titulo}</h3><ul>${xs.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '');
+  return `
+      <section class="partner-ficha__seccion partner-red" aria-labelledby="red-titulo">
+        <p class="eyebrow">${r.propuesta ? 'Propuesta, pendiente de aprobar · ' : ''}Su lugar en la red</p>
+        <h2 id="red-titulo">${r.rol ? esc(r.rol) : `${esc(nombre)} en la red`}</h2>
+        <div class="partner-red__flujo">${col('Lo que aporta al evento', r.aporta)}${col('Lo que recibe de la red', r.recibe)}${col('Para quién', r.para)}
+        </div>
+      </section>`;
 }
 
 /* Lo que el partner ha contado en el blog y lo que propone en la agenda */

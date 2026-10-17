@@ -62,3 +62,60 @@ export async function describir(tipo, datos, { apiKey = process.env.ANTHROPIC_AP
   if (!descripcion) { throw new Error('Claude no ha devuelto texto'); }
   return { descripcion: descripcion.slice(0, 900), falta: (salida.falta || []).map(String).slice(0, 3), uso: r.uso };
 }
+
+/* «Tu lugar en la red»: Claude acompaña al partner a ir dibujando su parte
+   del mapa de valor de la red (método VNA de Verna Allee): qué rol cumple en
+   un evento, qué entrega (tangible e intangible), qué recibe y a quién sirve.
+   Parte de lo publicable de su ficha, de lo que ya hay y de lo que el partner
+   le cuente, y devuelve también las preguntas que harían el mapa más fiel:
+   así cada vuelta lo hace evolucionar. Es texto público: nunca precios,
+   comisiones, condiciones ni proyectos que no estén en los datos. */
+export const ROLES_RED = ['Quien acoge', 'Quien sirve en el evento', 'Quien dinamiza la actividad', 'Quien produce y coordina', 'Quien lo revende'];
+
+const ESQUEMA_RED = {
+  type: 'object',
+  properties: {
+    rol: { type: 'string', enum: ROLES_RED },
+    aporta: { type: 'array', items: { type: 'string' } },
+    recibe: { type: 'array', items: { type: 'string' } },
+    para: { type: 'array', items: { type: 'string' } },
+    preguntas: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['rol', 'aporta', 'recibe', 'para', 'preguntas'],
+  additionalProperties: false,
+};
+
+const GUIA_RED = `Ayudas a un espacio o proveedor de la red de Events Penedès (agencia local de eventos de empresa en el Penedès) a describir su lugar en el flujo de valor de un evento, con el método de redes de valor de Verna Allee. Escribes en castellano lo que se publicará en su página.
+
+Los roles de la red son: ${ROLES_RED.join(', ')}. En un evento, quien lo encarga es una empresa y quien asiste es su equipo.
+
+- «rol»: el que mejor describe lo que hace en un evento.
+- «aporta»: de 2 a 5 cosas que entrega al evento. Mezcla lo tangible (un espacio, un taller, una comida) y lo intangible (confianza, una vivencia, conocimiento del territorio). Frases cortas, sin verbo al principio si no hace falta.
+- «recibe»: de 2 a 4 cosas que recibe a cambio de la red y de los clientes, también tangibles e intangibles (encargos, visibilidad, testimonio, un caso que contar). Nunca dinero, precios ni comisiones.
+- «para»: de 1 a 3 tipos de cliente o de evento a los que sirve mejor.
+- «preguntas»: de 1 a 3 preguntas cortas al partner que, contestadas, harían su mapa más fiel. Si ya hay un mapa, pregunta por lo que falta o no encaja.
+- Solo lo que dicen los datos y lo que te cuente el partner. Si ya hay un mapa, mejóralo sin perder lo que dice.
+- Nunca precios, importes, teléfonos, correos, webs ni condiciones, ni proyectos, socios o planes que no estén en los datos.`;
+
+const lista = v => (Array.isArray(v) ? v.map(x => String(x).replace(/\s+/g, ' ').trim().slice(0, 160)).filter(Boolean).slice(0, 6) : []);
+
+export async function mapaRed(tipo, datos, red, nota, { apiKey = process.env.ANTHROPIC_API_KEY, fetch } = {}) {
+  if (!apiKey) { throw Object.assign(new Error('La IA no está configurada en el sitio'), { motivo: 'sin-clave' }); }
+  const ficha = entrada(tipo, datos);
+  if (!ficha) { throw new Error('La ficha está vacía'); }
+  const actual = red && (red.rol || red.aporta?.length)
+    ? `\n\n## Su lugar en la red ahora\nRol: ${red.rol || '—'}\nAporta: ${lista(red.aporta).join('; ') || '—'}\nRecibe: ${lista(red.recibe).join('; ') || '—'}\nPara: ${lista(red.para).join('; ') || '—'}` : '';
+  const cuenta = typeof nota === 'string' && nota.trim() ? `\n\n## Lo que cuenta el partner\n${nota.trim().slice(0, 2000)}` : '';
+  const r = await mensaje({
+    model: MODELO,
+    max_tokens: 1500,
+    system: GUIA_RED,
+    output_config: { effort: 'low', format: { type: 'json_schema', schema: ESQUEMA_RED } },
+    messages: [{ role: 'user', content: `${ficha}${actual}${cuenta}` }],
+  }, { apiKey, fetch, espera: 25000 });
+  const s = JSON.parse(textoDe(r.respuesta));
+  return {
+    red: { rol: ROLES_RED.includes(s.rol) ? s.rol : '', aporta: lista(s.aporta), recibe: lista(s.recibe), para: lista(s.para) },
+    preguntas: lista(s.preguntas).slice(0, 3), uso: r.uso,
+  };
+}
