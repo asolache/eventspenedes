@@ -8,7 +8,7 @@
    fuente no entra. Lo que ya ha pasado deja de salir solo.
 
    Se revisa a mano: cuando una fecha cambia en la fuente, se cambia aquí.
-   Revisado el 17 de octubre de 2026.
+   Revisado el 17 de octubre de 2026, con lo ya publicado de 2027.
    ========================================================================== */
 
 const PT = 'Penedès Turisme';
@@ -55,6 +55,42 @@ export const TERRITORIO = [
     poblacion: 'Gelida', categoria: 'gastronomia',
     descripcion: 'Escudella popular en la plaza de la iglesia, bailes, feria de artesanos y premio solidario.',
     fuente: 'https://www.penedesturisme.cat/ca/activitat/fira-de-santa-llucia-de-gelida', fuente_nombre: PT },
+  { id: 'casals150-2027-02-07', titulo: 'Casals150: The Rest Project', inicio: '2027-02-07',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-de-rest-project-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-03-07', titulo: 'Casals150: Mar Gimferrer y Marc Heredia', inicio: '2027-03-07',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-de-mar-gimferrer-i-marc-heredia-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-03-21', titulo: 'Casals150: Òscar Alabau y Ricard Rovirosa', inicio: '2027-03-21',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-doscar-alabau-i-ricard-rovirosa-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-04-18', titulo: 'Casals150: Jordi Camell', inicio: '2027-04-18',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-de-jordi-camell-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-05-23', titulo: 'Casals150: Mariona Camats y Florian Verweij', inicio: '2027-05-23',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-de-mariona-camats-i-florian-verweij-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-06-20', titulo: 'Casals150: Inés Issel', inicio: '2027-06-20',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-de-ines-issel-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-09-26', titulo: 'Casals150: Trio Victoria', inicio: '2027-09-26',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-del-trio-victoria-cicle-casals150', fuente_nombre: PT },
+  { id: 'casals150-2027-10-16', titulo: 'Casals150: Arnau Tomàs', inicio: '2027-10-16',
+    poblacion: 'El Vendrell', categoria: 'musica',
+    descripcion: 'Concierto del ciclo por los 150 años de Pau Casals, en la sala de música del Museu Pau Casals.',
+    fuente: 'https://www.penedesturisme.cat/ca/activitat/concert-darnau-tomas-cicle-casals150', fuente_nombre: PT },
+  { id: 'festa-major-vilafranca-2027', titulo: 'Festa Major de Vilafranca', inicio: '2027-08-29', fin: '2027-09-02',
+    poblacion: 'Vilafranca del Penedès', categoria: 'castells',
+    descripcion: 'La fiesta mayor de Vilafranca, con castells, música y cultura popular en la calle.',
+    fuente: 'https://www.spain.info/en/calendar/fiesta-mayor-vilafranca-penedes/', fuente_nombre: 'Spain.info' },
 ];
 
 /* Lo que todavía no ha acabado, por fecha */
