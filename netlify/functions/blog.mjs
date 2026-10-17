@@ -31,6 +31,7 @@ import { configurado, articulosPublicados, agendaAprobada, partnersPorId, foto, 
 import { pagina, migas, esc, recorta, SITIO } from '../portal/pagina.mjs';
 import { CATEGORIAS, MESES, cuerpoHtml, textoPlano, accionPublica, cuando } from '../../js/blog-comun.js';
 import { territorioProximo } from '../../js/agenda-territorio.js';
+import { CLUB, NOMBRE_REGLA, citasClub } from '../../js/club.js';
 
 const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -280,6 +281,17 @@ function paginaAgenda(acciones, socios, territorio = []) {
     };
   });
 
+  const citas = citasClub();
+  const club = citas.length ? `
+  <section class="section" id="club">
+    <div class="wrap">
+      <p class="eyebrow">Club Events Penedès ${CLUB.ano} · ${CLUB.plazas} socios como mucho</p>
+      <h2>Una cita fija: ${NOMBRE_REGLA[CLUB.regla]}</h2>
+      <p>Música entre viñas en un espacio de la red, siempre el mismo día del mes. El lugar de cada cita se anuncia a los socios con la fecha.</p>
+      <p class="form__note">${citas.map(f => cuando(f)).join(' · ')}</p>
+      <p><a class="btn btn--primary" href="/contacto.html?${esc(new URLSearchParams({ asunto: `Quiero ser socio del Club Events Penedès ${CLUB.ano}` }).toString())}#escribenos" rel="nofollow">Quiero ser socio</a></p>
+    </div>
+  </section>` : '';
   const cuerpo = `${crumbs([['Events Penedès', '/'], ['Agenda', null]])}
   <section class="hero hero--dj">
     <div class="wrap">
@@ -292,7 +304,7 @@ function paginaAgenda(acciones, socios, territorio = []) {
       </div>
       ${claves.length > 1 ? `<p class="form__note">${claves.map(k => `<a href="#m-${k}">${MESES[Number(k.slice(5)) - 1]}</a>`).join(' · ')}</p>` : ''}
     </div>
-  </section>${meses || `
+  </section>${club}${meses || `
   <section class="section"><div class="wrap"><p>Estamos preparando la agenda del año con los espacios y proveedores de la red.</p></div></section>`}
   <section class="section">
     <div class="wrap">
@@ -311,7 +323,7 @@ function paginaAgenda(acciones, socios, territorio = []) {
   return pagina({
     titulo: 'Agenda de experiencias en el Penedès · Events Penedès',
     descripcion: 'Vendimia, catas, castells y cocina de temporada en el Penedès, mes a mes: las experiencias para grupos y empresas de la red de Events Penedès.',
-    canonica: url, indexar: acciones.length + territorio.length > 0,
+    canonica: url, indexar: acciones.length + territorio.length + citas.length > 0,
     estructurados: [...eventos, migas([['Events Penedès', `${SITIO}/`], ['Agenda', url]])],
     cuerpo,
   });

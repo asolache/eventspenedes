@@ -42,6 +42,15 @@ comprueba('lo que ya ha acabado no sale', territorioProximo([{ id: 'a', titulo: 
 comprueba('lo que dura todavía sale', territorioProximo([{ id: 'a', titulo: 'x', inicio: '2026-10-01', fin: '2026-11-01', fuente: 'https://x.cat' }], '2026-10-17').length === 1);
 comprueba('sin fuente no sale', territorioProximo([{ id: 'a', titulo: 'x', inicio: '2026-12-01' }], '2026-10-17').length === 0);
 
+/* 2c · El club: una cita fija al mes y un tope de socios */
+const { CLUB, citasClub } = await import('../js/club.js');
+const sabados = citasClub({ ano: 2027, regla: 'primer-sabado' }, '2026-10-17');
+comprueba('el club tiene doce citas el primer sábado de cada mes', sabados.length === 12 && sabados[0] === '2027-01-02' && sabados.every(f => new Date(f).getUTCDay() === 6 && Number(f.slice(8)) <= 7));
+const viernes = citasClub({ ano: 2027, regla: 'ultimo-viernes' }, '2026-10-17');
+comprueba('o el último viernes', viernes[0] === '2027-01-29' && viernes.every(f => new Date(f).getUTCDay() === 5));
+comprueba('las citas pasadas no salen', citasClub({ ano: 2027, regla: 'primer-sabado' }, '2027-06-10').length === 6);
+comprueba('el club no pasa de 222 socios', CLUB.plazas <= 222);
+
 /* 3 · Lo que se publica de una acción */
 const ACCION = { id: '11111111-1111-4111-8111-111111111111', partner_id: '22222222-2222-4222-8222-222222222222', titulo: 'Vendimia en familia',
   descripcion: 'Cortar uva y pisarla.', categoria: 'vino', fecha_inicio: '2026-11-07', fecha_fin: null, cada_ano: false,
@@ -91,6 +100,8 @@ const { territorioProximo: hayTerritorio } = await import('../js/agenda-territor
 const conTerritorio = hayTerritorio().length > 0;
 comprueba('la agenda trae lo del territorio con su fuente', !conTerritorio || agenda.includes('En el territorio') && agenda.includes('Fuente: <a href="https://'));
 comprueba('«Ir en grupo» lleva a nuestro formulario, no a la organización', !conTerritorio || /href="\/contacto\.html\?asunto=Ir\+en\+grupo[^"]*#escribenos"/.test(agenda));
+
+comprueba('la agenda trae el club con su tope de socios', citasClub().length === 0 || (agenda.includes('Quiero ser socio') && agenda.includes(`${CLUB.plazas} socios`)));
 
 const articulo = await (await pide('/blog/la-masia-entre-vinas')).text();
 comprueba('el artículo sale con su BlogPosting', articulo.includes('"@type":"BlogPosting"'));
