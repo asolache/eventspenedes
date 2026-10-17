@@ -1835,5 +1835,63 @@ body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
     body:has(.barra-cta) { padding-bottom: 4.5rem; }
 }
 
+/* Portada como una conversación: una pregunta, unas ideas y un solo campo
+   que lleva al formulario de propuesta ya empezado. */
+.charla {
+    max-width: 40rem;
+    margin-top: 2rem;
+    padding: 1.2rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: 18px;
+    background: rgb(var(--panel-rgb) / 0.82);
+    backdrop-filter: blur(8px);
+}
+.charla__burbuja {
+    display: inline-block;
+    margin: 0 0 0.9rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 14px 14px 14px 4px;
+    background: rgb(var(--ink-rgb) / 0.08);
+    color: var(--text-hi);
+}
+.charla__ideas { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+.charla .chip {
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-mid);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.charla .chip:hover { border-color: var(--accent-gold); color: var(--text-hi); }
+.charla .chip[aria-pressed="true"] { border-color: var(--accent-gold); background: var(--gold-fondo); color: var(--on-gold); }
+.charla__etiqueta { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--text-mid); }
+.charla textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: 12px;
+    background: rgb(var(--bg-rgb) / 0.6);
+    color: var(--text-hi);
+    font: inherit;
+    resize: vertical;
+}
+.charla textarea:focus { outline: 2px solid var(--accent-gold); outline-offset: 1px; }
+.charla__pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.8rem; }
+.charla__pax { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-mid); }
+.charla__pax input {
+    width: 5.5rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--glass-border-hi);
+    border-radius: 10px;
+    background: rgb(var(--bg-rgb) / 0.6);
+    color: var(--text-hi);
+    font: inherit;
+}
+.charla__alt { margin: 0.9rem 0 0; font-size: 0.9rem; color: var(--text-mid); }
+.charla__alt a { color: var(--accent-gold); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* Agenda: lo que pasa en el territorio, debajo de lo de la red */
 .agenda__fuera { margin: 2rem 0 1rem; color: var(--accent-gold); font-size: 1rem; letter-spacing: .04em; text-transform: uppercase; }
