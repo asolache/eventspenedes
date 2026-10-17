@@ -10,7 +10,9 @@
 
 export const CLUB = { ano: 2027, plazas: 222, regla: 'primer-sabado',
   // Quién pone la música en las citas
-  djs: ['Mazinguer', 'DJ Golfo de Guinea', 'DJ Lady Avocado'] };
+  djs: ['Mazinguer', 'DJ Golfo de Guinea', 'DJ Lady Avocado'],
+  // Las músicas de las citas temáticas
+  musicas: ['rock català'] };
 
 const REGLAS = {
   'primer-sabado': (ano, mes) => { const d = new Date(Date.UTC(ano, mes, 1)); d.setUTCDate(1 + ((6 - d.getUTCDay() + 7) % 7)); return d; },
