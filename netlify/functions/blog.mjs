@@ -287,7 +287,7 @@ function paginaAgenda(acciones, socios, territorio = []) {
     <div class="wrap">
       <p class="eyebrow">Club Events Penedès ${CLUB.ano} · ${CLUB.plazas} socios como mucho</p>
       <h2>Una cita fija: ${NOMBRE_REGLA[CLUB.regla]}</h2>
-      <p>Cada mes, Events Penedès organiza un evento temático con un partner de la red: vino y cava, castells, cocina de temporada, paisaje o música entre viñas. Siempre el mismo día del mes; el tema y el lugar se anuncian a los socios con cada fecha.</p>
+      <p>Cada mes, Events Penedès organiza un evento temático con un partner de la red: vino y cava, castells, cocina de temporada, paisaje o música entre viñas. Con la cocina y el vino de los partners de la red. Siempre el mismo día del mes; el tema y el lugar se anuncian a los socios con cada fecha.</p>
       ${CLUB.djs?.length ? `<p>A los platos: ${esc(CLUB.djs.join(', ').replace(/, ([^,]*)$/, ' y $1'))}${CLUB.musicas?.length ? `, con noches de ${esc(CLUB.musicas.join(', ').replace(/, ([^,]*)$/, ' y $1'))}` : ''}.</p>` : ''}
       <p class="form__note">${citas.map(f => cuando(f)).join(' · ')}</p>
       <p><a class="btn btn--primary" href="/contacto.html?${esc(new URLSearchParams({ asunto: `Quiero ser socio del Club Events Penedès ${CLUB.ano}` }).toString())}#escribenos" rel="nofollow">Quiero ser socio</a></p>
