@@ -41,6 +41,7 @@ export function pagina({ titulo, descripcion, canonica, imagen, estructurados, c
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/css/styles.css">
+<script src="/js/tema.js"></script>
 <link rel="alternate" type="application/rss+xml" title="Blog de Events Penedès" href="${SITIO}/blog/feed.xml">${cabeza}
 ${estructurados.map(o => `<script type="application/ld+json">${ld(o)}</script>`).join('\n')}
 </head>

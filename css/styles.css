@@ -4,12 +4,14 @@
    ========================================================================== */
 
 :root {
+    color-scheme:     dark;
+
     /* Superfícies */
     --bg-dark:        #050507;
     --bg-panel:       #0a0a0f;
     --bg-elevated:    #111118;
-    --glass-border:   rgba(255, 255, 255, 0.07);
-    --glass-border-hi:rgba(255, 255, 255, 0.16);
+    --glass-border:   rgb(var(--ink-rgb) / 0.07);
+    --glass-border-hi:rgb(var(--ink-rgb) / 0.16);
 
     /* Accents */
     --accent-indigo:  #6366f1;
@@ -23,6 +25,18 @@
     --text-mid:       #a9a9b8;
     --text-low:       #6b6b7b;
 
+    /* Los mismos tonos en canales, para velos y bordes con transparencia:
+       rgb(var(--bg-rgb) / 0.8). Así el tema claro solo cambia estas líneas. */
+    --bg-rgb:         5 5 7;
+    --panel-rgb:      17 17 24;
+    --ink-rgb:        255 255 255;
+    --gold-fondo:     #d9a441;   /* el dorado de botones y etiquetas rellenas */
+    --gold-claro:     #f0c46a;
+    --on-gold:        #14100a;   /* el texto sobre ese dorado */
+    --rojo-texto:     #e57373;
+    --logo-borde:     transparent;
+    --sombra-texto:   0 2px 20px rgba(0, 0, 0, 0.6);
+
     /* Tipografia */
     --font-base:      'Space Grotesk', system-ui, -apple-system, sans-serif;
     --font-mono:      'JetBrains Mono', ui-monospace, monospace;
@@ -34,6 +48,36 @@
     --gutter:         clamp(1.25rem, 4vw, 2.5rem);
     --section-y:      clamp(4rem, 9vw, 7.5rem);
     --card-pad:       clamp(1.4rem, 2.6vw, 1.9rem);
+}
+
+/* --- Tema claro -----------------------------------------------------------
+   El oscuro es el de la casa; el claro se elige con el botón del menú
+   (js/tema.js lo guarda en el navegador o sigue el del sistema). Solo cambian
+   las variables: el dorado de texto se oscurece para leerse sobre blanco
+   (contraste AA ≥ 4,5:1) y el de los botones se queda como está. */
+:root[data-tema="claro"] {
+    color-scheme:     light;
+    --bg-dark:        #ffffff;
+    --bg-panel:       #f7f5f0;
+    --bg-elevated:    #fdfcf9;
+    --glass-border:   rgb(var(--ink-rgb) / 0.12);
+    --glass-border-hi:rgb(var(--ink-rgb) / 0.26);
+
+    --accent-indigo:  #4f46e5;
+    --accent-blue:    #0369a1;
+    --accent-green:   #1b7a3d;
+    --accent-gold:    #8a5d0a;
+
+    --text-hi:        #15151c;
+    --text-mid:       #4a4a57;
+    --text-low:       #66667a;
+
+    --bg-rgb:         255 255 255;
+    --panel-rgb:      253 252 249;
+    --ink-rgb:        20 20 30;
+    --rojo-texto:     #b03a2e;
+    --logo-borde:     var(--glass-border);
+    --sombra-texto:   0 1px 12px rgba(255, 255, 255, 0.8);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -115,8 +159,8 @@ ul { margin: 0; padding: 0; list-style: none; }
     position: absolute;
     left: -9999px;
     top: 0;
-    background: var(--accent-gold);
-    color: #14100a;
+    background: var(--gold-fondo);
+    color: var(--on-gold);
     padding: 0.7rem 1.1rem;
     border-radius: 0 0 var(--radius-sm) 0;
     font-weight: 600;
@@ -142,8 +186,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn:hover { transform: translateY(-2px); text-decoration: none; }
 
 .btn--primary {
-    background: linear-gradient(135deg, var(--accent-gold), #f0c46a);
-    color: #14100a;
+    background: linear-gradient(135deg, var(--gold-fondo), var(--gold-claro));
+    color: var(--on-gold);
 }
 .btn--ghost {
     background: transparent;
@@ -158,7 +202,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(5, 5, 7, 0.82);
+    background: rgb(var(--bg-rgb) / 0.82);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--glass-border);
@@ -219,13 +263,46 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .lang__btn:hover { color: var(--text-hi); text-decoration: none; }
 .lang__btn[aria-current="true"] {
-    background: var(--accent-gold);
-    color: #14100a;
+    background: var(--gold-fondo);
+    color: var(--on-gold);
     font-weight: 600;
 }
-.lang__btn[aria-current="true"]:hover { color: #14100a; }
+.lang__btn[aria-current="true"]:hover { color: var(--on-gold); }
 
 .nav-toggle { display: none; }
+
+/* El botón claro/oscuro: lo pone js/tema.js al final del menú */
+.tema {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: none;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+.tema:hover { color: var(--text-hi); border-color: var(--glass-border-hi); }
+.tema svg { width: 1rem; height: 1rem; }
+/* En escritorio el menú ya llena la cabecera: el botón va en el margen de la
+   derecha, fuera de la columna, para no apretar la marca ni las entradas. */
+@media (min-width: 1101px) {
+    .tema {
+        position: absolute;
+        top: 50%;
+        right: max(0.3rem, calc((100% - var(--maxw)) / 2 - 2.8rem));
+        transform: translateY(-50%);
+        width: 2rem;
+        height: 2rem;
+    }
+}
+.tema .tema__luna { display: none; }
+:root[data-tema="claro"] .tema .tema__luna { display: block; }
+:root[data-tema="claro"] .tema .tema__sol { display: none; }
 
 /* --- Hero --------------------------------------------------------------- */
 
@@ -312,7 +389,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--accent-gold);
+    background: var(--gold-fondo);
 }
 
 /* --- Per a qui ---------------------------------------------------------- */
@@ -341,7 +418,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     min-height: 220px;
     background:
         radial-gradient(120% 90% at 30% 20%, rgba(217, 164, 65, 0.22), transparent 65%),
-        linear-gradient(160deg, #15151d, #0b0b10);
+        linear-gradient(160deg, var(--bg-elevated), var(--bg-panel));
     display: grid;
     place-items: center;
     border-right: 1px solid var(--glass-border);
@@ -523,7 +600,10 @@ ul { margin: 0; padding: 0; list-style: none; }
         color: var(--text-hi);
         padding: 0.5rem 0.7rem;
         cursor: pointer;
+        order: 2;
     }
+    .tema { order: 1; margin-left: auto; }
+    .tema ~ .nav-toggle, .nav-toggle:has(~ .tema) { margin-left: 0; }
     .nav {
         position: fixed;
         inset: 68px 0 auto 0;
@@ -574,7 +654,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
 /* La ficha pública de un partner (/partners/<código>) */
 .partner-ficha { display: grid; gap: 2rem; }
 .partner-previa { margin: 1rem 0 0; padding: 0.75rem 1rem; border: 1px solid var(--accent-gold); border-radius: var(--radius); }
-.portal__previa { width: min(1100px, 100vw - 2rem); height: calc(100vh - 2rem); max-width: none; max-height: none; padding: 0; border: 0; border-radius: var(--radius); background: #050507; color: inherit; }
+.portal__previa { width: min(1100px, 100vw - 2rem); height: calc(100vh - 2rem); max-width: none; max-height: none; padding: 0; border: 0; border-radius: var(--radius); background: var(--bg-dark); color: inherit; }
 .portal__previa::backdrop { background: rgba(0, 0, 0, 0.7); }
 .portal__previa-barra { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.75rem; }
 .portal__previa-marco { display: block; width: 100%; height: calc(100% - 3.5rem); border: 0; }
@@ -611,7 +691,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
 .portal__conceptos, .portal__lista { margin: 0.3rem 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
 .portal__diff { list-style: none; margin: 0.4rem 0; padding: 0; font-family: var(--font-mono); font-size: 0.85rem; display: grid; gap: 0.2rem; }
 .portal__diff [data-tipo="nuevo"] { color: var(--accent-green); }
-.portal__diff [data-tipo="quita"] { color: #e57373; }
+.portal__diff [data-tipo="quita"] { color: var(--rojo-texto); }
 .portal__diff [data-tipo="cambia"] { color: var(--accent-gold); }
 .portal__reservas { display: grid; gap: 1rem; }
 .portal__reserva { display: grid; gap: 0.5rem; border-left: 3px solid var(--glass-border-hi); }
@@ -687,7 +767,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: var(--accent-gold);
+    background: var(--gold-fondo);
 }
 .timeline__year {
     font-family: var(--font-mono);
@@ -755,6 +835,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     display: inline-grid;
     place-items: center;
     background: #fff;
+    box-shadow: 0 0 0 1px var(--logo-borde);
     border-radius: var(--radius-sm);
     padding: 1.15rem 1.5rem;
     margin-bottom: 1.4rem;
@@ -861,7 +942,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: var(--accent-gold);
+    background: var(--gold-fondo);
 }
 .timeline__year {
     font-family: var(--font-mono);
@@ -932,6 +1013,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     display: grid;
     place-items: center;
     background: #fff;
+    box-shadow: 0 0 0 1px var(--logo-borde);
     border-radius: var(--radius-sm);
     padding: 1.2rem 1.4rem;
     min-height: 92px;
@@ -1142,8 +1224,8 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(104deg, rgba(5,5,7,0.94) 0%, rgba(5,5,7,0.80) 46%, rgba(5,5,7,0.44) 100%),
-        linear-gradient(0deg, var(--bg-dark) 2%, rgba(5,5,7,0) 48%),
+        linear-gradient(104deg, rgb(var(--bg-rgb) / 0.94) 0%, rgb(var(--bg-rgb) / 0.80) 46%, rgb(var(--bg-rgb) / 0.44) 100%),
+        linear-gradient(0deg, var(--bg-dark) 2%, rgb(var(--bg-rgb) / 0) 48%),
         radial-gradient(68% 58% at 76% 28%, rgba(217,164,65,0.20), transparent 72%);
 }
 
@@ -1169,7 +1251,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     content: "";
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--accent-gold);
+    background: var(--gold-fondo);
 }
 
 /* --- Los intangibles ----------------------------------------------------- */
@@ -1199,8 +1281,8 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
 .intangibles > :first-child.intangible { min-height: 340px; padding: 2.2rem; }
 .intangibles > :first-child .intangible__media::after {
     background:
-        linear-gradient(0deg, rgba(5,5,7,0.96) 2%, rgba(5,5,7,0.74) 46%, rgba(5,5,7,0.26) 100%),
-        linear-gradient(90deg, rgba(5,5,7,0.68) 0%, rgba(5,5,7,0.10) 62%);
+        linear-gradient(0deg, rgb(var(--bg-rgb) / 0.96) 2%, rgb(var(--bg-rgb) / 0.74) 46%, rgb(var(--bg-rgb) / 0.26) 100%),
+        linear-gradient(90deg, rgb(var(--bg-rgb) / 0.68) 0%, rgb(var(--bg-rgb) / 0.10) 62%);
 }
 
 .intangible__media {
@@ -1223,9 +1305,9 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(0deg, rgba(5,5,7,0.97) 0%, rgba(5,5,7,0.88) 32%,
-                               rgba(5,5,7,0.62) 62%, rgba(5,5,7,0.38) 100%),
-        linear-gradient(0deg, rgba(5,5,7,0.22), rgba(5,5,7,0.22));
+        linear-gradient(0deg, rgb(var(--bg-rgb) / 0.97) 0%, rgb(var(--bg-rgb) / 0.88) 32%,
+                               rgb(var(--bg-rgb) / 0.62) 62%, rgb(var(--bg-rgb) / 0.38) 100%),
+        linear-gradient(0deg, rgb(var(--bg-rgb) / 0.22), rgb(var(--bg-rgb) / 0.22));
 }
 .intangible:hover .intangible__media img,
 .intangible:hover .intangible__media svg { transform: scale(1.045); }
@@ -1257,7 +1339,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(0deg, var(--bg-dark) 1%, rgba(5,5,7,0.30) 42%, rgba(5,5,7,0.62) 100%);
+        linear-gradient(0deg, var(--bg-dark) 1%, rgb(var(--bg-rgb) / 0.30) 42%, rgb(var(--bg-rgb) / 0.62) 100%);
 }
 .band__cita {
     position: absolute;
@@ -1267,7 +1349,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     font-size: clamp(1rem, 2.4vw, 1.45rem);
     font-weight: 500;
     color: var(--text-hi);
-    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    text-shadow: var(--sombra-texto);
 }
 .band__cita span { color: var(--accent-gold); }
 
@@ -1312,7 +1394,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(96deg, rgba(5,5,7,0.95) 0%, rgba(5,5,7,0.78) 44%, rgba(5,5,7,0.30) 100%);
+    background: linear-gradient(96deg, rgb(var(--bg-rgb) / 0.95) 0%, rgb(var(--bg-rgb) / 0.78) 44%, rgb(var(--bg-rgb) / 0.30) 100%);
 }
 .escena__cos { max-width: 46ch; }
 .escena h3 { margin-top: 0.4rem; font-size: clamp(1.4rem, 3vw, 2rem); }
@@ -1342,7 +1424,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(0deg, rgba(17,17,24,0.92) 2%, rgba(17,17,24,0.12) 60%);
+    background: linear-gradient(0deg, rgb(var(--panel-rgb) / 0.92) 2%, rgb(var(--panel-rgb) / 0.12) 60%);
 }
 .escena__llista { margin-top: 1.1rem; }
 .escena__llista li { color: var(--text-mid); }
@@ -1368,7 +1450,7 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     padding: 0.55rem 0.7rem;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.015);
+    background: rgb(var(--ink-rgb) / 0.015);
     font-size: 0.88rem;
     line-height: 1.35;
 }
@@ -1575,7 +1657,7 @@ form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accen
 .interes:hover { border-color: var(--accent-gold); }
 .interes:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
 .interes .interes__si { display: none; }
-.interes[aria-pressed="true"] { background: var(--accent-gold); border-color: var(--accent-gold); color: #14100a; }
+.interes[aria-pressed="true"] { background: var(--gold-fondo); border-color: var(--accent-gold); color: var(--on-gold); }
 .interes[aria-pressed="true"]::before { content: "✓"; color: inherit; }
 .interes[aria-pressed="true"] .interes__no { display: none; }
 .interes[aria-pressed="true"] .interes__si { display: inline; }
@@ -1594,7 +1676,7 @@ form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accen
     padding: 0.75rem 1rem;
     border-radius: 18px;
     border: 1px solid var(--glass-border-hi);
-    background: rgba(10, 10, 15, 0.94);
+    background: rgb(var(--panel-rgb) / 0.94);
     backdrop-filter: blur(10px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
@@ -1607,8 +1689,8 @@ form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accen
     height: 1.6rem;
     margin-left: 0.3rem;
     border-radius: 999px;
-    background: var(--accent-gold);
-    color: #14100a;
+    background: var(--gold-fondo);
+    color: var(--on-gold);
     font-weight: 700;
     font-size: 0.85rem;
 }
@@ -1738,7 +1820,7 @@ body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
         gap: 0.6rem;
         padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
         background: var(--bg-dark);
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 1px solid rgb(var(--ink-rgb) / 0.12);
     }
     .barra-cta .btn { flex: 1 1 0; justify-content: center; text-align: center; padding: 0.7rem 0.8rem; font-size: 0.95rem; }
     .seleccion:not([hidden]) ~ .barra-cta { display: none; }
