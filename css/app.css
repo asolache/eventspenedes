@@ -23,6 +23,25 @@
     --app-error:      #ff6b6b;
     --app-info:       #6ea8ff;
     --app-sombra:     0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px -18px rgba(0, 0, 0, 0.8);
+    --app-sombra-menu:0 18px 44px -14px rgba(0, 0, 0, 0.9);
+    --app-del:        #ffb3ad;
+    --app-ins:        #aff5b4;
+}
+
+/* Tema claro: lo mismo con tonos que se leen sobre blanco (AA) */
+:root[data-tema="claro"] {
+    --app-superficie: #ffffff;
+    --app-superficie-hi: #f4f2ec;
+    --app-oro-suave:  rgba(217, 164, 65, 0.16);
+    --app-oro-borde:  rgba(138, 93, 10, 0.4);
+    --app-ok:         #1b7a3d;
+    --app-aviso:      #8a5a00;
+    --app-error:      #c62828;
+    --app-info:       #1d5fc4;
+    --app-sombra:     0 1px 2px rgba(20, 20, 30, 0.06), 0 12px 32px -20px rgba(20, 20, 30, 0.25);
+    --app-sombra-menu:0 18px 44px -14px rgba(20, 20, 30, 0.3);
+    --app-del:        #9b1c1c;
+    --app-ins:        #14532d;
 }
 
 /* --- Con sesión, la página es la app ------------------------------------------ */
@@ -57,7 +76,7 @@ body.en-app .site-header { position: relative; }
     position: sticky; top: 0; z-index: 5;
     display: flex; align-items: center; gap: 0.75rem;
     padding: 0 var(--app-gap);
-    background: rgba(5, 5, 7, 0.85);
+    background: rgb(var(--bg-rgb) / 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--glass-border);
 }
@@ -83,7 +102,7 @@ body.en-app .site-header { position: relative; }
     position: absolute; z-index: 40; top: calc(100% + 0.4rem); left: 0; right: 0;
     margin: 0; padding: 0.35rem; list-style: none; max-height: min(24rem, 60dvh); overflow-y: auto;
     background: var(--bg-panel); border: 1px solid var(--glass-border-hi); border-radius: var(--radius);
-    box-shadow: 0 18px 44px -14px rgba(0, 0, 0, 0.9);
+    box-shadow: var(--app-sombra-menu);
 }
 .app-buscar__lista li { display: flex; flex-direction: column; gap: 0.1rem; padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); cursor: pointer; }
 .app-buscar__lista li[aria-selected="true"] { background: var(--app-oro-suave); }
@@ -125,7 +144,7 @@ body.en-app .site-header { position: relative; }
 .app__ir:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 1px; }
 .app__ir .app__n {
     margin-left: auto; min-width: 1.4rem; padding: 0 0.4rem;
-    border-radius: 999px; background: var(--accent-gold); color: #111;
+    border-radius: 999px; background: var(--gold-fondo); color: var(--on-gold);
     font-size: 0.75rem; font-weight: 600; text-align: center; line-height: 1.4rem;
 }
 
@@ -149,7 +168,7 @@ body.en-app .site-header { position: relative; }
         flex-direction: row; gap: 0; padding: 0 0.25rem env(safe-area-inset-bottom);
         border-right: 0; border-top: 1px solid var(--glass-border);
         overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
-        background: rgba(10, 10, 15, 0.96); backdrop-filter: blur(12px);
+        background: rgb(var(--panel-rgb) / 0.96); backdrop-filter: blur(12px);
     }
     .app__nav::-webkit-scrollbar { display: none; }
     .app__marca, .app__grupo { display: none; }
@@ -221,7 +240,7 @@ body.en-app .site-header { position: relative; }
 .app-tabla { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .app-tabla th, .app-tabla td { padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--glass-border); text-align: left; vertical-align: top; }
 .app-tabla thead th { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-low); }
-.app-tabla tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+.app-tabla tbody tr:hover { background: rgb(var(--ink-rgb) / 0.03); }
 .app-tabla code { font-size: 0.78rem; color: var(--text-low); }
 .app-desliza { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
@@ -234,8 +253,8 @@ body.en-app .site-header { position: relative; }
 .app-antes { color: var(--text-mid); background: rgba(248, 81, 73, 0.08); }
 .app-ahora { color: var(--text-hi); background: rgba(63, 185, 80, 0.08); }
 .app-antes[data-vacio], .app-ahora[data-vacio] { background: none; }
-.app-del { background: rgba(248, 81, 73, 0.3); color: #ffb3ad; text-decoration: line-through; text-decoration-color: rgba(255, 179, 173, 0.7); border-radius: 3px; padding: 0 0.1em; }
-.app-ins { background: rgba(63, 185, 80, 0.3); color: #aff5b4; text-decoration: none; border-radius: 3px; padding: 0 0.1em; }
+.app-del { background: rgba(248, 81, 73, 0.3); color: var(--app-del); text-decoration: line-through; text-decoration-color: currentColor; border-radius: 3px; padding: 0 0.1em; }
+.app-ins { background: rgba(63, 185, 80, 0.3); color: var(--app-ins); text-decoration: none; border-radius: 3px; padding: 0 0.1em; }
 
 /* --- Planes ------------------------------------------------------------------------ */
 
@@ -282,7 +301,7 @@ body.en-app .portal__estado {
     position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
     bottom: calc(1.25rem + env(safe-area-inset-bottom));
     width: min(36rem, calc(100vw - 2rem)); margin: 0;
-    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.9);
+    box-shadow: var(--app-sombra-menu);
 }
 @media (max-width: 899px) {
     body.en-app .portal__estado { bottom: calc(var(--app-tab) + 0.75rem + env(safe-area-inset-bottom)); }
