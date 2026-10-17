@@ -21,6 +21,7 @@ import { panelAdmin } from './portal-admin.js';
 import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
+import { vistaCerebro } from './portal-red.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
 
@@ -83,7 +84,7 @@ async function pintar(sesion) {
   if (pintando) { return; }
   pintando = (async () => {
     const [partners, esAdmin] = await Promise.all([
-      sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,tester').order('nombre').then(ok),
+      sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,tester,red').order('nombre').then(ok),
       sb.rpc('es_admin').then(ok),
     ]);
     const cont = $('[data-partners]');
@@ -307,6 +308,8 @@ async function panelPartner(p, { sesion, acciones }) {
         intro: 'Te las pedimos nosotros: confirma, propón otra cosa o dinos que no podéis.', nodos: vReservas },
       { grupo: 'Hoy', id: 'conversacion', titulo: 'Nuestra conversación', corto: 'Mensajes', icono: 'conversacion', nodos: vConversacion },
       { grupo: RED, id: 'ficha', titulo: 'Ficha, fotos e IA', corto: 'Ficha', icono: 'ficha', nodos: vFicha },
+      { grupo: RED, id: 'cerebro', titulo: 'Crea tu cerebro', corto: 'Cerebro', icono: 'ia',
+        intro: 'Un tast: con la IA, tu lugar en el mapa de valor de la red.', nodos: (actual.version || actual.pendiente) ? vistaCerebro(p, { recargar }) : [h('p', { class: 'app-vacio' }, 'Rellena antes tu ficha: la IA parte de ella.')] },
       ...extra.map(v => ({ grupo: RED, ...v })),
       { grupo: RED, id: 'flujo', titulo: 'Tu flujo de valor', corto: 'Flujo', icono: 'flujo',
         intro: 'De quien ve tu página al evento hecho. Cada cifra sale de lo que pasa en el portal.', nodos: vFlujo },

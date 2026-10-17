@@ -68,3 +68,13 @@ export function fichaPublica(esquema, d) {
   const texto = n => (typeof d[n] === 'string' && d[n].trim() ? d[n].trim() : null);
   return { nombre: texto('nombre'), descripcion: texto('descripcion'), poblacion: texto('poblacion'), secciones };
 }
+
+/* Su lugar en la red, tal como se publica: solo aprobado y en texto corto.
+   `previa` lo enseña también como propuesta, para revisarlo antes. */
+const linea = v => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, 160) : '');
+const lineas = v => (Array.isArray(v) ? v.map(linea).filter(Boolean).slice(0, 6) : []);
+export function redPublica(red, { previa = false } = {}) {
+  if (!red || typeof red !== 'object' || !(red.estado === 'aprobada' || (previa && red.estado === 'propuesta'))) { return null; }
+  const r = { rol: linea(red.rol), aporta: lineas(red.aporta), recibe: lineas(red.recibe), para: lineas(red.para), propuesta: red.estado !== 'aprobada' };
+  return r.rol || r.aporta.length || r.recibe.length || r.para.length ? r : null;
+}

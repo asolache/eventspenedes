@@ -121,12 +121,17 @@ globalThis.fetch = async (url, op = {}) => {
   const u = String(url);
   if (u.includes('/rest/v1/cambios_ficha')) { return Response.json([{ datos: FICHA_IA }]); }
   if (u.includes('/rest/v1/fichas')) { return Response.json([]); }
-  if (u.includes('/rest/v1/partners')) { return Response.json([{ id: P1, tipo: 'localizacion' }]); }
+  if (u.includes('/rest/v1/partners')) {
+    if (op.method === 'PATCH') { llamadas.push({ url: u, op }); return new Response(null, { status: 204 }); }
+    return Response.json([{ id: P1, tipo: 'localizacion', red: { estado: 'aprobada', rol: 'Quien acoge', aporta: ['La masía'] } }]);
+  }
   if (u.includes('/rest/v1/uso_ia')) { llamadas.push({ url: u, op }); return new Response(null, { status: 201 }); }
   if (u.includes('/v1/messages')) {
     peticionClaude = JSON.parse(op.body);
     return Response.json({ model: 'claude-opus-5-5', stop_reason: 'end_turn', usage: { input_tokens: 800, output_tokens: 200 },
-      content: [{ type: 'text', text: JSON.stringify({ descripcion: 'Masía entre viñas en Subirats para 120 invitados.', falta: ['las salas'] }) }] });
+      content: [{ type: 'text', text: JSON.stringify(JSON.parse(op.body).system.includes('Verna Allee')
+        ? { rol: 'Quien acoge', aporta: ['La cava para 120', 'Calma entre viñas'], recibe: ['Encargos de empresa'], para: ['Convenciones'], preguntas: ['¿Qué hace distinta vuestra cava?'] }
+        : { descripcion: 'Masía entre viñas en Subirats para 120 invitados.', falta: ['las salas'] }) }] });
   }
   return fetchZoho(url, op);
 };
@@ -142,6 +147,22 @@ comprueba('a su partner le propone la descripción', ri.status === 200 && /Subir
 comprueba('Claude no ve sus precios ni sus contactos', peticionClaude && !/3500|600 111 222|joana/.test(JSON.stringify(peticionClaude.messages)));
 comprueba('y lo que cuesta se apunta en uso_ia con su partner', llamadas.some(l => l.url.includes('uso_ia') && JSON.parse(l.op.body).partner_id === P1
   && JSON.parse(l.op.body).operacion === 'portal-descripcion'));
+
+// Crea tu cerebro: la IA dibuja su lugar en la red y el partner lo manda a revisar
+llamadas.length = 0;
+const rr = await ia({ token: 'a.b.socio', cuerpo: { partner: P1, accion: 'red', nota: 'Hacemos catas en la cava' } });
+const jr = await rr.json();
+comprueba('la IA propone su lugar en la red y pregunta para afinarlo', rr.status === 200 && jr.red.rol === 'Quien acoge' && jr.red.aporta.length === 2 && jr.preguntas.length === 1);
+comprueba('Claude lee lo publicado, lo que cuenta el partner y nada privado', /Quien acoge/.test(JSON.stringify(peticionClaude.messages)) && /catas en la cava/.test(JSON.stringify(peticionClaude.messages))
+  && !/3500|600 111 222|joana/.test(JSON.stringify(peticionClaude.messages)));
+comprueba('y se apunta como portal-red', llamadas.some(l => l.url.includes('uso_ia') && JSON.parse(l.op.body).operacion === 'portal-red'));
+llamadas.length = 0;
+const re = await ia({ token: 'a.b.socio', cuerpo: { partner: P1, accion: 'red-enviar', red: { rol: 'Quien acoge', aporta: ['La cava'], precio: 3500 } } });
+const parche = llamadas.find(l => l.op.method === 'PATCH');
+const enviada = parche && JSON.parse(parche.op.body).red;
+comprueba('lo que manda el partner queda como versión nueva, sin tocar lo publicado', re.status === 200 && enviada.estado === 'aprobada' && enviada.rol === 'Quien acoge'
+  && enviada.nueva.aporta[0] === 'La cava' && !('precio' in enviada.nueva));
+comprueba('y sin rol ni aportación no se guarda', (await ia({ token: 'a.b.socio', cuerpo: { partner: P1, accion: 'red-enviar', red: {} } })).status === 400);
 globalThis.fetch = fetchZoho;
 
 // Cambios de ficha marcados como en GitHub
