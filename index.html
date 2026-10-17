@@ -670,12 +670,26 @@
     </div>
     <div class="wrap">
       <p class="hero__segell" data-i18n="hero.segell">Alt Penedès · a 40 min de Barcelona</p>
-      <h1 data-i18n="hero.title">Eventos de empresa donde el <em>vino</em> todavía se hace a mano.</h1>
-      <p class="lead" data-i18n="hero.lead">Eventos de empresa, team building y enoturismo en el Penedès, a 40 minutos de Barcelona. Masías, bodegas y viña, con un solo interlocutor de principio a fin.</p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="propuesta.html" data-i18n="hero.cta1" data-clic="hero-propuesta">Pedir propuesta</a>
-        <a class="btn btn--ghost" href="https://calendar.app.google/124c4fJD7QDJTq2q9" target="_blank" rel="noopener" data-i18n="hero.call" data-clic="hero-llamada">Reservar una llamada</a>
-      </div>
+      <h1 data-i18n="hero.title">Eventos de empresa en una <em>masía</em>, entre viñas y campos.</h1>
+      <p class="lead" data-i18n="hero.lead">El Penedès agrícola a 40 minutos de Barcelona: masías con campo alrededor, viñedo y olivos. Cuéntanos tu evento como se lo contarías a una persona y te respondemos con un programa.</p>
+      <form class="charla" action="propuesta.html" method="get" data-clic="hero-charla">
+        <p class="charla__burbuja" data-i18n="charla.pregunta">Hola. ¿Qué tienes en mente para tu equipo?</p>
+        <div class="charla__ideas" role="group" aria-labelledby="charla-ideas-t">
+          <span class="visually-hidden" id="charla-ideas-t" data-i18n="charla.ideas">Ideas para empezar</span>
+          <button type="button" class="chip" data-exp="castells" data-i18n="charla.i1">Hacer equipo con castells</button>
+          <button type="button" class="chip" data-exp="cata_vino" data-i18n="charla.i2">Una cata entre viñas</button>
+          <button type="button" class="chip" data-exp="cata_aceite" data-i18n="charla.i3">Aceite y molino en una masía</button>
+          <button type="button" class="chip" data-exp="comer_bodega" data-i18n="charla.i4">Comer al aire libre en el campo</button>
+        </div>
+        <label class="charla__etiqueta" for="charla-texto" data-i18n="charla.etiqueta">Con tus palabras: cuántos sois, cuándo y qué os gustaría vivir.</label>
+        <textarea id="charla-texto" name="objetivo" rows="3" maxlength="1200" required></textarea>
+        <input type="hidden" name="exp" value="">
+        <div class="charla__pie">
+          <label class="charla__pax"><span data-i18n="charla.pax">Personas</span> <input name="pax" type="number" min="1" max="2000" inputmode="numeric"></label>
+          <button class="btn btn--primary" type="submit" data-i18n="charla.enviar">Seguir</button>
+        </div>
+        <p class="charla__alt"><span data-i18n="charla.o">¿Prefieres hablarlo?</span> <a href="https://calendar.app.google/124c4fJD7QDJTq2q9" target="_blank" rel="noopener" data-i18n="hero.call" data-clic="hero-llamada">Reservar una llamada</a></p>
+      </form>
       <ul class="hero__meta">
         <li data-i18n="hero.meta1">Espacios privados y exclusivos</li>
         <li data-i18n="hero.meta2">Taller de castells desde 2005</li>

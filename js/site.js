@@ -123,6 +123,11 @@
       var c = /^[a-z_]+$/.test(x) ? form.querySelector('input[name="exp_' + x + '"]') : null;
       if (c) { c.checked = true; }
     });
+    /* Desde la conversación de la portada llegan también lo escrito y las
+       personas (?objetivo=…&pax=…): solo si el campo está vacío. */
+    var objetivo = (q.get('objetivo') || '').slice(0, 1200), pax = q.get('pax') || '';
+    if (objetivo && form.elements.objetivo && !form.elements.objetivo.value) { form.elements.objetivo.value = objetivo; }
+    if (/^\d{1,4}$/.test(pax) && form.elements.pax && !form.elements.pax.value) { form.elements.pax.value = pax; }
     ['duracion', 'catering', 'movilidad', 'espacio'].forEach(function (k) {
       var sel = form.querySelector('select[name="' + k + '"]'), v = q.get(k);
       if (!sel || !v) { return; }
@@ -370,4 +375,25 @@
       navigator.sendBeacon('/api/clic', JSON.stringify({ b: el.getAttribute('data-clic'), p: location.pathname }));
     } catch (err) { /* contar nunca debe romper el clic */ }
   });
+})();
+
+/* La conversación de la portada: cada idea se añade a lo escrito y marca su
+   experiencia, que viaja como ?exp= al formulario de propuesta. */
+(function () {
+  var form = document.querySelector('form.charla');
+  if (!form) return;
+  var texto = form.elements.objetivo, exp = form.elements.exp;
+  form.querySelectorAll('.chip').forEach(function (chip) {
+    chip.setAttribute('aria-pressed', 'false');
+    chip.addEventListener('click', function () {
+      var on = chip.getAttribute('aria-pressed') !== 'true';
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var frase = chip.textContent.trim();
+      if (on && texto.value.indexOf(frase) === -1) { texto.value = (texto.value ? texto.value.replace(/\s+$/, '') + '. ' : '') + frase; }
+      exp.value = Array.prototype.filter.call(form.querySelectorAll('.chip[aria-pressed="true"]'), function () { return true; })
+        .map(function (c) { return c.getAttribute('data-exp'); }).join(',');
+      texto.focus();
+    });
+  });
+  form.addEventListener('submit', function () { if (!exp.value) exp.disabled = true; });
 })();
