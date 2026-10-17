@@ -7,7 +7,8 @@
      GET /blog/<slug>/foto/<n>      la foto n de un artículo
      GET /blog/feed.xml             RSS, para lectores y asistentes
      GET /blog/sitemap.xml          para los buscadores
-     GET /agenda                    las acciones del año por mes, desde hoy
+     GET /agenda                    las acciones del año por mes, desde hoy,
+                                    y lo que pasa en el territorio (con fuente)
      GET /agenda/<id>/plaza         lleva al formulario de contacto con la
                                     acción y el partner: toda petición llega
                                     primero a Events Penedès, nunca al partner
@@ -29,6 +30,7 @@ import { fichaPublica } from '../ficha/publica.mjs';
 import { configurado, articulosPublicados, agendaAprobada, partnersPorId, foto, sumarImpresion } from '../portal/supabase.mjs';
 import { pagina, migas, esc, recorta, SITIO } from '../portal/pagina.mjs';
 import { CATEGORIAS, MESES, cuerpoHtml, textoPlano, accionPublica, cuando } from '../../js/blog-comun.js';
+import { territorioProximo } from '../../js/agenda-territorio.js';
 
 const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -209,14 +211,28 @@ ${[fila(`${SITIO}/blog`), fila(`${SITIO}/agenda`), ...articulos.map(a => fila(`$
 
 /* --- La agenda ----------------------------------------------------------------- */
 
-function paginaAgenda(acciones, socios) {
+/* Una fiesta o feria del territorio: no es nuestra, así que enlaza a su fuente
+   y la llamada es ir en grupo con la red, que nos llega por el formulario. */
+function filaTerritorio(t) {
+  const detalles = [cuando(t.inicio, t.fin), t.hora ? `${t.hora}${t.hora_fin ? `–${t.hora_fin}` : ''}` : '', t.poblacion, CATEGORIAS[t.categoria] || ''].filter(Boolean);
+  const q = new URLSearchParams({ asunto: `Ir en grupo: ${t.titulo} (${cuando(t.inicio, t.fin)})`, fecha: t.inicio });
+  return `
+          <article class="card card--territorio">
+            <p class="eyebrow">${esc(detalles.join(' · '))}</p>
+            <h3>${esc(t.titulo)}</h3>
+            ${t.descripcion ? `<p>${esc(recorta(t.descripcion, 300))}</p>` : ''}
+            <p class="form__note">Fuente: <a href="${esc(t.fuente)}" rel="noopener nofollow" target="_blank">${esc(t.fuente_nombre || 'la organización')}</a></p>
+            <p><a class="btn btn--ghost" href="/contacto.html?${esc(q.toString())}#escribenos" rel="nofollow">Ir en grupo</a></p>
+          </article>`;
+}
+
+function paginaAgenda(acciones, socios, territorio = []) {
   const url = `${SITIO}/agenda`;
   const porMes = new Map();
-  for (const x of acciones) {
-    const clave = x.inicio.slice(0, 7);
-    if (!porMes.has(clave)) { porMes.set(clave, []); }
-    porMes.get(clave).push(x);
-  }
+  const mes = clave => { if (!porMes.has(clave)) { porMes.set(clave, { red: [], fuera: [] }); } return porMes.get(clave); };
+  for (const x of acciones) { mes(x.inicio.slice(0, 7)).red.push(x); }
+  for (const t of territorio) { mes(t.inicio.slice(0, 7)).fuera.push(t); }
+  const claves = [...porMes.keys()].sort();
   const quien = x => firma(socios[x.partner_id], { conPermiso: false });
   const fila = x => {
     const s = quien(x);
@@ -232,14 +248,18 @@ function paginaAgenda(acciones, socios) {
             <p><a class="btn btn--ghost" href="/agenda/${x.id}/plaza" rel="nofollow">Me interesa</a></p>
           </article>`;
   };
-  const meses = [...porMes.entries()].map(([clave, lista]) => {
-    const [ano, mes] = clave.split('-').map(Number);
+  const meses = claves.map(clave => {
+    const { red, fuera } = porMes.get(clave);
+    const [ano, m] = clave.split('-').map(Number);
     return `
   <section class="section" id="m-${clave}">
     <div class="wrap">
-      <h2>${MESES[mes - 1][0].toUpperCase() + MESES[mes - 1].slice(1)} ${ano}</h2>
-      <div class="grid grid--3">${lista.map(fila).join('')}
-      </div>
+      <h2>${MESES[m - 1][0].toUpperCase() + MESES[m - 1].slice(1)} ${ano}</h2>${red.length ? `
+      <div class="grid grid--3">${red.map(fila).join('')}
+      </div>` : ''}${fuera.length ? `
+      <h3 class="agenda__fuera">En el territorio</h3>
+      <div class="grid grid--3">${fuera.map(filaTerritorio).join('')}
+      </div>` : ''}
     </div>
   </section>`;
   }).join('');
@@ -270,18 +290,28 @@ function paginaAgenda(acciones, socios) {
         <a class="btn btn--primary" href="/propuesta.html">Pedir una propuesta</a>
         <a class="btn btn--ghost" href="/blog">Leer el blog</a>
       </div>
-      ${porMes.size > 1 ? `<p class="form__note">${[...porMes.keys()].map(k => `<a href="#m-${k}">${MESES[Number(k.slice(5)) - 1]}</a>`).join(' · ')}</p>` : ''}
+      ${claves.length > 1 ? `<p class="form__note">${claves.map(k => `<a href="#m-${k}">${MESES[Number(k.slice(5)) - 1]}</a>`).join(' · ')}</p>` : ''}
     </div>
   </section>${meses || `
   <section class="section"><div class="wrap"><p>Estamos preparando la agenda del año con los espacios y proveedores de la red.</p></div></section>`}
   <section class="section">
-    <div class="wrap"><p class="form__note">Precios y disponibilidad, bajo petición. Pulsa «Me interesa» y te contestamos nosotros con la propuesta.</p></div>
+    <div class="wrap">
+      <h2>Música entre viñas</h2>
+      <p>Sesiones de DJ y música en directo al aire libre, en las bodegas, masías y rincones de la red. Si tienes un espacio y quieres una sesión, proponla en tu portal; si buscas música para tu grupo, te la preparamos.</p>
+      <div class="hero__actions">
+        <a class="btn btn--ghost" href="/dj.html">Música para tu evento</a>
+        <a class="btn btn--ghost" href="/acceso.html">Proponer una sesión (partners)</a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap"><p class="form__note">Precios y disponibilidad, bajo petición. Pulsa «Me interesa» o «Ir en grupo» y te contestamos nosotros con la propuesta: transporte, espacio, comida y actividad con la red. Las fechas del territorio son de su fuente; confírmalas allí.</p></div>
   </section>`;
 
   return pagina({
     titulo: 'Agenda de experiencias en el Penedès · Events Penedès',
     descripcion: 'Vendimia, catas, castells y cocina de temporada en el Penedès, mes a mes: las experiencias para grupos y empresas de la red de Events Penedès.',
-    canonica: url, indexar: acciones.length > 0,
+    canonica: url, indexar: acciones.length + territorio.length > 0,
     estructurados: [...eventos, migas([['Events Penedès', `${SITIO}/`], ['Agenda', url]])],
     cuerpo,
   });
@@ -306,7 +336,7 @@ export default async (req) => {
     if (raiz === 'agenda') {
       const acciones = proximas(await agendaAprobada());
       if (partes.length === 0) {
-        return responder(paginaAgenda(acciones, await partnersPorId(acciones.map(x => x.partner_id))));
+        return responder(paginaAgenda(acciones, await partnersPorId(acciones.map(x => x.partner_id)), territorioProximo()));
       }
       if (partes.length === 2 && partes[1] === 'plaza' && UUID.test(partes[0])) {
         const x = acciones.find(a => a.id === partes[0]);
