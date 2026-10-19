@@ -317,3 +317,17 @@ body.en-app .portal__estado {
     .portal__cambio .app-tabla th, .portal__cambio .app-tabla td { border: 0; padding: 0.3rem 0.5rem; }
     .portal__cambio .app-antes[data-vacio] { display: none; }
 }
+
+/* --- La página del cliente (/evento) ------------------------------------------- */
+
+.evento-programa { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 1rem; }
+.evento-programa li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding-left: 1rem; border-left: 2px solid var(--app-oro-borde); }
+.evento-programa__hora { margin: 0; font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-variant-numeric: tabular-nums; }
+.evento-programa h4 { margin: 0 0 0.35rem; font-size: 1rem; color: var(--text-hi); }
+.evento-programa p { margin: 0; }
+.evento-peticiones { list-style: none; margin: var(--app-gap) 0 0; padding: 0; display: grid; gap: var(--app-gap); }
+.evento-peticiones blockquote { margin: 0.75rem 0 0; padding: 0.75rem 1rem; border-left: 2px solid var(--accent-gold); background: var(--app-oro-suave); border-radius: 0 var(--radius) var(--radius) 0; }
+.evento-peticiones blockquote p { margin: 0 0 0.35rem; }
+@media (max-width: 40rem) {
+    .evento-programa li { grid-template-columns: 1fr; gap: 0.35rem; }
+}

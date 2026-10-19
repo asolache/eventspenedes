@@ -62,6 +62,9 @@ jobs:
       - name: El portal solo habla con Zoho por quien debe
         run: node tools/test-portal.mjs
 
+      - name: La página del cliente solo lleva lo suyo, sin precios ni proveedores
+        run: node tools/test-evento.mjs
+
       - name: El menú y el pie salen de tools/build-nav.mjs
         run: node tools/build-nav.mjs --check
 

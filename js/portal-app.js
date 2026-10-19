@@ -38,7 +38,7 @@ export function icono(nombre) {
 
 /* vistas: [{ id, titulo, icono, grupo?, n?, intro?, nodos: [...] }]; el grupo se
    rotula en la barra lateral cuando cambia (en el móvil no cabe y no sale) */
-export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', acciones = [], vistas }) {
+export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', acciones = [], vistas, buscar }) {
   const botones = {};
   const secciones = {};
   const nav = h('nav', { class: 'app__nav', 'aria-label': `Secciones de ${titulo}` },
@@ -60,7 +60,7 @@ export function app({ clave, titulo, subtitulo, marca = 'Events Penedès', accio
     main.append(s);
   }
 
-  const busca = buscador({ clave, vistas, secciones, ir: id => ir(id, true) });
+  const busca = buscador({ clave, vistas, secciones, ir: id => ir(id, true), placeholder: buscar });
   const raiz = h('div', { class: 'app', 'data-app': clave },
     h('header', { class: 'app__barra' },
       h('div', { class: 'app__titulo' }, h('strong', {}, titulo), subtitulo ? h('span', {}, subtitulo) : null),

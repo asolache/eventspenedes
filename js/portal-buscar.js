@@ -28,11 +28,11 @@ function indexar(vistas, secciones) {
   return out;
 }
 
-export function buscador({ clave, vistas, secciones, ir }) {
+export function buscador({ clave, vistas, secciones, ir, placeholder = 'Buscar reservas, clientes, cobros…' }) {
   const idLista = `${clave}-buscar-lista`;
   const entrada = h('input', {
     type: 'search', id: `${clave}-buscar`, autocomplete: 'off', spellcheck: 'false',
-    placeholder: 'Buscar reservas, clientes, cobros…', role: 'combobox',
+    placeholder, role: 'combobox',
     'aria-expanded': 'false', 'aria-controls': idLista, 'aria-autocomplete': 'list',
   });
   const lista = h('ul', { class: 'app-buscar__lista', id: idLista, role: 'listbox', hidden: true, 'aria-label': 'Resultados' });
