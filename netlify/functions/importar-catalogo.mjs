@@ -58,6 +58,9 @@ export default async (req) => {
   }
   if (!url && !pdf) { return responder({ ok: false, error: 'Falta la web o el PDF' }, 400); }
   const ficha = p.ficha === undefined ? 'localizacion' : p.ficha;
+  /* El trato de Zoho del pedido para el que un proveedor manda su propuesta:
+     así lo que cuesta leerla suma en el coste de ese cliente. Solo un id. */
+  const pedido = typeof p.pedido === 'string' && /^\d{10,25}$/.test(p.pedido) ? p.pedido : null;
   if (!Object.hasOwn(FICHAS, ficha)) { return responder({ ok: false, error: 'Ficha desconocida' }, 400); }
 
   try {
@@ -83,6 +86,7 @@ export default async (req) => {
         ficha, metodo: r.metodo, modelo: uso?.modelo || null,
         tokens_entrada: uso?.tokens.entrada || 0, tokens_salida: uso?.tokens.salida || 0,
         tokens_cache: uso?.tokens.cache || 0, coste_usd: usd || 0, fuente,
+        zoho_modulo: pedido ? 'Deals' : null, zoho_id: pedido,
       }).catch(e => console.error('importar · no se pudo anotar el coste:', e.message));
     }
     return responder({ ok: true, ...resto });
