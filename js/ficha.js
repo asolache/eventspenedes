@@ -324,6 +324,8 @@
         var cuerpo = { ficha: form.name };
         var pedido = new URLSearchParams(location.search).get('pedido');
         if (pedido && /^\d{10,25}$/.test(pedido)) { cuerpo.pedido = pedido; }
+        var socio = new URLSearchParams(location.search).get('partner');
+        if (socio && /^[a-z0-9-]{2,60}$/.test(socio)) { cuerpo.partner = socio; }
         if (url) { cuerpo.url = url; }
         if (b64) { cuerpo.pdf = b64; cuerpo.nombre = fichero.name; }
         return fetch('/api/importar-catalogo', {

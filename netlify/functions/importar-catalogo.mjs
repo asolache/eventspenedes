@@ -30,7 +30,7 @@
    ========================================================================== */
 import { importar } from '../ficha/importar.mjs';
 import { FICHAS } from '../ficha/fichas.mjs';
-import { configurado, anotar } from '../portal/supabase.mjs';
+import { configurado, anotar, partnerPorCodigo } from '../portal/supabase.mjs';
 
 const CABECERAS = { 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
 const responder = (cuerpo, status = 200) => Response.json(cuerpo, { status, headers: CABECERAS });
@@ -61,6 +61,9 @@ export default async (req) => {
   /* El trato de Zoho del pedido para el que un proveedor manda su propuesta:
      así lo que cuesta leerla suma en el coste de ese cliente. Solo un id. */
   const pedido = typeof p.pedido === 'string' && /^\d{10,25}$/.test(p.pedido) ? p.pedido : null;
+  /* El partner que manda su propuesta: la lectura cuenta como valor de su plan
+     (valor_plan suma importaciones con partner_id). Solo un código de slug. */
+  const socio = typeof p.partner === 'string' && /^[a-z0-9-]{2,60}$/.test(p.partner) ? p.partner : null;
   if (!Object.hasOwn(FICHAS, ficha)) { return responder({ ok: false, error: 'Ficha desconocida' }, 400); }
 
   try {
@@ -82,11 +85,12 @@ export default async (req) => {
     if (configurado()) {
       let fuente = null;
       try { fuente = url ? new URL(url).host : 'pdf subido'; } catch { fuente = null; }
+      const partnerId = socio ? await partnerPorCodigo(socio).then(x => x?.id || null).catch(() => null) : null;
       await anotar('importaciones', {
         ficha, metodo: r.metodo, modelo: uso?.modelo || null,
         tokens_entrada: uso?.tokens.entrada || 0, tokens_salida: uso?.tokens.salida || 0,
         tokens_cache: uso?.tokens.cache || 0, coste_usd: usd || 0, fuente,
-        zoho_modulo: pedido ? 'Deals' : null, zoho_id: pedido,
+        zoho_modulo: pedido ? 'Deals' : null, zoho_id: pedido, partner_id: partnerId,
       }).catch(e => console.error('importar · no se pudo anotar el coste:', e.message));
     }
     return responder({ ok: true, ...resto });
