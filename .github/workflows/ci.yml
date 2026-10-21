@@ -62,6 +62,14 @@ jobs:
       - name: El portal solo habla con Zoho por quien debe
         run: node tools/test-portal.mjs
 
+      - name: La página del cliente solo lleva lo suyo, sin precios ni proveedores
+        run: node tools/test-evento.mjs
+
+      # Desde el 30/10/2026 Supabase no da permisos por defecto a las tablas
+      # nuevas: cada tabla o vista de public lleva sus GRANT en la migración.
+      - name: Ninguna tabla de public sin permisos explícitos
+        run: node tools/check-permisos.mjs
+
       - name: El menú y el pie salen de tools/build-nav.mjs
         run: node tools/build-nav.mjs --check
 

@@ -24,6 +24,7 @@ import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { vistaCerebro } from './portal-red.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
+import './portal-eventos.js';
 
 const raiz = document.getElementById('portal');
 const $ = s => raiz.querySelector(s);

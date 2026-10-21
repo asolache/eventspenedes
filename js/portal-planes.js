@@ -10,8 +10,8 @@
    publica solo: el partner lo usa y queda como un cambio por revisar.
    ========================================================================== */
 import { sb, proponer } from './portal-cliente.js';
-import { h, ok, intentar, decir, api, aZoho, boton } from './portal-ui.js';
-import { icono, tarjeta, chip } from './portal-app.js';
+import { h, ok, intentar, decir, api, aZoho, boton, fecha } from './portal-ui.js';
+import { icono, tarjeta, chip, kpis, extras } from './portal-app.js';
 
 let cache = null;
 export async function planes() {
@@ -58,7 +58,10 @@ export async function vistaPlan(p, { recargar }) {
     decir(`Te escribimos para pasarte al plan ${pl.nombre}. Lo verás en la conversación.`, 'ok');
     await recargar();
   };
+  const valor = await valorPlan(p);
   return [
+    valor ? tarjetaValor(datos, p, valor) : null,
+    p.tester || p.plan !== 'ficha' ? formMejora(p, { recargar }) : null,
     oferta ? h('div', { class: 'app-card app-card--oro app-oferta' }, icono('regalo'),
       h('div', {}, h('h3', {}, p.tester ? 'Eres uno de nuestros primeros partners' : `Oferta para los ${oferta.plazas} primeros`),
         h('p', {}, oferta.texto))) : null,
@@ -66,6 +69,76 @@ export async function vistaPlan(p, { recargar }) {
     h('p', { class: 'app-nota' }, `Cuotas ${datos.iva_incluido ? 'con' : 'sin'} IVA${datos.provisional ? ', de lanzamiento' : ''}. Puedes cambiar de plan cuando quieras: escríbenos y lo hacemos.`),
   ];
 }
+
+/* Lo que el plan le ha dado al partner: solo recuentos, sin costes
+   (supabase/migrations/20261020200000_valor_plan.sql) */
+export async function valorPlan(p, dias = 30) {
+  const { data, error } = await sb.rpc('valor_plan', { p: p.id, dias });
+  if (error) { console.error('valor_plan:', error.message); return null; }
+  return data;
+}
+
+const plural = (n, uno, varios) => `${n} ${n === 1 ? uno : varios}`;
+
+export function tarjetaValor(datos, p, v, { admin = false } = {}) {
+  const dePago = p.plan && p.plan !== 'ficha';
+  const titulo = admin ? `Últimos ${v.dias} días`
+    : dePago ? `Lo que te ha dado tu plan en los últimos ${v.dias} días` : `Lo que ha pasado en los últimos ${v.dias} días`;
+  const ia = v.propuestas_ia + v.textos_ia;
+  return tarjeta(titulo,
+    kpis([
+      [admin ? 'Visitas a su página' : 'Visitas a tu página', v.vistas, plural(v.clics, 'clic', 'clics'), 'oro'],
+      [admin ? 'Clientes por su enlace' : 'Clientes por tu enlace', v.clientes],
+      ['Reservas', v.reservas, `${v.confirmadas} confirmadas`],
+      ['Ayuda de la IA', ia, ia ? [v.propuestas_ia ? plural(v.propuestas_ia, 'propuesta', 'propuestas') : null, v.textos_ia ? plural(v.textos_ia, 'texto', 'textos') : null].filter(Boolean).join(' · ') : null],
+    ]),
+    admin ? null : h('p', { class: 'app-nota' }, dePago
+      ? 'Cada cifra sale de lo que pasa en el portal. Si algo no te está sirviendo, cuéntanoslo aquí abajo.'
+      : `Con el plan ${nombrePlan(datos, 'pagina')} ves esto cada día y te llegan las peticiones con la respuesta preparada.`));
+}
+
+/* Lo que el partner nos pide mejorar llega a la conversación, marcado */
+export const PREFIJO_MEJORA = 'Para mejorar el plan: ';
+function formMejora(p, { recargar }) {
+  const caja = h('textarea', { rows: 3, maxlength: 2000, required: true, placeholder: 'Qué te ahorraría tiempo, qué echas en falta, qué sobra…' });
+  return h('form', { class: 'app-card form', onsubmit: intentar(async e => {
+    e.preventDefault();
+    const texto = caja.value.trim();
+    if (!texto) { return; }
+    const id = ok(await sb.rpc('comentar', { p_partner: p.id, p_texto: `${PREFIJO_MEJORA}${texto}`, p_sobre: 'general', p_ref: null, p_interno: false }));
+    await aZoho({ mensaje: id });
+    decir('Gracias. Lo leemos y te contamos qué cambiamos.', 'ok');
+    await recargar();
+  }) },
+  h('h3', {}, p.tester ? 'Qué mejorarías' : 'Cuéntanos qué mejorar'),
+  h('p', { class: 'app-nota' }, 'Lo que nos digas decide lo próximo que hacemos en el portal.'),
+  h('p', { class: 'field' }, h('label', {}, 'Tu idea', caja)),
+  h('p', { class: 'portal__botones' }, h('button', { class: 'btn btn--primary', type: 'submit' }, 'Enviar')));
+}
+
+/* En administración: cómo le va a cada partner de pago o tester, para saber
+   si el plan le compensa, y lo que nos ha pedido mejorar */
+extras.admin.push(async ({ irAPartner }) => {
+  const [lista, datos] = await Promise.all([
+    sb.from('partners').select('id,codigo,nombre,plan,tester').or('tester.eq.true,plan.neq.ficha').order('nombre').then(ok),
+    planes(),
+  ]);
+  const ideas = lista.length ? ok(await sb.from('mensajes').select('partner_id,texto,creado_en')
+    .in('partner_id', lista.map(p => p.id)).like('texto', `${PREFIJO_MEJORA}%`).order('creado_en', { ascending: false })).filter(x => (x.texto || '').startsWith(PREFIJO_MEJORA)) : [];
+  const valores = await Promise.all(lista.map(p => valorPlan(p)));
+  const plazas = datos.oferta_testers?.plazas;
+  const testers = lista.filter(p => p.tester).length;
+  return {
+    id: 'planes-valor', titulo: 'Partners de pago y testers', corto: 'Testers', icono: 'plan', n: ideas.filter(x => Date.now() - new Date(x.creado_en) < 14 * 864e5).length,
+    intro: `Lo que el plan le da a cada partner que paga o prueba${plazas ? ` (${testers} de ${plazas} testers)` : ''}, y lo que nos pide mejorar.`,
+    nodos: lista.length ? [h('div', { class: 'app-rejilla' }, lista.map((p, i) => h('div', {},
+      h('p', { class: 'app-fila' }, h('strong', {}, p.nombre), chip(nombrePlan(datos, p.plan)), p.tester ? chip('tester', 'oro') : null,
+        irAPartner ? h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => irAPartner(p.id) }, 'Abrir') : null),
+      valores[i] ? tarjetaValor(datos, p, valores[i], { admin: true }) : null,
+      ...ideas.filter(x => x.partner_id === p.id).map(x => h('blockquote', {}, h('p', {}, x.texto.slice(PREFIJO_MEJORA.length)), h('p', { class: 'app-nota' }, `Nos pide mejorar · ${fecha(x.creado_en)}`))))))]
+      : [h('p', { class: 'app-vacio' }, 'Ningún partner de pago ni tester todavía.')],
+  };
+});
 
 /* El asistente de IA para la descripción. `datos` es la ficha en curso. */
 export function asistenteDescripcion(p, datos, { recargar, admin = false }) {

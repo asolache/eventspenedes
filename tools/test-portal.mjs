@@ -205,6 +205,15 @@ comprueba('el buscador no distingue acentos ni mayúsculas', normal('CÓBROS') =
 comprueba('pide todas las palabras', buscar(idx, 'comida 40').length === 1 && buscar(idx, 'comida 41').length === 0);
 comprueba('y sin nada escrito no enseña nada', buscar(idx, '  ').length === 0);
 
+// Lo que el plan le da al partner: recuentos, nunca costes
+const { readFileSync } = await import('node:fs');
+const sqlValor = readFileSync(new URL('../supabase/migrations/20261020200000_valor_plan.sql', import.meta.url), 'utf8');
+const cuerpoValor = sqlValor.slice(sqlValor.indexOf('jsonb_build_object'));
+comprueba('el valor del plan solo cuenta, no suma costes ni tokens', !/coste|tokens|importe/.test(cuerpoValor.slice(0, cuerpoValor.indexOf('end $$'))));
+comprueba('y solo lo ve el partner o administración', /es_admin\(\) or public\.es_miembro\(p\)/.test(sqlValor) && /from public, anon/.test(sqlValor));
+const jsPlanes = readFileSync(new URL('../js/portal-planes.js', import.meta.url), 'utf8');
+comprueba('la vista del plan no lee las tablas de la IA', !/from\('(uso_ia|importaciones)'\)/.test(jsPlanes));
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');
