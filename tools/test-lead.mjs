@@ -13,7 +13,7 @@ import { createHmac, createHash } from 'node:crypto';
 process.env.NETLIFY_WEBHOOK_JWS_SECRET = 'secreto-de-prueba-no-usar';
 process.env.ZOHO_DRY_RUN = '1';
 
-const { default: handler } = await import('../netlify/functions/lead.mjs');
+const { default: handler, eventoSeguimiento } = await import('../netlify/functions/lead.mjs');
 
 const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
 
@@ -482,6 +482,15 @@ comprueba('un GET se rechaza',
 delete process.env.NETLIFY_WEBHOOK_JWS_SECRET;
 comprueba('sin secreto configurado no se acepta nada',
   (await handler(peticion(AVISO, firmar(AVISO, 'secreto-de-prueba-no-usar')))).status === 503);
+
+/* 4 · Cada pedido de propuesta abre su seguimiento, sin datos de contacto */
+const seg = eventoSeguimiento({ evento: { id: '2026-12-18-Acme SL' } },
+  { tipo: 'comida', fecha: '2026-12-18', personas: '35', correo: 'x@acme.example', telefono: '600' }, '2606679000001883001');
+comprueba('el seguimiento lleva id válido, fecha, personas y ninguna propuesta todavía',
+  seg && /^[a-z0-9-]{3,80}$/.test(seg.id) && seg.id.endsWith('883001') && seg.fecha === '2026-12-18'
+  && seg.datos.pax === 35 && seg.datos.propuestas.length === 0);
+comprueba('ni correo ni teléfono en el seguimiento', !/acme\.example|600/.test(JSON.stringify(seg.datos)));
+comprueba('sin registro en Zoho no se abre seguimiento', eventoSeguimiento({ evento: { id: 'x' } }, {}, null) === null);
 
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }

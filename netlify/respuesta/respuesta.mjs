@@ -40,7 +40,7 @@ const QUE = {
 
 /* El siguiente paso de cada formulario. Es lo único que el correo promete */
 const SIGUIENTE = {
-  propuesta: a => `ya estamos preparando su propuesta; para afinarla, una llamada de 20 minutos que reserva cuando le vaya bien en ${a.agenda}`,
+  propuesta: a => `ya estamos preparando su propuesta; para afinarla, una llamada de 20 minutos que reserva cuando le vaya bien en ${a.agenda}${a.seguimiento ? `. Y puede ver en todo momento cómo va su propuesta en ${a.seguimiento} (se actualiza sola con cada espacio que contesta): pon este enlace tal cual` : ''}`,
   contacto: a => `una llamada de 20 minutos para concretarlo, que reserva cuando le vaya bien en ${a.agenda}`,
   agencia: a => `le adjuntamos nuestro catálogo para agencias (lo adjunta Álvaro al enviar: nómbralo como adjunto, sin describir lo que trae) y le proponemos una llamada de 20 minutos para conocernos: ${a.agenda}`,
   red: a => `rellenar su ficha en ${a.ficha}, que puede empezar desde su web o sus tarifas en PDF; después le llamamos para conocernos`,
@@ -93,7 +93,7 @@ const PLANTILLA = {
     datos: p => `Tomamos nota: ${p.join(', ')}.`,
     personas: n => `${n} personas`,
     siguiente: {
-      propuesta: a => `Para afinarla, ¿hablamos 20 minutos? Elige el momento que mejor te vaya: ${a.agenda}`,
+      propuesta: a => `Para afinarla, ¿hablamos 20 minutos? Elige el momento que mejor te vaya: ${a.agenda}${a.seguimiento ? `\n\nAquí puedes ver en todo momento cómo va tu propuesta; se actualiza sola cada vez que un espacio nos contesta: ${a.seguimiento}` : ''}`,
       contacto: a => `Lo vemos mejor en una llamada de 20 minutos. Elige el momento que mejor te vaya: ${a.agenda}`,
       agencia: a => `Si te va bien, hablamos 20 minutos para conocernos: ${a.agenda}`,
       red: a => `El siguiente paso es vuestra ficha, que podéis empezar desde vuestra web o vuestras tarifas en PDF: ${a.ficha}\n\nDespués os llamamos para conocernos.`,
@@ -117,7 +117,7 @@ const PLANTILLA = {
     datos: p => `En prenem nota: ${p.join(', ')}.`,
     personas: n => `${n} persones`,
     siguiente: {
-      propuesta: a => `Per afinar-la, en parlem 20 minuts? Tria el moment que et vagi millor: ${a.agenda}`,
+      propuesta: a => `Per afinar-la, en parlem 20 minuts? Tria el moment que et vagi millor: ${a.agenda}${a.seguimiento ? `\n\nAquí pots veure en tot moment com va la teva proposta; s’actualitza sola cada vegada que un espai ens contesta: ${a.seguimiento}` : ''}`,
       contacto: a => `Ho veurem millor en una trucada de 20 minuts. Tria el moment que et vagi millor: ${a.agenda}`,
       agencia: a => `Si et va bé, en parlem 20 minuts per conèixer-nos: ${a.agenda}`,
       red: a => `El següent pas és la vostra fitxa, que podeu començar des del vostre web o les vostres tarifes en PDF: ${a.ficha}\n\nDesprés us truquem per conèixer-nos.`,
@@ -141,7 +141,7 @@ const PLANTILLA = {
     datos: p => `We have noted: ${p.join(', ')}.`,
     personas: n => `${n} people`,
     siguiente: {
-      propuesta: a => `To fine-tune it, shall we talk for 20 minutes? Pick the time that suits you best: ${a.agenda}`,
+      propuesta: a => `To fine-tune it, shall we talk for 20 minutes? Pick the time that suits you best: ${a.agenda}${a.seguimiento ? `\n\nYou can follow your proposal here at any time; it updates itself each time a venue gets back to us: ${a.seguimiento}` : ''}`,
       contacto: a => `It will be easier on a 20-minute call. Pick the time that suits you best: ${a.agenda}`,
       agencia: a => `If it suits you, let’s talk for 20 minutes to get to know each other: ${a.agenda}`,
       red: a => `The next step is your profile, which you can start from your website or your price list in PDF: ${a.ficha}\n\nThen we will call you to get to know each other.`,
@@ -232,11 +232,11 @@ export function enlaces({ correo, asunto, cuerpo, quien, cuando, idioma }) {
 /* --- La respuesta ---------------------------------------------------------
    `peticion` es lo que se pidió, una línea por dato y sin correo ni teléfono:
    es lo único que Claude lee de quien escribe. */
-export async function preparar({ form, d = {}, cuando, peticion = '', apiKey, model, fetch = globalThis.fetch } = {}) {
+export async function preparar({ form, d = {}, cuando, peticion = '', seguimiento = null, apiKey, model, fetch = globalThis.fetch } = {}) {
   const idioma = Object.hasOwn(IDIOMAS, d.idioma) ? d.idioma : 'es';
   const { nombre, correo, correoMalo, quien } = quienEs(d);
   const ficha = d.perfil === 'localizacion' ? '/alta-localizacion' : '/alta-proveedor';
-  const a = { agenda: AGENDA, ficha: `${sitio()}${ficha}` };
+  const a = { agenda: AGENDA, ficha: `${sitio()}${ficha}`, seguimiento };
   const avisos = [];
   let texto = null, modo = 'plantilla', uso = null, pendiente = [];
 
@@ -265,6 +265,7 @@ export async function preparar({ form, d = {}, cuando, peticion = '', apiKey, mo
     if (m) { pendiente.push(`Contestar lo que escribe: «${m.slice(0, 300)}${m.length > 300 ? '…' : ''}»`); }
   }
   avisos.push(...revisar(texto));
+  if (seguimiento && !texto.cuerpo.includes(seguimiento)) { avisos.push(`No lleva el enlace de seguimiento del cliente: añádelo, ${seguimiento}`); }
   if (form === 'agencia') {
     avisos.push(`Adjunta el catálogo para agencias en PDF${process.env.CATALOGO_AGENCIAS_URL ? `: ${process.env.CATALOGO_AGENCIAS_URL}` : ''}.`);
   }

@@ -384,9 +384,9 @@ function peticion(form, d) {
    el portal. Nada de esto puede tumbar el lead, que ya está dentro: lo que
    falle queda en el registro de la función. Sin `destino` (prueba en seco)
    solo la prepara. */
-async function responder(form, d, cuando, destino) {
+async function responder(form, d, cuando, destino, seguimiento = null) {
   try {
-    const r = await RESP.preparar({ form, d, cuando, peticion: peticion(form, d),
+    const r = await RESP.preparar({ form, d, cuando, peticion: peticion(form, d), seguimiento,
       apiKey: process.env.ANTHROPIC_API_KEY, model: process.env.ANTHROPIC_MODEL });
     if (!destino) { return r; }
     const fallos = [];
@@ -413,6 +413,38 @@ async function responder(form, d, cuando, destino) {
     return { ...r, fallos };
   } catch (e) {
     console.error('No se pudo preparar la respuesta:', e.message);
+    return null;
+  }
+}
+
+/* --- El seguimiento del cliente ---------------------------------------------
+   Cada pedido de propuesta abre su página de seguimiento
+   (/seguimiento/<id>/<clave>, ver netlify/functions/seguimiento.mjs): el
+   cliente ve cómo van las propuestas sin entrar, y el enlace va en la
+   respuesta preparada y en una nota de su ficha. Sin propuestas todavía: las
+   añade tools/evento-cliente.mjs cuando los espacios contestan. El id lleva el
+   final del registro de Zoho para que dos pedidos del mismo día no choquen. */
+export function eventoSeguimiento(b, d, zohoId) {
+  const ev = b?.evento;
+  if (!ev?.id || !zohoId) { return null; }
+  const pax = Number.parseInt(d.personas || d.pax, 10);
+  return {
+    id: `${ev.id}-${String(zohoId).slice(-6)}`.toLowerCase().replace(/[^a-z0-9-]/g, '-').slice(0, 80),
+    titulo: (ev.titulo || legible('propuesta', 'tipo', d.tipo) || 'Vuestro evento').slice(0, 160),
+    fecha: FECHA.test(d.fecha || '') ? d.fecha : null,
+    estado: 'propuesta',
+    datos: { pax: Number.isFinite(pax) ? pax : null, propuestas: [], faltan: [] },
+  };
+}
+
+async function abrirSeguimiento(b, d, zohoId, base) {
+  const fila = eventoSeguimiento(b, d, zohoId);
+  if (!fila || !PORTAL.configurado()) { return null; }
+  try {
+    const [c] = await PORTAL.rest('eventos_cliente?select=id,clave', { method: 'POST', body: fila, prefer: 'return=representation' });
+    return c?.clave ? `${base}/seguimiento/${c.id}/${c.clave}` : null;
+  } catch (e) {
+    console.error('No se pudo abrir el seguimiento del cliente:', e.message);
     return null;
   }
 }
@@ -787,10 +819,14 @@ export default async (req, context) => {
 
   /* El borrador, en una nota de la oportunidad o del lead. Si falla, la ficha
      ya está dentro y el enlace en el registro de la función: se avisa y se sigue. */
+  const seguimiento = b && id ? await abrirSeguimiento(b, d, id, process.env.URL || 'https://eventspenedes.com') : null;
+  if (seguimiento) { console.log(`Seguimiento del cliente: ${seguimiento}`); }
+
   let fallo = null;
   if (b && id) {
     try {
-      await nota(modulo, id, 'Borrador de propuesta', b.nota.trim());
+      await nota(modulo, id, 'Borrador de propuesta', (b.nota.trim() + (seguimiento
+        ? `\n\nSeguimiento para el cliente (sin entrar, sin precios): ${seguimiento}` : '')).trim());
     } catch (e) {
       console.error(`La ficha está en Zoho (${modulo}), pero no la nota del borrador:`, e.message);
       fallo = e.message;
@@ -800,7 +836,7 @@ export default async (req, context) => {
   /* La respuesta preparada, después de contestar a Netlify: escribirla con
      Claude lleva unos segundos y el aviso del formulario no tiene por qué
      esperarlos. Sin `waitUntil` (en las pruebas) se espera aquí. */
-  const trabajo = id && RESP.FORMULARIOS.includes(form) ? responder(form, d, cuando, { modulo, id, contacto }) : null;
+  const trabajo = id && RESP.FORMULARIOS.includes(form) ? responder(form, d, cuando, { modulo, id, contacto }, seguimiento) : null;
   if (trabajo && context?.waitUntil) { context.waitUntil(trabajo); }
   const r = trabajo && !context?.waitUntil ? await trabajo : null;
   return Response.json({ ok: true, modulo, ...(fallo ? { nota: false, error: fallo } : {}), ...(r ? { respuesta: r.modo } : {}) });
