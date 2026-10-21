@@ -169,6 +169,16 @@ delete process.env.ANTHROPIC_WORKSPACE_ID;
 const guia = GUIA({ idioma: 'castellano', siguiente: 'x' });
 comprueba('las instrucciones no llevan importes ni enlaces', !revisar({ asunto: '', cuerpo: guia }).length);
 
+/* 8 · El enlace de seguimiento del cliente va en la respuesta a una propuesta */
+const SEG = 'https://eventspenedes.com/seguimiento/2026-05-14-acme-123456/' + 'a'.repeat(32);
+for (const idioma of ['es', 'ca', 'en']) {
+  const r = await preparar({ form: 'propuesta', d: { ...MARTA, idioma }, cuando: CUANDO, seguimiento: SEG });
+  comprueba(`propuesta (${idioma}): la plantilla lleva el enlace de seguimiento y no lo avisa como ajeno`,
+    r.cuerpo.includes(SEG) && !r.avisos.some(a => a.includes('seguimiento') || a.includes('no son nuestros')));
+}
+const sinSeg = await preparar({ form: 'propuesta', d: MARTA, cuando: CUANDO });
+comprueba('sin seguimiento, la respuesta sale igual y sin enlace roto', !/seguimiento\//.test(sinSeg.cuerpo));
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ La respuesta sale siempre, en su idioma, sin enviarse y sin lo que no toca.\n');
