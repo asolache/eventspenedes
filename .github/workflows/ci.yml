@@ -65,6 +65,9 @@ jobs:
       - name: La página del cliente solo lleva lo suyo, sin precios ni proveedores
         run: node tools/test-evento.mjs
 
+      - name: El envío propio solo saca lo aprobado, con Álvaro en CCO
+        run: node tools/test-correo-salida.mjs
+
       # Desde el 30/10/2026 Supabase no da permisos por defecto a las tablas
       # nuevas: cada tabla o vista de public lleva sus GRANT en la migración.
       - name: Ninguna tabla de public sin permisos explícitos
