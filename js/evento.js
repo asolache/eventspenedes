@@ -125,6 +125,14 @@ export async function panelEvento(ev, { sesion, acciones, recargar }) {
     })) : null,
   ];
 
+  /* Las propuestas que estamos pidiendo, mientras el evento está en propuesta */
+  const propuestas = Array.isArray(d.propuestas) ? d.propuestas : [];
+  const vPropuestas = propuestas.map(p => tarjeta(p.titulo,
+    p.foto ? h('img', { src: p.foto, alt: p.alt || '', loading: 'lazy' }) : null,
+    p.estado === 'lista' && p.texto ? h('p', {}, p.texto) : null,
+    h('p', { class: 'app-fila' }, p.estado === 'lista' ? chip('Propuesta lista', 'ok') : chip('En curso', 'aviso'),
+      h('span', { class: 'app-nota' }, p.estado === 'lista' ? 'Te la enviamos por correo con el precio.' : 'Estamos esperando su propuesta formal.'))));
+
   const sinContestar = peticiones.filter(p => p.estado !== 'respondida').length;
   vistaApp = app({
     clave: ev.id,
@@ -133,6 +141,9 @@ export async function panelEvento(ev, { sesion, acciones, recargar }) {
     acciones,
     buscar: 'Buscar en tu evento…',
     vistas: [
+      ...(propuestas.length ? [{ id: 'propuestas', titulo: 'Las propuestas', corto: 'Propuestas', icono: 'ficha',
+        n: propuestas.filter(p => p.estado === 'lista').length,
+        intro: 'Una por espacio. Cada una sale como lista en cuanto el espacio nos la confirma.', nodos: vPropuestas }] : []),
       { id: 'programa', titulo: 'El programa', corto: 'Programa', icono: 'reservas', nodos: vPrograma },
       { id: 'faltan', titulo: 'Lo que nos falta de vosotros', corto: 'Nos falta', icono: 'ficha', n: faltan.length,
         intro: 'Con esto cerramos el día. Contesta lo que sepas: lo demás lo vamos viendo.', nodos: vFaltan },

@@ -3,11 +3,19 @@
    La versión para el cliente de un evento
 
      node tools/evento-cliente.mjs <eventos/<id>.json> [--invita correo …]
+                                   [--peticiones data/peticiones.json]
 
    Escribe en la salida el SQL que deja en public.eventos_cliente lo que el
    cliente ve en /evento: título, fecha, lugar, personas, el programa con sus
    horas y lo que aún nos falta de él. Se puede repetir: el evento se
    actualiza, no se duplica. Con --invita, ese correo puede entrar a verlo.
+
+   Si el evento lleva `correo_opciones` (la propuesta en marcha), también las
+   propuestas que estamos pidiendo, una por espacio: «en curso» hasta que el
+   espacio confirma el día y la opción tiene precio, y entonces «lista». Las
+   ve el cliente en /evento y en el enlace de seguimiento, sin entrar
+   (/seguimiento/<id>/<clave>), sin precios: la propuesta con precio le llega
+   por correo.
 
    Solo pasa lo que es del cliente. Nunca la venta (precios, costes,
    comisiones), los proveedores, la dedicación ni las notas internas: los
@@ -31,8 +39,28 @@ function finDe(hora, minutos) {
   return `${String(Math.floor(t / 60) % 24).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
 }
 
+/* Las propuestas para el cliente: de cada opción, el título, la descripción y
+   la foto. Nunca precios ni el fijo de gestión. Está lista cuando el espacio
+   ha dicho que tiene el día (peticiones.json) y la opción tiene precio. */
+export function propuestasCliente(co, peticiones = []) {
+  if (!co || !Array.isArray(co.opciones)) { return []; }
+  return co.opciones.map(o => {
+    const p = peticiones.find(x => x.id === o.peticion) || {};
+    const menus = Array.isArray(o.menus) ? o.menus : [];
+    const conPrecio = menus.length ? menus.every(m => Number.isFinite(m.precio_pax)) : Number.isFinite(o.precio_pax);
+    return {
+      titulo: sinHtml(o.titulo).slice(0, 160) || null,
+      estado: conPrecio && p.disponible === true ? 'lista' : 'en_curso',
+      texto: sinHtml(o.texto) || null,
+      foto: /^https:\/\/eventspenedes\.com\//.test(o.foto || '') ? o.foto : null,
+      alt: o.foto ? sinHtml(o.alt) || null : null,
+    };
+  }).filter(x => x.titulo);
+}
+
 /* El evento, sin SQL: exactamente lo que verá el cliente */
-export function eventoCliente(ev, id) {
+export function eventoCliente(ev, id, { peticiones = [] } = {}) {
+  const co = ev.correo_opciones || null;
   const e = ev.evento || {};
   const sitio = espacios.find(x => x.id === ev.espacio) || null;
   const programa = (ev.programa || []).map(p => {
@@ -49,7 +77,7 @@ export function eventoCliente(ev, id) {
   const faltan = [];
   const falta = (clave, txt) => faltan.push({ clave, texto: txt });
   if (!ev.cliente?.empresa) { falta('empresa', 'El nombre de vuestra empresa, tal como debe salir en el evento'); }
-  if (!Number.isFinite(e.pax)) { falta('pax', 'Cuántas personas vendréis, aunque sea aproximado'); }
+  if (!Number.isFinite(e.pax) && !Number.isFinite(co?.pax)) { falta('pax', 'Cuántas personas vendréis, aunque sea aproximado'); }
   if (!sitio) {
     falta('lugar', e.espacio_confirmado ? 'El nombre y la dirección exacta del lugar' : 'Dónde será el evento');
   }
@@ -61,16 +89,21 @@ export function eventoCliente(ev, id) {
   if (!e.idioma_evento) { falta('idioma', 'En qué idioma lo hacemos'); }
   if (!e.objetivo) { falta('objetivo', 'Qué queréis que se lleve el grupo del día'); }
 
-  const titulo = programa.map(p => p.titulo).join(' + ') || 'Vuestro evento';
+  const propuestas = propuestasCliente(co, peticiones);
+  const titulo = programa.map(p => p.titulo).join(' + ') || sinHtml(co?.cabecera?.[0]) || 'Vuestro evento';
+  /* Sin evento cerrado, la fecha es la del pedido (sus ids empiezan por ella) */
+  const fechaPedido = (co?.pedido || '').slice(0, 10);
+  const fecha = [e.fecha, fechaPedido].find(f => /^\d{4}-\d{2}-\d{2}$/.test(f || '')) || null;
   return {
     id,
     titulo: titulo.slice(0, 160),
-    fecha: /^\d{4}-\d{2}-\d{2}$/.test(e.fecha || '') ? e.fecha : null,
+    fecha,
     estado: ESTADOS[ev.estado] || 'propuesta',
     datos: {
       lugar: sitio ? { nombre: sitio.nombre, poblacion: sitio.poblacion || null } : null,
-      pax: Number.isFinite(e.pax) ? e.pax : null,
+      pax: Number.isFinite(e.pax) ? e.pax : (Number.isFinite(co?.pax) ? co.pax : null),
       programa,
+      ...(co ? { propuestas } : {}),
       faltan,
     },
   };
@@ -89,9 +122,13 @@ on conflict (id) do update set titulo = excluded.titulo, fecha = excluded.fecha,
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const [ruta, ...resto] = process.argv.slice(2);
-  if (!ruta) { console.error('Uso: node tools/evento-cliente.mjs <evento.json> [--invita correo …]'); process.exit(2); }
+  if (!ruta) { console.error('Uso: node tools/evento-cliente.mjs <evento.json> [--invita correo …] [--peticiones peticiones.json]'); process.exit(2); }
   const invitados = [];
-  for (let i = 0; i < resto.length; i++) { if (resto[i] === '--invita' && resto[i + 1]) { invitados.push(resto[++i]); } }
+  let peticiones = [];
+  for (let i = 0; i < resto.length; i++) {
+    if (resto[i] === '--invita' && resto[i + 1]) { invitados.push(resto[++i]); }
+    if (resto[i] === '--peticiones' && resto[i + 1]) { peticiones = JSON.parse(readFileSync(resto[++i], 'utf8')).peticiones || []; }
+  }
   const ev = JSON.parse(readFileSync(ruta, 'utf8'));
-  console.log(sqlEventoCliente(eventoCliente(ev, ev.id || basename(ruta, '.json')), invitados));
+  console.log(sqlEventoCliente(eventoCliente(ev, ev.id || basename(ruta, '.json'), { peticiones }), invitados));
 }

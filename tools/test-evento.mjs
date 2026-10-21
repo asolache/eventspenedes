@@ -80,5 +80,34 @@ const migracion = readFileSync(new URL('../supabase/migrations/20261019180000_ev
 comprueba('el cliente no puede escribir su evento', !/policy "[^"]*" on public\.eventos_cliente for (insert|update|all) to authenticated\s+using \(\(select public\.es_admin\(\)\) or/.test(migracion));
 comprueba('lo que pide nace nueva y sin respuesta', /estado = 'nueva' and respuesta is null/.test(migracion));
 
+/* 7 · Las propuestas en marcha y el enlace de seguimiento */
+const PEDIDO = {
+  correo_opciones: {
+    pedido: '2026-12-18-comida-35', cabecera: ['Vuestra comida de empresa'], pax: 35,
+    opciones: [
+      { peticion: 'p/a', titulo: 'Masía A · menú', texto: 'Sala privada', foto: 'https://eventspenedes.com/assets/a.jpg', alt: 'A',
+        menus: [{ nombre: 'Menú 1', precio_pax: 50 }], fijo: { texto: 'Coordinación y gestión del evento', importe: 300 } },
+      { peticion: 'p/b', titulo: 'Bodega B', texto: 'Cata', foto: 'https://otra-web.com/b.jpg', precio_pax: null },
+    ],
+  },
+};
+const PETS = [{ id: 'p/a', disponible: true, nota: 'comisión 10 %' }, { id: 'p/b', disponible: null }];
+const conPropuestas = eventoCliente(PEDIDO, '2026-12-18-prueba', { peticiones: PETS });
+const props = conPropuestas.datos.propuestas;
+const textoProps = JSON.stringify(props);
+comprueba('una propuesta por opción', props.length === 2);
+comprueba('lista con día confirmado y precio; en curso si no', props[0].estado === 'lista' && props[1].estado === 'en_curso');
+comprueba('ni precios, ni el fijo, ni las notas de la petición', !/50|300|precio|Coordinación|comisión|menus/i.test(textoProps));
+comprueba('fotos solo de nuestro dominio', props[0].foto && props[1].foto === null);
+comprueba('fecha y personas del pedido', conPropuestas.fecha === '2026-12-18' && conPropuestas.datos.pax === 35);
+comprueba('sin correo_opciones no hay propuestas', !('propuestas' in c.datos));
+const { paginaSeguimiento } = await import('../netlify/functions/seguimiento.mjs');
+const html = paginaSeguimiento({ ...conPropuestas, actualizado_en: '2026-10-21T16:00:00Z' });
+comprueba('la página de seguimiento no se indexa', html.includes('noindex'));
+comprueba('dice cuántas están listas', html.includes('1 de 2 propuestas listas'));
+comprueba('la página no lleva precios', !/€|300/.test(html.replace(/<footer[\s\S]*<\/footer>/, '')));
+const fn = readFileSync(new URL('../netlify/functions/seguimiento.mjs', import.meta.url), 'utf8');
+comprueba('el seguimiento pide id y clave', /id=eq\.\$\{id\}&clave=eq\.\$\{clave\}/.test(fn));
+
 console.log(fallos ? `\n${fallos} fallo(s)\n` : '\nTodo bien\n');
 process.exit(fallos ? 1 : 0);
