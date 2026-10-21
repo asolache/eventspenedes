@@ -214,6 +214,14 @@ comprueba('y solo lo ve el partner o administración', /es_admin\(\) or public\.
 const jsPlanes = readFileSync(new URL('../js/portal-planes.js', import.meta.url), 'utf8');
 comprueba('la vista del plan no lee las tablas de la IA', !/from\('(uso_ia|importaciones)'\)/.test(jsPlanes));
 
+/* supabase-js tiene su candado de sesión cogido mientras corre onAuthStateChange:
+   una consulta hecha dentro no vuelve nunca (así se quedó /acceso vacío el 21/10) */
+for (const f of ['portal.js', 'evento.js']) {
+  const js = readFileSync(new URL(`../js/${f}`, import.meta.url), 'utf8');
+  const aviso = js.slice(js.indexOf('onAuthStateChange'), js.indexOf('});', js.indexOf('onAuthStateChange')));
+  comprueba(`${f}: pinta fuera del aviso de sesión`, aviso.includes('setTimeout(') && !/^\s*(await\s+)?pintar\(/m.test(aviso.replace(/setTimeout\([^]*$/, '')));
+}
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ El portal solo habla con Zoho por quien debe y lo que debe.\n');
