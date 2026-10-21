@@ -107,6 +107,11 @@ comprueba('la página de seguimiento no se indexa', html.includes('noindex'));
 comprueba('dice cuántas están listas', html.includes('1 de 2 propuestas listas'));
 comprueba('la página no lleva precios', !/€|300/.test(html.replace(/<footer[\s\S]*<\/footer>/, '')));
 const fn = readFileSync(new URL('../netlify/functions/seguimiento.mjs', import.meta.url), 'utf8');
+const { datosSeguimiento } = await import('../netlify/functions/seguimiento.mjs');
+const json = datosSeguimiento({ ...conPropuestas, actualizado_en: '2026-10-21T16:00:00Z' });
+comprueba('en datos: lo de la página y nada más', Object.keys(json).join() === 'titulo,fecha,pax,propuestas,actualizado_en'
+  && json.propuestas[1].texto === null && !/precio|€|faltan|programa/.test(JSON.stringify(json)));
+comprueba('solo las webs de la casa leen los datos', /ORIGENES = \['https:\/\/teamtowershuma\.com'/.test(fn) && !fn.includes("'access-control-allow-origin': '*'"));
 comprueba('el seguimiento pide id y clave', /id=eq\.\$\{id\}&clave=eq\.\$\{clave\}/.test(fn));
 
 console.log(fallos ? `\n${fallos} fallo(s)\n` : '\nTodo bien\n');
