@@ -27,7 +27,8 @@ $('[data-form="enlace"]').addEventListener('submit', intentar(async ev => {
   decir('Te hemos enviado el enlace. Ábrelo en este dispositivo y vuelves aquí ya dentro.', 'ok');
 }));
 
-sb.auth.onAuthStateChange((_, sesion) => { pintar(sesion).catch(e => decir(e.message, 'error')); });
+/* Fuera del aviso: dentro, una consulta espera al candado de sesión de supabase-js (ver portal.js) */
+sb.auth.onAuthStateChange((_, sesion) => { setTimeout(() => { pintar(sesion).catch(e => decir(e.message, 'error')); }, 0); });
 
 let pintando = null;
 async function pintar(sesion) {

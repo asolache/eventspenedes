@@ -69,9 +69,13 @@ $('[data-form="nueva-clave"]').addEventListener('submit', intentar(async ev => {
   decir('Contraseña cambiada.', 'ok');
 }));
 
+/* Pintar va fuera del aviso, en la vuelta siguiente: supabase-js tiene
+   cogido su candado de sesión mientras corre el aviso, y una consulta hecha
+   dentro se queda esperándolo para siempre. Pasaba al renovar una sesión
+   caducada: el formulario se escondía y el panel no llegaba nunca. */
 sb.auth.onAuthStateChange((evento, sesion) => {
   if (evento === 'PASSWORD_RECOVERY') { $('[data-form="nueva-clave"]').hidden = false; }
-  pintar(sesion);
+  setTimeout(() => { pintar(sesion).catch(e => decir(e.message, 'error')); }, 0);
 });
 
 /* --- Pintar ---------------------------------------------------------------- */

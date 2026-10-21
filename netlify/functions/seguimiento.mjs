@@ -10,6 +10,10 @@
    no hay nada. No lleva precios, ni proveedores, ni lo que nos falta, ni lo
    que el cliente nos ha pedido: eso queda en /evento, con su correo.
 
+   Con ?formato=json devuelve lo mismo en datos, para que otra web de la casa
+   (teamtowershuma.com/seguiment) lo pinte con su estilo sin copiar nada: la
+   fuente es una, esta.
+
    Variables de entorno: SUPABASE_SECRET_KEY (ver netlify/portal/supabase.mjs)
    ========================================================================== */
 import { configurado, rest } from '../portal/supabase.mjs';
@@ -73,6 +77,25 @@ ${filas}
   });
 }
 
+/* Las webs de la casa que pintan el seguimiento con su estilo */
+const ORIGENES = ['https://teamtowershuma.com', 'https://www.teamtowershuma.com'];
+const PREVIEW = /^https:\/\/[a-z0-9-]+--teamtowershuma\.netlify\.app$/;
+
+/* Lo mismo que enseña la página, en datos: nada más */
+export function datosSeguimiento(ev) {
+  const d = ev.datos || {};
+  return {
+    titulo: ev.titulo,
+    fecha: ev.fecha || null,
+    pax: Number.isFinite(d.pax) ? d.pax : null,
+    propuestas: (Array.isArray(d.propuestas) ? d.propuestas : []).map(p => ({
+      titulo: p.titulo, estado: p.estado === 'lista' ? 'lista' : 'en_curso',
+      texto: p.estado === 'lista' ? p.texto || null : null, foto: p.foto || null, alt: p.alt || null,
+    })),
+    actualizado_en: ev.actualizado_en,
+  };
+}
+
 const nada = () => new Response('No encontrado', { status: 404, headers: { ...CABECERAS, 'content-type': 'text/plain; charset=utf-8' } });
 
 export default async (req) => {
@@ -83,6 +106,15 @@ export default async (req) => {
   try {
     const filas = await rest(`eventos_cliente?id=eq.${id}&clave=eq.${clave}&select=id,titulo,fecha,datos,actualizado_en`);
     if (!filas?.length) { return nada(); }
+    if (new URL(req.url).searchParams.get('formato') === 'json') {
+      const origen = req.headers.get('origin') || '';
+      return new Response(JSON.stringify(datosSeguimiento(filas[0])), { headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'private, no-store, max-age=0',
+        'x-robots-tag': 'noindex',
+        ...(ORIGENES.includes(origen) || PREVIEW.test(origen) ? { 'access-control-allow-origin': origen, vary: 'Origin' } : {}),
+      } });
+    }
     return new Response(paginaSeguimiento(filas[0]), { headers: CABECERAS });
   } catch (e) {
     console.error('seguimiento:', e.message);
