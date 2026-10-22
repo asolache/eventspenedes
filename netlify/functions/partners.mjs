@@ -35,6 +35,7 @@ import { fichaPublica, redPublica } from '../ficha/publica.mjs';
 import { configurado, articulosPublicados, agendaAprobada, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
 import { pagina, migas, esc, recorta } from '../portal/pagina.mjs';
 import { accionPublica, cuando } from '../../js/blog-comun.js';
+import { alPortal } from '../portal/entrada.mjs';
 
 const SITIO = 'https://eventspenedes.com';
 const CODIGO = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
@@ -255,6 +256,8 @@ const html = (cuerpo, status = 200, extra = {}) => new Response(cuerpo, { status
 const noEncontrado = () => new Response('No encontrado', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'x-robots-tag': 'noindex' } });
 
 export default async (req) => {
+  const fuera = alPortal(req);
+  if (fuera) { return fuera; }
   const partes = new URL(req.url).pathname.replace(/\/+$/, '').split('/').slice(2);
   if (!configurado()) { return noEncontrado(); }
 
