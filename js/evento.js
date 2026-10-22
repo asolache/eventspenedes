@@ -127,12 +127,17 @@ export async function panelEvento(ev, { sesion, acciones, recargar }) {
   ];
 
   /* Las propuestas que estamos pidiendo, mientras el evento está en propuesta */
+  const PROPUESTA = {
+    lista: ['Propuesta lista', 'ok', 'Te la enviamos por correo con el precio.'],
+    en_curso: ['En curso', 'aviso', 'Estamos esperando su propuesta formal.'],
+    no_disponible: ['No disponible', null, 'No tienen libre ese día: seguimos con las otras opciones.'],
+  };
   const propuestas = Array.isArray(d.propuestas) ? d.propuestas : [];
   const vPropuestas = propuestas.map(p => tarjeta(p.titulo,
     p.foto ? h('img', { src: p.foto, alt: p.alt || '', loading: 'lazy' }) : null,
     p.estado === 'lista' && p.texto ? h('p', {}, p.texto) : null,
-    h('p', { class: 'app-fila' }, p.estado === 'lista' ? chip('Propuesta lista', 'ok') : chip('En curso', 'aviso'),
-      h('span', { class: 'app-nota' }, p.estado === 'lista' ? 'Te la enviamos por correo con el precio.' : 'Estamos esperando su propuesta formal.'))));
+    h('p', { class: 'app-fila' }, chip(...(PROPUESTA[p.estado] || PROPUESTA.en_curso).slice(0, 2)),
+      h('span', { class: 'app-nota' }, (PROPUESTA[p.estado] || PROPUESTA.en_curso)[2]))));
 
   const sinContestar = peticiones.filter(p => p.estado !== 'respondida').length;
   vistaApp = app({

@@ -2,7 +2,7 @@
    Events Penedès · el seguimiento de una propuesta, sin entrar
 
    /seguimiento/<id>/<clave> enseña al cliente cómo van las propuestas que
-   pedimos para su evento: una por espacio, «en curso» o «lista», con su
+   pedimos para su evento: una por espacio, «en curso», «lista» o «no disponible», con su
    descripción. Se actualiza solo: cada vez que tools/evento-cliente.mjs vuelve
    a escribir el evento, el enlace enseña lo nuevo.
 
@@ -30,7 +30,10 @@ const CABECERAS = {
 const ESTADOS = {
   lista: ['Propuesta lista', 'Te la enviamos por correo con el precio.'],
   en_curso: ['En curso', 'Estamos esperando su propuesta formal.'],
+  no_disponible: ['No disponible', 'No tienen libre ese día: seguimos con las otras opciones.'],
 };
+/* Lo que se enseña de cada propuesta: lo que no sea uno de estos, «en curso» */
+export const estadoDe = p => (ESTADOS[p?.estado] ? p.estado : 'en_curso');
 
 const diaLargo = f => (f ? new Date(`${f}T12:00:00Z`).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }) : 'Fecha por cerrar');
 const horaDe = t => new Date(t).toLocaleString('es-ES', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' });
@@ -39,8 +42,10 @@ export function paginaSeguimiento(ev) {
   const d = ev.datos || {};
   const propuestas = Array.isArray(d.propuestas) ? d.propuestas : [];
   const listas = propuestas.filter(p => p.estado === 'lista').length;
+  const fuera = propuestas.filter(p => p.estado === 'no_disponible').length;
+  const resumen = `${listas} de ${propuestas.length - fuera} propuestas listas.${fuera ? ` ${fuera === 1 ? 'Un espacio no tiene' : `${fuera} espacios no tienen`} libre ese día.` : ''}`;
   const filas = propuestas.map(p => {
-    const [estado, nota] = ESTADOS[p.estado] || ESTADOS.en_curso;
+    const [estado, nota] = ESTADOS[estadoDe(p)];
     return `<li class="card seguimiento__opcion">
   ${p.foto ? `<img src="${esc(p.foto)}" alt="${esc(p.alt || '')}" loading="lazy" width="640" height="360">` : ''}
   <div>
@@ -60,7 +65,7 @@ export function paginaSeguimiento(ev) {
 </section>
 <section class="section">
   <div class="wrap">
-    <p>${propuestas.length ? `${listas} de ${propuestas.length} propuestas listas.` : 'Estamos preparando las propuestas: salen aquí en cuanto las tengamos.'} Esta página se actualiza sola cuando llega cada una.</p>
+    <p>${propuestas.length ? resumen : 'Estamos preparando las propuestas: salen aquí en cuanto las tengamos.'} Esta página se actualiza sola cuando llega cada una.</p>
     <ol class="seguimiento" style="list-style:none;padding:0;display:grid;gap:1rem">
 ${filas}
     </ol>
@@ -89,7 +94,7 @@ export function datosSeguimiento(ev) {
     fecha: ev.fecha || null,
     pax: Number.isFinite(d.pax) ? d.pax : null,
     propuestas: (Array.isArray(d.propuestas) ? d.propuestas : []).map(p => ({
-      titulo: p.titulo, estado: p.estado === 'lista' ? 'lista' : 'en_curso',
+      titulo: p.titulo, estado: estadoDe(p),
       texto: p.estado === 'lista' ? p.texto || null : null, foto: p.foto || null, alt: p.alt || null,
     })),
     actualizado_en: ev.actualizado_en,
