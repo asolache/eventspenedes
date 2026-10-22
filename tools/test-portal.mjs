@@ -214,6 +214,22 @@ comprueba('y solo lo ve el partner o administración', /es_admin\(\) or public\.
 const jsPlanes = readFileSync(new URL('../js/portal-planes.js', import.meta.url), 'utf8');
 comprueba('la vista del plan no lee las tablas de la IA', !/from\('(uso_ia|importaciones)'\)/.test(jsPlanes));
 
+/* Las marcas: un cliente de TeamTowers no ve Events Penedès */
+const M = await import('../js/portal-marca.js');
+comprueba('un partner sin marcas es de Events Penedès', M.marcaDe({}).nombre === 'Events Penedès' && M.esDeLaRed({ tipo: 'localizacion' }));
+comprueba('un cliente de TeamTowers se ve con TeamTowers y no es de la red', M.marcaDe({ marcas: ['TeamTowers'] }).nombre === 'TeamTowers'
+  && !M.esDeLaRed({ tipo: 'cliente', marcas: ['TeamTowers'] }) && !M.esDeLaRed({ tipo: 'proveedor', marcas: ['TeamTowers'] }));
+comprueba('la marca del sitio sale del dominio, o de ?marca= en una preview', M.marcaDelSitio({ hostname: 'www.teamtowershuma.com', search: '' }).nombre === 'TeamTowers'
+  && M.marcaDelSitio({ hostname: 'eventspenedes.com', search: '' }).nombre === 'Events Penedès'
+  && M.marcaDelSitio({ hostname: 'deploy-preview-79--eventspenedes.netlify.app', search: '?marca=teamtowers' }).nombre === 'TeamTowers'
+  && M.marcaDelSitio({ hostname: 'localhost', search: '?marca=otra' }).nombre === 'Events Penedès');
+comprueba('las marcas son las de la base de datos', /marcas <@ array\['Events Penedès', 'TeamTowers'\]/.test(readFileSync(new URL('../supabase/migrations/20261022194317_marcas_partners.sql', import.meta.url), 'utf8'))
+  && JSON.stringify(Object.keys(M.MARCAS)) === JSON.stringify(['Events Penedès', 'TeamTowers']));
+const notaCliente = textoNota({ tipo: 'comentario', texto: 'Hola', creado_en: '2026-10-22' }, { partner: { nombre: 'ELE', marcas: ['TeamTowers'] }, dePartner: false });
+comprueba('la nota en Zoho dice quién escribe con su marca', /Lo escribe TeamTowers en el portal/.test(notaCliente.texto) && !/Events Penedès/.test(notaCliente.texto));
+const acceso = readFileSync(new URL('../acceso.html', import.meta.url), 'utf8');
+comprueba('la entrada marca lo que es solo de la red', (acceso.match(/data-solo-red/g) || []).length >= 6 && /class="portal__info" data-solo-red/.test(acceso));
+
 /* supabase-js tiene su candado de sesión cogido mientras corre onAuthStateChange:
    una consulta hecha dentro no vuelve nunca (así se quedó /acceso vacío el 21/10) */
 for (const f of ['portal.js', 'evento.js']) {

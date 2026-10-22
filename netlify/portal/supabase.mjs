@@ -70,9 +70,13 @@ export async function fichaEnCurso(partnerId, { fetch } = {}) {
   return pend?.[0]?.datos ? { datos: pend[0].datos, pendiente: true } : pub?.[0]?.datos ? { datos: pub[0].datos, pendiente: false } : null;
 }
 
+/* Lo público es de la red de espacios y proveedores: ni los clientes que
+   suben al paso 2 ni los partners de otras marcas salen en eventspenedes.com */
+export const DE_LA_RED = `tipo=in.(localizacion,proveedor)&marcas=cs.${encodeURIComponent('{"Events Penedès"}')}`;
+
 /* Los partners activos con ficha aprobada y autorizada: lo que es público */
 export async function partnersPublicos({ fetch } = {}) {
-  const filas = await rest('partners?select=id,codigo,nombre,tipo,estado,red,fichas(datos,version,actualizada_en)&estado=eq.activo&order=nombre', { fetch });
+  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,red,fichas(datos,version,actualizada_en)&estado=eq.activo&${DE_LA_RED}&order=nombre`, { fetch });
   return (filas || []).map(p => {
     const f = Array.isArray(p.fichas) ? p.fichas[0] : p.fichas;
     return { id: p.id, codigo: p.codigo, nombre: p.nombre, tipo: p.tipo, red: p.red || null, datos: f?.datos || null, actualizada: f?.actualizada_en || null };
@@ -80,7 +84,7 @@ export async function partnersPublicos({ fetch } = {}) {
 }
 
 export async function partnerPorCodigo(codigo, { fetch } = {}) {
-  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,red&codigo=eq.${encodeURIComponent(codigo)}&limit=1`, { fetch });
+  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,red&codigo=eq.${encodeURIComponent(codigo)}&${DE_LA_RED}&limit=1`, { fetch });
   return filas?.[0] || null;
 }
 
@@ -132,7 +136,7 @@ export const agendaAprobada = ({ fetch } = {}) =>
 export async function partnersPorId(ids, { fetch } = {}) {
   const limpios = [...new Set(ids.filter(esUuid))];
   if (!limpios.length) { return {}; }
-  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,fichas(datos)&estado=eq.activo&id=in.(${limpios.join(',')})`, { fetch });
+  const filas = await rest(`partners?select=id,codigo,nombre,tipo,estado,fichas(datos)&estado=eq.activo&${DE_LA_RED}&id=in.(${limpios.join(',')})`, { fetch });
   return Object.fromEntries((filas || []).map(p => {
     const f = Array.isArray(p.fichas) ? p.fichas[0] : p.fichas;
     return [p.id, { id: p.id, codigo: p.codigo, nombre: p.nombre, tipo: p.tipo, datos: f?.datos || null }];

@@ -694,6 +694,8 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
 .portal__condiciones { white-space: pre-wrap; font-family: inherit; margin: 0.4rem 0; }
 .portal__acuerdos { list-style: none; padding: 0; display: grid; gap: 1rem; }
 .portal [hidden] { display: none !important; }
+/* La entrada con otra marca esconde lo de la red, también lo que tiene display propio */
+[data-solo-red][hidden] { display: none !important; }
 .portal__acuerdo[data-estado="vigente"] > p:first-child strong { color: var(--accent-gold); }
 .portal__acuerdo[data-estado="sustituido"], .portal__acuerdo[data-estado="rechazado"] { opacity: 0.75; }
 .portal__conceptos, .portal__lista { margin: 0.3rem 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
