@@ -19,10 +19,13 @@ una, igual que en `assets/fotos/`.
 | `albet-i-noya-sala-xarello.jpg` | Sala Xarel·lo con proyector y barricas | Confirmada (Álvaro, 22/10) |
 | `albet-i-noya-jardi.jpg` | Mesa larga entre pinos frente a las viñas | Confirmada |
 | `albet-i-noya-mur-vinyes.jpg` | Muro de piedra con puerta, cipreses y viñas | Confirmada |
+| `albet-i-noya-jardi-taules.jpg` | Mesas redondas en el jardín, a la sombra, con viñas al fondo | Confirmada |
+| `albet-i-noya-taula-capvespre.jpg` | Mesa larga al atardecer ante el muro y las viñas | Confirmada |
 
 Las de Albet i Noya las cedió Virginia Vacarisas por correo el 21/10/2026, en
 respuesta a nuestra petición de fotos «per publicar-les a la nostra web», y
-Álvaro las pasó el 22/10. Reducidas a 1600 px y sin metadatos.
+Álvaro las pasó el 22/10; las dos últimas se bajaron del Drive de su correo
+ese mismo día. Reducidas a 1600 px y sin metadatos.
 
 La torre y el comedor se asignaron primero por lectura de la propia imagen —el
 comedor es el mismo que se ve por la puerta en `bellesguart-facana.jpg`, y la
@@ -39,7 +42,7 @@ correo de dos líneas, y se anota aquí quién la cedió y cuándo.
 
 ## Provisionales: Albet i Noya
 
-Quedan tres fotos **de su propia web, sin permiso escrito**, porque Virginia no
+Quedan dos fotos **de su propia web, sin permiso escrito**, porque Virginia no
 ha cedido ninguna de visita entre viñas. Cada `<img>` las pide a
 `/.netlify/images?url=…` y el Image CDN de Netlify las trae, las reduce a 1200
 px y las sirve desde eventspenedes.com; la ruta permitida está en
@@ -49,7 +52,6 @@ su origen:
 | Origen | Dónde sale |
 |---|---|
 | `albetinoya.cat/imatges/enotur2020/visita-estandar1.jpg` | Actividad: visita entre viñas |
-| `albetinoya.cat/imatges/enotur2020/visita-estandar2.jpg` | «Por qué aquí»: el vino |
 | `albetinoya.cat/imatges/enotur2020/ruta_vinyes.jpg` | Actividad: maridaje de paisaje |
 
 Si su web cambia una ruta, la foto desaparece. Cuando lleguen fotos cedidas de
