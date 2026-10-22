@@ -16,7 +16,7 @@
    coste paquetizado de cada proveedor y lo que acaba en `data/proveedores.json`
    del repositorio privado (`tools/importar-proveedor.mjs`).
    ========================================================================== */
-import { UNIDAD_SERVICIO, COMISION_TIPO, COMISION_GENERAL, CONTACTO, ficha } from '../ficha/nucleo.mjs';
+import { UNIDAD_SERVICIO, COMISION_TIPO, COMISION_GENERAL, CONTACTO, AMPLIA, NO_IMPORTA_AMPLIA, ficha } from '../ficha/nucleo.mjs';
 
 export const FORM = 'proveedor';
 
@@ -199,6 +199,7 @@ export const SECCIONES = [
         hint: 'Sin esta autorización vuestro nombre no sale en la web. Los precios y las personas de contacto no se publican nunca.' },
     ],
   },
+  ...AMPLIA,
   {
     id: 'revision', titulo: 'Nuestra valoración', destino: 'interno', interno: true,
     campos: [
@@ -220,7 +221,7 @@ export const SECCIONES = [
 ];
 
 /* Lo nuestro no se importa nunca de un catálogo */
-export const NO_IMPORTA = ['revision_fecha', 'revision_notas', 'modelo_notas'];
+export const NO_IMPORTA = ['revision_fecha', 'revision_notas', 'modelo_notas', ...NO_IMPORTA_AMPLIA];
 
 export const { nombres, campos, cambios, cambiosTexto, legible, comisionLegible, fichaTexto } = ficha(SECCIONES);
 

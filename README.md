@@ -313,6 +313,19 @@ tipo Proveedor con las etiquetas «Proveedor» y la de cada cosa que ofrece
 ficha como **nota**. Hasta que una ficha llega con la fecha en que lo
 validamos lleva «Pendiente de validar» y, la primera vez, una tarea «Revisar …».
 
+### Amplía tu ficha
+
+Las dos fichas acaban con «Amplía tu ficha»: un texto libre para lo que el
+partner quiera contar además (su historia, qué lo hace diferente, ofertas de
+temporada) y hasta 5 documentos como enlaces, cada uno con qué es (carta,
+dossier, fotos, vídeo…). Sale del mismo esquema (`AMPLIA` en
+`netlify/ficha/nucleo.mjs`), así que llega a la nota de Zoho, al registro de
+cambios y al portal como cualquier otro campo, y admite enlaces prellenados
+(`?amplia=…&documento1_que=…&documento1_enlace=…`). Es `destino: 'aporta'`: no
+se importa de su web y no se publica solo; lo que sirva pasa a su página por la
+aprobación de siempre. Los documentos no se suben: el cubo `fotos` del portal
+solo admite imágenes, y las fotos ya se suben desde `/acceso`.
+
 Quien se presenta en «Entra en la red» encuentra en la página de gracias el
 enlace a su ficha (de espacio o de proveedor) con lo que ya nos ha dicho.
 

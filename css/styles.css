@@ -1526,6 +1526,8 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
     border-top: 1px solid var(--glass-border);
 }
 .form > .form__h:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+/* Una parte de la sección anterior, sin su raya: los documentos de «Amplía tu ficha» */
+.form > .form__h--sub { font-size: 0.95rem; border-top: 0; padding-top: 0; margin-top: 0.6rem; }
 
 .field__hint { font-size: 0.82rem; color: var(--text-low); line-height: 1.5; }
 
