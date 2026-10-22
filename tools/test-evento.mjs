@@ -88,15 +88,17 @@ const PEDIDO = {
       { peticion: 'p/a', titulo: 'Masía A · menú', texto: 'Sala privada', foto: 'https://eventspenedes.com/assets/a.jpg', alt: 'A',
         menus: [{ nombre: 'Menú 1', precio_pax: 50 }], fijo: { texto: 'Coordinación y gestión del evento', importe: 300 } },
       { peticion: 'p/b', titulo: 'Bodega B', texto: 'Cata', foto: 'https://otra-web.com/b.jpg', precio_pax: null },
+      { peticion: 'p/c', titulo: 'Bodega C', texto: 'Visita', precio_pax: 40 },
     ],
   },
 };
-const PETS = [{ id: 'p/a', disponible: true, nota: 'comisión 10 %' }, { id: 'p/b', disponible: null }];
+const PETS = [{ id: 'p/a', disponible: true, nota: 'comisión 10 %' }, { id: 'p/b', disponible: null }, { id: 'p/c', disponible: false }];
 const conPropuestas = eventoCliente(PEDIDO, '2026-12-18-prueba', { peticiones: PETS });
 const props = conPropuestas.datos.propuestas;
 const textoProps = JSON.stringify(props);
-comprueba('una propuesta por opción', props.length === 2);
+comprueba('una propuesta por opción', props.length === 3);
 comprueba('lista con día confirmado y precio; en curso si no', props[0].estado === 'lista' && props[1].estado === 'en_curso');
+comprueba('no disponible si el espacio no tiene el día, aunque tenga precio', props[2].estado === 'no_disponible');
 comprueba('ni precios, ni el fijo, ni las notas de la petición', !/50|300|precio|Coordinación|comisión|menus/i.test(textoProps));
 comprueba('fotos solo de nuestro dominio', props[0].foto && props[1].foto === null);
 comprueba('fecha y personas del pedido', conPropuestas.fecha === '2026-12-18' && conPropuestas.datos.pax === 35);
@@ -104,13 +106,15 @@ comprueba('sin correo_opciones no hay propuestas', !('propuestas' in c.datos));
 const { paginaSeguimiento } = await import('../netlify/functions/seguimiento.mjs');
 const html = paginaSeguimiento({ ...conPropuestas, actualizado_en: '2026-10-21T16:00:00Z' });
 comprueba('la página de seguimiento no se indexa', html.includes('noindex'));
-comprueba('dice cuántas están listas', html.includes('1 de 2 propuestas listas'));
+comprueba('dice cuántas están listas', html.includes('1 de 2 propuestas listas. Un espacio no tiene libre ese día.'));
+comprueba('la página dice qué espacio no está disponible', /No disponible<\/p>\s*<h2>Bodega C/.test(html));
 comprueba('la página no lleva precios', !/€|300/.test(html.replace(/<footer[\s\S]*<\/footer>/, '')));
 const fn = readFileSync(new URL('../netlify/functions/seguimiento.mjs', import.meta.url), 'utf8');
 const { datosSeguimiento } = await import('../netlify/functions/seguimiento.mjs');
 const json = datosSeguimiento({ ...conPropuestas, actualizado_en: '2026-10-21T16:00:00Z' });
 comprueba('en datos: lo de la página y nada más', Object.keys(json).join() === 'titulo,fecha,pax,propuestas,actualizado_en'
-  && json.propuestas[1].texto === null && !/precio|€|faltan|programa/.test(JSON.stringify(json)));
+  && json.propuestas[1].texto === null && json.propuestas[2].estado === 'no_disponible'
+  && datosSeguimiento({ datos: { propuestas: [{ titulo: 'x', estado: 'raro' }] } }).propuestas[0].estado === 'en_curso' && !/precio|€|faltan|programa/.test(JSON.stringify(json)));
 comprueba('solo las webs de la casa leen los datos', /ORIGENES = \['https:\/\/teamtowershuma\.com'/.test(fn) && !fn.includes("'access-control-allow-origin': '*'"));
 comprueba('el seguimiento pide id y clave', /id=eq\.\$\{id\}&clave=eq\.\$\{clave\}/.test(fn));
 

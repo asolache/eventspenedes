@@ -41,7 +41,8 @@ function finDe(hora, minutos) {
 
 /* Las propuestas para el cliente: de cada opción, el título, la descripción y
    la foto. Nunca precios ni el fijo de gestión. Está lista cuando el espacio
-   ha dicho que tiene el día (peticiones.json) y la opción tiene precio. */
+   ha dicho que tiene el día (peticiones.json) y la opción tiene precio; no
+   disponible cuando ha dicho que no lo tiene. */
 export function propuestasCliente(co, peticiones = []) {
   if (!co || !Array.isArray(co.opciones)) { return []; }
   return co.opciones.map(o => {
@@ -50,7 +51,7 @@ export function propuestasCliente(co, peticiones = []) {
     const conPrecio = menus.length ? menus.every(m => Number.isFinite(m.precio_pax)) : Number.isFinite(o.precio_pax);
     return {
       titulo: sinHtml(o.titulo).slice(0, 160) || null,
-      estado: conPrecio && p.disponible === true ? 'lista' : 'en_curso',
+      estado: p.disponible === false ? 'no_disponible' : conPrecio && p.disponible === true ? 'lista' : 'en_curso',
       texto: sinHtml(o.texto) || null,
       foto: /^https:\/\/eventspenedes\.com\//.test(o.foto || '') ? o.foto : null,
       alt: o.foto ? sinHtml(o.alt) || null : null,
