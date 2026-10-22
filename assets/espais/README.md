@@ -15,6 +15,14 @@ una, igual que en `assets/fotos/`.
 | `bellesguart-torre.jpg` | Torre modernista sobre el estanque | Confirmada |
 | `bellesguart-menjador.jpg` | Mesa larga bajo lámparas de cristal | Confirmada |
 | `dolicios-arbequina.jpg` | Botella de arbequina apoyada en un olivo | Confirmada |
+| `albet-i-noya-catering.jpg` | Jardín con mesas redondas y viñas al fondo | Confirmada |
+| `albet-i-noya-sala-xarello.jpg` | Sala Xarel·lo con proyector y barricas | Confirmada (Álvaro, 22/10) |
+| `albet-i-noya-jardi.jpg` | Mesa larga entre pinos frente a las viñas | Confirmada |
+| `albet-i-noya-mur-vinyes.jpg` | Muro de piedra con puerta, cipreses y viñas | Confirmada |
+
+Las de Albet i Noya las cedió Virginia Vacarisas por correo el 21/10/2026, en
+respuesta a nuestra petición de fotos «per publicar-les a la nostra web», y
+Álvaro las pasó el 22/10. Reducidas a 1600 px y sin metadatos.
 
 La torre y el comedor se asignaron primero por lectura de la propia imagen —el
 comedor es el mismo que se ve por la puerta en `bellesguart-facana.jpg`, y la
@@ -31,25 +39,19 @@ correo de dos líneas, y se anota aquí quién la cedió y cuándo.
 
 ## Provisionales: Albet i Noya
 
-Albet i Noya sale en la portada (localizaciones y actividades) con **fotos
-provisionales de su propia web**, no copiadas aquí, a petición de Álvaro
-(15/10/2026) y **sin permiso escrito todavía**. Su web no deja cargarlas
-incrustadas en otra (el 16/10 no salían en la portada), así que cada `<img>`
-las pide a `/.netlify/images?url=…` y el Image CDN de Netlify las trae, las
-reduce a 1200 px y las sirve desde eventspenedes.com. La lista de rutas
-permitidas está en `netlify.toml`, en `[images]`. Cada `<img>` lleva un
-comentario `PROVISIONAL` con su origen:
+Quedan tres fotos **de su propia web, sin permiso escrito**, porque Virginia no
+ha cedido ninguna de visita entre viñas. Cada `<img>` las pide a
+`/.netlify/images?url=…` y el Image CDN de Netlify las trae, las reduce a 1200
+px y las sirve desde eventspenedes.com; la ruta permitida está en
+`netlify.toml`, en `[images]`. Cada una lleva un comentario `PROVISIONAL` con
+su origen:
 
 | Origen | Dónde sale |
 |---|---|
-| `albetinoya.cat/imatges/exteriorjardi.jpg` | Foto principal del espacio |
-| `albetinoya.cat/imatges/salaxarello.jpg` | Galería: sala de reuniones |
-| `albetinoya.cat/imatges/exteriormasia.jpg` | Galería: exterior de la masía |
-| `albetinoya.cat/imatges/enotur2020/winebar_albetinoya1.jpg` | Galería: wine bar |
 | `albetinoya.cat/imatges/enotur2020/visita-estandar1.jpg` | Actividad: visita entre viñas |
 | `albetinoya.cat/imatges/enotur2020/visita-estandar2.jpg` | «Por qué aquí»: el vino |
 | `albetinoya.cat/imatges/enotur2020/ruta_vinyes.jpg` | Actividad: maridaje de paisaje |
 
-Si su web cambia una ruta, la foto desaparece. Cuando Virginia ceda fotos (o
-hagamos las nuestras), se guardan aquí como `albet-i-noya-*.jpg`, se cambia
-cada `src`, se quita el comentario y se borra su línea de `[images]`.
+Si su web cambia una ruta, la foto desaparece. Cuando lleguen fotos cedidas de
+la visita, se guardan aquí como `albet-i-noya-*.jpg`, se cambia cada `src`, se
+quita el comentario y, cuando no quede ninguna, se borra `[images]`.
