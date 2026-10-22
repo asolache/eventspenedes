@@ -68,6 +68,11 @@ jobs:
       - name: El envío propio solo saca lo aprobado, con Álvaro en CCO
         run: node tools/test-correo-salida.mjs
 
+      # El recordatorio de la víspera: 24 h antes en horario laboral, con la
+      # previsión del tiempo y su «Recibido», y nunca sin pasar por borrador.
+      - name: El recordatorio sale la víspera, con el tiempo y sin saltarse el OK
+        run: node tools/test-recordatorio.mjs
+
       # Desde el 30/10/2026 Supabase no da permisos por defecto a las tablas
       # nuevas: cada tabla o vista de public lleva sus GRANT en la migración.
       - name: Ninguna tabla de public sin permisos explícitos

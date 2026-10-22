@@ -316,6 +316,20 @@ validamos lleva «Pendiente de validar» y, la primera vez, una tarea «Revisar 
 Quien se presenta en «Entra en la red» encuentra en la página de gracias el
 enlace a su ficha (de espacio o de proveedor) con lo que ya nos ha dicho.
 
+### El recordatorio de la víspera
+
+Cada evento confirmado tiene sus personas interesadas en
+`evento_interesados` (cliente, espacio, proveedores; idioma y líneas propias
+en `notas`). Cada hora, `netlify/functions/recordatorios.mjs` calcula cuándo
+le toca a cada una (24 h antes del inicio, movido a la hora laborable más
+cercana, de lunes a viernes de 9 a 18 h, Madrid) y, si es en las próximas
+30 h, deja su correo en `correos_salida` como **borrador** con la previsión
+del tiempo de Open-Meteo y un botón «Recibido» (`/rebut/<clave>`, que solo
+cuenta con el clic, no al abrir el enlace). Con el OK de Álvaro el borrador
+pasa a **programado** y la misma función lo suelta a su hora. Quién lo ha
+recibido queda en `avisos_evento.recibido_en`. WhatsApp tiene sitio en
+`evento_interesados.canal`, pero aún no se usa.
+
 ### Variables de entorno
 
 En *Site configuration → Environment variables*, marcadas como **secretas** y con
