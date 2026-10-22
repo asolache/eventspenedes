@@ -94,8 +94,21 @@ comprueba('la foto de otra carpeta no se sirve', (await pedir('/partners/masia-p
 comprueba('la suya sí', (await pedir('/partners/masia-prova/foto/1')).status === 200);
 comprueba('un partner sin autorización no tiene página', (await pedir('/partners/sin-permiso')).status === 404);
 comprueba('un código raro tampoco', (await pedir('/partners/%3Cscript%3E')).status === 404);
+
+/* Las acciones: la misma cesta de la portada (`.interes[data-interes]`, la
+   barra #seleccion) y «Reservar / pedir fecha» hacia la propuesta, sin precios */
+comprueba('la página lleva «Añadir a mi selección» con el id del partner', /class="interes interes--grande" data-interes="partner:masia-prova" data-nombre="Masia de Prova" aria-pressed="false"/.test(html)
+  && /Añadir a mi selección/.test(html));
+comprueba('cada sala se puede añadir por separado, con su nombre', /data-interes="partner:masia-prova:sala-1" data-nombre="La Cava · Masia de Prova" aria-pressed="false"/.test(html)
+  && /<span class="visually-hidden">: La Cava<\/span>/.test(html));
+comprueba('«Reservar / pedir fecha» va por la ruta que cuenta el clic y la deja en la selección', /href="\/partners\/masia-prova\/reservar" rel="nofollow" data-reservar="partner:masia-prova" data-nombre="Masia de Prova">Reservar \/ pedir fecha/.test(html));
+comprueba('con la caja a un lado y la barra del móvil', /class="pficha__caja"/.test(html) && /class="pficha__barra"/.test(html));
+comprueba('y la barra de «tu selección» hacia la propuesta', /<aside class="seleccion" id="seleccion" hidden/.test(html) && /href="\/propuesta#briefing">Pedir propuesta con esto/.test(html));
+comprueba('lo esencial en cifras y la ficha técnica, sin precios', /class="phechos"/.test(html) && /Ficha técnica/.test(html) && !/€|precio|comisi/i.test(html.replace(/Precio y disponibilidad|Precios y disponibilidad/g, '')));
 const dir = await (await pedir('/partners')).text();
 comprueba('el directorio enseña a los autorizados y a nadie más', /Masia de Prova/.test(dir) && !/Sin permiso/.test(dir));
+comprueba('cada tarjeta del directorio lleva «Añadir a mi selección» y la barra', /data-interes="partner:masia-prova" data-nombre="Masia de Prova" aria-pressed="false"/.test(dir) && /id="seleccion"/.test(dir));
+comprueba('el directorio tampoco lleva teléfono, contacto ni precios', !/600 111 222|Joana|3500|1800|€/.test(dir));
 const mapa = await (await pedir('/partners/sitemap.xml')).text();
 comprueba('el mapa del sitio lleva su página', /<loc>https:\/\/eventspenedes.com\/partners\/masia-prova<\/loc><lastmod>2026-10-15<\/lastmod>/.test(mapa));
 
@@ -104,6 +117,12 @@ const ir = await pedir('/partners/masia-prova/contacto');
 comprueba('«Organizar un evento aquí» cuenta el clic y lleva al contacto con su código', ir.status === 302
   && ir.headers.get('location') === '/contacto.html?ref=masia-prova#escribenos'
   && llamadas.some(l => l.url.includes('sumar_impresion') && JSON.parse(l.op.body).p_clic === true));
+llamadas.length = 0;
+const res = await pedir('/partners/masia-prova/reservar');
+comprueba('«Reservar / pedir fecha» cuenta el clic y lleva a la propuesta con su código y su espacio', res.status === 302
+  && res.headers.get('location') === '/propuesta.html?ref=masia-prova&espacio=masia-prova#briefing'
+  && llamadas.some(l => l.url.includes('sumar_impresion') && JSON.parse(l.op.body).p_clic === true));
+comprueba('reservar un partner sin autorización no existe', (await pedir('/partners/sin-permiso/reservar')).status === 404);
 llamadas.length = 0;
 const visto = await pedir('/partners/masia-prova/visto', 'POST');
 comprueba('una visita se cuenta por POST', visto.status === 204 && llamadas.some(l => l.url.includes('sumar_impresion') && JSON.parse(l.op.body).p_clic === false));
@@ -139,6 +158,8 @@ comprueba('su partner ve la ficha pendiente aunque no esté autorizada', rp.stat
 comprueba('la vista previa tampoco lleva teléfono, contacto ni precios', !/600 111 222|Joana|3500|1800/.test(hp));
 comprueba('no se indexa, no se guarda en la CDN ni cuenta visitas', /content="noindex"/.test(hp) && rp.headers.get('cache-control') === 'no-store'
   && !/\/visto/.test(hp) && !/\/contacto"/.test(hp) && !llamadas.some(l => l.url.includes('sumar_impresion')));
+comprueba('en la vista previa los botones no hacen nada: ni cesta, ni reserva, ni barra', !/data-interes|data-reservar|\/reservar|id="seleccion"/.test(hp)
+  && /Reservar \/ pedir fecha/.test(hp));
 comprueba('enseña las fotos aún sin aprobar con un enlace que caduca', /storage\/v1\/object\/sign\/fotos\/x\?token=t/.test(hp));
 globalThis.fetch = fetchPortal;
 

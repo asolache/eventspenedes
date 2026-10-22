@@ -137,10 +137,15 @@
     });
   }
 
-  /* La selección: «Me interesa» en espacios y actividades de la portada. Se
-     guarda en este navegador (localStorage, sin cookies ni servidor) y pasa al
-     formulario de propuesta: rellena el espacio y las experiencias que tienen
-     casilla, y el resto viaja en el campo `seleccion`. Se vacía al enviar. */
+  /* La selección: «Me interesa» en espacios y actividades de la portada, y
+     «Añadir a mi selección» en las páginas de los partners (/partners). Una
+     sola cesta para todo el sitio: se guarda en este navegador (localStorage,
+     sin cookies ni servidor) y pasa al formulario de propuesta: rellena el
+     espacio y las experiencias que tienen casilla, y el resto viaja por su
+     nombre en el campo `seleccion`. Se vacía al enviar.
+     Los ids: `exp:<casilla>`, `act:<actividad>`, `espacio:<valor>`,
+     `catering:<código>`, `partner:<código>` (y `partner:<código>:sala-1`, una
+     parte suya) y `agenda:<id>`. */
   var CLAVE_SEL = 'ep-seleccion';
   var CASILLA_SEL = {
     'exp:castells': 'exp_castells', 'exp:cata_aceite': 'exp_cata_aceite', 'exp:cata_vino': 'exp_cata_vino',
@@ -159,6 +164,7 @@
 
   function seleccionPortada() {
     var botones = document.querySelectorAll('.interes[data-interes]');
+    var reservas = document.querySelectorAll('a[data-reservar]');
     var barra = document.getElementById('seleccion');
     if (!botones.length || !barra) { return; }
     function pintar() {
@@ -174,11 +180,23 @@
         var id = this.getAttribute('data-interes');
         var caja = this.closest('article');
         var h3 = caja && caja.querySelector('h3');
-        var nombre = h3 ? h3.textContent.trim() : id;
+        var nombre = this.getAttribute('data-nombre') || (h3 ? h3.textContent.trim() : id);
         var sel = leerSel().filter(function (x) { return x.id !== id; });
         if (this.getAttribute('aria-pressed') !== 'true') { sel.push({ id: id, nombre: nombre }); }
         guardarSel(sel);
         pintar();
+      });
+    }
+    /* «Reservar / pedir fecha» en la página de un partner: lo deja en la
+       selección (sin quitarlo si ya estaba) y sigue al formulario */
+    for (var j = 0; j < reservas.length; j++) {
+      reservas[j].addEventListener('click', function () {
+        var id = this.getAttribute('data-reservar');
+        var sel = leerSel();
+        if (!sel.some(function (x) { return x.id === id; })) {
+          sel.push({ id: id, nombre: this.getAttribute('data-nombre') || id });
+          guardarSel(sel);
+        }
       });
     }
     barra.querySelector('.seleccion__vaciar').addEventListener('click', function () {
@@ -222,7 +240,7 @@
       var espacio = form.querySelector('select[name="espacio"]');
       sel.forEach(function (x) {
         var p = x.id.split(':');
-        if (p[0] === 'espacio' && espacio && !espacio.value) {
+        if ((p[0] === 'espacio' || p[0] === 'partner') && p.length === 2 && espacio && !espacio.value) {
           for (var i = 0; i < espacio.options.length; i++) {
             if (espacio.options[i].value === p[1]) { espacio.value = p[1]; }
           }
