@@ -12,7 +12,10 @@
 
 export const MARCAS = {
   'Events Penedès': { nombre: 'Events Penedès', web: 'eventspenedes.com', hosts: ['eventspenedes.com'] },
-  TeamTowers: { nombre: 'TeamTowers', web: 'teamtowershuma.com', hosts: ['teamtowershuma.com', 'teamtowers.eu'] },
+  /* `espacio`: lo que la marca añade al espacio de sus clientes. Vive en su
+     web y se carga de allí, no se copia (teamtowershuma, SOS/lib/espai-client.js) */
+  TeamTowers: { nombre: 'TeamTowers', web: 'teamtowershuma.com', hosts: ['teamtowershuma.com', 'teamtowers.eu'],
+    espacio: 'https://teamtowershuma.com/SOS/lib/espai-client.js' },
 };
 export const MARCA_RED = 'Events Penedès';
 

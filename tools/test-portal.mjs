@@ -228,6 +228,10 @@ comprueba('las marcas son las de la base de datos', /marcas <@ array\['Events Pe
 const notaCliente = textoNota({ tipo: 'comentario', texto: 'Hola', creado_en: '2026-10-22' }, { partner: { nombre: 'ELE', marcas: ['TeamTowers'] }, dePartner: false });
 comprueba('la nota en Zoho dice quién escribe con su marca', /Lo escribe TeamTowers en el portal/.test(notaCliente.texto) && !/Events Penedès/.test(notaCliente.texto));
 const acceso = readFileSync(new URL('../acceso.html', import.meta.url), 'utf8');
+const jsPortal = readFileSync(new URL('../js/portal.js', import.meta.url), 'utf8');
+comprueba('el espacio de TeamTowers se carga de su web, sin copiarlo ni pasarle la sesión', /^https:\/\/teamtowershuma\.com\/SOS\/lib\/espai-client\.js$/.test(M.MARCAS.TeamTowers.espacio)
+  && !M.MARCAS['Events Penedès'].espacio && /pintarEspacio\(caja, p, marca\)\.catch\(\(\) => caja\.remove\(\)\)/.test(jsPortal)
+  && !/EspaiClient\.pinta\([^)]*(token|testimoni)/.test(jsPortal));
 const E = await import('../netlify/portal/entrada.mjs');
 const toml = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8');
 comprueba('acceso.teamtowershuma.com es TeamTowers y su portada lleva al portal', M.marcaDelSitio({ hostname: 'acceso.teamtowershuma.com', search: '' }).nombre === 'TeamTowers'
