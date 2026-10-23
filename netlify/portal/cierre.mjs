@@ -166,5 +166,5 @@ export function notaZoho({ evento, preparados }) {
   const quien = preparados.map(p => `${p.nombre} (${p.rol})`).join(', ');
   return [`Cierre de «${evento.titulo}» (${evento.fecha}).`,
     `Agradecimiento y petición de fotos con autorización preparados para: ${quien || 'nadie'}.`,
-    'Falta: valoración de Álvaro sobre el resultado y la factura final del 25 %.'].join('\n');
+    'Falta: valoración de Álvaro sobre el resultado y cobrar el 25 % pendiente de la factura (ya emitida por el 100 %).'].join('\n');
 }

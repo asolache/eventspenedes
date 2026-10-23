@@ -8,8 +8,8 @@
 --
 -- Como el recordatorio de la víspera, netlify/functions/recordatorios.mjs
 -- prepara cada correo como «borrador» en correos_salida; no sale nada sin el
--- OK de Álvaro en el hilo. La nota de Zoho y la factura final del 25 % se
--- proponen en cierres_evento y las hace una sesión de Claude con su OK.
+-- OK de Álvaro en el hilo. La nota de Zoho y el cobro del 25 % pendiente (la
+-- factura del 100 % ya se emitió al confirmar) se proponen en cierres_evento y las hace una sesión de Claude con su OK.
 -- Nadie lee estas tablas desde la web: todo pasa por netlify/functions/fotos.mjs.
 
 -- 1 · El aviso de cierre es otro tipo de aviso, con su propia clave
@@ -24,7 +24,7 @@ create table public.cierres_evento (
   automatico boolean not null default true,
   nota_zoho text,                    -- propuesta de nota de éxito para el trato
   nota_zoho_en timestamptz,          -- escrita en Zoho, con el OK de Álvaro
-  factura_final_en timestamptz,      -- emitida la factura del 25 % final
+  cobro_final_en timestamptz,        -- cobrado el 25 % que faltaba de la factura
   notas text,
   creado_en timestamptz not null default now()
 );

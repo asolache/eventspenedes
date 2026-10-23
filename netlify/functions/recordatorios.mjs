@@ -17,8 +17,8 @@
    3. El cierre: para cada evento de la última semana, el correo de gracias y
       de petición de fotos a cada persona interesada (netlify/portal/cierre.mjs),
       para el primer día laborable siguiente, también como «borrador». En
-      cierres_evento queda la nota de Zoho propuesta y lo que falta (factura
-      final del 25 %), para que una sesión de Claude lo haga con el OK de
+      cierres_evento queda la nota de Zoho propuesta y lo que falta (cobrar
+      el 25 % pendiente de la factura, que ya se emitió por el 100 %), para que una sesión de Claude lo haga con el OK de
       Álvaro. Un cierre hecho a mano (automatico = false) no se toca.
 
    Variables de entorno: SUPABASE_SECRET_KEY (ver netlify/portal/supabase.mjs)

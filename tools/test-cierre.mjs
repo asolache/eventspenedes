@@ -80,7 +80,7 @@ const nota = escrito.find(([m, r]) => m === 'POST' && r.startsWith('cierres_even
 comprueba('la nota de Zoho queda propuesta, no escrita', nota?.evento_id === 'ev-bcn' && nota.nota_zoho.includes('Neus (cliente)') && !('nota_zoho_en' in nota));
 escrito.length = 0;
 comprueba('con más de 30 h por delante, aún no', (await prepararCierres(new Date('2026-11-10T08:00:00Z'), { rest: db })).length === 0);
-comprueba('la nota habla de la factura final, solo por dentro', notaZoho({ evento: EV, preparados: [] }).includes('25 %'));
+comprueba('la nota recuerda cobrar el 25 %, no facturarlo, solo por dentro', /cobrar el 25 %/.test(notaZoho({ evento: EV, preparados: [] })));
 
 /* 4 · El permiso para publicar */
 const AV = { id: 'av-1', evento_id: 'ev-bcn', evento_interesados: { nombre: 'Neus', idioma: 'ca' }, eventos_cliente: { titulo: EV.titulo, fecha: EV.fecha } };
