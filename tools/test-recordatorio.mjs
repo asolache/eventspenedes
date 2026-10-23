@@ -77,7 +77,7 @@ const escrito = [];
 const BD = {
   eventos: [{ id: 'ev-1', titulo: EV.titulo, fecha: '2026-10-23', datos: { pax: 40, lugar: { ...EV.lugar, lat: 41.26, lon: 1.6 }, programa: [{ hora: '11:00' }] } }],
   interesados: [{ id: 'i-1', rol: 'espacio', nombre: 'Neus', correo: 'oli@example.com', idioma: 'ca', notas: [], avisos_evento: [] },
-    { id: 'i-2', rol: 'cliente', nombre: 'Aida', correo: 'aida@example.com', idioma: 'ca', notas: [], avisos_evento: [{ id: 'ya' }] }],
+    { id: 'i-2', rol: 'cliente', nombre: 'Aida', correo: 'aida@example.com', idioma: 'ca', notas: [], avisos_evento: [{ id: 'ya', tipo: 'recordatorio_24h' }] }],
 };
 const db = async (ruta, o = {}) => {
   escrito.push([o.method || 'GET', ruta, o.body]);
