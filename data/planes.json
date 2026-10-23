@@ -50,8 +50,10 @@
     }
   ],
   "oferta_testers": {
-    "plazas": 3,
-    "precio_mes": null,
-    "texto": "Los tres primeros partners que prueben la página o la web propia tienen una cuota de lanzamiento a cambio de contarnos qué mejorar."
+    "plazas": 10,
+    "plan": "pagina",
+    "meses": 3,
+    "precio_mes": 0,
+    "texto": "Los diez primeros partners tienen tres meses del plan Página sin coste ni compromiso, para que vean qué les da. Al acabar, siguen con el plan que quieran o vuelven a la ficha."
   }
 }
