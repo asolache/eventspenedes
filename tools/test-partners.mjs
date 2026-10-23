@@ -10,6 +10,8 @@
 import { FICHAS } from '../netlify/ficha/fichas.mjs';
 import { fichaPublica, redPublica } from '../netlify/ficha/publica.mjs';
 import { coste } from '../netlify/ficha/coste.mjs';
+import { definiciones } from '../netlify/ficha/importar.mjs';
+import { readFileSync } from 'node:fs';
 
 let fallos = 0;
 const comprueba = (nombre, cond) => {
@@ -49,6 +51,41 @@ const PROV = {
 const pp = JSON.stringify(fichaPublica(FICHAS.proveedor, PROV));
 comprueba('de un proveedor salen sus servicios por su nombre y qué incluyen', /Cuarteto de cuerda/.test(pp) && /Sonido y montaje/.test(pp));
 comprueba('pero no su precio, su comisión ni sus condiciones', !/900/.test(pp) && !/"15"/.test(pp) && !/500/.test(pp) && !/Señal/.test(pp));
+
+/* 1 bis · «Amplía tu ficha»: lo que el partner cuenta además y sus documentos
+   llegan a Zoho y al registro de cambios, pero no se publican solos ni se
+   importan de su web */
+const AMPLIA = {
+  amplia: 'Desde 1920 en la misma masía. En verano, menú de temporada; llamad al 600 123 456.',
+  documento1_que: 'Carta de vinos', documento1_enlace: 'https://drive.example/carta.pdf',
+  documento2_que: 'Vídeo de la finca', documento2_enlace: 'https://youtube.example/v',
+};
+/* Las secciones que van detrás de los documentos: solo las nuestras (?interno=1) */
+const detras = html => {
+  const resto = html.slice(html.indexOf('id="sec-documentos"'), html.indexOf('<!-- /campos -->'));
+  return { todas: (resto.match(/<h2 /g) || []).length, internas: (resto.match(/<div class="solo-interno form">\n\s*<h2 /g) || []).length };
+};
+for (const [tipo, base, pagina] of [['localizacion', ESPACIO, 'alta-localizacion.html'], ['proveedor', PROV, 'alta-proveedor.html']]) {
+  const E = FICHAS[tipo];
+  const html = readFileSync(new URL(`../${pagina}`, import.meta.url), 'utf8');
+  const nombres = E.nombres();
+  comprueba(`${tipo}: el esquema lleva el texto libre y 5 documentos`, nombres.includes('amplia')
+    && nombres.includes('documento5_que') && nombres.includes('documento5_enlace') && !nombres.includes('documento6_enlace'));
+  comprueba(`${tipo}: el formulario los lleva, en la última sección que ve el partner`,
+    /name="amplia"/.test(html) && /name="documento5_enlace" type="url"/.test(html) && html.includes('Amplía tu ficha')
+    && html.indexOf('id="sec-amplia"') > html.indexOf(tipo === 'proveedor' ? 'id="sec-publicacion"' : 'id="sec-tarifas"')
+    && detras(html).todas === detras(html).internas);
+  const t = E.fichaTexto({ ...base, ...AMPLIA });
+  comprueba(`${tipo}: la nota de Zoho los lleva, marcados como suyos`,
+    /## Amplía tu ficha \(lo aporta el partner/.test(t) && t.includes('Desde 1920') && t.includes('· Carta de vinos — Enlace: https://drive.example/carta.pdf'));
+  const cam = E.cambios(base, { ...base, ...AMPLIA });
+  comprueba(`${tipo}: el registro de cambios los cuenta`, cam.some(x => x.campo === 'amplia') && cam.some(x => x.campo === 'documento2_enlace' && x.etiqueta === 'Documento 2 · Enlace'));
+  const pub = JSON.stringify(fichaPublica(E, { ...base, ...AMPLIA }));
+  comprueba(`${tipo}: no se publican solos, ni el texto ni los documentos`,
+    !pub.includes('1920') && !pub.includes('600 123 456') && !pub.includes('Carta de vinos') && !pub.includes('drive.example'));
+  const def = definiciones(E);
+  comprueba(`${tipo}: no se importan de su web`, !def.has('amplia') && !def.has('documento1_enlace') && !def.has('documento5_que'));
+}
 
 /* 2 · El coste de una importación */
 const c = coste('claude-opus-5-5', { input_tokens: 100000, output_tokens: 4000, cache_read_input_tokens: 0 });
