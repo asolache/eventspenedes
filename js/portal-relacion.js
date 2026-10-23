@@ -28,12 +28,12 @@ const PASOS = {
 };
 const DATOS = { titulo: 'Qué', fecha: 'Fecha', hora_inicio: 'Desde', hora_fin: 'Hasta', personas: 'Personas', concepto: 'Servicio', importe: 'Importe', version: 'Versión' };
 
-export function lineaDeTiempo(mensajes, { admin, nombres = {}, yo }) {
+export function lineaDeTiempo(mensajes, { admin, nombres = {}, yo, nosotros = 'Events Penedès' }) {
   if (!mensajes.length) { return h('p', { class: 'form__note' }, 'Todavía no hay nada escrito.'); }
   return h('ol', { class: 'portal__conversacion' }, mensajes.map(m => {
     const datos = Object.entries(m.datos || {}).filter(([k, v]) => DATOS[k] && v !== null && v !== '')
       .map(([k, v]) => `${DATOS[k]}: ${k === 'importe' ? euros(v) : k.startsWith('hora') ? hora(v) : k === 'fecha' ? fecha(v) : v}`);
-    const quien = m.autor === yo ? 'Tú' : nombres[m.autor] || (admin ? 'Partner' : 'Events Penedès');
+    const quien = m.autor === yo ? 'Tú' : nombres[m.autor] || (admin ? 'Partner' : nosotros);
     return h('li', { class: `portal__msg${m.interno ? ' portal__msg--interno' : ''}`, 'data-tipo': m.tipo },
       h('p', { class: 'portal__msg-cab' }, h('strong', {}, PASOS[m.tipo] || m.tipo), ` · ${quien} · ${fechaHora(m.creado_en)}`,
         admin && m.zoho_nota_id && m.zoho_nota_id !== 'sin-destino' ? ' · en Zoho' : ''),

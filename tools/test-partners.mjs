@@ -152,6 +152,11 @@ const conRed = paginaPartner({ id: ID, codigo: 'masia-prova', nombre: 'Masia de 
 comprueba('la página enseña aporta, recibe y para quién', /Su lugar en la red/.test(conRed) && /Quien dinamiza la actividad/.test(conRed) && /Equipos de empresa/.test(conRed));
 comprueba('y sin aprobar, la página pública no lo enseña', !/Su lugar en la red/.test(paginaPartner({ id: ID, codigo: 'masia-prova', nombre: 'Masia de Prova', tipo: 'localizacion', datos: ESPACIO, red: { ...RED, estado: 'propuesta' } })));
 
+/* Lo público es solo de la red: ni clientes del paso 2 ni otras marcas */
+const lecturas = llamadas.filter(l => l.url.includes('/rest/v1/partners?'));
+comprueba('el directorio y las páginas solo leen espacios y proveedores de Events Penedès', lecturas.length > 0
+  && lecturas.every(l => l.url.includes('tipo=in.(localizacion,proveedor)') && decodeURIComponent(l.url).includes('marcas=cs.{"Events Penedès"}')));
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ Solo se publica lo autorizado y cada ruta hace lo suyo.\n');

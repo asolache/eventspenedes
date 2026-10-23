@@ -22,13 +22,16 @@ import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { vistaCerebro } from './portal-red.js';
+import { marcaDe, marcaDelSitio } from './portal-marca.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
 import './portal-eventos.js';
 
 const raiz = document.getElementById('portal');
+/* La página ya la viste acceso.html, aunque falle la carga de lo demás */
+const SITIO = marcaDelSitio();
 const $ = s => raiz.querySelector(s);
-const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio' };
+const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio', cliente: 'Cliente' };
 const FICHA = { localizacion: '/alta-localizacion', proveedor: '/alta-proveedor' };
 const ESTADOS_LEAD = { nuevo: 'Nuevo' };
 const ESTADOS_PARTNER = { invitado: 'Invitado', activo: 'Activo', pausado: 'Pausado' };
@@ -89,7 +92,7 @@ async function pintar(sesion) {
   if (pintando) { return; }
   pintando = (async () => {
     const [partners, esAdmin] = await Promise.all([
-      sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,tester,red').order('nombre').then(ok),
+      sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,tester,red,marcas').order('nombre').then(ok),
       sb.rpc('es_admin').then(ok),
     ]);
     const cont = $('[data-partners]');
@@ -97,8 +100,10 @@ async function pintar(sesion) {
     const salir = h('button', { class: 'btn btn--ghost', type: 'button', onclick: intentar(async () => { await sb.auth.signOut(); }) }, 'Salir');
     if (!esAdmin && !partners.length) {
       cont.append(h('div', { class: 'app-vacio' },
-        h('p', {}, `Has entrado como ${sesion.user.email || 'usuario'}, pero tu cuenta aún no está unida a ningún espacio o proveedor.`),
-        h('p', {}, 'Si te hemos invitado con otro correo, entra con ese. Si no, ', h('a', { href: '/red.html#alta' }, 'preséntate'), ' y te damos acceso.'),
+        h('p', {}, `Has entrado como ${sesion.user.email || 'usuario'}, pero tu cuenta aún no tiene acceso a nada.`),
+        SITIO === marcaDe(null)
+          ? h('p', {}, 'Si te hemos invitado con otro correo, entra con ese. Si no, ', h('a', { href: '/red.html#alta' }, 'preséntate'), ' y te damos acceso.')
+          : h('p', {}, 'Si te hemos invitado con otro correo, entra con ese. Si no, escríbenos y te damos acceso.'),
         h('p', {}, salir)));
     }
     if (!esAdmin && partners.length) {
@@ -121,6 +126,7 @@ async function pintar(sesion) {
 /* --- El panel de un partner, como app ---------------------------------------- */
 
 async function panelPartner(p, { sesion, acciones }) {
+  if (p.tipo === 'cliente') { return panelCliente(p, { sesion, acciones }); }
   let raiz = null;
   const recargar = async () => { raiz.replaceWith(await panelPartner(p, { sesion, acciones })); };
   const desde30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
@@ -305,7 +311,7 @@ async function panelPartner(p, { sesion, acciones }) {
     clave: p.codigo,
     titulo: p.nombre,
     subtitulo: `${TIPOS[p.tipo]} · ${ESTADOS_PARTNER[p.estado] || p.estado} · ${sesion.user.email || ''}`,
-    marca: 'Events Penedès',
+    marca: marcaDe(p).nombre,
     acciones,
     vistas: [
       { grupo: 'Hoy', id: 'inicio', titulo: 'Inicio', icono: 'inicio', n: tareas.length, nodos: inicio },
@@ -324,6 +330,51 @@ async function panelPartner(p, { sesion, acciones }) {
       { grupo: 'Tus condiciones', id: 'plan', titulo: 'Tu plan', corto: 'Plan', icono: 'plan', nodos: datosPlanes ? await vistaPlan(p, { recargar }) : [h('p', { class: 'app-vacio' }, 'Los planes no se han podido cargar.')] },
       { grupo: 'Tus condiciones', id: 'liquidaciones', titulo: 'Liquidaciones', corto: 'Cobros', icono: 'uso',
         intro: 'Lo que has facturado y cobrado en cada evento, según tu acuerdo.', nodos: await vistaLiquidaciones(p, { recargar }) },
+    ],
+  });
+  return raiz;
+}
+
+/* --- El panel de un cliente: el paso 2 de cualquier marca ------------------------
+   Un cliente no es un espacio ni un proveedor: no tiene ficha, reservas ni
+   acuerdo de la red. Ve su cuenta con nosotros, con su marca, y la
+   conversación, que pasa a su ficha de Zoho como la de cualquier partner. */
+async function panelCliente(p, { sesion, acciones }) {
+  let raiz = null;
+  const recargar = async () => { raiz.replaceWith(await panelCliente(p, { sesion, acciones })); };
+  const marca = marcaDe(p);
+  const [mensajes, miembros, { data: u }] = await Promise.all([
+    sb.from('mensajes').select('*').eq('partner_id', p.id).order('creado_en').limit(300).then(ok),
+    sb.from('miembros').select('user_id').eq('partner_id', p.id).then(ok),
+    sb.auth.getUser(),
+  ]);
+  const yo = u.user.id;
+  const ctx = { admin: false, partner: p, mensajes, recargar, yo, nombres: Object.fromEntries(miembros.map(m => [m.user_id, 'Tu equipo'])), partnerId: p.id, nosotros: marca.nombre };
+  const ir = (vista, texto) => h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => raiz.ir(vista) }, texto);
+  const nuestros = mensajes.filter(m => m.autor !== yo && !m.interno);
+  const inicio = [
+    h('div', { class: 'app-rejilla' },
+      tarjeta(`Hola, ${p.nombre}`,
+        h('p', {}, `Este es tu espacio con ${marca.nombre}: lo que vamos haciendo juntos y nuestra conversación, en un solo sitio y a tu nombre.`),
+        h('p', { class: 'app-fila' }, ir('conversacion', 'Escríbenos'))),
+      tarjeta('Lo último',
+        nuestros.length
+          ? h('p', {}, `Te escribimos el ${fecha(nuestros[nuestros.length - 1].creado_en)}. `, ir('conversacion', 'Leerlo'))
+          : h('p', { class: 'app-nota' }, 'Cuando tengamos algo para ti, sale aquí y en la conversación.'))),
+  ];
+  const vConversacion = [
+    tarjeta(null, formComentario({ partnerId: p.id, admin: false, recargar, etiqueta: 'Escríbenos lo que necesites' })),
+    lineaDeTiempo([...mensajes].reverse(), ctx),
+  ];
+  raiz = app({
+    clave: p.codigo,
+    titulo: p.nombre,
+    subtitulo: `${TIPOS.cliente} · ${ESTADOS_PARTNER[p.estado] || p.estado} · ${sesion.user.email || ''}`,
+    marca: marca.nombre,
+    acciones,
+    vistas: [
+      { grupo: 'Hoy', id: 'inicio', titulo: 'Inicio', icono: 'inicio', nodos: inicio },
+      { grupo: 'Hoy', id: 'conversacion', titulo: 'Nuestra conversación', corto: 'Mensajes', icono: 'conversacion', nodos: vConversacion },
     ],
   });
   return raiz;

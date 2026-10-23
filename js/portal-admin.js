@@ -15,8 +15,9 @@ import { diffPalabras, lados } from './portal-diff.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { asistenteRed } from './portal-red.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
+import { MARCAS, marcaDe } from './portal-marca.js';
 
-const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio' };
+const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio', cliente: 'Cliente' };
 const ESTADOS = { invitado: 'Invitado', activo: 'Activo', pausado: 'Pausado' };
 const TONO_ESTADO = { invitado: 'aviso', activo: 'ok', pausado: 'error' };
 const hace = dias => new Date(Date.now() - dias * 864e5).toISOString();
@@ -60,7 +61,7 @@ function celdasCambio(tipo, k, antes, ahora) {
 export async function panelAdmin(caja, detalle = null, opciones = {}) {
   const recargar = (p = detalle) => panelAdmin(caja, p, opciones).catch(e => decir(e.message, 'error'));
   const [todos, , datosPlanes] = await Promise.all([
-    sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,plan_desde,tester,zoho_account_id,creado_en,red').order('nombre').then(ok),
+    sb.from('partners').select('id,codigo,nombre,tipo,estado,plan,plan_desde,tester,zoho_account_id,creado_en,red,marcas').order('nombre').then(ok),
     cargarEtiquetas().catch(() => null),
     planes().catch(() => null),
   ]);
@@ -243,15 +244,16 @@ async function tarjetaCambio(c, nombres, tipo, recargar) {
 function formAlta(recargar) {
   const codigo = h('input', { name: 'codigo', required: true, pattern: '[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?', placeholder: 'cal-soler' });
   const nombre = h('input', { name: 'nombre', required: true, placeholder: 'Cal Soler' });
-  const tipo = h('select', { name: 'tipo' }, h('option', { value: 'localizacion' }, 'Espacio'), h('option', { value: 'proveedor' }, 'Actuación o servicio'));
+  const tipo = h('select', { name: 'tipo' }, Object.entries(TIPOS).map(([v, t]) => h('option', { value: v }, t)));
+  const marca = h('select', { name: 'marca' }, Object.keys(MARCAS).map(m => h('option', { value: m }, m)));
   const zoho = h('input', { name: 'zoho', inputmode: 'numeric', placeholder: 'Id de la cuenta en Zoho (opcional)' });
   return h('form', { class: 'form portal__alta', onsubmit: intentar(async ev => {
     ev.preventDefault();
-    const p = ok(await sb.from('partners').insert({ codigo: codigo.value.trim(), nombre: nombre.value.trim(), tipo: tipo.value, zoho_account_id: zoho.value.trim() || null }).select('id').single());
+    const p = ok(await sb.from('partners').insert({ codigo: codigo.value.trim(), nombre: nombre.value.trim(), tipo: tipo.value, marcas: [marca.value], zoho_account_id: zoho.value.trim() || null }).select('id').single());
     decir('Partner creado. Ahora invítale con su correo.', 'ok');
     await recargar({ id: p.id });
   }) },
-  campo('Código del enlace', codigo), campo('Nombre', nombre), campo('Tipo', tipo), campo('Cuenta en Zoho', zoho),
+  campo('Código del enlace', codigo), campo('Nombre', nombre), campo('Tipo', tipo), campo('Marca', marca), campo('Cuenta en Zoho', zoho),
   h('p', {}, h('button', { class: 'btn btn--primary', type: 'submit' }, 'Dar de alta')));
 }
 
@@ -336,7 +338,7 @@ async function fichaCompleta(p, recargar, { sesion, salir, datosPlanes }) {
     tarjeta('Invitar a alguien', h('form', { class: 'form portal__rejilla', onsubmit: intentar(async ev => {
       ev.preventDefault();
       ok(await sb.from('invitaciones').insert({ partner_id: p.id, correo: correo.value.trim().toLowerCase() }));
-      decir(`Invitación apuntada. Mándale el enlace eventspenedes.com/acceso: al entrar con ${correo.value.trim()} queda dentro.`, 'ok');
+      decir(`Invitación apuntada. Mándale el enlace ${marcaDe(p).web}/acceso: al entrar con ${correo.value.trim()} queda dentro.`, 'ok');
       await yoMismo();
     }) }, campo('Correo', correo), h('p', {}, h('button', { class: 'btn btn--ghost', type: 'submit' }, 'Invitar')))),
   ];
