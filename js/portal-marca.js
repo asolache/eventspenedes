@@ -24,6 +24,10 @@ export const marcaDe = p => deNombre((p?.marcas || [])[0]) || MARCAS[MARCA_RED];
 /* ¿Es de la red de espacios y proveedores? Solo a ellos les toca lo de la red */
 export const esDeLaRed = p => p?.tipo !== 'cliente' && (!p?.marcas || p.marcas.includes(MARCA_RED));
 
+/* ¿Es de esa marca? `TODAS` deja pasar a todos (la vista del administrador) */
+export const TODAS = 'todas';
+export const esDeMarca = (p, marca) => marca === TODAS || (p?.marcas?.length ? p.marcas : [MARCA_RED]).includes(marca);
+
 /* La marca del sitio, antes de entrar */
 export function marcaDelSitio(loc = globalThis.location) {
   const pedida = new URLSearchParams(loc?.search || '').get('marca');
@@ -35,17 +39,39 @@ export function marcaDelSitio(loc = globalThis.location) {
   return Object.values(MARCAS).find(m => m.hosts.some(x => host === x || host.endsWith(`.${x}`))) || MARCAS[MARCA_RED];
 }
 
-/* La página de entrada con la marca del sitio: lo de la red solo sale en la
-   suya (`data-solo-red`), y el nombre, el título y el pie dicen la marca. */
+/* La página con una marca: lo de la red solo sale en la suya (`data-solo-red`),
+   y el nombre, el título y el pie dicen la marca. Se puede volver a llamar con
+   otra (al cambiar de partner o de marca dentro): lo de la red se recuerda la
+   primera vez y vuelve tal cual. */
+const ORIGINAL = new WeakMap();
+const OCULTO = new WeakMap();
+const recordar = (el, attrs) => {
+  if (!ORIGINAL.has(el)) { ORIGINAL.set(el, { texto: el.textContent, ...Object.fromEntries(attrs.map(a => [a, el.getAttribute(a)])) }); }
+  return ORIGINAL.get(el);
+};
+const devolver = (el, o, a) => { if (o[a] === null) { el.removeAttribute(a); } else { el.setAttribute(a, o[a]); } };
+
 export function vestirPagina(m, doc = globalThis.document) {
-  if (!doc || m.nombre === MARCA_RED) { return; }
-  doc.title = `Acceso de clientes · ${m.nombre}`;
-  doc.documentElement.dataset.marca = m.nombre;
-  for (const el of doc.querySelectorAll('[data-solo-red]')) { el.hidden = true; }
-  for (const el of doc.querySelectorAll('[data-marca-nombre]')) { el.removeAttribute('data-i18n'); el.textContent = m.nombre; }
-  for (const el of doc.querySelectorAll('a.brand')) { el.href = `https://${m.web}`; }
+  if (!doc) { return; }
+  const red = m.nombre === MARCA_RED;
+  if (!ORIGINAL.has(doc)) { ORIGINAL.set(doc, { titulo: doc.title }); }
+  doc.title = red ? ORIGINAL.get(doc).titulo : `Acceso de clientes · ${m.nombre}`;
+  if (red) { delete doc.documentElement.dataset.marca; } else { doc.documentElement.dataset.marca = m.nombre; }
+  for (const el of doc.querySelectorAll('[data-solo-red]')) {
+    if (!OCULTO.has(el)) { OCULTO.set(el, el.hidden); }
+    el.hidden = red ? OCULTO.get(el) : true;
+  }
+  for (const el of doc.querySelectorAll('[data-marca-nombre]')) {
+    const o = recordar(el, ['data-i18n']);
+    if (red) { el.textContent = o.texto; devolver(el, o, 'data-i18n'); } else { el.removeAttribute('data-i18n'); el.textContent = m.nombre; }
+  }
+  for (const el of doc.querySelectorAll('a.brand')) {
+    const o = recordar(el, ['href']);
+    if (red) { devolver(el, o, 'href'); } else { el.href = `https://${m.web}`; }
+  }
   for (const el of doc.querySelectorAll('[data-marca-texto]')) {
-    const t = el.dataset[`texto${m.nombre.replace(/\s+/g, '')}`];
-    if (t) { el.removeAttribute('data-i18n'); el.textContent = t; }
+    const o = recordar(el, ['data-i18n']);
+    const t = red ? null : el.dataset[`texto${m.nombre.replace(/\s+/g, '')}`];
+    if (t) { el.removeAttribute('data-i18n'); el.textContent = t; } else { el.textContent = o.texto; devolver(el, o, 'data-i18n'); }
   }
 }

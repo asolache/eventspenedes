@@ -22,7 +22,7 @@ import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { vistaCerebro } from './portal-red.js';
-import { marcaDe, marcaDelSitio } from './portal-marca.js';
+import { marcaDe, marcaDelSitio, vestirPagina } from './portal-marca.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
 import './portal-eventos.js';
@@ -108,11 +108,16 @@ async function pintar(sesion) {
     }
     if (!esAdmin && partners.length) {
       let actual = partners.find(x => `#${x.codigo}` === location.hash.split('/')[0]) || partners[0];
+      /* Con partners de varias marcas, el selector dice la marca de cada uno y
+         la página se viste con la del que se abre */
+      const variasMarcas = new Set(partners.map(x => marcaDe(x).nombre)).size > 1;
       const montar = async () => {
         const otro = partners.length > 1 ? h('select', { 'aria-label': 'Cambiar de partner', onchange: ev => {
           actual = partners.find(x => x.id === ev.target.value);
           montar().catch(e => decir(e.message, 'error'));
-        } }, partners.map(x => h('option', { value: x.id, selected: x.id === actual.id ? true : null }, x.nombre))) : null;
+        } }, partners.map(x => h('option', { value: x.id, selected: x.id === actual.id ? true : null },
+          variasMarcas ? `${x.nombre} · ${marcaDe(x).nombre}` : x.nombre))) : null;
+        vestirPagina(marcaDe(actual));
         cont.replaceChildren(await panelPartner(actual, { sesion, acciones: [otro, salir] }));
       };
       await montar();
