@@ -64,3 +64,12 @@ export function migas(items) {
   };
 }
 
+
+/* La barra de «tu selección», la misma de la portada (index.html): una sola
+   cesta para todo el sitio, en `localStorage` (`ep-seleccion`), que pinta
+   js/site.js y que pasa al formulario de propuesta. */
+export const BARRA_SELECCION = `<aside class="seleccion" id="seleccion" hidden aria-live="polite" aria-label="Tu selección">
+  <p class="seleccion__txt"><b>Tu selección</b> <span class="seleccion__n">0</span></p>
+  <a class="btn btn--primary" href="/propuesta#briefing">Pedir propuesta con esto</a>
+  <button type="button" class="seleccion__vaciar">Vaciar</button>
+</aside>`;

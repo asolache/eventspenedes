@@ -675,6 +675,176 @@ a.card--ruta:focus-visible { outline: 2px solid var(--accent-gold); outline-offs
 .partner-ficha__datos dd { margin: 0.15rem 0 0; }
 .partner-ficha__lista { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.6rem; }
 
+/* La página de un partner como la de un producto: arriba qué es, las fotos y
+   lo esencial; a un lado, siempre a la vista, añadir a la selección y pedir
+   fecha; debajo, lo que se puede reservar por separado y la ficha técnica.
+   En el móvil la caja va después de las fotos y las dos acciones quedan en
+   una barra abajo. Nunca precios: eso va en la propuesta. */
+.pficha {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+    padding-block: 1.25rem var(--section-y);
+    grid-template-columns: minmax(0, 1fr);
+}
+.pficha > * { min-width: 0; }
+@media (min-width: 960px) {
+    .pficha {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        grid-template-areas: "cabeza caja" "galeria caja" "cuerpo caja";
+        column-gap: clamp(2rem, 4vw, 3.5rem);
+        align-items: start;
+    }
+    .pficha__cabeza { grid-area: cabeza; }
+    .pficha__galeria { grid-area: galeria; }
+    .pficha__cuerpo { grid-area: cuerpo; }
+    .pficha__caja { grid-area: caja; position: sticky; top: 5.5rem; }
+}
+.pficha__cabeza h1 { max-width: 22ch; margin-bottom: 0.4em; }
+.pficha__cabeza .eyebrow { margin-bottom: 0.75rem; }
+.pficha__cabeza .lead { margin-bottom: 1rem; color: var(--text-hi); }
+.pficha__resumen { display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; margin: 0; font-size: 0.95rem; color: var(--text-mid); }
+.pficha__resumen span::before { content: "●"; margin-right: 0.45rem; font-size: 0.5em; vertical-align: 0.3em; color: var(--accent-gold); }
+
+/* La galería: una grande y hasta cuatro al lado; la quinta dice cuántas más
+   hay (todas se ven en la tira del móvil y al abrir cada foto) */
+.pgal { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; grid-template-columns: 2fr 1fr 1fr; grid-auto-rows: minmax(0, 1fr); aspect-ratio: 16 / 8; }
+.pgal li { position: relative; margin: 0; min-height: 0; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-elevated); }
+.pgal li:first-child { grid-row: span 2; border-radius: var(--radius) var(--radius-sm) var(--radius-sm) var(--radius); }
+.pgal li:nth-child(n+6) { display: none; }
+.pgal li[data-mas]::after { content: attr(data-mas); position: absolute; inset: auto 0.6rem 0.6rem auto; padding: 0.3rem 0.7rem; border-radius: 999px; background: rgb(var(--bg-rgb) / 0.85); color: var(--text-hi); font-size: 0.85rem; font-weight: 500; pointer-events: none; }
+.pgal a { display: block; height: 100%; }
+.pgal img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.pgal a:hover img { transform: scale(1.03); }
+.pgal a:focus-visible { outline-offset: -3px; }
+.pgal--1 { grid-template-columns: 1fr; aspect-ratio: 16 / 9; }
+.pgal--1 li:first-child { grid-row: auto; border-radius: var(--radius); }
+.pgal--2 { grid-template-columns: 1fr 1fr; aspect-ratio: 16 / 6; }
+.pgal--2 li, .pgal--2 li:first-child { grid-row: auto; border-radius: var(--radius); }
+.pgal--3 { grid-template-columns: 2fr 1fr; }
+.pgal--4 { grid-template-columns: 2fr 1fr; }
+.pgal--4 li:first-child { grid-row: span 3; }
+@media (max-width: 720px) {
+    /* En el móvil, una tira que se desliza con el dedo, dentro de su caja */
+    .pgal, .pgal--1, .pgal--2 {
+        display: flex;
+        aspect-ratio: auto;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        margin-inline: calc(-1 * var(--gutter));
+        padding-inline: var(--gutter);
+        scroll-padding-inline: var(--gutter);
+    }
+    .pgal::-webkit-scrollbar { display: none; }
+    .pgal li, .pgal li:first-child, .pgal--2 li, .pgal li:nth-child(n+6) { display: block; flex: 0 0 86%; aspect-ratio: 4 / 3; scroll-snap-align: start; border-radius: var(--radius); }
+    .pgal li[data-mas]::after { content: none; }
+    .pgal--1 li:first-child { flex-basis: 100%; }
+}
+
+/* La caja de acciones */
+.pficha__caja {
+    display: grid;
+    gap: 0.9rem;
+    padding: clamp(1.25rem, 2.5vw, 1.6rem);
+    border: 1px solid var(--glass-border-hi);
+    border-radius: 18px;
+    background: var(--bg-elevated);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+.pficha__caja .eyebrow { margin: 0; }
+.pficha__caja-nombre { margin: 0; font-size: 1.35rem; }
+.pficha__caja-linea { margin: -0.4rem 0 0; font-size: 0.92rem; }
+.pficha__caja-acciones { display: grid; gap: 0.6rem; }
+.pficha__caja-acciones .btn { justify-content: center; text-align: center; width: 100%; }
+.interes.interes--grande { margin: 0; width: 100%; justify-content: center; padding: 0.8rem 1rem; font-size: 0.97rem; }
+.pficha__garantias { display: grid; gap: 0.4rem; margin: 0.2rem 0 0; font-size: 0.88rem; color: var(--text-mid); }
+.pficha__garantias li { position: relative; padding-left: 1.3rem; }
+.pficha__garantias li::before { content: "✓"; position: absolute; left: 0; color: var(--accent-gold); font-weight: 700; }
+.pficha__caja-pie { margin: 0; padding-top: 0.8rem; border-top: 1px solid var(--glass-border); font-size: 0.92rem; }
+.pficha__caja-pie a { color: var(--accent-gold); }
+
+/* El cuerpo */
+.pficha__cuerpo { display: grid; gap: clamp(2rem, 4vw, 3rem); }
+.pficha__bloque > h2, .pficha__cuerpo .partner-red h2 { font-size: clamp(1.35rem, 2.6vw, 1.75rem); margin-bottom: 1rem; }
+.pficha__texto { white-space: pre-line; max-width: 68ch; }
+
+.phechos { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
+.phechos li { display: grid; align-content: start; gap: 0.2rem; padding: 1rem 1.1rem; border: 1px solid var(--glass-border); border-radius: var(--radius); background: var(--bg-panel); }
+.phechos__v { font-size: clamp(1.6rem, 3.5vw, 2.1rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; color: var(--text-hi); }
+.phechos__texto .phechos__v { font-size: 1.05rem; line-height: 1.3; }
+.phechos__l { font-size: 0.88rem; color: var(--text-mid); }
+.phechos__d { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--text-low); }
+
+.pchips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1rem; }
+.pchips li { padding: 0.45rem 0.85rem; border: 1px solid var(--glass-border-hi); border-radius: 999px; font-size: 0.9rem; color: var(--text-hi); }
+
+.popciones { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+.popcion { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; padding: 1.1rem 1.2rem; border: 1px solid var(--glass-border); border-radius: var(--radius); background: var(--bg-elevated); }
+.popcion h3 { margin: 0; font-size: 1.05rem; }
+.popcion p { margin: 0; font-size: 0.92rem; }
+.popcion__fecha { font-family: var(--font-mono); font-size: 0.78rem !important; color: var(--accent-gold) !important; }
+.popcion__datos { display: grid; gap: 0.25rem; margin: 0; font-size: 0.88rem; }
+.popcion__datos div { display: flex; justify-content: space-between; gap: 0.75rem; border-bottom: 1px dashed var(--glass-border); padding-bottom: 0.2rem; }
+.popcion__datos dt { color: var(--text-low); }
+.popcion__datos dd { margin: 0; color: var(--text-hi); text-align: right; }
+.popcion .interes { margin-top: auto; align-self: flex-start; }
+
+/* La ficha técnica: título a la izquierda, datos a la derecha */
+.pspecs { border-top: 1px solid var(--glass-border-hi); }
+.pspecs__grupo { display: grid; gap: 0.5rem 2rem; padding-block: 1.1rem; border-bottom: 1px solid var(--glass-border); }
+@media (min-width: 640px) { .pspecs__grupo { grid-template-columns: 11rem minmax(0, 1fr); } }
+.pspecs__grupo h3 { margin: 0; font-size: 1rem; }
+.pspecs__grupo dl { display: grid; gap: 0.55rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); margin: 0; }
+.pspecs__grupo dt { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-low); }
+.pspecs__grupo dd { margin: 0.15rem 0 0; color: var(--text-hi); overflow-wrap: anywhere; }
+
+/* La barra de abajo en el móvil: las mismas dos acciones */
+.pficha__barra { display: none; }
+@media (max-width: 959px) {
+    .pficha__barra {
+        position: fixed;
+        z-index: 85;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        gap: 0.6rem;
+        padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+        background: rgb(var(--bg-rgb) / 0.94);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgb(var(--ink-rgb) / 0.12);
+    }
+    .pficha__barra .interes { margin: 0; flex: 0 0 auto; justify-content: center; padding: 0.7rem 1rem; }
+    .pficha__barra .btn { flex: 1 1 auto; justify-content: center; text-align: center; padding: 0.7rem 0.8rem; font-size: 0.95rem; }
+    body:has(.pficha__barra) { padding-bottom: 4.75rem; }
+    body:has(.pficha__barra) .seleccion { bottom: calc(4.6rem + env(safe-area-inset-bottom)); }
+    body:has(.pficha__barra):has(.seleccion:not([hidden])) { padding-bottom: 10.5rem; }
+}
+
+/* El directorio: tarjetas con foto, lo esencial y «Añadir a mi selección» */
+.section--pdir { padding-block: clamp(2rem, 5vw, 3.5rem); }
+.section--pdir + .section--pdir { padding-top: 0; }
+.pdir { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); }
+.pcard { position: relative; display: flex; flex-direction: column; height: 100%; border: 1px solid var(--glass-border); border-radius: var(--radius); background: var(--bg-elevated); overflow: hidden; transition: border-color 0.25s ease, transform 0.25s ease; }
+.pcard:hover { border-color: var(--glass-border-hi); transform: translateY(-3px); }
+.pcard__foto { display: block; aspect-ratio: 16 / 10; background: var(--bg-panel); overflow: hidden; }
+.pcard__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pcard__foto--vacia { display: grid; place-items: center; background: radial-gradient(70% 80% at 30% 20%, rgba(217, 164, 65, 0.22), transparent 70%), var(--bg-panel); text-decoration: none; }
+.pcard__foto--vacia span { font-size: 3rem; font-weight: 600; color: var(--accent-gold); opacity: 0.7; }
+.pcard__cuerpo { display: flex; flex-direction: column; gap: 0.5rem; flex: 1 1 auto; padding: 1.1rem 1.2rem 1.2rem; }
+.pcard__cuerpo .eyebrow { margin: 0; }
+.pcard h3 { margin: 0; }
+.pcard h3 a { color: var(--text-hi); text-decoration: none; }
+.pcard h3 a:hover { color: var(--accent-gold); }
+.pcard__hechos { display: flex; flex-wrap: wrap; margin: 0; font-size: 0.88rem; color: var(--text-hi); }
+.pcard__hechos span + span::before { content: "·"; margin-inline: 0.5rem; color: var(--accent-gold); }
+.pcard__texto { margin: 0; font-size: 0.93rem; }
+.pcard__acciones { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; margin-top: auto; padding-top: 0.6rem; }
+.pcard__acciones .interes { margin: 0; }
+.pcard__ver { color: var(--accent-gold); font-weight: 500; font-size: 0.93rem; }
+.pcard__ver::after { content: " →"; }
+
 /* El portal de partners (/acceso) */
 .portal { display: grid; gap: 1.5rem; }
 .portal__estado { padding: 0.8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); }
@@ -1673,6 +1843,7 @@ form[data-ficha] .field--check [data-importado] { outline: 2px solid var(--accen
 .interes[aria-pressed="true"]::before { content: "✓"; color: inherit; }
 .interes[aria-pressed="true"] .interes__no { display: none; }
 .interes[aria-pressed="true"] .interes__si { display: inline; }
+.interes:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .seleccion {
     position: fixed;
