@@ -73,6 +73,11 @@ jobs:
       - name: El recordatorio sale la víspera, con el tiempo y sin saltarse el OK
         run: node tools/test-recordatorio.mjs
 
+      # El cierre: gracias el día laborable siguiente, fotos con un permiso
+      # para publicarlas que queda con su texto exacto, y nunca sin el OK.
+      - name: El cierre pide las fotos con permiso trazable y sin saltarse el OK
+        run: node tools/test-cierre.mjs
+
       # Desde el 30/10/2026 Supabase no da permisos por defecto a las tablas
       # nuevas: cada tabla o vista de public lleva sus GRANT en la migración.
       - name: Ninguna tabla de public sin permisos explícitos
