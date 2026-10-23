@@ -19,7 +19,7 @@
    Es lo que rellenamos nosotros en la visita y no le toca al espacio.
    ========================================================================== */
 
-import { UNIDAD, COMISION_TIPO, COMISION_GENERAL, CONTACTO, ficha, repetido } from '../ficha/nucleo.mjs';
+import { UNIDAD, COMISION_TIPO, COMISION_GENERAL, CONTACTO, AMPLIA, NO_IMPORTA_AMPLIA, ficha, repetido } from '../ficha/nucleo.mjs';
 
 export const FORM = 'localizacion';
 
@@ -275,6 +275,7 @@ export const SECCIONES = [
       { n: 'tarifa_notas', l: 'Notas de tarifas', t: 'textarea', hint: 'Lo que no cabe arriba, tal cual lo dicen.' },
     ],
   },
+  ...AMPLIA,
   {
     id: 'visita', titulo: 'Notas de la visita', destino: 'interno', interno: true,
     campos: [
@@ -297,6 +298,9 @@ export const SECCIONES = [
 
 export const salaCampo = (i, c) => repetido({ prefijo: 'sala' }, i, c);
 export const camposSala = SALA;
+
+/* Lo de «Amplía tu ficha» lo escribe el espacio: no se importa de su web */
+export const NO_IMPORTA = NO_IMPORTA_AMPLIA;
 
 export const { nombres, campos, cambios, cambiosTexto, legible, comisionLegible, fichaTexto } = ficha(SECCIONES);
 

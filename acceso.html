@@ -38,16 +38,16 @@
         <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
         <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
       </svg>
-      <span class="brand__name">Events <span>Penedès</span></span>
+      <span class="brand__name" data-marca-nombre>Events <span>Penedès</span></span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menú">
+    <button class="nav-toggle" data-solo-red type="button" aria-expanded="false" aria-controls="nav" aria-label="Menú">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
       </svg>
     </button>
 
-    <nav class="nav" id="nav" aria-label="Principal">
+    <nav class="nav" id="nav" aria-label="Principal" data-solo-red>
       <ul class="nav__list">
         <li><a href="index.html#servicios" data-i18n="nav.events">Eventos</a></li>
         <li><a href="index.html#localizaciones" data-i18n="nav.spaces">Espacios</a></li>
@@ -67,9 +67,9 @@
 
   <section class="hero hero--dj">
     <div class="wrap">
-      <p class="eyebrow">Red de Events Penedès</p>
-      <h1>Acceso de partners</h1>
-      <p class="lead">Para los espacios y proveedores de la red. En un solo sitio tienes tus reservas, tu ficha y tus fotos, tu acuerdo y los clientes que te traemos.</p>
+      <p class="eyebrow" data-marca-texto data-texto-team-towers="TeamTowers">Red de Events Penedès</p>
+      <h1 data-marca-texto data-texto-team-towers="Tu espacio">Acceso de partners</h1>
+      <p class="lead" data-marca-texto data-texto-team-towers="Tu cuenta con nosotros: lo que hemos dibujado juntos, nuestra conversación y tu plan, en un solo sitio.">Para los espacios y proveedores de la red. En un solo sitio tienes tus reservas, tu ficha y tus fotos, tu acuerdo y los clientes que te traemos.</p>
     </div>
   </section>
 
@@ -97,11 +97,11 @@
               <button class="btn btn--ghost" type="button" data-accion="olvido">He olvidado la contraseña</button>
             </p>
             <p class="form__note"><strong>¿Primera vez?</strong> Escribe el correo con el que te hemos invitado, elige una contraseña y pulsa «Crear la cuenta». Te llega un correo para confirmarla.</p>
-            <p class="form__note">¿Aún no formas parte de la red? <a href="/red.html#alta">Preséntate aquí</a>.</p>
+            <p class="form__note" data-solo-red>¿Aún no formas parte de la red? <a href="/red.html#alta">Preséntate aquí</a>.</p>
           </form>
         </aside>
 
-        <div class="portal__info">
+        <div class="portal__info" data-solo-red>
           <section aria-labelledby="ofrece-titulo">
             <p class="eyebrow">Lo que te ofrecemos</p>
             <h2 id="ofrece-titulo">Tu espacio o tu servicio, en los eventos que organizamos</h2>
@@ -191,11 +191,11 @@
             <path d="M24 12v24M15 18v14M33 18v14" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/>
             <circle cx="24" cy="9" r="2.6" fill="#d9a441"/>
           </svg>
-          <span class="brand__name">Events <span>Penedès</span></span>
+          <span class="brand__name" data-marca-nombre>Events <span>Penedès</span></span>
         </a>
-        <p data-i18n="foot.tagline">Producción de eventos, localizaciones y actividades en el Alt Penedès.</p>
+        <p data-i18n="foot.tagline" data-marca-texto data-texto-team-towers="Mapas de valor, webs y acompañamiento para equipos y organizaciones.">Producción de eventos, localizaciones y actividades en el Alt Penedès.</p>
       </div>
-      <div>
+      <div data-solo-red>
         <h4 data-i18n="foot.h1">Secciones</h4>
         <ul>
           <li><a href="index.html#servicios" data-i18n="nav.events">Eventos</a></li>
@@ -212,7 +212,7 @@
           <li><a href="/acceso" data-i18n="nav.partners">Acceso partners</a></li>
         </ul>
       </div>
-      <div>
+      <div data-solo-red>
         <h4 data-i18n="foot.h2">Contacto</h4>
         <ul>
           <li><a class="js-mail" href="index.html#contacto" data-m="==QbvNmLjFWbAVGajFGbvNXY">Correo</a></li>
@@ -229,13 +229,14 @@
       </div>
     </div>
     <div class="site-footer__bottom">
-      <p data-i18n="foot.rights">© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
-      <p><a href="privacidad.html" data-i18n="foot.priv">Aviso de privacidad</a> <span aria-hidden="true">·</span> <a href="/recursos.html" data-i18n="foot.res">Recursos</a></p>
+      <p data-i18n="foot.rights" data-marca-texto data-texto-team-towers="© 2026 TeamTowers · Alvaro Solache">© 2026 Events Penedès · Un proyecto de TeamTowers Humà</p>
+      <p><a href="privacidad.html" data-i18n="foot.priv">Aviso de privacidad</a> <span data-solo-red><span aria-hidden="true">·</span> <a href="/recursos.html" data-i18n="foot.res">Recursos</a></span></p>
     </div>
   </div>
 </footer>
 
 <script src="js/site.js" defer></script>
+<script type="module">import { marcaDelSitio, vestirPagina } from './js/portal-marca.js'; vestirPagina(marcaDelSitio());</script>
 <script type="module" src="js/portal.js"></script>
 </body>
 </html>

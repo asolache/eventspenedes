@@ -151,6 +151,28 @@
   status = 301
   force = true
 
+# acceso.teamtowershuma.com es la entrada de los clientes de TeamTowers al
+# mismo portal (js/portal-marca.js la reconoce por el dominio). Desde ahí, la
+# portada y las páginas de la red llevan al portal, no a Events Penedès. /partners,
+# /blog y /agenda son funciones y lo hacen ellas (netlify/portal/entrada.mjs).
+[[redirects]]
+  from = "https://acceso.teamtowershuma.com/"
+  to = "/acceso"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "https://acceso.teamtowershuma.com/red.html"
+  to = "/acceso"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "https://acceso.teamtowershuma.com/index.html"
+  to = "/acceso"
+  status = 302
+  force = true
+
 # URLs sin extensión. Un enlace compartido a mano se escribe sin «.html», y sin
 # estas reglas acaba en el 404 —que además, con rutas relativas, salía sin
 # estilos—.

@@ -28,7 +28,9 @@ const vale = c => !c.interno && !TIPOS_FUERA.has(c.t) && !NOMBRES_FUERA.test(c.n
 
 export const autorizada = d => Boolean(d) && d.autoriza === 'si';
 
-/* { nombre, descripcion, poblacion, secciones: [{ titulo, filas: [{ l, v }] , lista? }] } */
+/* { nombre, descripcion, poblacion, secciones: [{ id, titulo, filas: [{ n, l, v, vs? }] , lista? }] }
+   `n` es el nombre del campo y `vs`, en las casillas, cada una por separado:
+   sirven para montar la página sin depender de cómo se escribe la etiqueta. */
 export function fichaPublica(esquema, d) {
   if (!autorizada(d)) { return null; }
   const secciones = [];
@@ -44,11 +46,11 @@ export function fichaPublica(esquema, d) {
         const partes = [];
         for (const c of r.campos.filter(c => publicos.includes(c.n))) {
           const v = c.t === 'checks' ? null : legible(c, d[repetido(r, i, c.n)]);
-          if (v) { partes.push({ l: c.l, v }); }
+          if (v) { partes.push({ n: c.n, l: c.l, v }); }
         }
         if (partes.length) { lista.push(partes); }
       }
-      if (lista.length) { secciones.push({ titulo: s.destino === 'web' ? s.titulo : 'Servicios', lista }); }
+      if (lista.length) { secciones.push({ id: s.id, titulo: s.destino === 'web' ? s.titulo : 'Servicios', lista }); }
       continue;
     }
     if (s.destino !== 'web') { continue; }
@@ -57,13 +59,13 @@ export function fichaPublica(esquema, d) {
       if (!vale(c) || c.n === 'nombre' || c.n === 'descripcion' || c.n === 'poblacion') { continue; }
       if (c.t === 'checks') {
         const marcadas = Object.entries(c.op).filter(([k]) => d[`${c.n}_${k}`]).map(([, t]) => t);
-        if (marcadas.length) { filas.push({ l: c.l, v: marcadas.join(', ') }); }
+        if (marcadas.length) { filas.push({ n: c.n, l: c.l, v: marcadas.join(', '), vs: marcadas }); }
         continue;
       }
       const v = legible(c, d[c.n]);
-      if (v) { filas.push({ l: c.l, v }); }
+      if (v) { filas.push({ n: c.n, l: c.l, v }); }
     }
-    if (filas.length) { secciones.push({ titulo: s.titulo, filas }); }
+    if (filas.length) { secciones.push({ id: s.id, titulo: s.titulo, filas }); }
   }
   const texto = n => (typeof d[n] === 'string' && d[n].trim() ? d[n].trim() : null);
   return { nombre: texto('nombre'), descripcion: texto('descripcion'), poblacion: texto('poblacion'), secciones };

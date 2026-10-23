@@ -313,8 +313,35 @@ tipo Proveedor con las etiquetas «Proveedor» y la de cada cosa que ofrece
 ficha como **nota**. Hasta que una ficha llega con la fecha en que lo
 validamos lleva «Pendiente de validar» y, la primera vez, una tarea «Revisar …».
 
+### Amplía tu ficha
+
+Las dos fichas acaban con «Amplía tu ficha»: un texto libre para lo que el
+partner quiera contar además (su historia, qué lo hace diferente, ofertas de
+temporada) y hasta 5 documentos como enlaces, cada uno con qué es (carta,
+dossier, fotos, vídeo…). Sale del mismo esquema (`AMPLIA` en
+`netlify/ficha/nucleo.mjs`), así que llega a la nota de Zoho, al registro de
+cambios y al portal como cualquier otro campo, y admite enlaces prellenados
+(`?amplia=…&documento1_que=…&documento1_enlace=…`). Es `destino: 'aporta'`: no
+se importa de su web y no se publica solo; lo que sirva pasa a su página por la
+aprobación de siempre. Los documentos no se suben: el cubo `fotos` del portal
+solo admite imágenes, y las fotos ya se suben desde `/acceso`.
+
 Quien se presenta en «Entra en la red» encuentra en la página de gracias el
 enlace a su ficha (de espacio o de proveedor) con lo que ya nos ha dicho.
+
+### El recordatorio de la víspera
+
+Cada evento confirmado tiene sus personas interesadas en
+`evento_interesados` (cliente, espacio, proveedores; idioma y líneas propias
+en `notas`). Cada hora, `netlify/functions/recordatorios.mjs` calcula cuándo
+le toca a cada una (24 h antes del inicio, movido a la hora laborable más
+cercana, de lunes a viernes de 9 a 18 h, Madrid) y, si es en las próximas
+30 h, deja su correo en `correos_salida` como **borrador** con la previsión
+del tiempo de Open-Meteo y un botón «Recibido» (`/rebut/<clave>`, que solo
+cuenta con el clic, no al abrir el enlace). Con el OK de Álvaro el borrador
+pasa a **programado** y la misma función lo suelta a su hora. Quién lo ha
+recibido queda en `avisos_evento.recibido_en`. WhatsApp tiene sitio en
+`evento_interesados.canal`, pero aún no se usa.
 
 ### Variables de entorno
 

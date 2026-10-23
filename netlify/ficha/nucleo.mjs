@@ -27,7 +27,12 @@
      web      se puede publicar si se autoriza
      zoho     datos de una persona: a Zoho y a ningún repositorio
      interno  precios y condiciones: al repositorio privado, nunca a la web
+     aporta   lo que el partner cuenta por su cuenta para ampliar su ficha: va
+              a Zoho y al portal, pero no se publica solo. Lo leemos y, si
+              sirve, lo pasamos a su página por la aprobación de siempre
    `interno: true` en un campo o una sección: solo se ve con `?interno=1`.
+   `sub: true` en una sección: se ve como parte de la anterior (un h3).
+   `max` en un textarea: su límite de caracteres, si no es el de siempre.
    ========================================================================== */
 
 export const SINO = { si: 'Sí', no: 'No' };
@@ -55,7 +60,35 @@ export const CONTACTO = {
   ],
 };
 
+/* «Amplía tu ficha», igual en todas: lo que el partner quiera contar además
+   y sus documentos como enlaces (carta, dossier, fotos, vídeo). Los enlaces no
+   necesitan dónde guardar nada; las fotos se suben en el portal. */
+export const DOCUMENTOS = 5;
+export const AMPLIA = [
+  {
+    id: 'amplia', titulo: 'Amplía tu ficha', destino: 'aporta',
+    nota: '¿Queréis contarnos más? Este es vuestro sitio. Lo leemos para presentaros mejor, y nada de aquí se publica sin revisarlo antes con vosotros.',
+    campos: [
+      { n: 'amplia', l: 'Lo que queráis añadir', t: 'textarea', max: 4000,
+        hint: 'Vuestra historia, qué os hace diferentes, ofertas de temporada, lo que no haya cabido arriba…' },
+    ],
+  },
+  {
+    id: 'documentos', titulo: 'Documentos', destino: 'aporta', sub: true,
+    nota: `Hasta ${DOCUMENTOS} enlaces: la carta, el dossier, una carpeta de fotos, un vídeo… En Drive, Dropbox, YouTube o vuestra web. Las fotos para la web se suben en vuestro portal de partners.`,
+    repite: { prefijo: 'documento', n: DOCUMENTOS, etiqueta: 'Documento', leyenda: 'Documento', mas: 'Añadir otro documento',
+      campos: [
+        { n: 'que', l: 'Qué es', t: 'text', hint: 'Carta, dossier, fotos, vídeo…' },
+        { n: 'enlace', l: 'Enlace', t: 'url' },
+      ] },
+  },
+];
+
 export const repetido = (r, i, c) => `${r.prefijo}${i}_${c}`;
+
+/* Lo de «Amplía tu ficha» lo escribe el partner: no se importa de su web */
+export const NO_IMPORTA_AMPLIA = ['amplia', ...Array.from({ length: DOCUMENTOS }, (_, i) =>
+  AMPLIA[1].repite.campos.map(c => repetido(AMPLIA[1].repite, i + 1, c.n))).flat()];
 
 /* El valor tal como se lee en una ficha: «Bodega o cava», no «bodega». */
 export function legible(campo, v) {
@@ -167,7 +200,7 @@ export function ficha(SECCIONES) {
         out.push(...filas(s.campos, d));
       }
       if (out.length) {
-        const marca = s.destino === 'interno' ? ' (interno)' : s.destino === 'zoho' ? ' (no se publica)' : '';
+        const marca = { interno: ' (interno)', zoho: ' (no se publica)', aporta: ' (lo aporta el partner: no se publica sin revisar)' }[s.destino] || '';
         l.push(`## ${s.titulo}${marca}`, ...out, '');
       }
     }

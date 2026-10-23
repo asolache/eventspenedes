@@ -9,6 +9,7 @@
      GET  /partners/<código>/foto/<n>  la foto n de su ficha aprobada
      GET  /partners/<código>/contacto  cuenta el clic y lleva a /contacto con
                                        el código: el lead queda trazado
+     GET  /partners/<código>/reservar  igual, pero al formulario de propuesta
      POST /partners/<código>/visto     cuenta una visita (la manda la página)
      GET  /partners/<código>/previa    (su partner o un administrador, con su
                                        sesión del portal) cómo quedaría su
@@ -33,8 +34,9 @@
 import { FICHAS } from '../ficha/fichas.mjs';
 import { fichaPublica, redPublica } from '../ficha/publica.mjs';
 import { configurado, articulosPublicados, agendaAprobada, partnersPublicos, partnerPorCodigo, sumarImpresion, foto, firmarFoto, fichaEnCurso, usuario, esAdmin, esMiembro } from '../portal/supabase.mjs';
-import { pagina, migas, esc, recorta } from '../portal/pagina.mjs';
+import { pagina, migas, esc, recorta, BARRA_SELECCION } from '../portal/pagina.mjs';
 import { accionPublica, cuando } from '../../js/blog-comun.js';
+import { alPortal } from '../portal/entrada.mjs';
 
 const SITIO = 'https://eventspenedes.com';
 const CODIGO = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
@@ -46,6 +48,73 @@ const TIPO_LEGIBLE = { localizacion: 'Espacio para eventos', proveedor: 'Proveed
 const fotosDe = p => (Array.isArray(p.datos.imagenes) ? p.datos.imagenes : [])
   .filter(r => typeof r === 'string' && r.startsWith(`${p.id}/`)).slice(0, MAX_FOTOS);
 
+/* Lo que se lee de la ficha pública por el nombre del campo: así la página no
+   depende de cómo está escrito un rótulo. Todo sale de `fichaPublica()`. */
+const filaDe = (pub, n) => {
+  for (const s of pub.secciones) { const f = (s.filas || []).find(x => x.n === n); if (f) { return f; } }
+  return null;
+};
+const cifra = (pub, n) => { const f = filaDe(pub, n); return f && /^\d+$/.test(f.v) ? Number(f.v) : 0; };
+const seccionDe = (pub, id) => pub.secciones.find(s => s.id === id);
+
+/* Lo esencial, en cifras: lo primero que mira quien organiza un evento.
+   `v` la cifra, `l` lo que es y `corto` cómo se dice en una tarjeta. */
+function hechosDe(tipo, pub) {
+  const h = [];
+  const plural = (n, uno, varios) => (n === 1 ? uno : varios);
+  if (tipo === 'localizacion') {
+    const aforos = [['aforo_banquete', 'sentados'], ['aforo_coctel', 'de pie'], ['aforo_teatro', 'en teatro']]
+      .map(([n, como]) => [cifra(pub, n), como]).filter(([n]) => n > 0);
+    const max = Math.max(0, ...aforos.map(([n]) => n));
+    if (max) { h.push({ v: String(max), l: 'personas como máximo', d: aforos.map(([n, como]) => `${n} ${como}`).join(' · '), corto: `Hasta ${max} personas` }); }
+    const salas = (seccionDe(pub, 'salas')?.lista || []).length;
+    if (salas) { h.push({ v: String(salas), l: plural(salas, 'sala o espacio', 'salas y espacios'), corto: `${salas} ${plural(salas, 'sala', 'salas')}` }); }
+    const min = cifra(pub, 'minutos_bcn');
+    if (min) { h.push({ v: `${min} min`, l: 'desde Barcelona', corto: `${min} min de Barcelona` }); }
+    const dormir = cifra(pub, 'plazas');
+    if (dormir) { h.push({ v: String(dormir), l: 'plazas para dormir', corto: `${dormir} plazas para dormir` }); }
+    const parking = cifra(pub, 'parking');
+    if (parking) { h.push({ v: String(parking), l: 'plazas de aparcamiento', corto: `${parking} plazas de parking` }); }
+  } else {
+    const max = Math.max(0, ...['catering_pax_max', 'actividad_pax_max', 'cata_pax_max', 'transporte_plazas'].map(n => cifra(pub, n)));
+    if (max) { h.push({ v: String(max), l: 'personas como máximo', corto: `Hasta ${max} personas` }); }
+    const servicios = (seccionDe(pub, 'servicios')?.lista || []).length;
+    if (servicios) { h.push({ v: String(servicios), l: plural(servicios, 'servicio', 'servicios'), corto: `${servicios} ${plural(servicios, 'servicio', 'servicios')}` }); }
+    const idiomas = filaDe(pub, 'idiomas');
+    if (idiomas?.vs?.length) { h.push({ v: String(idiomas.vs.length), l: plural(idiomas.vs.length, 'idioma', 'idiomas'), d: idiomas.v, corto: idiomas.v }); }
+    const zona = filaDe(pub, 'zona');
+    if (zona) { h.push({ v: zona.v, l: 'dónde trabaja', corto: zona.v, texto: true }); }
+  }
+  return h.slice(0, 4);
+}
+
+/* Qué se puede hacer: las casillas de lo que ofrece, sin repetir */
+const QUE_HACER = ['eventos', 'cata_tipos', 'actividad_tipos', 'catering_formatos', 'cata_productos', 'musica_formatos', 'imagen_servicios', 'transporte_vehiculos', 'tecnica_equipos', 'extras'];
+function queHacerDe(pub) {
+  const xs = [];
+  for (const n of QUE_HACER) { for (const v of filaDe(pub, n)?.vs || []) { if (!xs.includes(v)) { xs.push(v); } } }
+  return xs.slice(0, 16);
+}
+
+/* La frase de arriba: la primera de la descripción, si la descripción es larga */
+function entradilla(texto) {
+  if (!texto) { return { frase: '', resto: '' }; }
+  if (texto.length <= 200) { return { frase: texto, resto: '' }; }
+  const m = texto.match(/^(.{20,200}?[.!?])\s/s);
+  return m ? { frase: m[1], resto: texto } : { frase: recorta(texto, 180), resto: texto };
+}
+
+/* El botón de la cesta: el mismo de la portada (js/site.js lo pinta y lo
+   guarda en `ep-seleccion`). En la vista previa no hace nada. */
+function botonCesta(id, nombre, { previa, oculto = '', clase = '', textos = ['Añadir a mi selección', 'En tu selección'] }) {
+  /* `oculto`: lo que lee un lector de pantalla detrás del texto visible, para
+     que «Añadir» diga qué añade */
+  const extra = oculto ? `<span class="visually-hidden">: ${esc(oculto)}</span>` : '';
+  return previa
+    ? `<button type="button" class="interes ${clase}" disabled><span class="interes__no">${textos[0]}</span>${extra}</button>`
+    : `<button type="button" class="interes ${clase}" data-interes="${esc(id)}" data-nombre="${esc(nombre)}" aria-pressed="false"><span class="interes__no">${textos[0]}</span><span class="interes__si">${textos[1]}</span>${extra}</button>`;
+}
+
 /* `previa`: { fotos: [url], pendiente, autoriza } para la vista previa del
    portal. Se publica igual que la página de verdad, como si estuviera
    autorizada, con un aviso arriba y sin contar nada. */
@@ -56,8 +125,13 @@ function paginaPartner(p, previa = null, extra = {}) {
   const url = `${SITIO}/partners/${p.codigo}`;
   const fotos = previa ? previa.fotos : fotosDe(p).map((_, i) => `${SITIO}/partners/${p.codigo}/foto/${i + 1}`);
   const tipo = TIPO_LEGIBLE[p.tipo];
+  const clase = filaDe(pub, p.tipo === 'localizacion' ? 'tipo' : 'categoria')?.v;
   const lugar = pub.poblacion ? `${pub.poblacion}, Penedès` : 'Penedès';
   const descripcion = recorta(pub.descripcion || `${nombre}: ${tipo.toLowerCase()} en ${lugar}, en la red de Events Penedès.`, 155);
+  const hechos = hechosDe(p.tipo, pub);
+  const queHacer = queHacerDe(pub);
+  const { frase, resto } = entradilla(pub.descripcion);
+  const idPartner = `partner:${p.codigo}`;
 
   /* Para buscadores y asistentes: qué es, dónde está y qué ofrece, con los
      mismos datos que se leen en la página. */
@@ -73,26 +147,103 @@ function paginaPartner(p, previa = null, extra = {}) {
     ...(fotos.length ? { image: fotos } : {}),
     memberOf: { '@id': `${SITIO}/#business` },
   };
-  const aforo = Math.max(...['aforo_banquete', 'aforo_coctel', 'aforo_teatro'].map(k => Number(p.datos[k]) || 0));
+  const aforo = Math.max(...['aforo_banquete', 'aforo_coctel', 'aforo_teatro'].map(n => cifra(pub, n)));
   if (p.tipo === 'localizacion' && aforo > 0) { negocio.maximumAttendeeCapacity = aforo; }
-  const servicios = pub.secciones.find(s => s.titulo === 'Servicios');
+  const servicios = seccionDe(pub, 'servicios');
   if (servicios) {
     negocio.makesOffer = servicios.lista.map(partes => ({
       '@type': 'Offer', itemOffered: { '@type': 'Service', name: partes[0].v,
-        ...(partes.find(x => x.l === 'Qué incluye') ? { description: partes.find(x => x.l === 'Qué incluye').v } : {}) },
+        ...(partes.find(x => x.n === 'incluye') ? { description: partes.find(x => x.n === 'incluye').v } : {}) },
     }));
   }
 
-  const secciones = pub.secciones.map(s => `
-      <section class="partner-ficha__seccion">
-        <h2>${esc(s.titulo)}</h2>
-        ${s.filas ? `<dl class="partner-ficha__datos">${s.filas.map(f => `<div><dt>${esc(f.l)}</dt><dd>${esc(f.v)}</dd></div>`).join('')}</dl>` : ''}
-        ${s.lista ? `<ul class="partner-ficha__lista">${s.lista.map(partes => `<li><strong>${esc(partes[0].v)}</strong>${partes.slice(1).map(x => `<br><span>${esc(x.l)}: ${esc(x.v)}</span>`).join('')}</li>`).join('')}</ul>` : ''}
-      </section>`).join('');
+  /* La galería: la primera foto grande y hasta cuatro al lado (la quinta
+     dice cuántas más hay); en el móvil, una tira que se desliza con el dedo
+     con todas */
+  const galeria = fotos.length ? `
+    <section class="pficha__galeria" aria-label="Fotos de ${esc(nombre)}">
+      <ul class="pgal pgal--${Math.min(fotos.length, 5)}" tabindex="0" aria-label="${fotos.length} ${fotos.length === 1 ? 'foto' : 'fotos'}">${fotos.map((f, i) => `
+        <li${i === 4 && fotos.length > 5 ? ` data-mas="+${fotos.length - 5} ${fotos.length === 6 ? 'foto' : 'fotos'}"` : ''}><a href="${esc(f)}" target="_blank" rel="noopener"><img src="${esc(f)}" alt="${esc(nombre)} · foto ${i + 1} de ${fotos.length}" loading="${i < 5 ? 'eager' : 'lazy'}"${i ? '' : ' fetchpriority="high"'}></a></li>`).join('')}
+      </ul>
+    </section>` : '';
+
+  /* La caja de acciones: a un lado en el escritorio, siempre a la vista */
+  const reservar = previa ? '#' : `/partners/${p.codigo}/reservar`;
+  const datosReserva = previa ? '' : ` data-reservar="${esc(idPartner)}" data-nombre="${esc(nombre)}"`;
+  const caja = `
+    <aside class="pficha__caja" aria-labelledby="caja-titulo">
+      <p class="eyebrow">Organiza tu evento aquí</p>
+      <h2 id="caja-titulo" class="pficha__caja-nombre">${esc(nombre)}</h2>
+      <p class="pficha__caja-linea">${esc([clase || tipo, pub.poblacion, hechos[0]?.corto].filter(Boolean).join(' · '))}</p>
+      <div class="pficha__caja-acciones">
+        ${botonCesta(idPartner, nombre, { previa, clase: 'interes--grande' })}
+        <a class="btn btn--primary pficha__reservar" href="${reservar}" rel="nofollow"${datosReserva}>Reservar / pedir fecha</a>
+      </div>
+      <ul class="pficha__garantias">
+        <li>Sin compromiso: te preparamos la propuesta con este ${p.tipo === 'localizacion' ? 'espacio' : 'proveedor'}.</li>
+        <li>Precio y disponibilidad para tu fecha, bajo petición.</li>
+        <li>Un solo interlocutor para todo el evento.</li>
+      </ul>
+      <p class="pficha__caja-pie"><a href="${previa ? '#' : `/partners/${p.codigo}/contacto`}" rel="nofollow">Hacer una pregunta</a></p>
+    </aside>`;
+
+  /* Lo que se puede reservar por separado: salas o servicios, cada uno con su
+     botón de la cesta */
+  const opciones = s => {
+    if (!s || !s.lista?.length) { return ''; }
+    const pref = s.id === 'salas' ? 'sala' : 'servicio';
+    return `
+      <section class="pficha__bloque" aria-labelledby="t-${s.id}">
+        <h2 id="t-${s.id}">${s.id === 'salas' ? 'Salas y espacios' : 'Servicios'}</h2>
+        <ul class="popciones">${s.lista.map((partes, i) => {
+          const titulo = partes[0].v;
+          return `
+          <li><article class="popcion">
+            <h3>${esc(titulo)}</h3>${partes.length > 1 ? `
+            <dl class="popcion__datos">${partes.slice(1).map(x => `<div><dt>${esc(x.l)}</dt><dd>${esc(x.v)}</dd></div>`).join('')}</dl>` : ''}
+            ${botonCesta(`${idPartner}:${pref}-${i + 1}`, `${titulo} · ${nombre}`, { previa, oculto: titulo, textos: ['Añadir', 'Añadido'] })}
+          </article></li>`;
+        }).join('')}
+        </ul>
+      </section>`;
+  };
+
+  const bloqueHechos = hechos.length ? `
+      <section class="pficha__bloque" aria-labelledby="t-esencial">
+        <h2 id="t-esencial" class="visually-hidden">Lo esencial</h2>
+        <ul class="phechos">${hechos.map(x => `
+          <li${x.texto ? ' class="phechos__texto"' : ''}><span class="phechos__v">${esc(x.v)}</span><span class="phechos__l">${esc(x.l)}</span>${x.d ? `<span class="phechos__d">${esc(x.d)}</span>` : ''}</li>`).join('')}
+        </ul>
+      </section>` : '';
+
+  const actividades = filaDe(pub, 'actividades')?.v;
+  const bloqueQueHacer = queHacer.length || actividades ? `
+      <section class="pficha__bloque" aria-labelledby="t-hacer">
+        <h2 id="t-hacer">${p.tipo === 'localizacion' ? 'Qué puedes hacer aquí' : 'Qué ofrece'}</h2>
+        ${queHacer.length ? `<ul class="pchips">${queHacer.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+        ${actividades ? `<p>${esc(actividades)}</p>` : ''}
+      </section>` : '';
+
+  const bloqueSobre = resto ? `
+      <section class="pficha__bloque" aria-labelledby="t-sobre">
+        <h2 id="t-sobre">Sobre ${esc(nombre)}</h2>
+        <p class="pficha__texto">${esc(resto)}</p>
+      </section>` : '';
+
+  /* La ficha técnica: todo lo demás, como la de un producto */
+  const tecnica = pub.secciones.filter(s => s.filas && !['fotos', 'publicacion'].includes(s.id));
+  const bloqueTecnica = tecnica.length ? `
+      <section class="pficha__bloque" aria-labelledby="t-tecnica">
+        <h2 id="t-tecnica">Ficha técnica</h2>
+        <div class="pspecs">${tecnica.map(s => `
+          <div class="pspecs__grupo">
+            <h3>${esc(s.titulo)}</h3>
+            <dl>${s.filas.map(f => `<div><dt>${esc(f.l)}</dt><dd>${esc(f.v)}</dd></div>`).join('')}</dl>
+          </div>`).join('')}
+        </div>
+      </section>` : '';
 
   const red = bloqueRed(redPublica(p.red, { previa: Boolean(previa) }), nombre);
-  const galeria = fotos.length ? `
-      <ul class="partner-ficha__fotos">${fotos.map((f, i) => `<li><img src="${f}" alt="${esc(nombre)} · foto ${i + 1}" loading="${i ? 'lazy' : 'eager'}"></li>`).join('')}</ul>` : '';
 
   const aviso = !previa ? '' : `
   <div class="wrap"><p class="partner-previa" role="status"><strong>Vista previa.</strong> Así se verá tu página${previa.pendiente ? ' con los cambios que tienes pendientes de validar' : ''}.
@@ -101,23 +252,23 @@ function paginaPartner(p, previa = null, extra = {}) {
   <nav class="crumbs wrap" aria-label="Migas de pan">
     <a href="/">Events Penedès</a> <span aria-hidden="true">/</span> <a href="/partners">Espacios y proveedores</a> <span aria-hidden="true">/</span> <span>${esc(nombre)}</span>
   </nav>
-  <section class="hero hero--dj">
-    <div class="wrap">
-      <p class="eyebrow">${esc(tipo)} · ${esc(lugar)}</p>
+  <div class="wrap pficha${fotos.length ? '' : ' pficha--sin-fotos'}">
+    <header class="pficha__cabeza">
+      <p class="eyebrow">${esc(clase || tipo)} · ${esc(lugar)}</p>
       <h1>${esc(nombre)}</h1>
-      ${pub.descripcion ? `<p class="lead">${esc(pub.descripcion)}</p>` : ''}
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="${previa ? '#' : `/partners/${p.codigo}/contacto`}" rel="nofollow">Organizar un evento aquí</a>
-        <a class="btn btn--ghost" href="/partners">Ver toda la red</a>
-      </div>
+      ${frase ? `<p class="lead">${esc(frase)}</p>` : ''}
+      ${hechos.length ? `<p class="pficha__resumen">${hechos.slice(0, 3).map(x => `<span>${esc(x.corto)}</span>`).join('')}</p>` : ''}
+    </header>${galeria}${caja}
+    <div class="pficha__cuerpo">${bloqueHechos}${bloqueQueHacer}${bloqueSobre}${opciones(seccionDe(pub, 'salas'))}${opciones(servicios)}${red}${bloqueTecnica}
+${bloqueBlog(extra, { previa, nombre })}
+      <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: añade lo que te interese a tu selección y te preparamos la propuesta.</p>
     </div>
-  </section>
-  <section class="section">
-    <div class="wrap partner-ficha">${red}${galeria}${secciones}
-${bloqueBlog(extra)}
-      <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: escríbenos y te preparamos la propuesta.</p>
-    </div>
-  </section>${previa ? '' : `
+  </div>
+  <div class="pficha__barra" role="region" aria-label="Reservar ${esc(nombre)}">
+    ${botonCesta(idPartner, nombre, { previa, textos: ['Añadir', 'En tu selección'] })}
+    <a class="btn btn--primary" href="${reservar}" rel="nofollow"${datosReserva}>Reservar / pedir fecha</a>
+  </div>${previa ? '' : `
+${BARRA_SELECCION}
   <script>
     try { fetch('/partners/${p.codigo}/visto', { method: 'POST', keepalive: true }); } catch (e) {}
   </script>`}`;
@@ -145,16 +296,27 @@ function bloqueRed(r, nombre) {
       </section>`;
 }
 
-/* Lo que el partner ha contado en el blog y lo que propone en la agenda */
-function bloqueBlog({ entrevistas = [], acciones = [] }) {
+/* Lo que el partner ha contado en el blog y lo que propone en la agenda.
+   Cada experiencia de la agenda se puede añadir a la selección. */
+function bloqueBlog({ entrevistas = [], acciones = [] }, { previa = null, nombre = '' } = {}) {
   return `${acciones.length ? `
-      <section class="partner-ficha__seccion">
-        <h2>Próximas experiencias</h2>
-        <ul class="partner-ficha__lista">${acciones.map(x => `<li><strong>${esc(x.titulo)}</strong><br><span>${esc(cuando(x.inicio, x.fin))}${x.cada_ano ? ' · cada año' : ''}</span>${x.descripcion ? `<br><span>${esc(recorta(x.descripcion, 220))}</span>` : ''}</li>`).join('')}</ul>
+      <section class="pficha__bloque" aria-labelledby="t-agenda">
+        <h2 id="t-agenda">Próximas experiencias</h2>
+        <ul class="popciones">${acciones.map(x => {
+          const fecha = `${cuando(x.inicio, x.fin)}${x.cada_ano ? ' · cada año' : ''}`;
+          return `
+          <li><article class="popcion">
+            <h3>${esc(x.titulo)}</h3>
+            <p class="popcion__fecha">${esc(fecha)}</p>${x.descripcion ? `
+            <p>${esc(recorta(x.descripcion, 220))}</p>` : ''}
+            ${botonCesta(`agenda:${x.id}`, `${x.titulo} (${cuando(x.inicio, x.fin)}) · ${nombre}`, { previa, oculto: x.titulo, textos: ['Añadir', 'Añadido'] })}
+          </article></li>`;
+        }).join('')}
+        </ul>
         <p><a href="/agenda">Toda la agenda del Penedès</a></p>
       </section>` : ''}${entrevistas.length ? `
-      <section class="partner-ficha__seccion">
-        <h2>En el blog</h2>
+      <section class="pficha__bloque" aria-labelledby="t-blog">
+        <h2 id="t-blog">En el blog</h2>
         <ul class="partner-ficha__lista">${entrevistas.map(a => `<li><a href="/blog/${a.slug}">${esc(a.titulo)}</a></li>`).join('')}</ul>
       </section>` : ''}`;
 }
@@ -198,17 +360,32 @@ function paginaDirectorio(lista) {
     const del = fichas.filter(x => x.p.tipo === tipo);
     if (!del.length) { return ''; }
     return `
-  <section class="section">
+  <section class="section section--pdir" aria-labelledby="t-${tipo}">
     <div class="wrap">
-      <h2>${titulo}</h2>
-      <div class="grid grid--3">${del.map(({ p, pub }) => `
-        <a class="card card--ruta" href="/partners/${p.codigo}">
-          <h3>${esc(pub.nombre || p.nombre)}</h3>
-          ${pub.poblacion ? `<p class="eyebrow">${esc(pub.poblacion)}</p>` : ''}
-          ${pub.descripcion ? `<p>${esc(recorta(pub.descripcion, 180))}</p>` : ''}
-          <p class="card__more">Ver ficha</p>
-        </a>`).join('')}
-      </div>
+      <h2 id="t-${tipo}">${titulo}</h2>
+      <ul class="pdir">${del.map(({ p, pub }) => {
+        const nombre = pub.nombre || p.nombre;
+        const clase = filaDe(pub, tipo === 'localizacion' ? 'tipo' : 'categoria')?.v;
+        const hechos = hechosDe(p.tipo, pub).slice(0, 2);
+        const enlace = `/partners/${p.codigo}`;
+        return `
+        <li><article class="pcard">
+          ${fotosDe(p).length
+            ? `<a class="pcard__foto" href="${enlace}" tabindex="-1" aria-hidden="true"><img src="${enlace}/foto/1" alt="" loading="lazy"></a>`
+            : `<a class="pcard__foto pcard__foto--vacia" href="${enlace}" tabindex="-1" aria-hidden="true"><span>${esc(nombre.slice(0, 1))}</span></a>`}
+          <div class="pcard__cuerpo">
+            <p class="eyebrow">${esc([clase, pub.poblacion].filter(Boolean).join(' · ') || TIPO_LEGIBLE[tipo])}</p>
+            <h3><a href="${enlace}">${esc(nombre)}</a></h3>
+            ${hechos.length ? `<p class="pcard__hechos">${hechos.map(x => `<span>${esc(x.corto)}</span>`).join('')}</p>` : ''}
+            ${pub.descripcion ? `<p class="pcard__texto">${esc(recorta(pub.descripcion, 150))}</p>` : ''}
+            <div class="pcard__acciones">
+              ${botonCesta(`partner:${p.codigo}`, nombre, { previa: null, oculto: nombre })}
+              <a class="pcard__ver" href="${enlace}">Ver ficha<span class="visually-hidden"> de ${esc(nombre)}</span></a>
+            </div>
+          </div>
+        </article></li>`;
+      }).join('')}
+      </ul>
     </div>
   </section>`;
   };
@@ -220,10 +397,11 @@ function paginaDirectorio(lista) {
     <div class="wrap">
       <p class="eyebrow">La red de Events Penedès</p>
       <h1>Espacios y proveedores para eventos en el Penedès</h1>
-      <p class="lead">Masías, bodegas, catering, actividades y música con los que trabajamos. Cuéntanos tu evento y lo montamos con ellos.</p>
-      <div class="hero__actions"><a class="btn btn--primary" href="/contacto.html">Contactar</a></div>
+      <p class="lead">Masías, bodegas, catering, actividades y música con los que trabajamos. Añade a tu selección lo que te encaje y te preparamos la propuesta con ellos.</p>
+      <div class="hero__actions"><a class="btn btn--primary" href="/propuesta#briefing">Pedir propuesta</a><a class="btn btn--ghost" href="/contacto.html">Contactar</a></div>
     </div>
-  </section>${grupo('localizacion', 'Espacios')}${grupo('proveedor', 'Proveedores')}`;
+  </section>${grupo('localizacion', 'Espacios')}${grupo('proveedor', 'Proveedores')}
+${BARRA_SELECCION}`;
 
   return pagina({
     titulo: 'Espacios y proveedores para eventos en el Penedès · Events Penedès',
@@ -255,6 +433,8 @@ const html = (cuerpo, status = 200, extra = {}) => new Response(cuerpo, { status
 const noEncontrado = () => new Response('No encontrado', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'x-robots-tag': 'noindex' } });
 
 export default async (req) => {
+  const fuera = alPortal(req);
+  if (fuera) { return fuera; }
   const partes = new URL(req.url).pathname.replace(/\/+$/, '').split('/').slice(2);
   if (!configurado()) { return noEncontrado(); }
 
@@ -291,6 +471,15 @@ export default async (req) => {
   if (!p) { return noEncontrado(); }
 
   if (partes.length === 1) { return html(paginaPartner(p, null, await delBlog(p))); }
+  /* «Reservar / pedir fecha»: cuenta el clic igual que el contacto y lleva al
+     formulario de propuesta con su código (el lead queda trazado) y, si es un
+     espacio, marcado en el desplegable cuando lo tiene. La página ya lo ha
+     puesto en la selección. */
+  if (partes.length === 2 && partes[1] === 'reservar') {
+    await sumarImpresion(codigo, true).catch(e => console.error('partners · reservar:', e.message));
+    const q = new URLSearchParams({ ref: codigo, ...(p.tipo === 'localizacion' ? { espacio: codigo } : {}) });
+    return new Response(null, { status: 302, headers: { location: `/propuesta.html?${q}#briefing`, 'cache-control': 'no-store' } });
+  }
   if (partes.length === 2 && partes[1] === 'contacto') {
     await sumarImpresion(codigo, true).catch(e => console.error('partners · clic:', e.message));
     return new Response(null, { status: 302, headers: { location: `/contacto.html?ref=${codigo}#escribenos`, 'cache-control': 'no-store' } });

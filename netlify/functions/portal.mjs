@@ -60,12 +60,12 @@ export function textoNota(m, { partner, reserva, dePartner }) {
   if (m.texto) { l.push('', m.texto); }
   const datos = Object.entries(m.datos || {}).filter(([k, v]) => CAMPOS[k] && v !== null && v !== '');
   if (datos.length) { l.push('', ...datos.map(([k, v]) => `${CAMPOS[k]}: ${v}`)); }
-  l.push('', `${dePartner ? `Lo escribe ${partner.nombre}` : 'Lo escribe Events Penedès'} en el portal de partners, ${m.creado_en}.`);
+  l.push('', `Lo escribe ${dePartner ? partner.nombre : (partner.marcas?.[0] || 'Events Penedès')} en el portal, ${m.creado_en}.`);
   return { titulo: `Portal · ${TITULOS[m.tipo] || m.tipo} · ${partner.nombre}`.slice(0, 120), texto: l.join('\n').trim() };
 }
 
 async function sincronizar(m, quien) {
-  const [partner] = await PORTAL.rest(`partners?select=id,nombre,zoho_account_id&id=eq.${m.partner_id}`);
+  const [partner] = await PORTAL.rest(`partners?select=id,nombre,zoho_account_id,marcas&id=eq.${m.partner_id}`);
   const reserva = m.sobre === 'reserva' && PORTAL.esUuid(m.ref)
     ? (await PORTAL.rest(`reservas?select=id,titulo,fecha,personas,zoho_deal_id&id=eq.${m.ref}`))?.[0] : null;
   const destino = reserva?.zoho_deal_id && ID_ZOHO.test(reserva.zoho_deal_id) ? ['Deals', reserva.zoho_deal_id]

@@ -32,6 +32,7 @@ import { pagina, migas, esc, recorta, SITIO } from '../portal/pagina.mjs';
 import { CATEGORIAS, MESES, cuerpoHtml, textoPlano, accionPublica, cuando } from '../../js/blog-comun.js';
 import { territorioProximo } from '../../js/agenda-territorio.js';
 import { CLUB, NOMBRE_REGLA, citasClub } from '../../js/club.js';
+import { alPortal } from '../portal/entrada.mjs';
 
 const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -341,6 +342,8 @@ export const proximas = (filas, dia = hoy()) => filas.map(a => accionPublica(a, 
   .sort((a, b) => a.inicio.localeCompare(b.inicio) || a.titulo.localeCompare(b.titulo));
 
 export default async (req) => {
+  const fuera = alPortal(req);
+  if (fuera) { return fuera; }
   if (req.method !== 'GET' && req.method !== 'HEAD') { return new Response('Solo GET', { status: 405 }); }
   if (!configurado()) { return noEncontrado(); }
   const [raiz, ...partes] = new URL(req.url).pathname.replace(/\/+$/, '').split('/').slice(1);

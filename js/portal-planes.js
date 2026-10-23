@@ -63,7 +63,7 @@ export async function vistaPlan(p, { recargar }) {
     valor ? tarjetaValor(datos, p, valor) : null,
     p.tester || p.plan !== 'ficha' ? formMejora(p, { recargar }) : null,
     oferta ? h('div', { class: 'app-card app-card--oro app-oferta' }, icono('regalo'),
-      h('div', {}, h('h3', {}, p.tester ? 'Eres uno de nuestros primeros partners' : `Oferta para los ${oferta.plazas} primeros`),
+      h('div', {}, h('h3', {}, p.tester ? 'Eres uno de nuestros primeros partners' : `Para los ${oferta.plazas} primeros: ${oferta.meses} meses de prueba`),
         h('p', {}, oferta.texto))) : null,
     tarjetasPlanes(datos, { actual: p.plan || 'ficha', tester: p.tester, pedir }),
     h('p', { class: 'app-nota' }, `Cuotas ${datos.iva_incluido ? 'con' : 'sin'} IVA${datos.provisional ? ', de lanzamiento' : ''}. Puedes cambiar de plan cuando quieras: escríbenos y lo hacemos.`),

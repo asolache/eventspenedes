@@ -53,7 +53,7 @@ function campo(c, nombre, sangria) {
     for (const [v, t] of Object.entries(op)) { l.push(`${s}    <option value="${esc(v)}">${esc(t)}</option>`); }
     l.push(`${s}  </select>`);
   } else if (c.t === 'textarea') {
-    l.push(`${s}  <textarea id="${id}" name="${nombre}" rows="3" maxlength="2000"></textarea>`);
+    l.push(`${s}  <textarea id="${id}" name="${nombre}" rows="${c.max ? 5 : 3}" maxlength="${c.max || 2000}"></textarea>`);
   } else {
     const extra = [];
     if (c.t === 'number') { extra.push('min="0"', 'max="100000"', ...(c.dec ? ['step="0.01"', 'inputmode="decimal"'] : ['inputmode="numeric"'])); }
@@ -98,7 +98,9 @@ const { SECCIONES, ABRE = {} } = esquema;
 PREFIJO = id;
 const bloques = [];
 for (const sec of SECCIONES) {
-  const b = [`${S}<h2 class="form__h" id="sec-${sec.id}">${esc(sec.titulo)}</h2>`];
+  const b = [sec.sub
+    ? `${S}<h3 class="form__h form__h--sub" id="sec-${sec.id}">${esc(sec.titulo)}</h3>`
+    : `${S}<h2 class="form__h" id="sec-${sec.id}">${esc(sec.titulo)}</h2>`];
   if (sec.interno) { b[0] = `${S}<div class="solo-interno form">\n` + b[0]; }
   if (sec.nota) { b.push(`${S}<p class="field__hint">${esc(sec.nota)}</p>`); }
   if (sec.si) {
