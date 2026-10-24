@@ -128,7 +128,7 @@
         <p class="eyebrow" data-i18n="red.q.eyebrow">Què t’emportes</p>
         <h2 data-i18n="red.q.title">Feina que no arribaria sola</h2>
       </div>
-      <div class="grid grid--3">
+      <div class="grid grid--4">
         <article class="card">
           <h3 data-i18n="red.q1.title">Clients de fora</h3>
           <p data-i18n="red.q1.text">Empreses de Barcelona i de fora, i agències que busquen partner local. Clients que no et trobarien pel seu compte.</p>
@@ -140,6 +140,10 @@
         <article class="card">
           <h3 data-i18n="red.q3.title">Ben presentat</h3>
           <p data-i18n="red.q3.text">Presentem el teu espai o el teu servei amb les teves fotos i les teves condicions. Mai oferim un preu que no ens hagis donat.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.q4.title">La teva pàgina a la xarxa</h3>
+          <p data-i18n="red.q4.text">Una pàgina pròpia al directori de la xarxa, amb el que ofereixes i on ets, que enllacem a les propostes als clients. Tu decideixes què es publica.</p>
         </article>
       </div>
     </div>
@@ -162,7 +166,35 @@
     </div>
   </section>
 
-  <section class="section section--panel" id="como">
+  <section class="section section--panel" id="valoracion">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="red.v.eyebrow">Com ho valorem</p>
+        <h2 data-i18n="red.v.title">No hi entra tothom, i és a posta</h2>
+        <p data-i18n="red.v.lead">Preferim una xarxa curta de gent que coneixem bé. Revisem cada sol·licitud amb aquests quatre criteris i, si ara no hi encaixa, t’ho diem.</p>
+      </div>
+      <div class="grid grid--4">
+        <article class="card">
+          <h3 data-i18n="red.v1.title">Ets al Penedès</h3>
+          <p data-i18n="red.v1.text">El teu espai o el teu servei és al Penedès o hi treballa cada setmana. El que venem és la comarca.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v2.title">Encaixes amb esdeveniments d’empresa</h3>
+          <p data-i18n="red.v2.text">Pots atendre grups d’empresa o d’agència: horaris tancats, factura i algú que respongui el dia de l’esdeveniment.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v3.title">Qualitat que puguem signar</h3>
+          <p data-i18n="red.v3.text">El que ofereixes ho recomanaríem a un client amb el nostre nom. Si ets un espai, abans el venim a veure.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v4.title">Respons de pressa</h3>
+          <p data-i18n="red.v4.text">Contestes una consulta el mateix dia. Un client que espera una setmana una resposta ja ha tancat amb un altre.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="como">
     <div class="wrap">
       <div class="section__head">
         <p class="eyebrow" data-i18n="red.c.eyebrow">Com funciona</p>
@@ -170,12 +202,12 @@
       </div>
       <div class="steps">
         <article class="step">
-          <h3 data-i18n="red.c1.title">Et presentes</h3>
+          <h3 data-i18n="red.c1.title">Envies la sol·licitud</h3>
           <p data-i18n="red.c1.text">Omples el formulari d’aquí sota. Són dos minuts.</p>
         </article>
         <article class="step">
-          <h3 data-i18n="red.c2.title">En parlem</h3>
-          <p data-i18n="red.c2.text">Et truquem i, si ets un espai, el venim a veure.</p>
+          <h3 data-i18n="red.c2.title">La valorem</h3>
+          <p data-i18n="red.c2.text">La revisem amb els criteris de dalt, et truquem i, si ets un espai, el venim a veure.</p>
         </article>
         <article class="step">
           <h3 data-i18n="red.c3.title">La teva fitxa</h3>
@@ -189,12 +221,12 @@
     </div>
   </section>
 
-  <section class="section" id="alta">
+  <section class="section section--panel" id="alta">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow" data-i18n="red.f.eyebrow">Presenta’t</p>
+        <p class="eyebrow" data-i18n="red.f.eyebrow">Sol·licitud</p>
         <h2 data-i18n="red.f.title">Explica’ns qui ets</h2>
-        <p class="lead" data-i18n="red.f.lead">Et responem en menys de 48 h laborables.</p>
+        <p class="lead" data-i18n="red.f.lead">Revisem cada sol·licitud i et responem en menys de 48 h laborables, hi entris o no.</p>
       </div>
 
       <form class="form" id="form-red" name="red" method="POST"
@@ -254,7 +286,7 @@
           <label for="r-mensaje" data-i18n="red.f.mensaje">Què ofereixes i per a quantes persones</label>
           <textarea id="r-mensaje" name="mensaje" rows="4" maxlength="800"></textarea>
         </p>
-        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Enviar</button></p>
+        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Enviar sol·licitud</button></p>
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
           <span data-i18n="red.f.consent">He llegit i accepto l’<a href="/ca/privacidad.html">avís de privacitat</a>.</span></label>
