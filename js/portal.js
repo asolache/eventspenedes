@@ -344,6 +344,20 @@ async function panelPartner(p, { sesion, acciones }) {
    Un cliente no es un espacio ni un proveedor: no tiene ficha, reservas ni
    acuerdo de la red. Ve su cuenta con nosotros, con su marca, y la
    conversación, que pasa a su ficha de Zoho como la de cualquier partner. */
+/* Lo que la marca añade al espacio de su cliente (su camino y su propuesta),
+   cargado de su web. Si no carga, el panel sigue igual. Para la propuesta
+   recibe el testigo de la sesión, que su web comprueba con Supabase (Álvaro,
+   24/10/2026). */
+const espacios = {};
+async function pintarEspacio(caja, p, marca) {
+  espacios[marca.espacio] ||= new Promise((bien, mal) => {
+    document.head.append(h('script', { src: marca.espacio, async: true, onload: bien, onerror: mal }));
+  }).catch(e => { delete espacios[marca.espacio]; throw e; });
+  await espacios[marca.espacio];
+  const { data } = await sb.auth.getSession();
+  await window.EspaiClient.pinta(caja, { plan: p.plan || null, testimoni: data.session?.access_token || null });
+}
+
 async function panelCliente(p, { sesion, acciones }) {
   let raiz = null;
   const recargar = async () => { raiz.replaceWith(await panelCliente(p, { sesion, acciones })); };
@@ -367,6 +381,11 @@ async function panelCliente(p, { sesion, acciones }) {
           ? h('p', {}, `Te escribimos el ${fecha(nuestros[nuestros.length - 1].creado_en)}. `, ir('conversacion', 'Leerlo'))
           : h('p', { class: 'app-nota' }, 'Cuando tengamos algo para ti, sale aquí y en la conversación.'))),
   ];
+  if (marca.espacio) {
+    const caja = h('div', { class: 'app-rejilla' });
+    inicio.push(caja);
+    pintarEspacio(caja, p, marca).catch(() => caja.remove());
+  }
   const vConversacion = [
     tarjeta(null, formComentario({ partnerId: p.id, admin: false, recargar, etiqueta: 'Escríbenos lo que necesites' })),
     lineaDeTiempo([...mensajes].reverse(), ctx),
