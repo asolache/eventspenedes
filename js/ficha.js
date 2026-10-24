@@ -297,6 +297,7 @@
        ficha prellenada que les mandamos): así sabremos qué han corregido. */
     if (partida && !partida.value) { fijarPartida(leer()); }
     guardar();
+    hechas();
     var avisos = (res.avisos || []).slice(0, 8);
     if (puestos) {
       iDecir('Hemos puesto ' + puestos + (puestos === 1 ? ' dato' : ' datos') + ' en la ficha, marcados en dorado con la frase de la que salen. Revisadlos uno a uno y corregid lo que no esté bien'
@@ -451,23 +452,84 @@
     desmarcarTodo();
     porTipo();
     mostrarSalas();
+    hechas();
     borrar.hidden = true;
     estado.hidden = true;
     if (vistaEl) { vistaEl.hidden = true; }
   });
+
+  /* --- Índice: dónde estás y qué secciones tienen ya algo --------------------- */
+
+  var indice = form.querySelector('[data-indice]');
+  var secciones = [];
+  if (indice) {
+    var enlaces = indice.querySelectorAll('a[data-sec]');
+    for (var e = 0; e < enlaces.length; e++) {
+      var h = document.getElementById('sec-' + enlaces[e].getAttribute('data-sec'));
+      if (!h) { continue; }
+      /* Una sección son su título y lo que sigue hasta el título siguiente
+         (los subtítulos, como «Documentos», van con la suya) */
+      var trozo = [];
+      for (var el = h.nextElementSibling; el && !(el.matches('h2.form__h')); el = el.nextElementSibling) { trozo.push(el); }
+      secciones.push({ a: enlaces[e], h: h, trozo: trozo });
+    }
+  }
+
+  function hechas() {
+    secciones.forEach(function (s) {
+      /* La casilla que abre un bloque no cuenta: se marca sola según el tipo */
+      var hay = s.trozo.some(function (el) {
+        var els = el.matches('input, select, textarea') ? [el] : el.querySelectorAll('input, select, textarea');
+        for (var i = 0; i < els.length; i++) {
+          if (els[i].hasAttribute('data-tipos')) { continue; }
+          if (els[i].type === 'checkbox' ? els[i].checked : els[i].value) { return true; }
+        }
+        return false;
+      });
+      if (hay) { s.a.setAttribute('data-hecho', ''); } else { s.a.removeAttribute('data-hecho'); }
+    });
+  }
+
+  function marcarActual(s) {
+    secciones.forEach(function (x) { x.a.removeAttribute('aria-current'); });
+    s.a.setAttribute('aria-current', 'true');
+    /* Que el botón de la sección actual se vea en la tira, sin mover la página */
+    var ol = s.a.closest('ol');
+    var izq = s.a.offsetLeft - ol.offsetLeft;
+    if (izq < ol.scrollLeft || izq + s.a.offsetWidth > ol.scrollLeft + ol.clientWidth) { ol.scrollLeft = izq - 16; }
+  }
+
+  /* La actual es la última cuyo título ya ha subido al primer tercio de la
+     pantalla. Las escondidas (las internas, fuera de `?interno=1`) no cuentan. */
+  function actual() {
+    var s = secciones[0];
+    secciones.forEach(function (x) { if (x.h.offsetParent && x.h.getBoundingClientRect().top < window.innerHeight * 0.35) { s = x; } });
+    marcarActual(s);
+  }
+  if (secciones.length) {
+    var pendiente = false;
+    window.addEventListener('scroll', function () {
+      if (pendiente) { return; }
+      pendiente = true;
+      window.requestAnimationFrame(function () { pendiente = false; actual(); });
+    }, { passive: true });
+    actual();
+  }
 
   /* --- Arranque ------------------------------------------------------------ */
 
   recuperar();
   porTipo();
   mostrarSalas();
+  hechas();
 
   var espera;
-  form.addEventListener('input', function (ev) { desmarcar(ev.target); clearTimeout(espera); espera = setTimeout(guardar, 300); });
+  form.addEventListener('input', function (ev) { desmarcar(ev.target); clearTimeout(espera); espera = setTimeout(function () { guardar(); hechas(); }, 300); });
   form.addEventListener('change', function (ev) {
     if (ev.target !== iPdfCampo) { desmarcar(ev.target); }
     if (ev.target === tipo || /^tambien_/.test(ev.target.name || '')) { porTipo(); }
     if (ev.target.hasAttribute && ev.target.hasAttribute('data-tipos')) { condicionales(); }
     guardar();
+    hechas();
   });
 })();

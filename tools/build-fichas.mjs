@@ -27,6 +27,8 @@ let PREFIJO = 'l';
 const INICIO = '<!-- campos: generado por tools/build-fichas.mjs, no editar -->';
 const FIN = '<!-- /campos -->';
 
+/* El asterisco es para la vista; el lector de pantalla ya oye «obligatorio» por el `required` */
+const OBLIGATORIO = ' <span class="req" aria-hidden="true">*</span>';
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const CORTOS = new Set(['text', 'tel', 'email', 'url', 'number', 'eur', 'date', 'select', 'sino']);
 const TIPO_INPUT = { eur: 'number', text: 'text', tel: 'tel', email: 'email', url: 'url', number: 'number', date: 'date' };
@@ -44,7 +46,7 @@ function campo(c, nombre, sangria) {
     l.push(`${s}</fieldset>`);
     return l.join('\n');
   }
-  const l = [`${s}<p class="field${c.interno ? ' solo-interno' : ''}">`, `${s}  <label for="${id}">${esc(c.l)}</label>`];
+  const l = [`${s}<p class="field${c.interno ? ' solo-interno' : ''}">`, `${s}  <label for="${id}">${esc(c.l)}${c.req ? OBLIGATORIO : ''}</label>`];
   if (c.t === 'select' || c.t === 'sino') {
     const op = c.t === 'sino' ? { si: 'Sí', no: 'No' } : c.op;
     const vacia = c.req ? 'Elige una opción' : 'Sin dato';
@@ -92,11 +94,27 @@ function campos(lista, sangria) {
   return out.join('\n');
 }
 
+/* El índice de la ficha: una ficha larga se rellena a trozos, y cada uno tiene
+   que poder ir directo a lo suyo. Sale de las mismas secciones, así que una
+   sección nueva aparece sola. Arriba, lo único obligatorio. */
+function indice(SECCIONES) {
+  const req = SECCIONES.flatMap(sec => sec.campos || []).filter(c => c.req).map(c => c.l.toLowerCase());
+  const lista = req.length > 1 ? `${req.slice(0, -1).join(', ')} y ${req[req.length - 1]}` : req.join('');
+  const l = [`${S}<p class="ficha-min"><strong>Lo mínimo para enviarla:</strong> ${esc(lista)} (marcados con <span class="req" aria-hidden="true">*</span>) y aceptar el aviso de privacidad. Todo lo demás es opcional: rellenad lo que sepáis y saltad a la parte que os toque.</p>`];
+  l.push(`${S}<nav class="ficha-indice" aria-label="Secciones de la ficha" data-indice>`, `${S}  <ol>`);
+  for (const sec of SECCIONES.filter(x => !x.sub)) {
+    const oblig = (sec.campos || []).some(c => c.req);
+    l.push(`${S}    <li${sec.interno ? ' class="solo-interno"' : ''}><a href="#sec-${sec.id}" data-sec="${sec.id}">${esc(sec.titulo)}${oblig ? OBLIGATORIO : ''}</a></li>`);
+  }
+  l.push(`${S}  </ol>`, `${S}</nav>`);
+  return l.join('\n');
+}
+
 const S = '        ';
 function generar({ pagina, esquema, id }) {
 const { SECCIONES, ABRE = {} } = esquema;
 PREFIJO = id;
-const bloques = [];
+const bloques = [indice(SECCIONES)];
 for (const sec of SECCIONES) {
   const b = [sec.sub
     ? `${S}<h3 class="form__h form__h--sub" id="sec-${sec.id}">${esc(sec.titulo)}</h3>`

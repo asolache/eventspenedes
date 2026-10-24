@@ -45,7 +45,7 @@
     <div class="wrap">
       <p class="eyebrow">Red de proveedores de Events Penedès</p>
       <h1>Ficha del proveedor</h1>
-      <p class="lead">Con esta ficha os proponemos a empresas y agencias cuando encajáis, con vuestros servicios y precios claros desde el principio, sin idas y venidas. Solo son obligatorios el nombre y qué ofrecéis; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
+      <p class="lead">Con esta ficha os proponemos a empresas y agencias cuando encajáis, con vuestros servicios y precios claros desde el principio, sin idas y venidas. Solo son obligatorios el nombre y qué ofrecéis, marcados con *; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
       <ol class="pasos">
         <li><strong>Empezad desde vuestra web o vuestras tarifas</strong> <span>Pegad la dirección o subid el PDF y rellenamos lo que encontremos, marcado para que lo reviséis.</span></li>
         <li><strong>Cada servicio con su precio</strong> <span>Qué es, cuánto cuesta, para cuántos y qué incluye. Es lo que nos permite proponeros sin tener que preguntaros cada vez.</span></li>
@@ -87,14 +87,35 @@
         </fieldset>
 
         <!-- campos: generado por tools/build-fichas.mjs, no editar -->
+        <p class="ficha-min"><strong>Lo mínimo para enviarla:</strong> nombre del negocio y lo principal que ofrecéis (marcados con <span class="req" aria-hidden="true">*</span>) y aceptar el aviso de privacidad. Todo lo demás es opcional: rellenad lo que sepáis y saltad a la parte que os toque.</p>
+        <nav class="ficha-indice" aria-label="Secciones de la ficha" data-indice>
+          <ol>
+            <li><a href="#sec-proveedor" data-sec="proveedor">Quiénes sois <span class="req" aria-hidden="true">*</span></a></li>
+            <li><a href="#sec-contacto" data-sec="contacto">Persona de contacto</a></li>
+            <li><a href="#sec-catering" data-sec="catering">Restauración y catering</a></li>
+            <li><a href="#sec-cata" data-sec="cata">Catas</a></li>
+            <li><a href="#sec-actividad" data-sec="actividad">Guías y actividades</a></li>
+            <li><a href="#sec-transporte" data-sec="transporte">Transporte</a></li>
+            <li><a href="#sec-alojamiento" data-sec="alojamiento">Alojamiento</a></li>
+            <li><a href="#sec-musica" data-sec="musica">Música y espectáculos</a></li>
+            <li><a href="#sec-imagen" data-sec="imagen">Fotografía y protocolo</a></li>
+            <li><a href="#sec-tecnica" data-sec="tecnica">Producción y técnica</a></li>
+            <li><a href="#sec-servicios" data-sec="servicios">Servicios y precios</a></li>
+            <li><a href="#sec-condiciones" data-sec="condiciones">Condiciones</a></li>
+            <li><a href="#sec-publicacion" data-sec="publicacion">Fotos y publicación</a></li>
+            <li><a href="#sec-amplia" data-sec="amplia">Amplía tu ficha</a></li>
+            <li class="solo-interno"><a href="#sec-revision" data-sec="revision">Nuestra valoración</a></li>
+          </ol>
+        </nav>
+
         <h2 class="form__h" id="sec-proveedor">Quiénes sois</h2>
         <div class="form__row">
           <p class="field">
-            <label for="p-nombre">Nombre del negocio</label>
+            <label for="p-nombre">Nombre del negocio <span class="req" aria-hidden="true">*</span></label>
             <input id="p-nombre" name="nombre" type="text" autocomplete="organization" maxlength="300" required>
           </p>
           <p class="field">
-            <label for="p-categoria">Lo principal que ofrecéis</label>
+            <label for="p-categoria">Lo principal que ofrecéis <span class="req" aria-hidden="true">*</span></label>
             <select id="p-categoria" name="categoria" required>
               <option value="">Elige una opción</option>
               <option value="restauracion">Restauración y catering</option>
@@ -2335,7 +2356,7 @@
 
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
-          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
+          <span>He leído el <a href="privacidad.html">aviso de privacidad</a> <span class="req" aria-hidden="true">*</span>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
         </p>
 
         <p class="form__acciones">
