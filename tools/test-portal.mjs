@@ -228,6 +228,8 @@ comprueba('las marcas son las de la base de datos', /marcas <@ array\['Events Pe
 const notaCliente = textoNota({ tipo: 'comentario', texto: 'Hola', creado_en: '2026-10-22' }, { partner: { nombre: 'ELE', marcas: ['TeamTowers'] }, dePartner: false });
 comprueba('la nota en Zoho dice quién escribe con su marca', /Lo escribe TeamTowers en el portal/.test(notaCliente.texto) && !/Events Penedès/.test(notaCliente.texto));
 const acceso = readFileSync(new URL('../acceso.html', import.meta.url), 'utf8');
+comprueba('el administrador filtra por marca', M.esDeMarca({ marcas: ['TeamTowers'] }, 'TeamTowers') && !M.esDeMarca({ marcas: ['TeamTowers'] }, 'Events Penedès')
+  && M.esDeMarca({ marcas: null }, 'Events Penedès') && M.esDeMarca({ marcas: ['TeamTowers'] }, M.TODAS));
 const E = await import('../netlify/portal/entrada.mjs');
 const toml = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8');
 comprueba('acceso.teamtowershuma.com es TeamTowers y su portada lleva al portal', M.marcaDelSitio({ hostname: 'acceso.teamtowershuma.com', search: '' }).nombre === 'TeamTowers'
