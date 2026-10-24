@@ -339,15 +339,18 @@ async function panelPartner(p, { sesion, acciones }) {
    Un cliente no es un espacio ni un proveedor: no tiene ficha, reservas ni
    acuerdo de la red. Ve su cuenta con nosotros, con su marca, y la
    conversación, que pasa a su ficha de Zoho como la de cualquier partner. */
-/* Lo que la marca añade al espacio de su cliente (su camino), cargado de su
-   web. Si no carga, el panel sigue igual. No recibe la sesión del portal. */
+/* Lo que la marca añade al espacio de su cliente (su camino y su propuesta),
+   cargado de su web. Si no carga, el panel sigue igual. Para la propuesta
+   recibe el testigo de la sesión, que su web comprueba con Supabase (Álvaro,
+   24/10/2026). */
 const espacios = {};
 async function pintarEspacio(caja, p, marca) {
   espacios[marca.espacio] ||= new Promise((bien, mal) => {
     document.head.append(h('script', { src: marca.espacio, async: true, onload: bien, onerror: mal }));
   }).catch(e => { delete espacios[marca.espacio]; throw e; });
   await espacios[marca.espacio];
-  await window.EspaiClient.pinta(caja, { plan: p.plan || null });
+  const { data } = await sb.auth.getSession();
+  await window.EspaiClient.pinta(caja, { plan: p.plan || null, testimoni: data.session?.access_token || null });
 }
 
 async function panelCliente(p, { sesion, acciones }) {
