@@ -355,6 +355,11 @@ window.EP_I18N = {
       'cta.cat.txt': 'Digues-nos quants sou i quin moment del dia és, i et proposem el menú juntament amb l’espai.',
       'cta.cat.btn': 'Demanar proposta',
       'cta.cat.red': 'Tens un càtering o un restaurant al Penedès? <a href="red.html?perfil=restauracion">Entra a la xarxa</a>.',
+      'join.eyebrow': 'Per a empreses del Penedès',
+      'join.title': 'Tens un servei al Penedès?',
+      'join.txt': 'Empreses i agències ens demanen espais, cuina, tastos, activitats i tècnica a la comarca. Si el que fas encaixa amb esdeveniments d’empresa, demana entrar a la xarxa: valorem cada sol·licitud i, si hi entres, tens la teva pàgina i t’arriben encàrrecs per escrit.',
+      'join.btn': 'Sol·licitar entrar',
+      'join.btn2': 'Com ho valorem',
     },
 
     en: {
@@ -708,6 +713,11 @@ window.EP_I18N = {
       'cta.cat.txt': 'Tell us how many you are and what time of day it is, and we’ll suggest the menu together with the venue.',
       'cta.cat.btn': 'Request a proposal',
       'cta.cat.red': 'Do you run a caterer or restaurant in the Penedès? <a href="red.html?perfil=restauracion">Join the network</a>.',
+      'join.eyebrow': 'For Penedès businesses',
+      'join.title': 'Do you offer a service in the Penedès?',
+      'join.txt': 'Companies and agencies ask us for venues, food, tastings, activities and AV in the region. If what you do fits corporate events, apply to join the network: we assess every application and, if you get in, you get your own page and receive written bookings.',
+      'join.btn': 'Apply to join',
+      'join.btn2': 'How we assess',
     }
 };
 
