@@ -5,11 +5,11 @@
    «Cómo trabajamos», en /contacto «Contacto», la portada iba a un ancla y las
    demás a /contacto). Ahora el menú sigue el flujo de valor y sale de aquí:
 
-     Eventos · Espacios · Experiencias · Cómo trabajamos · La red · Agencias
-     · Pedir propuesta · Acceso partners
+     Eventos · Espacios · Experiencias · DJ y música · Cómo trabajamos · La red
+     · Agencias · Pedir propuesta · Acceso partners
 
    y la columna «Secciones» del pie, lo mismo más lo que cuelga de cada
-   entrada (DJ y música, blog, agenda, «Entra en la red»).
+   entrada (blog, agenda, «Entra en la red»).
 
    Escribe las páginas en castellano; ca/ y en/ salen después con
    build-i18n.mjs y la cabecera de /partners y /blog con build-marco.mjs.
@@ -28,6 +28,7 @@ export const MENU = [
   { clave: 'nav.events',      ancla: 'servicios',      es: 'Eventos',          ca: 'Esdeveniments',    en: 'Events' },
   { clave: 'nav.spaces',      ancla: 'localizaciones', es: 'Espacios',         ca: 'Espais',           en: 'Venues' },
   { clave: 'nav.experiences', ancla: 'actividades',    es: 'Experiencias',     ca: 'Experiències',     en: 'Experiences' },
+  { clave: 'nav.dj',          href: 'dj.html',         es: 'DJ y música',      ca: 'DJ i música',      en: 'DJ & music' },
   { clave: 'nav.process',     ancla: 'proceso',        es: 'Cómo trabajamos',  ca: 'Com treballem',    en: 'How we work' },
   { clave: 'nav.network',     href: '/partners',       es: 'La red',           ca: 'La xarxa',         en: 'The network' },
   { clave: 'nav.agents',      href: 'agencias.html',   es: 'Agencias',         ca: 'Agències',         en: 'Agencies' },
@@ -38,7 +39,7 @@ export const MENU = [
 /* El pie: cada entrada del menú y, debajo de la suya, lo que cuelga de ella */
 const PIE = [
   'nav.events', 'nav.spaces', 'nav.experiences',
-  { clave: 'nav.dj',     href: 'dj.html',  es: 'DJ y música',     ca: 'DJ i música',      en: 'DJ & music' },
+  'nav.dj',
   'nav.process', 'nav.network',
   { clave: 'nav.blog',   href: '/blog',    es: 'Blog',            ca: 'Blog',             en: 'Blog' },
   { clave: 'nav.agenda', href: '/agenda',  es: 'Agenda',          ca: 'Agenda',           en: 'What\'s on' },

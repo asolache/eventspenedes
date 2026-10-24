@@ -229,15 +229,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 .brand__name span { color: var(--accent-gold); }
 
 .nav { margin-left: auto; }
-.nav__list { display: flex; align-items: center; gap: 1.6rem; }
+/* Nueve entradas en la columna de 1140 px: juntas y algo más pequeñas */
+.nav__list { display: flex; align-items: center; gap: 0.8rem; }
 .nav__list a {
     color: var(--text-mid);
-    font-size: 0.93rem;
+    font-size: 0.87rem;
     font-weight: 500;
     white-space: nowrap;
 }
-/* Ocho entradas: entre la tableta y el escritorio ancho se juntan un poco */
-@media (max-width: 1360px) { .nav__list { gap: 0.9rem; } .nav__list a { font-size: 0.87rem; } }
 .nav__list a:hover { color: var(--text-hi); text-decoration: none; }
 
 .lang {
@@ -290,7 +289,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .tema svg { width: 1rem; height: 1rem; }
 /* En escritorio el menú ya llena la cabecera: el botón va en el margen de la
    derecha, fuera de la columna, para no apretar la marca ni las entradas. */
-@media (min-width: 1101px) {
+@media (min-width: 1241px) {
     .tema {
         position: absolute;
         top: 50%;
@@ -590,7 +589,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* --- Responsive: navegació mòbil ---------------------------------------- */
 
-@media (max-width: 1100px) {
+@media (max-width: 1240px) {
     .nav-toggle {
         display: inline-flex;
         margin-left: auto;
