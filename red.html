@@ -86,6 +86,7 @@
         <li><a href="index.html#servicios" data-i18n="nav.events">Eventos</a></li>
         <li><a href="index.html#localizaciones" data-i18n="nav.spaces">Espacios</a></li>
         <li><a href="index.html#actividades" data-i18n="nav.experiences">Experiencias</a></li>
+        <li><a href="dj.html" data-i18n="nav.dj">DJ y música</a></li>
         <li><a href="index.html#proceso" data-i18n="nav.process">Cómo trabajamos</a></li>
         <li><a href="/partners" data-i18n="nav.network">La red</a></li>
         <li><a href="agencias.html" data-i18n="nav.agents">Agencias</a></li>
@@ -127,7 +128,7 @@
         <p class="eyebrow" data-i18n="red.q.eyebrow">Qué te llevas</p>
         <h2 data-i18n="red.q.title">Trabajo que no llegaría solo</h2>
       </div>
-      <div class="grid grid--3">
+      <div class="grid grid--4">
         <article class="card">
           <h3 data-i18n="red.q1.title">Clientes de fuera</h3>
           <p data-i18n="red.q1.text">Empresas de Barcelona y de fuera, y agencias que buscan partner local. Clientes que no te encontrarían por su cuenta.</p>
@@ -139,6 +140,10 @@
         <article class="card">
           <h3 data-i18n="red.q3.title">Bien presentado</h3>
           <p data-i18n="red.q3.text">Presentamos tu espacio o tu servicio con tus fotos y tus condiciones. Nunca ofrecemos un precio que no nos hayas dado.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.q4.title">Tu página en la red</h3>
+          <p data-i18n="red.q4.text">Una página propia en el directorio de la red, con lo que ofreces y dónde estás, que enlazamos en las propuestas a clientes. Tú decides qué se publica.</p>
         </article>
       </div>
     </div>
@@ -161,7 +166,35 @@
     </div>
   </section>
 
-  <section class="section section--panel" id="como">
+  <section class="section section--panel" id="valoracion">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="red.v.eyebrow">Cómo lo valoramos</p>
+        <h2 data-i18n="red.v.title">No entra todo el mundo, y es a propósito</h2>
+        <p data-i18n="red.v.lead">Preferimos una red corta de gente que conocemos bien. Revisamos cada solicitud con estos cuatro criterios y, si ahora no encaja, te lo decimos.</p>
+      </div>
+      <div class="grid grid--4">
+        <article class="card">
+          <h3 data-i18n="red.v1.title">Estás en el Penedès</h3>
+          <p data-i18n="red.v1.text">Tu espacio o tu servicio está en el Penedès o trabaja aquí cada semana. Lo que vendemos es la comarca.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v2.title">Encajas con eventos de empresa</h3>
+          <p data-i18n="red.v2.text">Puedes atender grupos de empresa o de agencia: horarios cerrados, factura y alguien que responda el día del evento.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v3.title">Calidad que podamos firmar</h3>
+          <p data-i18n="red.v3.text">Lo que ofreces lo recomendaríamos a un cliente con nuestro nombre. Si eres un espacio, vamos a verlo antes.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v4.title">Respondes rápido</h3>
+          <p data-i18n="red.v4.text">Contestas a una consulta en el día. Un cliente que espera una semana una respuesta ya ha cerrado con otro.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="como">
     <div class="wrap">
       <div class="section__head">
         <p class="eyebrow" data-i18n="red.c.eyebrow">Cómo funciona</p>
@@ -169,12 +202,12 @@
       </div>
       <div class="steps">
         <article class="step">
-          <h3 data-i18n="red.c1.title">Te presentas</h3>
+          <h3 data-i18n="red.c1.title">Envías la solicitud</h3>
           <p data-i18n="red.c1.text">Rellenas el formulario de aquí abajo. Son dos minutos.</p>
         </article>
         <article class="step">
-          <h3 data-i18n="red.c2.title">Hablamos</h3>
-          <p data-i18n="red.c2.text">Te llamamos y, si eres un espacio, vamos a verlo.</p>
+          <h3 data-i18n="red.c2.title">La valoramos</h3>
+          <p data-i18n="red.c2.text">La revisamos con los criterios de arriba, te llamamos y, si eres un espacio, vamos a verlo.</p>
         </article>
         <article class="step">
           <h3 data-i18n="red.c3.title">Tu ficha</h3>
@@ -188,12 +221,12 @@
     </div>
   </section>
 
-  <section class="section" id="alta">
+  <section class="section section--panel" id="alta">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow" data-i18n="red.f.eyebrow">Preséntate</p>
+        <p class="eyebrow" data-i18n="red.f.eyebrow">Solicitud</p>
         <h2 data-i18n="red.f.title">Cuéntanos quién eres</h2>
-        <p class="lead" data-i18n="red.f.lead">Te respondemos en menos de 48 h laborables.</p>
+        <p class="lead" data-i18n="red.f.lead">Revisamos cada solicitud y te respondemos en menos de 48 h laborables, entres o no.</p>
       </div>
 
       <form class="form" id="form-red" name="red" method="POST"
@@ -253,7 +286,7 @@
           <label for="r-mensaje" data-i18n="red.f.mensaje">Qué ofreces y para cuántas personas</label>
           <textarea id="r-mensaje" name="mensaje" rows="4" maxlength="800"></textarea>
         </p>
-        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Enviar</button></p>
+        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Enviar solicitud</button></p>
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
           <span data-i18n="red.f.consent">He leído y acepto el <a href="privacidad.html">aviso de privacidad</a>.</span></label>

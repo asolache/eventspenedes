@@ -86,11 +86,12 @@
         <li><a href="/en/index.html#servicios" data-i18n="nav.events">Events</a></li>
         <li><a href="/en/index.html#localizaciones" data-i18n="nav.spaces">Venues</a></li>
         <li><a href="/en/index.html#actividades" data-i18n="nav.experiences">Experiences</a></li>
+        <li><a href="/en/dj.html" data-i18n="nav.dj">DJ & music</a></li>
         <li><a href="/en/index.html#proceso" data-i18n="nav.process">How we work</a></li>
         <li><a href="/partners" data-i18n="nav.network">The network</a></li>
         <li><a href="/en/agencias.html" data-i18n="nav.agents">Agencies</a></li>
         <li><a href="/en/propuesta.html" data-i18n="nav.brief">Request a proposal</a></li>
-        <li><a href="/acceso" data-i18n="nav.access">Partner login</a></li>
+        <li><a href="/acceso" data-i18n="nav.access">Log in</a></li>
         <li>
           <div class="lang" role="group" aria-label="Idioma">
             <a class="lang__btn" href="/ca/red.html" hreflang="ca" lang="ca">CA</a>
@@ -127,7 +128,7 @@
         <p class="eyebrow" data-i18n="red.q.eyebrow">What you get</p>
         <h2 data-i18n="red.q.title">Work that would not come on its own</h2>
       </div>
-      <div class="grid grid--3">
+      <div class="grid grid--4">
         <article class="card">
           <h3 data-i18n="red.q1.title">Clients from further afield</h3>
           <p data-i18n="red.q1.text">Companies from Barcelona and abroad, and agencies looking for a local partner. Clients who would not find you on their own.</p>
@@ -139,6 +140,10 @@
         <article class="card">
           <h3 data-i18n="red.q3.title">Well presented</h3>
           <p data-i18n="red.q3.text">We present your venue or service with your photos and your terms. We never quote a price you have not given us.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.q4.title">Your page on the network</h3>
+          <p data-i18n="red.q4.text">A page of your own in the network directory, with what you offer and where you are, linked from our proposals to clients. You decide what is published.</p>
         </article>
       </div>
     </div>
@@ -161,7 +166,35 @@
     </div>
   </section>
 
-  <section class="section section--panel" id="como">
+  <section class="section section--panel" id="valoracion">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="red.v.eyebrow">How we assess</p>
+        <h2 data-i18n="red.v.title">Not everyone gets in, on purpose</h2>
+        <p data-i18n="red.v.lead">We prefer a short network of people we know well. We review every application against these four criteria and, if it is not a fit right now, we tell you.</p>
+      </div>
+      <div class="grid grid--4">
+        <article class="card">
+          <h3 data-i18n="red.v1.title">You are in the Penedès</h3>
+          <p data-i18n="red.v1.text">Your venue or service is in the Penedès or works here every week. What we sell is the region.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v2.title">You fit corporate events</h3>
+          <p data-i18n="red.v2.text">You can host company or agency groups: fixed schedules, invoicing and someone who answers on the day of the event.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v3.title">Quality we can put our name to</h3>
+          <p data-i18n="red.v3.text">We would recommend what you offer to a client under our own name. If you are a venue, we visit first.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="red.v4.title">You reply quickly</h3>
+          <p data-i18n="red.v4.text">You answer an enquiry the same day. A client who waits a week for an answer has already booked elsewhere.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="como">
     <div class="wrap">
       <div class="section__head">
         <p class="eyebrow" data-i18n="red.c.eyebrow">How it works</p>
@@ -169,12 +202,12 @@
       </div>
       <div class="steps">
         <article class="step">
-          <h3 data-i18n="red.c1.title">You introduce yourself</h3>
+          <h3 data-i18n="red.c1.title">You apply</h3>
           <p data-i18n="red.c1.text">Fill in the form below. It takes two minutes.</p>
         </article>
         <article class="step">
-          <h3 data-i18n="red.c2.title">We talk</h3>
-          <p data-i18n="red.c2.text">We call you and, if you are a venue, we come and see it.</p>
+          <h3 data-i18n="red.c2.title">We assess it</h3>
+          <p data-i18n="red.c2.text">We review it against the criteria above, call you and, if you are a venue, come and see it.</p>
         </article>
         <article class="step">
           <h3 data-i18n="red.c3.title">Your profile</h3>
@@ -188,12 +221,12 @@
     </div>
   </section>
 
-  <section class="section" id="alta">
+  <section class="section section--panel" id="alta">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow" data-i18n="red.f.eyebrow">Introduce yourself</p>
+        <p class="eyebrow" data-i18n="red.f.eyebrow">Application</p>
         <h2 data-i18n="red.f.title">Tell us who you are</h2>
-        <p class="lead" data-i18n="red.f.lead">We reply within 48 working hours.</p>
+        <p class="lead" data-i18n="red.f.lead">We review every application and reply within 48 working hours, whether you get in or not.</p>
       </div>
 
       <form class="form" id="form-red" name="red" method="POST"
@@ -253,7 +286,7 @@
           <label for="r-mensaje" data-i18n="red.f.mensaje">What you offer and for how many people</label>
           <textarea id="r-mensaje" name="mensaje" rows="4" maxlength="800"></textarea>
         </p>
-        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Send</button></p>
+        <p><button class="btn btn--primary" type="submit" data-i18n="red.f.send">Send application</button></p>
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
           <span data-i18n="red.f.consent">I have read and accept the <a href="/en/privacidad.html">privacy notice</a>.</span></label>

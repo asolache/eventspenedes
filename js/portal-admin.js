@@ -15,7 +15,7 @@ import { diffPalabras, lados } from './portal-diff.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { asistenteRed } from './portal-red.js';
 import { lineaDeTiempo, formComentario, tarjetaReserva, formReserva, historialAcuerdos, formAcuerdo, herramientas, ESTADO_RESERVA } from './portal-relacion.js';
-import { MARCAS, marcaDe } from './portal-marca.js';
+import { MARCAS, MARCA_RED, TODAS, esDeMarca, marcaDe, marcaDelSitio, vestirPagina } from './portal-marca.js';
 
 const TIPOS = { localizacion: 'Espacio', proveedor: 'Actuación o servicio', cliente: 'Cliente' };
 const ESTADOS = { invitado: 'Invitado', activo: 'Activo', pausado: 'Pausado' };
@@ -58,6 +58,15 @@ function celdasCambio(tipo, k, antes, ahora) {
   ];
 }
 
+/* La marca que mira el administrador: todas, o una (y la página se viste con
+   ella). Se recuerda en la pestaña; si no, la del sitio fuera de la red. */
+const CLAVE_MARCA = 'portal-marca-admin';
+function marcaElegida() {
+  try { const m = sessionStorage.getItem(CLAVE_MARCA); if (m === TODAS || MARCAS[m]) { return m; } } catch { /* sin almacenamiento */ }
+  const sitio = marcaDelSitio().nombre;
+  return sitio === MARCA_RED ? TODAS : sitio;
+}
+
 export async function panelAdmin(caja, detalle = null, opciones = {}) {
   const recargar = (p = detalle) => panelAdmin(caja, p, opciones).catch(e => decir(e.message, 'error'));
   const [todos, , datosPlanes] = await Promise.all([
@@ -70,16 +79,26 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
     if (p) { caja.replaceChildren(await fichaCompleta(p, recargar, { ...opciones, datosPlanes })); return; }
   }
   const nombres = Object.fromEntries(todos.map(p => [p.id, p.nombre]));
-  const [cambios, acuerdos, reservas, importaciones, invitaciones, sinZoho, usoIa] = await Promise.all([
+  const marca = marcaElegida();
+  vestirPagina(marca === TODAS ? marcaDelSitio() : MARCAS[marca]);
+  const deLaMarca = todos.filter(p => esDeMarca(p, marca));
+  const ids = new Set(deLaMarca.map(p => p.id));
+  const suyo = x => marca === TODAS || ids.has(x.partner_id);
+  const selMarca = h('select', { 'aria-label': 'Marca', onchange: ev => {
+    try { sessionStorage.setItem(CLAVE_MARCA, ev.target.value); } catch { /* sin almacenamiento */ }
+    recargar(null);
+  } }, [TODAS, ...Object.keys(MARCAS)].map(m => h('option', { value: m, selected: m === marca ? true : null }, m === TODAS ? 'Todas las marcas' : m)));
+  const [cambiosTodos, acuerdosTodos, reservasTodas, importacionesTodas, invitaciones, sinZoho, usoIaTodo] = await Promise.all([
     sb.from('cambios_ficha').select('*').eq('estado', 'pendiente').order('creado_en').then(ok),
     sb.from('acuerdos').select('*').eq('estado', 'propuesto').order('creado_en').then(ok),
     sb.from('reservas').select('*').neq('estado', 'cancelada').gte('fecha', new Date().toISOString().slice(0, 10)).order('fecha').then(ok),
-    sb.from('importaciones').select('creado_en,ficha,metodo,modelo,tokens_entrada,tokens_salida,coste_usd,fuente')
+    sb.from('importaciones').select('creado_en,ficha,metodo,modelo,tokens_entrada,tokens_salida,coste_usd,fuente,partner_id')
       .gte('creado_en', hace(30)).order('creado_en', { ascending: false }).then(ok),
     sb.from('invitaciones').select('partner_id,correo,aceptada_en').then(ok),
-    sb.from('mensajes').select('id', { count: 'exact', head: true }).is('zoho_nota_id', null),
+    (q => marca === TODAS ? q : q.in('partner_id', [...ids]))(sb.from('mensajes').select('id', { count: 'exact', head: true }).is('zoho_nota_id', null)),
     sb.from('uso_ia').select('creado_en,operacion,coste_usd,partner_id').gte('creado_en', hace(30)).order('creado_en', { ascending: false }).then(ok).catch(() => []),
   ]);
+  const [cambios, acuerdos, reservas, importaciones, usoIa] = [cambiosTodos, acuerdosTodos, reservasTodas, importacionesTodas, usoIaTodo].map(xs => xs.filter(suyo));
   const verPartner = id => recargar({ id });
   const enlacePartner = id => h('button', { class: 'btn-link', type: 'button', onclick: () => verPartner(id) }, nombres[id] || '—');
 
@@ -93,7 +112,7 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
       ['Reservas sin confirmar', esperan.length],
       ['Cambios de ficha', cambios.length, null, cambios.length ? 'oro' : null],
       ['Acuerdos por firmar', acuerdos.length],
-      ['Partners activos', todos.filter(p => p.estado === 'activo').length, `de ${todos.length}`],
+      ['Partners activos', deLaMarca.filter(p => p.estado === 'activo').length, `de ${deLaMarca.length}`],
       ['IA, 30 días', `${totalIa.toFixed(2)}`, 'USD'],
     ]),
     sinZoho.count ? tarjeta('Pendiente de pasar a Zoho',
@@ -137,8 +156,8 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
   const vPartners = [
     h('div', { class: 'app-card app-desliza' }, h('table', { class: 'app-tabla' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Nombre'), h('th', {}, 'Tipo'), h('th', {}, 'Estado'), h('th', {}, 'Plan'), h('th', {}, 'Invitados'), h('th', {}, 'Zoho'))),
-      h('tbody', {}, todos.map(p => h('tr', {},
-        h('td', {}, enlacePartner(p.id), h('br', {}), h('code', {}, p.codigo)), h('td', {}, TIPOS[p.tipo] || p.tipo),
+      h('tbody', {}, deLaMarca.map(p => h('tr', {},
+        h('td', {}, enlacePartner(p.id), h('br', {}), h('code', {}, p.codigo)), h('td', {}, TIPOS[p.tipo] || p.tipo, marca === TODAS ? ` · ${marcaDe(p).nombre}` : ''),
         h('td', {}, chip(ESTADOS[p.estado] || p.estado, TONO_ESTADO[p.estado])),
         h('td', {}, datosPlanes ? nombrePlan(datosPlanes, p.plan || 'ficha') : p.plan, p.tester ? ' · tester' : ''),
         h('td', {}, invitaciones.filter(i => i.partner_id === p.id).map(i => `${i.correo}${i.aceptada_en ? ' ✓' : ''}`).join(', ') || '—'),
@@ -147,14 +166,14 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
   ];
 
   /* Planes del canal */
-  const testers = todos.filter(p => p.tester).length;
+  const testers = deLaMarca.filter(p => p.tester).length;
   const vPlanes = datosPlanes ? [
     h('p', { class: 'app-nota' }, `Salen de data/planes.json. Testers: ${testers} de ${datosPlanes.oferta_testers?.plazas ?? '—'}. `
       + (datosPlanes.oferta_testers?.precio_mes === null ? 'Falta fijar el precio de la oferta de lanzamiento.' : '')),
     tarjetasPlanes(datosPlanes),
     tarjeta('Plan de cada partner', h('div', { class: 'app-desliza' }, h('table', { class: 'app-tabla' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Partner'), h('th', {}, 'Plan'), h('th', {}, 'Tester'), h('th', {}, 'Desde'))),
-      h('tbody', {}, todos.map(p => {
+      h('tbody', {}, deLaMarca.map(p => {
         const sel = h('select', { 'aria-label': `Plan de ${p.nombre}` }, datosPlanes.planes.map(pl => h('option', { value: pl.id, selected: (p.plan || 'ficha') === pl.id ? true : null }, pl.nombre)));
         const tester = h('input', { type: 'checkbox', 'aria-label': `${p.nombre} es tester`, checked: p.tester ? true : null });
         const guardar = intentar(async () => {
@@ -194,10 +213,11 @@ export async function panelAdmin(caja, detalle = null, opciones = {}) {
   const extra = await vistasExtra('admin', { sb, recargar, irAPartner: verPartner });
   const raiz = app({
     clave: 'admin', titulo: 'Administración', subtitulo: opciones.sesion?.user?.email || '',
-    acciones: [opciones.salir],
+    marca: marca === TODAS ? marcaDelSitio().nombre : marca,
+    acciones: [selMarca, opciones.salir],
     vistas: [
       { id: 'inicio', titulo: 'Inicio', icono: 'inicio', nodos: inicio },
-      { id: 'partners', titulo: `Partners (${todos.length})`, corto: 'Partners', icono: 'partners', nodos: vPartners },
+      { id: 'partners', titulo: `Partners (${deLaMarca.length})`, corto: 'Partners', icono: 'partners', nodos: vPartners },
       { id: 'cambios', titulo: 'Cambios de ficha', corto: 'Cambios', icono: 'cambios', n: cambios.length,
         intro: 'Cada campo con su nombre y su sección; debajo, su nombre en el sistema.', nodos: vCambios },
       { id: 'acuerdos', titulo: 'Acuerdos por firmar', corto: 'Acuerdos', icono: 'acuerdo', n: acuerdos.length, nodos: vAcuerdos },
