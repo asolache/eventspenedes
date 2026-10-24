@@ -45,7 +45,7 @@
     <div class="wrap">
       <p class="eyebrow">Red de espacios de Events Penedès</p>
       <h1>Ficha del espacio</h1>
-      <p class="lead">Con esta ficha sabemos qué grupos encajan en vuestro espacio antes de proponerlo a un cliente. Solo son obligatorios el nombre y el tipo; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
+      <p class="lead">Con esta ficha sabemos qué grupos encajan en vuestro espacio antes de proponerlo a un cliente. Solo son obligatorios el nombre y el tipo, marcados con *; lo que no tengáis claro, dejadlo en blanco. Se guarda sola en este dispositivo, así que podéis dejarla a medias y seguir más tarde.</p>
       <ol class="pasos">
         <li><strong>Nos llega a nosotros</strong> <span>La ficha llega a Events Penedès y a nadie más. No se publica nada al enviarla.</span></li>
         <li><strong>La revisamos con vosotros</strong> <span>Si falta algo o hay dudas, os llamamos.</span></li>
@@ -87,14 +87,36 @@
         </fieldset>
 
         <!-- campos: generado por tools/build-fichas.mjs, no editar -->
+        <p class="ficha-min"><strong>Lo mínimo para enviarla:</strong> nombre del espacio y tipo (marcados con <span class="req" aria-hidden="true">*</span>) y aceptar el aviso de privacidad. Todo lo demás es opcional: rellenad lo que sepáis y saltad a la parte que os toque.</p>
+        <nav class="ficha-indice" aria-label="Secciones de la ficha" data-indice>
+          <ol>
+            <li><a href="#sec-espacio" data-sec="espacio">El espacio <span class="req" aria-hidden="true">*</span></a></li>
+            <li><a href="#sec-contacto" data-sec="contacto">Persona de contacto</a></li>
+            <li><a href="#sec-capacidad" data-sec="capacidad">Capacidad</a></li>
+            <li><a href="#sec-salas" data-sec="salas">Salas y espacios</a></li>
+            <li><a href="#sec-cocina" data-sec="cocina">Cocina y catering</a></li>
+            <li><a href="#sec-mobiliario" data-sec="mobiliario">Mobiliario</a></li>
+            <li><a href="#sec-tecnica" data-sec="tecnica">Equipo técnico</a></li>
+            <li><a href="#sec-logistica" data-sec="logistica">Acceso y logística</a></li>
+            <li><a href="#sec-cata" data-sec="cata">Visita y cata</a></li>
+            <li><a href="#sec-alojamiento" data-sec="alojamiento">Alojamiento</a></li>
+            <li><a href="#sec-eventos" data-sec="eventos">Para qué sirve</a></li>
+            <li><a href="#sec-fotos" data-sec="fotos">Fotos y publicación</a></li>
+            <li><a href="#sec-paquetes" data-sec="paquetes">Paquetes para Events Penedès</a></li>
+            <li><a href="#sec-tarifas" data-sec="tarifas">Otras tarifas</a></li>
+            <li><a href="#sec-amplia" data-sec="amplia">Amplía tu ficha</a></li>
+            <li class="solo-interno"><a href="#sec-visita" data-sec="visita">Notas de la visita</a></li>
+          </ol>
+        </nav>
+
         <h2 class="form__h" id="sec-espacio">El espacio</h2>
         <div class="form__row">
           <p class="field">
-            <label for="l-nombre">Nombre del espacio</label>
+            <label for="l-nombre">Nombre del espacio <span class="req" aria-hidden="true">*</span></label>
             <input id="l-nombre" name="nombre" type="text" maxlength="300" required>
           </p>
           <p class="field">
-            <label for="l-tipo">Tipo</label>
+            <label for="l-tipo">Tipo <span class="req" aria-hidden="true">*</span></label>
             <select id="l-tipo" name="tipo" required>
               <option value="">Elige una opción</option>
               <option value="finca">Finca o masía</option>
@@ -1626,7 +1648,7 @@
 
         <p class="field--check field--consent">
           <label><input type="checkbox" name="consentimiento" value="si" required>
-          <span>He leído el <a href="privacidad.html">aviso de privacidad</a>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
+          <span>He leído el <a href="privacidad.html">aviso de privacidad</a> <span class="req" aria-hidden="true">*</span>. Los datos de la persona de contacto se usan solo para gestionar la colaboración.</span></label>
         </p>
 
         <p class="form__acciones">
