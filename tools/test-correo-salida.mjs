@@ -23,6 +23,11 @@ const FILA = { estado: 'enviando', para: ['cliente@empresa.example'], cco: [], a
 comprueba('una fila aprobada y bien escrita sale', errores(FILA).length === 0);
 comprueba('un borrador no sale', errores({ ...FILA, estado: 'borrador' }).length > 0);
 comprueba('un enlace google.com/url no sale', errores({ ...FILA, html: '<a href="https://www.google.com/url?q=https://x">x</a>' }).some(f => f.includes('google.com/url')));
+comprueba('un enlace google.com/url en el texto tampoco', errores({ ...FILA, texto: 'Entra en https://www.google.com/url?q=https://eventspenedes.com&sa=E' }).length > 0);
+comprueba('un hueco «[ÁLVARO: PEGA AQUÍ EL ENLACE]» no sale', errores({ ...FILA, texto: "Us deixo l'enllaç: [ÁLVARO: PEGA AQUÍ EL ENLACE A MANO]" }).some(f => f.includes('hueco')));
+comprueba('un «Hola [nombre]» no sale', errores({ ...FILA, html: '<p>Hola [nombre],</p>' }).some(f => f.includes('hueco')));
+comprueba('un enlace con http:// no sale', errores({ ...FILA, html: '<a href="http://eventspenedes.com">web</a>' }).some(f => f.includes('https')));
+comprueba('los corchetes normales sí salen', errores({ ...FILA, texto: 'Precio [sin IVA]: 20 €' }).length === 0);
 comprueba('un destinatario que no es un correo no sale', errores({ ...FILA, para: ['a@b.example, c@d.example'] }).length > 0);
 comprueba('sin destinatario no sale', errores({ ...FILA, para: [] }).length > 0);
 
