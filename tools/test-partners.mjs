@@ -215,6 +215,19 @@ const lecturas = llamadas.filter(l => l.url.includes('/rest/v1/partners?'));
 comprueba('el directorio y las páginas solo leen espacios y proveedores de Events Penedès', lecturas.length > 0
   && lecturas.every(l => l.url.includes('tipo=in.(localizacion,proveedor)') && decodeURIComponent(l.url).includes('marcas=cs.{"Events Penedès"}')));
 
+/* Las dos preguntas hacia teamtowershuma.com: en las fichas de espacio, con su
+   perfil y la marca, contadas por /api/clic; en las de proveedor, no */
+{
+  const { PERFILES } = await import('../netlify/portal/perfiles.mjs');
+  const espacio = paginaPartner({ id: ID, codigo: 'masia-prova', nombre: 'Masia de Prova', tipo: 'localizacion', datos: ESPACIO });
+  comprueba('la ficha de espacio pregunta «¿Tienes un negocio en el Penedès?» y «¿Organizas para un equipo?»',
+    espacio.includes('¿Tienes un negocio en el Penedès?') && espacio.includes('¿Organizas para un equipo?'));
+  comprueba('cada pregunta lleva su perfil y de=ep, y cuenta su clic',
+    PERFILES.every(x => x.href.startsWith('https://teamtowershuma.com/') && x.href.includes(`perfil=${x.perfil}&de=ep`)
+      && espacio.includes(`href="${x.href.replace(/&/g, '&amp;')}" data-clic="${x.clic}"`)));
+  comprueba('la ficha de proveedor no las lleva', !paginaPartner({ id: ID, codigo: 'prov-prova', nombre: 'Prov', tipo: 'proveedor', datos: PROV }).includes('data-clic="tth-'));
+}
+
 console.log('');
 if (fallos) { console.log(`❌ ${fallos} fallo${fallos > 1 ? 's' : ''}.`); process.exit(1); }
 console.log('✅ Solo se publica lo autorizado y cada ruta hace lo suyo.\n');

@@ -2085,3 +2085,10 @@ body:has(.seleccion:not([hidden])) { padding-bottom: 6.5rem; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* Agenda: lo que pasa en el territorio, debajo de lo de la red */
 .agenda__fuera { margin: 2rem 0 1rem; color: var(--accent-gold); font-size: 1rem; letter-spacing: .04em; text-transform: uppercase; }
+/* Las dos preguntas hacia teamtowershuma.com (netlify/portal/perfiles.mjs),
+   en la agenda y en las fichas de espacio */
+.perfiles { margin: 2rem 0 1.5rem; }
+.perfiles__lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.perfiles__enlace { display: block; padding: 1rem 1.25rem; border: 1px solid var(--glass-border-hi); border-radius: 12px; color: var(--text-hi); font-weight: 600; text-decoration: none; transition: border-color .2s, color .2s; }
+.perfiles__enlace:hover, .perfiles__enlace:focus-visible { border-color: var(--accent-gold); color: var(--accent-gold); }
+.section--perfiles { padding-block: 0; }
