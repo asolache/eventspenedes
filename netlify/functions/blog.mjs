@@ -33,6 +33,7 @@ import { CATEGORIAS, MESES, cuerpoHtml, textoPlano, accionPublica, cuando } from
 import { territorioProximo } from '../../js/agenda-territorio.js';
 import { CLUB, NOMBRE_REGLA, citasClub } from '../../js/club.js';
 import { alPortal } from '../portal/entrada.mjs';
+import { bloquePerfiles } from '../portal/perfiles.mjs';
 
 const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -308,6 +309,10 @@ function paginaAgenda(acciones, socios, territorio = []) {
     </div>
   </section>${club}${meses || `
   <section class="section"><div class="wrap"><p>Estamos preparando la agenda del año con los espacios y proveedores de la red.</p></div></section>`}
+  <section class="section section--perfiles">
+    <div class="wrap">${bloquePerfiles()}
+    </div>
+  </section>
   <section class="section">
     <div class="wrap">
       <h2>Música entre viñas</h2>

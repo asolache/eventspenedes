@@ -37,6 +37,7 @@ import { configurado, articulosPublicados, agendaAprobada, partnersPublicos, par
 import { pagina, migas, esc, recorta, BARRA_SELECCION } from '../portal/pagina.mjs';
 import { accionPublica, cuando } from '../../js/blog-comun.js';
 import { alPortal } from '../portal/entrada.mjs';
+import { bloquePerfiles } from '../portal/perfiles.mjs';
 
 const SITIO = 'https://eventspenedes.com';
 const CODIGO = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
@@ -260,7 +261,7 @@ function paginaPartner(p, previa = null, extra = {}) {
       ${hechos.length ? `<p class="pficha__resumen">${hechos.slice(0, 3).map(x => `<span>${esc(x.corto)}</span>`).join('')}</p>` : ''}
     </header>${galeria}${caja}
     <div class="pficha__cuerpo">${bloqueHechos}${bloqueQueHacer}${bloqueSobre}${opciones(seccionDe(pub, 'salas'))}${opciones(servicios)}${red}${bloqueTecnica}
-${bloqueBlog(extra, { previa, nombre })}
+${bloqueBlog(extra, { previa, nombre })}${p.tipo === 'localizacion' ? bloquePerfiles() : ''}
       <p class="form__note">Ficha revisada por Events Penedès. Precios y disponibilidad, bajo petición: añade lo que te interese a tu selección y te preparamos la propuesta.</p>
     </div>
   </div>

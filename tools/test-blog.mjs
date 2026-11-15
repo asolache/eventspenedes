@@ -52,8 +52,10 @@ comprueba('las citas pasadas no salen', citasClub({ ano: 2027, regla: 'primer-sa
 comprueba('el club no pasa de 222 socios', CLUB.plazas <= 222);
 
 /* 3 · Lo que se publica de una acción */
+/* Siempre en el futuro: con una fecha fija, la prueba caducaba al pasar el día */
+const DENTRO_DE_UN_MES = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
 const ACCION = { id: '11111111-1111-4111-8111-111111111111', partner_id: '22222222-2222-4222-8222-222222222222', titulo: 'Vendimia en familia',
-  descripcion: 'Cortar uva y pisarla.', categoria: 'vino', fecha_inicio: '2026-11-07', fecha_fin: null, cada_ano: false,
+  descripcion: 'Cortar uva y pisarla.', categoria: 'vino', fecha_inicio: DENTRO_DE_UN_MES, fecha_fin: null, cada_ano: false,
   hora_inicio: '10:00:00', hora_fin: '13:00:00', plazas_min: 10, plazas_max: 40, estado: 'aprobada',
   precio: 4321, precio_unidad: 'persona', iva_incluido: false, nota_revision: 'Negociar', autor: 'x' };
 const pub = accionPublica(ACCION, '2026-10-16');
@@ -126,6 +128,15 @@ const sql = readFileSync(new URL('../supabase/migrations/20261016120000_blog_age
 comprueba('una entrevista no se publica sin permiso del partner ni su visto bueno', /estado <> 'publicado' or tipo <> 'entrevista' or \(permiso_nombre and ok_partner_en is not null\)/.test(sql));
 comprueba('un partner solo propone acciones pendientes', /public\.es_miembro\(partner_id\) and estado = 'propuesta'/.test(sql));
 comprueba('cambiar el texto pide otra vez el visto bueno', /new\.ok_partner_en := null/.test(sql));
+
+/* La agenda lleva las dos preguntas hacia teamtowershuma.com, con su perfil */
+{
+  const { paginaAgenda } = await import('../netlify/functions/blog.mjs');
+  const html = String(paginaAgenda([], {}, []));
+  comprueba('la agenda pregunta por el negocio y por el equipo, con perfil y de=ep y su clic contado',
+    html.includes('perfil=negocio&amp;de=ep') && html.includes('perfil=empresa&amp;de=ep')
+    && html.includes('data-clic="tth-negocio"') && html.includes('data-clic="tth-empresa"'));
+}
 
 console.log(fallos ? `\n${fallos} fallo(s)\n` : '\nTodo bien\n');
 process.exit(fallos ? 1 : 0);
