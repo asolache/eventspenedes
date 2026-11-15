@@ -22,6 +22,7 @@ import { app, tarjeta, kpis, chip, vistasExtra } from './portal-app.js';
 import { planes, nombrePlan, vistaPlan, asistenteDescripcion, tarjetasPlanes } from './portal-planes.js';
 import { vistaLiquidaciones } from './portal-liquidaciones.js';
 import { vistaCerebro } from './portal-red.js';
+import { tuDia, tuSemana, tiempoRespuesta, duracion, CAPAS, RAPIDO_HORAS } from './portal-dia.js';
 import { marcaDe, marcaDelSitio, vestirPagina } from './portal-marca.js';
 /* Las vistas del blog y la agenda se registran en `extras` al cargarse */
 import './portal-blog.js';
@@ -136,7 +137,8 @@ async function panelPartner(p, { sesion, acciones }) {
   const recargar = async () => { raiz.replaceWith(await panelPartner(p, { sesion, acciones })); };
   const desde30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
 
-  const [actual, ficha, acuerdos, leads, impresiones, reservas, mensajes, miembros, { data: u }, datosPlanes] = await Promise.all([
+  const semana = dias => sb.rpc('valor_plan', { p: p.id, dias }).then(({ data, error }) => (error ? null : data));
+  const [actual, ficha, acuerdos, leads, impresiones, reservas, mensajes, miembros, { data: u }, datosPlanes, v7, v14] = await Promise.all([
     datosActuales(p.id),
     sb.from('fichas').select('datos,version').eq('partner_id', p.id).maybeSingle().then(ok),
     sb.from('acuerdos').select('*').eq('partner_id', p.id).order('version', { ascending: false }).then(ok),
@@ -147,6 +149,8 @@ async function panelPartner(p, { sesion, acciones }) {
     sb.from('miembros').select('user_id').eq('partner_id', p.id).then(ok),
     sb.auth.getUser(),
     planes().catch(() => null),
+    semana(7),
+    semana(14),
   ]);
   const yo = u.user.id;
   const nombres = Object.fromEntries(miembros.map(m => [m.user_id, 'Tu equipo']));
@@ -167,28 +171,40 @@ async function panelPartner(p, { sesion, acciones }) {
   const ir = (vista, texto = 'Ir') => h('button', { class: 'btn btn--ghost', type: 'button', onclick: () => raiz.ir(vista) }, texto);
   const publicada = actual.publicada?.autoriza === 'si' && p.estado === 'activo';
 
-  /* Inicio: lo que le toca hacer y cómo va */
-  const tareas = [
-    porContestar.length ? [`Contestar ${porContestar.length} reserva${porContestar.length > 1 ? 's' : ''}`, 'reservas'] : null,
-    porFirmar.length ? ['Revisar la propuesta de acuerdo', 'acuerdo'] : null,
+  /* Inicio: «Tu día» (lo que toca hoy, por capas) y «Tu semana en la red» */
+  const mejoras = [
     !actual.version && !actual.pendiente ? ['Completar tu ficha', 'ficha'] : null,
     !datos.descripcion ? ['Escribir tu presentación (la IA te ayuda)', 'ficha'] : null,
     !fotos.length ? ['Subir fotos que podamos publicar', 'ficha'] : null,
     datos.autoriza !== 'si' && (actual.version || actual.pendiente) ? ['Autorizar que publiquemos tu página', 'ficha'] : null,
     !vigente && !porFirmar.length ? ['Proponer las condiciones del acuerdo', 'acuerdo'] : null,
   ].filter(Boolean);
+  const dia = tuDia({ hoy, reservas, mensajes, yo, porFirmar: porFirmar.length, mejoras });
+  const tareas = dia.filter(f => f.capa < 2 && !f.espera);
+  const filaDia = f => h('li', { 'data-capa': f.capa },
+    h('span', { class: 'app-dia__que' }, h('strong', {}, f.texto), f.detalle ? h('small', {}, f.detalle) : null),
+    h('span', { class: 'app-fila' }, f.tono ? chip(f.capa === 0 ? 'Pronto' : f.tono === 'error' ? 'Hoy' : 'Pendiente', f.tono) : null, ir(f.vista, f.boton)));
+  const capas = CAPAS.map((t, i) => [t, dia.filter(f => f.capa === i)]).filter(([, filas]) => filas.length);
+  const respuesta = tiempoRespuesta(mensajes, new Date(Date.now() - 30 * 864e5).toISOString());
+  const numeros = tuSemana(v7, v14);
+  const hoyLargo = new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
   const inicio = [
-    kpis([
-      ['Visitas a tu página', vistas, '30 días'],
-      ['Clientes por tu enlace', leads.length],
-      ['Reservas por contestar', porContestar.length, null, porContestar.length ? 'oro' : null],
-      ['Eventos hechos', hechos.length],
-    ]),
-    h('div', { class: 'app-rejilla' },
-      tarjeta('Ahora te toca', tareas.length
-        ? h('ul', { class: 'app-tareas' }, tareas.map(([t, v]) => h('li', {}, h('span', {}, t), ir(v))))
-        : h('p', {}, 'Nada pendiente. Te avisamos cuando haya una reserva o un cambio que revisar.'),
+    h('div', { class: 'app-card app-dia' },
+      h('h3', {}, 'Lo que toca hoy', h('small', { class: 'app-nota' }, ` · ${hoyLargo}`)),
+      capas.length
+        ? capas.flatMap(([t, filas]) => [h('p', { class: 'app-grupo-dia' }, t), h('ul', { class: 'app-tareas' }, filas.map(filaDia))])
+        : h('p', {}, 'Hoy no tienes nada pendiente. Te avisamos aquí en cuanto haya una reserva o un mensaje.'),
       actual.pendiente ? h('p', { class: 'app-nota' }, 'Tienes cambios de ficha esperando nuestra revisión.') : null),
+    h('div', { class: 'app-card' },
+      h('h3', {}, 'Tu semana en la red'),
+      numeros.length ? kpis(numeros) : kpis([['Visitas a tu página', vistas, '30 días'], ['Clientes por tu enlace', leads.length]]),
+      h('p', { class: 'app-fila' },
+        respuesta.n
+          ? [h('span', {}, `Contestas las reservas en ${duracion(respuesta.mediana)} de media`, h('small', { class: 'app-nota' }, ` (${respuesta.n} en 30 días)`)),
+            respuesta.rapido ? chip('Respondes rápido', 'ok') : h('span', { class: 'app-nota' }, `Por debajo de ${RAPIDO_HORAS} h, sello «Respondes rápido»: los clientes reservan antes a quien contesta antes.`)]
+          : h('span', { class: 'app-nota' }, `Cuando contestes tu primera reserva verás aquí cuánto tardas. Por debajo de ${RAPIDO_HORAS} h, sello «Respondes rápido».`)),
+      h('p', { class: 'app-fila' }, ir('flujo', 'Ver todo tu flujo'), chip(`${hechos.length} evento${hechos.length === 1 ? '' : 's'} hecho${hechos.length === 1 ? '' : 's'}`))),
+    h('div', { class: 'app-rejilla' },
       tarjeta('Tu enlace y tu página',
         h('p', {}, 'Compártelo: quien escriba después de entrar por él queda apuntado como tuyo.'),
         h('p', { class: 'app-fila' }, h('code', {}, enlace),
@@ -319,7 +335,7 @@ async function panelPartner(p, { sesion, acciones }) {
     marca: marcaDe(p).nombre,
     acciones,
     vistas: [
-      { grupo: 'Hoy', id: 'inicio', titulo: 'Inicio', icono: 'inicio', n: tareas.length, nodos: inicio },
+      { grupo: 'Hoy', id: 'inicio', titulo: 'Tu día', corto: 'Hoy', icono: 'inicio', n: tareas.length, nodos: inicio },
       { grupo: 'Hoy', id: 'reservas', titulo: 'Reservas', icono: 'reservas', n: porContestar.length,
         intro: 'Te las pedimos nosotros: confirma, propón otra cosa o dinos que no podéis.', nodos: vReservas },
       { grupo: 'Hoy', id: 'conversacion', titulo: 'Nuestra conversación', corto: 'Mensajes', icono: 'conversacion', nodos: vConversacion },
