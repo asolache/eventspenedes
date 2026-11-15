@@ -62,6 +62,9 @@ jobs:
       - name: El portal solo habla con Zoho por quien debe
         run: node tools/test-portal.mjs
 
+      - name: «Tu día» pone arriba lo en curso y la semana se compara sin importes
+        run: node tools/test-dia.mjs
+
       - name: La página del cliente solo lleva lo suyo, sin precios ni proveedores
         run: node tools/test-evento.mjs
 

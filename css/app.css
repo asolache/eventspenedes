@@ -331,3 +331,15 @@ body.en-app .portal__estado {
 @media (max-width: 40rem) {
     .evento-programa li { grid-template-columns: 1fr; gap: 0.35rem; }
 }
+
+/* «Tu día» en la portada del portal (js/portal-dia.js): capas y una fila por cosa */
+.app-grupo-dia { margin: 1rem 0 0.4rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-low); }
+.app-dia h3 + .app-grupo-dia { margin-top: 0.5rem; }
+.app-dia__que { display: grid; gap: 0.15rem; min-width: 0; }
+.app-dia__que small { color: var(--text-low); font-size: 0.85rem; }
+.app-tareas li[data-capa="0"] { border-left: 3px solid var(--accent-gold); }
+@media (max-width: 560px) {
+    .app-dia .app-tareas li { flex-direction: column; align-items: stretch; }
+    .app-dia .app-tareas li > .app-fila { justify-content: space-between; }
+}
+.app-dia + .app-card .app-kpis + .app-fila { margin-top: 1rem; }
