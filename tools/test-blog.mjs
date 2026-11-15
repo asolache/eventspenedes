@@ -51,9 +51,12 @@ comprueba('o el último viernes', viernes[0] === '2027-01-29' && viernes.every(f
 comprueba('las citas pasadas no salen', citasClub({ ano: 2027, regla: 'primer-sabado' }, '2027-06-10').length === 6);
 comprueba('el club no pasa de 222 socios', CLUB.plazas <= 222);
 
-/* 3 · Lo que se publica de una acción */
+/* 3 · Lo que se publica de una acción
+   La fecha va siempre 30 días por delante: el manejador mira desde hoy, y una
+   fecha fija caduca y tumba la prueba sin que nada haya cambiado. */
+const DENTRO_DE_UN_MES = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
 const ACCION = { id: '11111111-1111-4111-8111-111111111111', partner_id: '22222222-2222-4222-8222-222222222222', titulo: 'Vendimia en familia',
-  descripcion: 'Cortar uva y pisarla.', categoria: 'vino', fecha_inicio: '2026-11-07', fecha_fin: null, cada_ano: false,
+  descripcion: 'Cortar uva y pisarla.', categoria: 'vino', fecha_inicio: DENTRO_DE_UN_MES, fecha_fin: null, cada_ano: false,
   hora_inicio: '10:00:00', hora_fin: '13:00:00', plazas_min: 10, plazas_max: 40, estado: 'aprobada',
   precio: 4321, precio_unidad: 'persona', iva_incluido: false, nota_revision: 'Negociar', autor: 'x' };
 const pub = accionPublica(ACCION, '2026-10-16');
