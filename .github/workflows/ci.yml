@@ -22,6 +22,11 @@ jobs:
       - name: La función de leads acepta lo legítimo y rechaza lo demás
         run: node tools/test-lead.mjs
 
+      # Fent Pinya (TeamTowers): la petición entra con su origen y su borrador,
+      # y el aviso de seguimiento salta a los cinco días sin repetir.
+      - name: Fent Pinya entra con su origen, su borrador y su aviso
+        run: node tools/test-pinya.mjs
+
       # Cada petición sale con su respuesta escrita en una nota de Zoho: que
       # salga siempre, que Claude no vea correo ni teléfono, que no lleve
       # precios ni enlaces ajenos sin avisar y que nunca se envíe sola.
