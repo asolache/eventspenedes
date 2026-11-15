@@ -30,6 +30,11 @@
    y agendar la llamada en Google Calendar, y una tarea para responder hoy.
    Tampoco se envía sola. Ver `netlify/respuesta/respuesta.mjs`.
 
+   También recibe la petición de Fent Pinya de teamtowers.eu/presupuesto
+   (form «pinya», mismo CRM): oportunidad con la marca TeamTowers, su origen,
+   el importe del tramo y el borrador con la tarifa. Ver netlify/pinya/pinya.mjs
+   (variables TARIFA_FENT_PINYA y ZOHO_ETAPA_PINYA).
+
    Lo que NO hace, a propósito: escribir nada en ningún repositorio. Un briefing
    lleva nombre, correo y teléfono de un cliente, y el historial de git es para
    siempre. Tampoco guarda el borrador en ningún sitio: viaja dentro de su
@@ -93,6 +98,7 @@ import * as PROV from '../proveedor/esquema.mjs';
 import * as PORTAL from '../portal/supabase.mjs';
 import { zoho, zohoGet } from '../portal/zoho.mjs';
 import * as RESP from '../respuesta/respuesta.mjs';
+import * as PINYA from '../pinya/pinya.mjs';
 
 /* --- La firma de Netlify -------------------------------------------------
    Netlify manda un JWS en la cabecera `X-Webhook-Signature`. Dentro va el
@@ -695,6 +701,55 @@ async function crearCuenta({ cuenta, contacto, etiquetas, quitar, pendiente, tar
   return { ids, avisos };
 }
 
+/* --- Fent Pinya (TeamTowers) -----------------------------------------------
+   Cuenta + contacto + oportunidad con la marca TeamTowers, las etiquetas del
+   origen, el borrador en una nota y la tarea de enviarlo hoy. Si la
+   oportunidad no entra, entra como lead con la ficha y el borrador: perder la
+   petición por organizarla mejor sería cambiar lo importante por lo cómodo. */
+async function pinya(d, cuando) {
+  const op = PINYA.oportunidad(d, cuando);
+  const textoNota = PINYA.notaBorrador(op.borrador);
+  if (process.env.ZOHO_DRY_RUN === '1') {
+    console.log('DRY RUN · Fent Pinya:', JSON.stringify({ ...op, borrador: undefined }, null, 2));
+    return Response.json({ ok: true, dry_run: true, modulo: 'Deals', oportunidad: op, nota: textoNota });
+  }
+  let modulo = 'Deals', id, contacto;
+  const avisos = [];
+  try {
+    const ids = await crearOportunidad(op);
+    id = ids.trato; contacto = ids.contacto;
+  } catch (e) {
+    console.error('Fent Pinya: no entró la oportunidad; entra como lead:', e.message);
+    modulo = 'Leads';
+    try {
+      const r = { Last_Name: op.contacto?.Last_Name || op.cuenta?.Account_Name || 'Sin nombre',
+                  Company: op.cuenta?.Account_Name || 'Particular', Email: op.contacto?.Email,
+                  Phone: op.contacto?.Phone, Description: recortar(op.trato.Description) };
+      if (process.env.ZOHO_CAMPO_MARCA) { r[process.env.ZOHO_CAMPO_MARCA] = PINYA.MARCA; }
+      id = idDe(await upsert(r));
+    } catch (e2) {
+      console.error('Fent Pinya: tampoco como lead:', e2.message);
+      return Response.json({ ok: false, error: e2.message });
+    }
+  }
+  if (modulo === 'Deals') {
+    try {
+      await zoho(`Deals/${id}/actions/add_tags?tag_names=${encodeURIComponent(op.etiquetas.join(','))}&over_write=false`, {});
+    } catch (e) { avisos.push('etiquetas: ' + e.message); }
+  }
+  try { await nota(modulo, id, PINYA.TITULO_NOTA, textoNota); } catch (e) { avisos.push('nota: ' + e.message); }
+  if (process.env.ZOHO_AVISO_TAREA !== '0') {
+    try {
+      const t = { ...op.tarea, What_Id: { id }, $se_module: modulo };
+      if (contacto) { t.Who_Id = { id: contacto }; }
+      await zoho('Tasks', { data: [t] });
+    } catch (e) { avisos.push('tarea: ' + e.message); }
+  }
+  console.log(`Fent Pinya en Zoho (${modulo}) · origen ${op.origen.origen}`);
+  if (avisos.length) { console.error('La petición está, pero:', avisos.join(' · ')); }
+  return Response.json({ ok: true, modulo, origen: op.origen.origen, avisos });
+}
+
 /* --- La función ---------------------------------------------------------- */
 
 export default async (req, context) => {
@@ -763,6 +818,10 @@ export default async (req, context) => {
     console.log(`Valoración de «${(d.evento || '').toString().slice(0, 120)}»: ${d.nota ?? '—'}/10, permiso ${d.permiso || 'no'}. No va a Zoho.`);
     return Response.json({ ok: true, modulo: null });
   }
+
+  /* La petición de Fent Pinya llega del sitio de TeamTowers: mismo CRM, su
+     marca, su tarifa y su borrador. Ver netlify/pinya/pinya.mjs. */
+  if (form === PINYA.FORM) { return pinya(d, cuando); }
 
   const registro = lead(form, d, cuando);
 
