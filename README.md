@@ -29,6 +29,7 @@ Netlify sobre el dominio `eventspenedes.com`.
 ├── netlify/propuesta/  GENERADO · copia de los módulos del repositorio privado
 ├── robots.txt          Acceso de rastreadores, incluidos los de IA
 ├── llms.txt            Resumen del negocio en texto plano para asistentes de IA
+├── saber/productos.md   Lo que esta web ya automatiza, como productos candidatos para la matriz
 ├── site.webmanifest    Nombre, colores e iconos de la aplicación web
 ├── sitemap.xml
 ├── css/styles.css      Hoja de estilos única (tokens Antigravity)
